@@ -1,7 +1,9 @@
 // 整合三來源資料 → upsert 到 RecyclePrice
 // 公式：往 Apple 官方價靠攏，避免被同業哄抬而虧本收
+// 寫入前統一透過 normalize-model 正規化（資料源頭統一）
 import { prisma } from "@/lib/prisma";
 import { scrapeSource1, scrapeSource2, scrapeSource3, type ScrapedRow } from "./sources";
+import { normalizeRecycleRow } from "@/lib/normalize-model";
 
 interface AggregatedRow {
   modelKey: string;
@@ -66,14 +68,22 @@ export async function refreshRecyclePrices() {
 
   const agg = new Map<string, AggregatedRow>();
   function addRow(r: ScrapedRow, src: "source1" | "source2" | "source3") {
-    const existing = agg.get(r.modelKey);
-    const base: AggregatedRow = existing ?? {
-      modelKey: r.modelKey,
-      category: r.category,
+    // ⭐ 入庫前統一正規化（單一來源 of truth）
+    const norm = normalizeRecycleRow({
       brand: r.brand,
       modelName: r.modelName,
       storage: r.storage,
       variant: r.variant,
+    });
+    const stableKey = norm.modelKey;
+    const existing = agg.get(stableKey);
+    const base: AggregatedRow = existing ?? {
+      modelKey: stableKey,
+      category: r.category,
+      brand: norm.brand,
+      modelName: norm.modelName,
+      storage: norm.storage || undefined,
+      variant: norm.variant || undefined,
       minPrice: 0,
     };
     if (src === "source1") base.source1Price = r.price;
@@ -84,7 +94,7 @@ export async function refreshRecyclePrices() {
     }
     const prices = [base.source1Price, base.source2Price, base.source3Price].filter((x): x is number => typeof x === "number");
     base.minPrice = calcFinalPrice(prices, base.officialPrice, officialMargin, competitorDiscount);
-    agg.set(r.modelKey, base);
+    agg.set(stableKey, base);
   }
   s1.forEach(r => addRow(r, "source1"));
   s2.forEach(r => addRow(r, "source2"));

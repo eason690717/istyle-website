@@ -1,7 +1,9 @@
 // 把 jyes-data.json 同步到 Turso（source3 = jyes）
+// 寫入前用共用正規化，確保跟 source1/2 共用同樣的 modelKey
 import { createClient } from "@libsql/client";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { normalizeRecycleRow } from "./_normalize.mjs";
 
 const url = process.env.TURSO_DATABASE_URL;
 const authToken = process.env.TURSO_AUTH_TOKEN;
@@ -10,8 +12,14 @@ if (!url || !authToken) { console.error("missing env"); process.exit(1); }
 const client = createClient({ url, authToken });
 
 const dataPath = resolve(process.cwd(), "..", "jyes-data.json");
-const { rows } = JSON.parse(readFileSync(dataPath, "utf-8"));
-console.log(`[sync] ${rows.length} rows from jyes-data.json`);
+const { rows: rawRows } = JSON.parse(readFileSync(dataPath, "utf-8"));
+console.log(`[sync] ${rawRows.length} rows from jyes-data.json`);
+
+// 統一正規化（同機型不同來源 → 同 modelKey）
+const rows = rawRows.map(r => {
+  const norm = normalizeRecycleRow(r);
+  return { ...r, ...norm };
+});
 
 const now = new Date().toISOString();
 let upserts = 0;
