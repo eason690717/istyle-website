@@ -3,7 +3,7 @@ import type { CaseStudy } from "@/lib/case-studies";
 
 export function CaseCard({ c, compact = false }: { c: CaseStudy; compact?: boolean }) {
   return (
-    <article className="overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] transition hover:border-[var(--gold)]">
+    <article className="refined-card overflow-hidden">
       {/* Before/After image side-by-side */}
       <div className="relative grid grid-cols-2 gap-px bg-[var(--border)]">
         {[c.beforeImage, c.afterImage].map((src, idx) => (
@@ -19,7 +19,7 @@ export function CaseCard({ c, compact = false }: { c: CaseStudy; compact?: boole
       </div>
 
       <div className="p-4">
-        <h3 className="font-serif text-base text-[var(--gold)]">{c.title}</h3>
+        <h3 className="text-gold-gradient font-serif text-base">{c.title}</h3>
         <p className="mt-1 text-xs text-[var(--fg-muted)]">{c.device}．{c.customerName}</p>
         {!compact && (
           <>

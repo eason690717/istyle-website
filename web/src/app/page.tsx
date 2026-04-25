@@ -304,8 +304,8 @@ function Badge({ children }: { children: React.ReactNode }) {
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] py-4">
-      <div className="font-serif text-2xl text-[var(--gold)] md:text-3xl">{value}</div>
+    <div className="glass-card rounded-xl py-4">
+      <div className="text-gold-gradient font-serif text-2xl md:text-3xl">{value}</div>
       <div className="mt-1 text-xs text-[var(--fg-muted)]">{label}</div>
     </div>
   );
@@ -322,13 +322,13 @@ const SERVICES = [
 
 function ServiceCard({ title, desc, href }: { title: string; desc: string; href: string }) {
   return (
-    <Link
-      href={href}
-      className="block rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] p-6 transition hover:border-[var(--gold)] hover:bg-[var(--bg-soft)]"
-    >
-      <h3 className="font-serif text-lg text-[var(--gold)]">{title}</h3>
+    <Link href={href} className="refined-card block p-6">
+      <h3 className="text-gold-gradient font-serif text-lg">{title}</h3>
       <p className="mt-2 text-sm text-[var(--fg-muted)] leading-relaxed">{desc}</p>
-      <span className="mt-3 inline-block text-xs text-[var(--gold-soft)]">查詢報價 →</span>
+      <span className="mt-3 inline-flex items-center gap-1 text-xs text-[var(--gold-soft)]">
+        查詢報價
+        <span className="transition group-hover:translate-x-1">→</span>
+      </span>
     </Link>
   );
 }
