@@ -7,6 +7,7 @@ import { FloatingCta } from "@/components/floating-cta";
 import { PromoBanner } from "@/components/promo-banner";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { CartProvider } from "@/lib/cart";
 import { SITE } from "@/lib/site-config";
 
 const notoSans = Noto_Sans_TC({
@@ -95,11 +96,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="flex min-h-full flex-col bg-[var(--bg)] text-[var(--fg)] antialiased pb-14 md:pb-0">
-        <PromoBanner />
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
-        <FloatingCta />
+        <CartProvider>
+          <PromoBanner />
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+          <FloatingCta />
+        </CartProvider>
         <Analytics />
         <SpeedInsights />
       </body>

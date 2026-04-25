@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { SITE } from "@/lib/site-config";
 import { displayPrice, formatTwd, TIER_DESCRIPTIONS, TIER_LABELS } from "@/lib/pricing";
 import { findRecyclePricesForModel } from "@/lib/model-helpers";
+import { AddToCartButton } from "@/components/cart-button";
 import type { Metadata } from "next";
 
 type Params = { brand: string; model: string };
@@ -117,7 +118,7 @@ export default async function ModelPage({ params }: { params: Promise<Params> })
           <TierLegend tier="OEM" />
         </div>
 
-        {/* 報價表格 */}
+        {/* 報價表格 + 加入訂單按鈕 */}
         <div className="mt-10 overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)]">
           <table className="w-full text-sm">
             <thead className="bg-[var(--bg-soft)]">
@@ -128,17 +129,53 @@ export default async function ModelPage({ params }: { params: Promise<Params> })
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--border)]">
-              {rows.map(r => (
-                <tr key={r.itemId} className="transition hover:bg-[var(--bg-soft)]">
-                  <td className="px-4 py-3 font-medium text-[var(--fg)]">{r.itemName}</td>
-                  <td className="px-4 py-3 text-right font-mono text-[var(--fg)]">
-                    {r.standard ? formatTwd(displayPrice(r.standard)) : <span className="text-[var(--fg-muted)]">—</span>}
-                  </td>
-                  <td className="px-4 py-3 text-right font-mono text-[var(--gold)]">
-                    {r.oem ? formatTwd(displayPrice(r.oem)) : <span className="text-[var(--fg-muted)]">—</span>}
-                  </td>
-                </tr>
-              ))}
+              {rows.map(r => {
+                const stdPrice = r.standard ? displayPrice(r.standard) : null;
+                const oemPrice = r.oem ? displayPrice(r.oem) : null;
+                return (
+                  <tr key={r.itemId} className="transition hover:bg-[var(--bg-soft)]">
+                    <td className="px-4 py-3 font-medium text-[var(--fg)]">{r.itemName}</td>
+                    <td className="px-4 py-3 text-right">
+                      {stdPrice ? (
+                        <div className="flex flex-col items-end gap-1">
+                          <span className="font-mono text-[var(--fg)]">{formatTwd(stdPrice)}</span>
+                          <AddToCartButton
+                            modelId={model.id}
+                            modelSlug={model.slug}
+                            modelName={model.name}
+                            brandSlug={model.brand.slug}
+                            brandName={model.brand.name}
+                            itemId={r.itemId}
+                            itemName={r.itemName}
+                            tier="STANDARD"
+                            tierLabel="標準版"
+                            unitPrice={stdPrice}
+                          />
+                        </div>
+                      ) : <span className="text-[var(--fg-muted)]">—</span>}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      {oemPrice ? (
+                        <div className="flex flex-col items-end gap-1">
+                          <span className="font-mono text-[var(--gold)]">{formatTwd(oemPrice)}</span>
+                          <AddToCartButton
+                            modelId={model.id}
+                            modelSlug={model.slug}
+                            modelName={model.name}
+                            brandSlug={model.brand.slug}
+                            brandName={model.brand.name}
+                            itemId={r.itemId}
+                            itemName={r.itemName}
+                            tier="OEM"
+                            tierLabel="原廠版"
+                            unitPrice={oemPrice}
+                          />
+                        </div>
+                      ) : <span className="text-[var(--fg-muted)]">—</span>}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

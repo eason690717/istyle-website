@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { SITE } from "@/lib/site-config";
 import { HeaderSearch } from "./header-search";
+import { CartButton } from "./cart-button";
 
 const NAV = [
   { href: "/quote", label: "維修報價" },
@@ -43,6 +44,7 @@ export function Header() {
             </Link>
           ))}
           <HeaderSearch />
+          <CartButton />
           <a
             href={`tel:${SITE.phoneRaw}`}
             className="btn-gold rounded-full px-4 py-2 text-sm"
@@ -51,9 +53,10 @@ export function Header() {
           </a>
         </nav>
 
-        {/* Mobile：搜尋 + 電話 */}
+        {/* Mobile：搜尋 + 購物車 + 電話 */}
         <div className="flex items-center gap-2 md:hidden">
           <HeaderSearch />
+          <CartButton />
           <a
             href={`tel:${SITE.phoneRaw}`}
             className="btn-gold rounded-full px-3 py-2 text-xs"
