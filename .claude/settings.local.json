@@ -74,7 +74,14 @@
       "mcp__Claude_in_Chrome__find",
       "Bash(curl -s \"https://istyle-snowy.vercel.app/api/cron/refresh-recycle?secret=ZQg3fL7rN2pXt8vKwR5jB6mQzY1uA4cE\")",
       "Bash(curl -s \"https://istyle-snowy.vercel.app/api/cron/generate-articles?secret=ZQg3fL7rN2pXt8vKwR5jB6mQzY1uA4cE\")",
-      "Bash(TURSO_DATABASE_URL=\"libsql://istyle-eason0717.aws-ap-northeast-1.turso.io\" TURSO_AUTH_TOKEN=\"eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3NzcwOTgyNDMsImlkIjoiMDE5ZGMzNGUtYmMwMS03YWQ5LWFjYjUtZTVmNWJmNTYwODJkIiwicmlkIjoiN2U2MWI0N2YtOWQzNi00ZDFlLWJhZGMtZTljNjRlNjZhNjU4In0.MSe1aesnDTt8AnuEyWxAbSq_5ZUakOBR31r4CmNvkwIdcNxP3ZneJ_nptKH8o6a00CYnG6ZFsN8PmCBM1yRGCA\" node scripts/sync-recycle-to-turso.mjs)"
+      "Bash(TURSO_DATABASE_URL=\"libsql://istyle-eason0717.aws-ap-northeast-1.turso.io\" TURSO_AUTH_TOKEN=\"eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3NzcwOTgyNDMsImlkIjoiMDE5ZGMzNGUtYmMwMS03YWQ5LWFjYjUtZTVmNWJmNTYwODJkIiwicmlkIjoiN2U2MWI0N2YtOWQzNi00ZDFlLWJhZGMtZTljNjRlNjZhNjU4In0.MSe1aesnDTt8AnuEyWxAbSq_5ZUakOBR31r4CmNvkwIdcNxP3ZneJ_nptKH8o6a00CYnG6ZFsN8PmCBM1yRGCA\" node scripts/sync-recycle-to-turso.mjs)",
+      "Bash(curl -s \"https://istyle-snowy.vercel.app/recycle\")",
+      "Bash(curl -s -o /dev/null -w \"i-style.store: %{http_code}\\\\n\" https://i-style.store/)",
+      "Bash(curl -s -o /dev/null -w \"www: %{http_code}\\\\n\" https://www.i-style.store/)",
+      "Bash(curl -s -o /dev/null -w \"www.i-style.store: %{http_code}\\\\n\" https://www.i-style.store/)",
+      "Bash(curl -s -o /dev/null -w \"/recycle: %{http_code}\\\\n\" https://www.i-style.store/recycle)",
+      "Bash(curl -s -o /dev/null -w \"/quote/apple: %{http_code}\\\\n\" https://www.i-style.store/quote/apple)",
+      "Bash(TURSO_DATABASE_URL=\"libsql://istyle-eason0717.aws-ap-northeast-1.turso.io\" TURSO_AUTH_TOKEN=\"eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3NzcwOTgyNDMsImlkIjoiMDE5ZGMzNGUtYmMwMS03YWQ5LWFjYjUtZTVmNWJmNTYwODJkIiwicmlkIjoiN2U2MWI0N2YtOWQzNi00ZDFlLWJhZGMtZTljNjRlNjZhNjU4In0.MSe1aesnDTt8AnuEyWxAbSq_5ZUakOBR31r4CmNvkwIdcNxP3ZneJ_nptKH8o6a00CYnG6ZFsN8PmCBM1yRGCA\" node scripts/refresh-blog-covers.mjs)"
     ]
   }
 }
