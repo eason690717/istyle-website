@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { BLOG_POSTS, CATEGORY_LABEL } from "@/lib/blog-posts";
+import { BLOG_POSTS, CATEGORY_LABEL, getCoverImage } from "@/lib/blog-posts";
 import { prisma } from "@/lib/prisma";
 import { SITE } from "@/lib/site-config";
 import type { Metadata } from "next";
@@ -34,7 +34,7 @@ export default async function BlogIndexPage() {
     href: `/blog/${p.slug}`,
     title: p.title,
     excerpt: p.excerpt,
-    cover: p.coverImage,
+    cover: getCoverImage(p),
     badge: CATEGORY_LABEL[p.category],
     date: p.publishedAt,
   }));

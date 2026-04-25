@@ -1,6 +1,14 @@
 // Blog 內容庫 — SEO 長尾流量主力
 // 每篇文章精心設計 H1 / meta / FAQ，含 Article + FAQPage Schema
 // 目標關鍵字為 Google / AI 搜尋常見查詢
+import PEXELS_MAP from "./pexels-covers.json" with { type: "json" };
+
+const pexelsMap = PEXELS_MAP as Record<string, string>;
+
+// 取得文章封面：Pexels 自動抓圖優先，否則用 BLOG_POSTS 中定義的 coverImage
+export function getCoverImage(post: { slug: string; coverImage: string }): string {
+  return pexelsMap[post.slug] || post.coverImage;
+}
 
 export interface BlogPost {
   slug: string;

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { BLOG_POSTS, getBlogPost, CATEGORY_LABEL } from "@/lib/blog-posts";
+import { BLOG_POSTS, getBlogPost, CATEGORY_LABEL, getCoverImage } from "@/lib/blog-posts";
 import { SITE } from "@/lib/site-config";
 import type { Metadata } from "next";
 
@@ -176,7 +176,7 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
         <h1 className="font-serif text-3xl leading-tight text-[var(--gold)] md:text-4xl">{post.title}</h1>
 
         <div className="relative my-8 aspect-[16/9] overflow-hidden rounded-lg border border-[var(--border)]">
-          <Image src={post.coverImage} alt={post.title} fill className="object-cover" sizes="800px" priority />
+          <Image src={getCoverImage(post)} alt={post.title} fill className="object-cover" sizes="800px" priority />
         </div>
 
         <div className="prose prose-invert">
