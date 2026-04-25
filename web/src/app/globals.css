@@ -1,17 +1,27 @@
 @import "tailwindcss";
 
-/* === i時代 設計 Token =================================================== */
+/* === i時代 設計 Token v2 — 提升質感 ====================================== */
 :root {
-  /* 主色 */
-  --bg: #000000;            /* 主背景 純黑（與 logo 黑底一致） */
-  --bg-elevated: #141414;   /* 次背景（卡片） */
-  --bg-soft: #1a1a1a;       /* 更柔和 */
-  --border: #2a2a2a;        /* 邊框 */
-  --border-soft: #1f1f1f;
-  /* 金色 */
+  /* 主色 — 多層次黑 */
+  --bg: #060606;            /* 主背景 — 比純黑更深邃 */
+  --bg-elevated: #131313;   /* 次背景 (卡片) */
+  --bg-soft: #1c1c1c;       /* 更柔和 */
+  --bg-glass: rgba(20, 20, 20, 0.7);
+  --border: #2a2520;        /* 帶金底色的邊框 */
+  --border-soft: #1f1c18;
+  --border-gold: rgba(201, 169, 110, 0.3);
+  /* 金色 — 完整漸層階梯 */
   --gold: #c9a96e;          /* 古典金 */
   --gold-soft: #a88b4f;     /* 鈍金 (hover) */
   --gold-bright: #e0c590;   /* 明金 (focus) */
+  --gold-deep: #8a6f3a;     /* 深金 (subtle accent) */
+  --gold-glow: rgba(201, 169, 110, 0.4);
+  /* 強調色（搜尋/CTA）*/
+  --accent: #d4af37;        /* 真金黃 */
+  --accent-cool: #4a90e2;   /* 冷藍（次要 CTA） */
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
   /* 文字 */
   --fg: #f5f0e8;            /* 主要文字（米白） */
   --fg-muted: #a8a39c;      /* 次要文字 */
@@ -24,11 +34,19 @@
   --color-bg: var(--bg);
   --color-bg-elevated: var(--bg-elevated);
   --color-bg-soft: var(--bg-soft);
+  --color-bg-glass: var(--bg-glass);
   --color-border: var(--border);
   --color-border-soft: var(--border-soft);
+  --color-border-gold: var(--border-gold);
   --color-gold: var(--gold);
   --color-gold-soft: var(--gold-soft);
   --color-gold-bright: var(--gold-bright);
+  --color-gold-deep: var(--gold-deep);
+  --color-accent: var(--accent);
+  --color-accent-cool: var(--accent-cool);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
   --color-fg: var(--fg);
   --color-fg-muted: var(--fg-muted);
   --color-fg-strong: var(--fg-strong);
@@ -98,3 +116,238 @@ h1, h2, h3 {
 
 /* 修剪老站殘留 */
 img { max-width: 100%; height: auto; }
+
+/* === 質感升級：背景紋理、卡片光暈、按鈕進階 ============================ */
+
+/* 全站背景：細微金光紋理 */
+body {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(201, 169, 110, 0.08), transparent),
+    radial-gradient(ellipse 60% 50% at 100% 100%, rgba(74, 144, 226, 0.04), transparent),
+    var(--bg);
+  background-attachment: fixed;
+}
+
+/* 玻璃擬態卡片 */
+.glass-card {
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-gold);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.04) inset,
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(201, 169, 110, 0.05);
+}
+
+/* 高質感卡片（hover 微光） */
+.refined-card {
+  position: relative;
+  background: linear-gradient(180deg, rgba(28, 28, 28, 0.6), rgba(19, 19, 19, 0.8));
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s, box-shadow 0.25s;
+  overflow: hidden;
+}
+.refined-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 0%), rgba(201, 169, 110, 0.15), transparent 40%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.refined-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-gold);
+  box-shadow:
+    0 0 0 1px rgba(201, 169, 110, 0.2),
+    0 12px 40px rgba(0, 0, 0, 0.6),
+    0 0 60px rgba(201, 169, 110, 0.08);
+}
+.refined-card:hover::before { opacity: 1; }
+
+/* 進階金按鈕 — 立體感、漸層、發光 */
+.btn-gold {
+  background: linear-gradient(180deg, var(--gold-bright) 0%, var(--gold) 50%, var(--gold-soft) 100%);
+  color: #0a0a0a;
+  font-weight: 600;
+  border: 1px solid var(--gold-bright);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.4) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.2) inset,
+    0 4px 12px rgba(201, 169, 110, 0.25);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.btn-gold:hover {
+  background: linear-gradient(180deg, #f0d8a8 0%, var(--gold-bright) 50%, var(--gold) 100%);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.5) inset,
+    0 6px 20px rgba(201, 169, 110, 0.4),
+    0 0 30px rgba(201, 169, 110, 0.2);
+  transform: translateY(-1px);
+}
+.btn-gold:active {
+  transform: translateY(1px);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.2) inset,
+    0 2px 6px rgba(201, 169, 110, 0.2);
+}
+
+/* 描金按鈕 — 發光描邊 */
+.btn-gold-outline {
+  background: rgba(201, 169, 110, 0.05);
+  color: var(--gold);
+  border: 1px solid var(--gold-soft);
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+.btn-gold-outline:hover {
+  background: var(--gold);
+  color: #0a0a0a;
+  border-color: var(--gold-bright);
+  box-shadow: 0 0 24px rgba(201, 169, 110, 0.3);
+}
+
+/* 高質感搜尋框 — 焦點有金光環 */
+.refined-search {
+  position: relative;
+  background: linear-gradient(180deg, rgba(28, 28, 28, 0.9), rgba(19, 19, 19, 1));
+  border: 1.5px solid var(--border);
+  border-radius: 999px;
+  transition: all 0.25s ease;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.03) inset,
+    0 4px 16px rgba(0, 0, 0, 0.4);
+}
+.refined-search:focus-within {
+  border-color: var(--gold);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.05) inset,
+    0 0 0 4px rgba(201, 169, 110, 0.15),
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    0 0 60px rgba(201, 169, 110, 0.1);
+}
+.refined-search input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--fg);
+  width: 100%;
+  font-size: 1rem;
+}
+.refined-search input::placeholder {
+  color: var(--fg-muted);
+}
+
+/* Chip 高質感版本 */
+.chip-refined {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.95rem;
+  font-size: 0.78rem;
+  border-radius: 999px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--fg);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+.chip-refined:hover {
+  border-color: var(--gold-soft);
+  color: var(--gold);
+  background: rgba(201, 169, 110, 0.05);
+}
+.chip-refined.active {
+  background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+  border-color: var(--gold-bright);
+  color: #0a0a0a;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(201, 169, 110, 0.3);
+}
+.chip-refined .count {
+  font-size: 0.7rem;
+  opacity: 0.7;
+  margin-left: 0.15rem;
+}
+.chip-refined.active .count { color: rgba(0, 0, 0, 0.7); opacity: 1; }
+
+/* Section 標題（更精緻的金線） */
+.gold-underline::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -0.6rem;
+  transform: translateX(-50%);
+  width: 4rem;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold-bright), var(--gold), var(--gold-bright), transparent);
+  box-shadow: 0 0 12px rgba(201, 169, 110, 0.5);
+}
+
+/* 標題前的金色裝飾線 */
+.section-heading {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.section-heading::before,
+.section-heading::after {
+  content: "";
+  width: 1.5rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-soft), transparent);
+}
+
+/* 金色文字漸層（強調用） */
+.text-gold-gradient {
+  background: linear-gradient(90deg, var(--gold-bright), var(--gold), var(--gold-soft));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* 表格行 hover — 金光掠過 */
+.table-row-refined {
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.table-row-refined:hover {
+  background: linear-gradient(90deg, transparent, rgba(201, 169, 110, 0.08), transparent) !important;
+}
+
+/* 滾動條（金色細線） */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--gold-deep), var(--gold-soft));
+  border-radius: 10px;
+  border: 2px solid var(--bg);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+/* 焦點環（accessibility，金色） */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* 微光浮現動畫 */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, transparent, rgba(201, 169, 110, 0.15), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite;
+}
+
+/* 漸層 divider */
+.divider-gold {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-deep) 30%, var(--gold) 50%, var(--gold-deep) 70%, transparent);
+  border: 0;
+}

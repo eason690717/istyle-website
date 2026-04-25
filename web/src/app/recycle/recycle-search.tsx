@@ -196,20 +196,22 @@ export function RecycleSearch({
 
   return (
     <div className="mt-8">
-      {/* 搜尋框 — 大尺寸、置中 */}
-      <div className="relative">
+      {/* 搜尋框 — 高質感、發光焦點 */}
+      <div className="refined-search relative flex items-center px-5 py-4">
+        <svg className="mr-3 h-5 w-5 flex-shrink-0 text-[var(--gold)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
         <input
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="搜尋機型（可組合：iPhone 15 Pro 256）"
-          className="w-full rounded-full border border-[var(--border)] bg-[var(--bg-elevated)] px-6 py-3 text-base text-[var(--fg)] outline-none transition placeholder:text-[var(--fg-muted)] focus:border-[var(--gold)]"
+          placeholder="搜尋機型（如：Air 4、iPhone 15 Pro 256）"
           autoFocus
         />
         {query && (
           <button
             onClick={() => setQuery("")}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--fg-muted)] hover:text-[var(--gold)]"
+            className="ml-2 flex h-6 w-6 items-center justify-center rounded-full text-[var(--fg-muted)] transition hover:bg-[var(--bg-soft)] hover:text-[var(--gold)]"
             aria-label="清除"
           >
             ✕
@@ -390,45 +392,34 @@ function Chip({
   active: boolean; onClick: () => void; label: string; count?: number;
 }) {
   return (
-    <button
-      onClick={onClick}
-      className={`rounded-full border px-3 py-1.5 text-xs transition ${
-        active
-          ? "border-[var(--gold)] bg-[var(--gold)] text-black font-medium"
-          : "border-[var(--border)] bg-[var(--bg-elevated)] text-[var(--fg)] hover:border-[var(--gold-soft)] hover:text-[var(--gold)]"
-      }`}
-    >
+    <button onClick={onClick} className={`chip-refined ${active ? "active" : ""}`} type="button">
       {label}
-      {count !== undefined && (
-        <span className={`ml-1 ${active ? "" : "text-[var(--fg-muted)]"}`}>({count})</span>
-      )}
+      {count !== undefined && <span className="count">({count})</span>}
     </button>
   );
 }
 
 function PriceCard({ item }: { item: PriceItem }) {
   return (
-    <div className="rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] p-4 transition hover:border-[var(--gold)]">
+    <div className="refined-card p-5">
       <div className="flex items-center gap-2 text-xs">
-        <span className="rounded bg-[var(--gold)]/15 px-2 py-0.5 text-[var(--gold)]">{item.brand}</span>
+        <span className="rounded-full bg-gradient-to-r from-[var(--gold)] to-[var(--gold-soft)] px-2.5 py-0.5 font-medium text-black">{item.brand}</span>
         <span className="text-[var(--fg-muted)]">{item.categoryLabel}</span>
       </div>
-      <div className="mt-2 text-sm font-medium text-[var(--fg)]">{item.modelName}</div>
+      <div className="mt-3 text-sm font-medium leading-snug text-[var(--fg-strong)]">{item.modelName}</div>
       {(item.storage || item.variant) && (
-        <div className="mt-1 flex flex-wrap gap-2 text-xs">
-          {item.storage && <span className="rounded bg-[var(--bg-soft)] px-2 py-0.5 text-[var(--fg-muted)]">{item.storage}</span>}
-          {item.variant && <span className="rounded bg-[var(--bg-soft)] px-2 py-0.5 text-[var(--fg-muted)]">{item.variant}</span>}
+        <div className="mt-2 flex flex-wrap gap-1.5 text-xs">
+          {item.storage && <span className="rounded-md border border-[var(--border)] bg-[var(--bg-soft)] px-2 py-0.5 text-[var(--fg-muted)]">{item.storage}</span>}
+          {item.variant && <span className="rounded-md border border-[var(--border)] bg-[var(--bg-soft)] px-2 py-0.5 text-[var(--fg-muted)]">{item.variant}</span>}
         </div>
       )}
-      <div className="mt-3 border-t border-[var(--border)] pt-3">
-        <div className="text-xs text-[var(--fg-muted)]">回收價（起）</div>
-        <div className="font-serif text-2xl text-[var(--gold)]">{formatTwd(item.minPrice)}</div>
+      <hr className="divider-gold my-4" />
+      <div className="text-[10px] uppercase tracking-widest text-[var(--gold-soft)]">回收價（起）</div>
+      <div className="text-gold-gradient font-serif text-3xl font-semibold leading-tight">
+        {formatTwd(item.minPrice)}
       </div>
-      <a
-        href={SITE.lineAddUrl}
-        className="btn-gold-outline mt-3 block rounded-full py-2 text-center text-xs"
-      >
-        LINE 預約回收
+      <a href={SITE.lineAddUrl} className="btn-gold-outline mt-4 block rounded-full py-2 text-center text-xs">
+        LINE 預約回收 →
       </a>
     </div>
   );
