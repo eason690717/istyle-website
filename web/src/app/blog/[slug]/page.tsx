@@ -176,8 +176,7 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
         <h1 className="font-serif text-3xl leading-tight text-[var(--gold)] md:text-4xl">{post.title}</h1>
 
         <div className="relative my-8 aspect-[16/9] overflow-hidden rounded-lg border border-[var(--border)]">
-          {/* 動態 OG 圖 — 標題 + 主題 emoji + 品牌風格，圖文一致 */}
-          <Image src={`/og/article/${post.slug}`} alt={post.title} fill className="object-cover" sizes="800px" priority unoptimized />
+          <Image src={post.coverImage} alt={post.title} fill className="object-cover" sizes="800px" priority />
         </div>
 
         <div className="prose prose-invert">

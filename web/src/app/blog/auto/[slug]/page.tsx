@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
       title: a.title,
       description: a.metaDescription || a.excerpt,
       publishedTime: a.publishedAt.toISOString(),
-      images: [{ url: `${process.env.NEXT_PUBLIC_SITE_URL || ""}/og/article/${a.slug}`, width: 1200, height: 630 }],
+      images: a.coverImage ? [{ url: a.coverImage, width: 1200, height: 630 }] : [],
     },
   };
 }
@@ -130,10 +130,11 @@ export default async function AutoArticlePage({ params }: { params: Promise<Para
 
         <h1 className="font-serif text-3xl leading-tight text-[var(--gold)] md:text-4xl">{article.title}</h1>
 
-        {/* 動態 OG 圖：標題 + 主題 emoji + 品牌風格，圖文一致 */}
-        <div className="relative my-8 aspect-[16/9] overflow-hidden rounded-lg border border-[var(--border)]">
-          <Image src={`/og/article/${article.slug}`} alt={article.title} fill className="object-cover" sizes="800px" priority unoptimized />
-        </div>
+        {article.coverImage && (
+          <div className="relative my-8 aspect-[16/9] overflow-hidden rounded-lg border border-[var(--border)]">
+            <Image src={article.coverImage} alt={article.title} fill className="object-cover" sizes="800px" priority />
+          </div>
+        )}
 
         <div className="prose prose-invert">{renderBody(article.body)}</div>
 

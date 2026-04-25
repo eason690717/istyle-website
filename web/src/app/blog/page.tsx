@@ -19,13 +19,13 @@ export default async function BlogIndexPage() {
     take: 12,
   }).catch(() => []);
 
-  // 統一用動態 OG 圖（保證圖文一致 + 品牌風格）
+  // 真實照片：用文章 coverImage（已透過 keyword 配對）
   const autoCards = auto.map(a => ({
     slug: a.slug,
     href: `/blog/auto/${a.slug}`,
     title: a.title,
     excerpt: a.excerpt,
-    cover: `/og/article/${a.slug}`,
+    cover: a.coverImage || "/cases/tech-shop.jpg",
     badge: a.kind === "weekly_recycle" ? "週報" : a.kind === "monthly_summary" ? "月報" : "自動",
     date: a.publishedAt.toISOString().slice(0, 10),
   }));
@@ -34,7 +34,7 @@ export default async function BlogIndexPage() {
     href: `/blog/${p.slug}`,
     title: p.title,
     excerpt: p.excerpt,
-    cover: `/og/article/${p.slug}`,
+    cover: p.coverImage,
     badge: CATEGORY_LABEL[p.category],
     date: p.publishedAt,
   }));
@@ -61,8 +61,7 @@ export default async function BlogIndexPage() {
             className="group overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] transition hover:border-[var(--gold)]"
           >
             <div className="relative aspect-[16/9] bg-[var(--bg-soft)]">
-              {/* 動態 OG 圖（外部 endpoint，用 unoptimized 避免 next/image 快取問題） */}
-              <Image src={c.cover} alt={c.title} fill className="object-cover" sizes="400px" unoptimized />
+              <Image src={c.cover} alt={c.title} fill className="object-cover" sizes="400px" />
               <span className="absolute left-3 top-3 rounded bg-black/70 px-2 py-0.5 text-[10px] text-[var(--gold)]">
                 {c.badge}
               </span>

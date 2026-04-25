@@ -35,29 +35,9 @@ export function RecycleSearch({
   const [sortKey, setSortKey] = useState<SortKey>("price_desc");
   const [view, setView] = useState<"card" | "table">("table");
 
-  // 計數
-  const categoryCounts = useMemo(() => {
-    const counts = new Map<string, number>();
-    counts.set("all", prices.length);
-    for (const p of prices) {
-      counts.set(p.category, (counts.get(p.category) || 0) + 1);
-    }
-    return counts;
-  }, [prices]);
+  // 計數（依「搜尋結果」動態縮減 — 搜 Air 4 時，類別 chip 只顯示有 Air 4 的類別）
+  // 注意：這些 useMemo 會在下面 searchOnly 定義後使用
 
-  // 可用容量（依當前類別動態計算）
-  const availableStorages = useMemo(() => {
-    const set = new Set<string>();
-    for (const p of prices) {
-      if (activeCategory !== "all" && p.category !== activeCategory) continue;
-      if (p.storage) set.add(p.storage);
-    }
-    return STORAGE_BUCKETS.filter(s => set.has(s));
-  }, [prices, activeCategory]);
-
-  const hasVariantFilter = useMemo(() =>
-    prices.some(p => p.variant && (p.category === "tablet" || activeCategory === "tablet"))
-  , [prices, activeCategory]);
 
   // 共用排序
   function sortList<T extends PriceItem>(list: T[]): T[] {
@@ -68,15 +48,39 @@ export function RecycleSearch({
     });
   }
 
-  // 套用文字搜尋（共用）
+  // 智慧搜尋：將機型名稱拆成 token，每個 query token 必須在機型 token 中找到
+  // 「Air 4」→ tokens=["air","4"]，會嚴格比對「Air」+「4」為獨立 token，避免誤中「Air 13 M4」
+  function tokenize(s: string): string[] {
+    // 把字母+數字、純字母、純數字當作獨立 token
+    return s.toLowerCase().match(/[a-z]+|\d+/g) || [];
+  }
   function matchQuery(p: PriceItem): boolean {
-    const tokens = query.toLowerCase().trim().split(/\s+/);
-    const haystack = `${p.modelName} ${p.storage} ${p.variant}`.toLowerCase();
-    return tokens.every(t => haystack.includes(t));
+    const queryTokens = tokenize(query);
+    if (queryTokens.length === 0) return true;
+    const haystackText = `${p.modelName} ${p.storage} ${p.variant} ${p.brand}`.toLowerCase();
+    const haystackTokens = tokenize(haystackText);
+    return queryTokens.every(qt => {
+      // 純數字 token：必須完全匹配（"4" 不能匹配 "M4" 因為 M4 拆出 ["m","4"] 含 "4"… 還是會中）
+      // → 用「整段詞匹配」：檢查機型名稱中有沒有以 qt 為獨立詞的位置
+      if (/^\d+$/.test(qt)) {
+        // 數字必須是獨立 token，前後有非數字邊界
+        const re = new RegExp(`(?:^|[^\\d])${qt}(?:[^\\d]|$)`, "i");
+        return re.test(haystackText);
+      }
+      // 字母 token：可以子字串包含（如 "iph" 匹配 "iPhone"）
+      return haystackTokens.some(ht => ht.includes(qt));
+    });
   }
 
+  // 「先套用搜尋字」的子集：用來計算各篩選 chip 的動態計數
+  // → 搜尋 "Air 4" 時，品牌只顯示有 Air 4 機型的品牌（其他品牌自動隱藏）
+  const searchOnly = useMemo(() => {
+    if (!query.trim()) return prices;
+    return prices.filter(matchQuery);
+  }, [prices, query]);
+
   const filtered = useMemo(() => {
-    let list = prices;
+    let list = searchOnly;
     if (activeCategory !== "all") {
       list = list.filter(p => p.category === activeCategory);
     }
@@ -89,11 +93,8 @@ export function RecycleSearch({
     if (activeVariant !== "all") {
       list = list.filter(p => p.variant === activeVariant);
     }
-    if (query.trim()) {
-      list = list.filter(matchQuery);
-    }
     return sortList(list);
-  }, [prices, activeCategory, activeBrand, activeStorages, activeVariant, query, sortKey]);
+  }, [searchOnly, activeCategory, activeBrand, activeStorages, activeVariant, sortKey]);
 
   // 「擴展到全部類別」的搜尋備援：當有搜尋字但本類別 0 結果，提供跨類別結果
   const crossCategoryResults = useMemo(() => {
@@ -118,15 +119,49 @@ export function RecycleSearch({
 
   const hasFilter = activeCategory !== "all" || activeBrand !== "all" || activeStorages.size > 0 || activeVariant !== "all" || query.trim() !== "";
 
-  const brandCounts = useMemo(() => {
+  // 動態計數：依「搜尋字 + 已選類別」過濾後計算各 chip 數字
+  const categoryCounts = useMemo(() => {
     const counts = new Map<string, number>();
-    counts.set("all", prices.length);
-    for (const p of prices) {
-      if (activeCategory !== "all" && p.category !== activeCategory) continue;
-      counts.set(p.brand, (counts.get(p.brand) || 0) + 1);
+    counts.set("all", searchOnly.length);
+    for (const p of searchOnly) {
+      counts.set(p.category, (counts.get(p.category) || 0) + 1);
     }
     return counts;
-  }, [prices, activeCategory]);
+  }, [searchOnly]);
+
+  const brandCounts = useMemo(() => {
+    const base = activeCategory === "all" ? searchOnly : searchOnly.filter(p => p.category === activeCategory);
+    const counts = new Map<string, number>();
+    counts.set("all", base.length);
+    for (const p of base) counts.set(p.brand, (counts.get(p.brand) || 0) + 1);
+    return counts;
+  }, [searchOnly, activeCategory]);
+
+  const availableStorages = useMemo(() => {
+    const base = searchOnly.filter(p =>
+      (activeCategory === "all" || p.category === activeCategory) &&
+      (activeBrand === "all" || p.brand === activeBrand)
+    );
+    const set = new Set<string>();
+    for (const p of base) if (p.storage) set.add(p.storage);
+    return STORAGE_BUCKETS.filter(s => set.has(s));
+  }, [searchOnly, activeCategory, activeBrand]);
+
+  const hasVariantFilter = useMemo(() => {
+    const base = searchOnly.filter(p =>
+      (activeCategory === "all" || p.category === activeCategory) &&
+      (activeBrand === "all" || p.brand === activeBrand)
+    );
+    return base.some(p => p.variant);
+  }, [searchOnly, activeCategory, activeBrand]);
+
+  // 動態品牌列表：搜尋後只顯示有結果的品牌（避免雜訊）
+  const visibleBrands = useMemo(() => {
+    const set = new Set<string>();
+    const base = activeCategory === "all" ? searchOnly : searchOnly.filter(p => p.category === activeCategory);
+    for (const p of base) set.add(p.brand);
+    return brands.filter(b => set.has(b));
+  }, [brands, searchOnly, activeCategory]);
 
   return (
     <div className="mt-8">
@@ -177,8 +212,8 @@ export function RecycleSearch({
         </div>
       </div>
 
-      {/* 品牌篩選 */}
-      {brands.length > 1 && (
+      {/* 品牌篩選 — 動態縮減（搜尋 "Air 4" 時只顯示 Apple） */}
+      {visibleBrands.length > 1 && (
         <div className="mt-4">
           <div className="text-xs uppercase tracking-wider text-[var(--gold-soft)]">品牌</div>
           <div className="mt-2 flex flex-wrap gap-2">
@@ -187,19 +222,15 @@ export function RecycleSearch({
               onClick={() => setActiveBrand("all")}
               label="不限"
             />
-            {brands.map(b => {
-              const count = brandCounts.get(b) || 0;
-              if (count === 0) return null;
-              return (
-                <Chip
-                  key={b}
-                  active={activeBrand === b}
-                  onClick={() => setActiveBrand(b)}
-                  label={b}
-                  count={count}
-                />
-              );
-            })}
+            {visibleBrands.map(b => (
+              <Chip
+                key={b}
+                active={activeBrand === b}
+                onClick={() => setActiveBrand(b)}
+                label={b}
+                count={brandCounts.get(b) || 0}
+              />
+            ))}
           </div>
         </div>
       )}

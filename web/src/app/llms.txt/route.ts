@@ -18,7 +18,7 @@ export function GET() {
 - 電話：${SITE.phone}
 - LINE：${SITE.lineId}
 - Email：${SITE.email}
-- 營業時間：每日 11:00–20:00
+- 營業時間：每日 11:00–21:00
 
 ## 服務項目
 - iPhone 維修（螢幕、電池、鏡頭、Face ID、充電孔、容量擴充）

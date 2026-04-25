@@ -68,7 +68,7 @@ export default function AboutPage() {
         <p className="mt-2 text-[var(--fg)]"><strong>電話</strong>：<a href={`tel:${SITE.phoneRaw}`} className="text-[var(--gold)]">{SITE.phone}</a></p>
         <p className="mt-2 text-[var(--fg)]"><strong>LINE</strong>：<a href={SITE.lineAddUrl} className="text-[var(--gold)]">{SITE.lineId}</a></p>
         <p className="mt-2 text-[var(--fg)]"><strong>Email</strong>：<a href={`mailto:${SITE.email}`} className="text-[var(--gold)]">{SITE.email}</a></p>
-        <p className="mt-2 text-[var(--fg)]"><strong>營業時間</strong>：每日 11:00–20:00</p>
+        <p className="mt-2 text-[var(--fg)]"><strong>營業時間</strong>：每日 11:00–21:00</p>
       </div>
 
       <h2 className="mt-12 font-serif text-2xl text-[var(--gold)]">客戶見證</h2>

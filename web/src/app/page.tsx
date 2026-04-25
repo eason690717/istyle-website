@@ -13,7 +13,7 @@ import { TESTIMONIALS, getAggregateRating } from "@/lib/testimonials";
 const FAQS = [
   {
     q: "i時代位於哪裡？營業時間？",
-    a: "i時代位於新北市板橋區（江子翠商圈），每日 11:00–20:00 營業，可現場維修或預約。",
+    a: "i時代位於新北市板橋區（江子翠商圈），每日 11:00–21:00 營業，可現場維修或預約。",
   },
   {
     q: "維修需要多久時間？",
@@ -264,7 +264,7 @@ export default async function HomePage() {
           <span className="gold-underline">門市位置</span>
         </h2>
         <p className="mt-3 text-center text-sm text-[var(--fg-muted)]">
-          板橋・江子翠商圈．近捷運站．每日 11:00–20:00
+          板橋・江子翠商圈．近捷運站．每日 11:00–21:00
         </p>
         <div className="mt-8">
           <GoogleMap height={360} />
@@ -278,7 +278,7 @@ export default async function HomePage() {
             手機壞了？立刻聯絡我們
           </h2>
           <p className="mt-3 text-sm text-[var(--fg-muted)]">
-            {SITE.shortSlogan}．每日 11:00–20:00 服務
+            {SITE.shortSlogan}．每日 11:00–21:00 服務
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             <a href={`tel:${SITE.phoneRaw}`} className="btn-gold rounded-full px-6 py-3 text-sm">

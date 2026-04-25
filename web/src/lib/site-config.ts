@@ -25,7 +25,7 @@ export const SITE = {
   googleMapsUrl: "https://maps.google.com/?q=i時代+手機維修+板橋",
   // 營業時間（24h 制；Open Mon-Sun）
   businessHours: [
-    { days: "Mon-Sun", open: "11:00", close: "20:00" },
+    { days: "Mon-Sun", open: "11:00", close: "21:00" },
   ],
   // SEO 關鍵字
   keywords: [

@@ -71,7 +71,7 @@ export default function BookingPage() {
         >
           ☎ 直接撥打 {SITE.phone}
         </a>
-        <p className="mt-1 text-[10px] text-[var(--fg-muted)]">每日 11:00 – 20:00</p>
+        <p className="mt-1 text-[10px] text-[var(--fg-muted)]">每日 11:00 – 21:00</p>
       </div>
 
       {/* TERTIARY：填表單（折疊） */}
