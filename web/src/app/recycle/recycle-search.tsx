@@ -39,37 +39,68 @@ export function RecycleSearch({
   // 注意：這些 useMemo 會在下面 searchOnly 定義後使用
 
 
-  // 共用排序
+  // 共用排序：搜尋字存在時 → 相關度優先；否則使用者指定排序
   function sortList<T extends PriceItem>(list: T[]): T[] {
+    const hasQuery = query.trim().length > 0;
     return [...list].sort((a, b) => {
+      if (hasQuery) {
+        const sa = matchScore(a);
+        const sb = matchScore(b);
+        if (sa !== sb) return sb - sa; // 高分在前
+      }
       if (sortKey === "price_desc") return b.minPrice - a.minPrice;
       if (sortKey === "price_asc") return a.minPrice - b.minPrice;
       return a.modelName.localeCompare(b.modelName, "zh-TW");
     });
   }
 
-  // 智慧搜尋：將機型名稱拆成 token，每個 query token 必須在機型 token 中找到
-  // 「Air 4」→ tokens=["air","4"]，會嚴格比對「Air」+「4」為獨立 token，避免誤中「Air 13 M4」
+  // 智慧搜尋：將機型名稱拆成 token，計算「相鄰相關度分數」
+  // 「Air 4」應優先匹配「iPad Air 4」(相鄰)，而非「iPad Air 13 M4」(分離)
   function tokenize(s: string): string[] {
-    // 把字母+數字、純字母、純數字當作獨立 token
     return s.toLowerCase().match(/[a-z]+|\d+/g) || [];
   }
-  function matchQuery(p: PriceItem): boolean {
-    const queryTokens = tokenize(query);
-    if (queryTokens.length === 0) return true;
+
+  // 取得匹配分數：0=不符、1=token 都在但分離、2=token 相鄰、3=完整短語匹配
+  function matchScore(p: PriceItem): number {
+    const q = query.trim().toLowerCase();
+    if (!q) return 1; // 沒搜尋字，全部當匹配
+    const qTokens = tokenize(q);
+    if (qTokens.length === 0) return 0;
+
     const haystackText = `${p.modelName} ${p.storage} ${p.variant} ${p.brand}`.toLowerCase();
     const haystackTokens = tokenize(haystackText);
-    return queryTokens.every(qt => {
-      // 純數字 token：必須完全匹配（"4" 不能匹配 "M4" 因為 M4 拆出 ["m","4"] 含 "4"… 還是會中）
-      // → 用「整段詞匹配」：檢查機型名稱中有沒有以 qt 為獨立詞的位置
+
+    // 數字 token 強制邊界匹配
+    for (const qt of qTokens) {
       if (/^\d+$/.test(qt)) {
-        // 數字必須是獨立 token，前後有非數字邊界
-        const re = new RegExp(`(?:^|[^\\d])${qt}(?:[^\\d]|$)`, "i");
-        return re.test(haystackText);
+        const re = new RegExp(`(?:^|[^\\d])${qt}(?:[^\\d]|$)`);
+        if (!re.test(haystackText)) return 0;
+      } else {
+        if (!haystackTokens.some(ht => ht.includes(qt))) return 0;
       }
-      // 字母 token：可以子字串包含（如 "iph" 匹配 "iPhone"）
-      return haystackTokens.some(ht => ht.includes(qt));
-    });
+    }
+
+    // 完整短語匹配（「Air 4」整段出現）— 最高分
+    const phraseRe = new RegExp(`(?:^|[^a-z\\d])${qTokens.join("\\s*")}(?:[^a-z\\d]|$)`);
+    if (phraseRe.test(haystackText)) return 3;
+
+    // 連續 token 相鄰匹配
+    if (qTokens.length >= 2) {
+      for (let i = 0; i <= haystackTokens.length - qTokens.length; i++) {
+        const slice = haystackTokens.slice(i, i + qTokens.length);
+        const allMatch = qTokens.every((qt, j) => {
+          if (/^\d+$/.test(qt)) return slice[j] === qt;
+          return slice[j].includes(qt);
+        });
+        if (allMatch) return 2;
+      }
+    }
+
+    return 1;
+  }
+
+  function matchQuery(p: PriceItem): boolean {
+    return matchScore(p) > 0;
   }
 
   // 「先套用搜尋字」的子集：用來計算各篩選 chip 的動態計數
