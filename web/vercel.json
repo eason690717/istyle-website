@@ -1,0 +1,16 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/refresh-recycle",
+      "schedule": "0 18 * * *"
+    },
+    {
+      "path": "/api/cron/generate-articles",
+      "schedule": "0 19 * * *"
+    },
+    {
+      "path": "/api/cron/refresh-prices",
+      "schedule": "0 20 * * 1"
+    }
+  ]
+}

@@ -1,0 +1,337 @@
+// i時代 — 板橋手機維修 / 自建電商
+// Schema: 維修報價引擎 + 訂單 + 預約 + 後台
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// ============================================================
+// 維修目錄
+// ============================================================
+
+model Brand {
+  id          Int           @id @default(autoincrement())
+  slug        String        @unique
+  name        String
+  nameZh      String
+  iconUrl     String?
+  sortOrder   Int           @default(0)
+  isActive    Boolean       @default(true)
+  models      DeviceModel[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model DeviceModel {
+  id          Int           @id @default(autoincrement())
+  brandId     Int
+  brand       Brand         @relation(fields: [brandId], references: [id])
+  slug        String        @unique
+  name        String
+  section     String?
+  searchKeywords String?
+  imageUrl    String?
+  sortOrder   Int           @default(0)
+  isActive    Boolean       @default(true)
+  prices      RepairPrice[]
+  bookings    Booking[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([brandId])
+}
+
+model RepairItem {
+  id             Int           @id @default(autoincrement())
+  slug           String        @unique
+  name           String
+  nameEn         String?
+  description    String?
+  category       String?
+  estimatedHours Float?
+  warrantyMonths Int?
+  sortOrder      Int           @default(0)
+  isActive       Boolean       @default(true)
+  prices         RepairPrice[]
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+model RepairPrice {
+  id                Int         @id @default(autoincrement())
+  modelId           Int
+  model             DeviceModel @relation(fields: [modelId], references: [id])
+  itemId            Int
+  item              RepairItem  @relation(fields: [itemId], references: [id])
+  tier              String      // "STANDARD" | "OEM"
+  cerphonePriceRaw  String?
+  cerphonePrice     Int?
+  calculatedPrice   Int?
+  manualOverride    Int?
+  partsCost         Int?
+  outsourceCost     Int?
+  laborCost         Int?
+  isAvailable       Boolean     @default(true)
+  notes             String?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  @@unique([modelId, itemId, tier])
+  @@index([modelId])
+  @@index([itemId])
+}
+
+// ============================================================
+// 客戶 / 訂單
+// ============================================================
+
+model Customer {
+  id          Int       @id @default(autoincrement())
+  name        String
+  phone       String
+  email       String?
+  lineId      String?
+  notes       String?
+  orders      Order[]
+  bookings    Booking[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([phone])
+}
+
+model Order {
+  id              Int          @id @default(autoincrement())
+  orderNumber     String       @unique
+  customerId      Int?
+  customer        Customer?    @relation(fields: [customerId], references: [id])
+  contactName     String
+  contactPhone    String
+  contactEmail    String?
+  shippingMethod  String       @default("IN_STORE")  // IN_STORE | CVS_711 | HOME
+  shippingAddress String?
+  shippingFee     Int          @default(0)
+  subtotal        Int
+  total           Int
+  status          String       @default("PENDING")    // PENDING | CONFIRMED | IN_REPAIR | COMPLETED | CANCELLED
+  paymentStatus   String       @default("UNPAID")     // UNPAID | PAID | REFUNDED
+  paymentMethod   String?
+  ecpayTradeNo    String?      @unique
+  invoiceNumber   String?
+  customerNote    String?
+  internalNote    String?
+  bookingId       Int?         @unique
+  booking         Booking?     @relation(fields: [bookingId], references: [id])
+  items           OrderItem[]
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  paidAt          DateTime?
+  completedAt     DateTime?
+
+  @@index([customerId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id              Int      @id @default(autoincrement())
+  orderId         Int
+  order           Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  modelName       String
+  itemName        String
+  tier            String
+  unitPrice       Int
+  quantity        Int      @default(1)
+  subtotal        Int
+  priceAdjustment Int      @default(0)
+  adjustmentReason String?
+  repairStatus    String   @default("PENDING")  // PENDING | IN_PROGRESS | DONE | ISSUE
+  partsCostAtTime Int?
+  internalNote    String?
+
+  @@index([orderId])
+}
+
+// ============================================================
+// 預約
+// ============================================================
+
+model Booking {
+  id            Int          @id @default(autoincrement())
+  bookingNumber String       @unique
+  customerId    Int?
+  customer      Customer?    @relation(fields: [customerId], references: [id])
+  serviceType   String       // REPAIR | RECYCLE | DIAGNOSTIC | COURSE_INQUIRY | GENERAL
+  modelId       Int?
+  model         DeviceModel? @relation(fields: [modelId], references: [id])
+  itemIds       String?      // JSON array
+  description   String?
+  contactName   String
+  contactPhone  String
+  contactEmail  String?
+  contactLine   String?
+  scheduledDate DateTime
+  scheduledTime String       // "14:00"
+  status        String       @default("PENDING")  // PENDING | CONFIRMED | COMPLETED | CANCELLED | NO_SHOW
+  cancelReason  String?
+  order         Order?
+  internalNote  String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  confirmedAt   DateTime?
+  completedAt   DateTime?
+
+  @@index([scheduledDate])
+  @@index([status])
+}
+
+// ============================================================
+// 後台
+// ============================================================
+
+model User {
+  id            Int      @id @default(autoincrement())
+  email         String   @unique
+  name          String?
+  role          String   @default("ADMIN")  // ADMIN | STAFF
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// ============================================================
+// 付款連結（老闆產生 → LINE 給客戶 → 客戶付款）
+// ============================================================
+model PaymentLink {
+  id              Int       @id @default(autoincrement())
+  token           String    @unique  // 公開 URL token
+  amount          Int       // 金額 NTD
+  itemName        String    // 商品/服務名稱
+  description     String?
+  customerName    String?
+  customerPhone   String?
+  customerEmail   String?
+  // 連動訂單
+  orderId         Int?      @unique
+  // ECPay 相關
+  ecpayTradeNo    String?   @unique
+  ecpayMerchantTradeNo String? @unique
+  paymentMethod   String?
+  paidAt          DateTime?
+  // 發票
+  invoiceNumber   String?
+  invoiceIssuedAt DateTime?
+  // 狀態
+  status          String    @default("PENDING")  // PENDING | PAID | EXPIRED | CANCELLED
+  expiresAt       DateTime?
+  notes           String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+// ============================================================
+// 自動產生的每週/每日報導文章
+// ============================================================
+model AutoArticle {
+  id              Int      @id @default(autoincrement())
+  slug            String   @unique
+  kind            String   // "weekly_recycle" | "daily_repair" | "monthly_summary"
+  title           String
+  excerpt         String
+  body            String
+  coverImage      String?
+  metaDescription String?
+  keywords        String?  // CSV
+  publishedAt     DateTime @default(now())
+  createdAt       DateTime @default(now())
+
+  @@index([kind])
+  @@index([publishedAt])
+}
+
+model SiteSetting {
+  id                    Int      @id @default(1)
+  companyName           String   @default("i時代")
+  legalName             String   @default("愛時代國際股份有限公司")
+  taxId                 String   @default("42648769")
+  phone                 String?
+  lineId                String?  @default("@563amdnh")
+  email                 String?  @default("admin@i-style.store")
+  addressLine           String?
+  city                  String   @default("新北市")
+  district              String   @default("板橋區")
+  postalCode            String?
+  googleMapsUrl         String?
+  googlePlaceId         String?
+  latitude              Float?
+  longitude             Float?
+  businessHours         String?
+  metaTitle             String?
+  metaDescription       String?
+  metaKeywords          String?
+  cerphoneMarkupRate    Float    @default(1.15)
+  oemMarkupRate         Float    @default(1.5)
+  priceRoundingUnit     Int      @default(100)
+  // 二手回收：若有 Apple 官方價，最終報價 = 官方 × (1 + this)
+  recycleOfficialMargin Float    @default(0.4)
+  // 二手回收：無官方價時，從同業最低價打折
+  recycleCompetitorDiscount Float @default(0.7)
+  updatedAt             DateTime @updatedAt
+}
+
+// ============================================================
+// 二手回收：每日從 3 個來源爬取，取最低價
+// 來源資訊不對外顯示
+// ============================================================
+
+model RecyclePrice {
+  id              Int      @id @default(autoincrement())
+  modelKey        String   @unique
+  category        String
+  brand           String
+  modelName       String
+  storage         String?
+  variant         String?
+  // 同業來源價（內部用，不外露）
+  source1Price    Int?
+  source1At       DateTime?
+  source2Price    Int?
+  source2At       DateTime?
+  source3Price    Int?
+  source3At       DateTime?
+  // Apple 官方收購參考價（重要 anchor，避免虧本收）
+  officialPrice   Int?
+  officialAt      DateTime?
+  // 對外顯示（取 Apple 官方 × ratio + 同業最低之合理值）
+  minPrice        Int?
+  manualOverride  Int?     // 後台可手動覆寫
+  isAvailable     Boolean  @default(true)
+  searchKeywords  String?
+  sortOrder       Int      @default(0)
+  lastUpdatedAt   DateTime @updatedAt
+  createdAt       DateTime @default(now())
+
+  @@index([category])
+  @@index([brand])
+  @@index([minPrice])
+}
+
+model RecycleScrapeLog {
+  id          Int      @id @default(autoincrement())
+  source      String   // "source1" | "source2" | "source3"
+  status      String   // "success" | "error"
+  recordCount Int      @default(0)
+  errorMsg    String?
+  durationMs  Int?
+  startedAt   DateTime
+  finishedAt  DateTime @default(now())
+}

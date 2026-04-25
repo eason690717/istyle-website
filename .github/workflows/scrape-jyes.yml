@@ -1,0 +1,35 @@
+name: Scrape jyes recycle prices
+
+# 每週四 03:00 UTC（台灣 11:00）跑一次，用 cloudscraper 繞過 jyes 的 IP 擋牆
+on:
+  schedule:
+    - cron: '0 3 * * 4'
+  workflow_dispatch: # 允許手動觸發
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install deps
+        run: pip install cloudscraper beautifulsoup4 requests
+
+      - name: Run jyes scraper → JSON
+        env:
+          PYTHONIOENCODING: utf-8
+        run: python scripts/scrape_jyes_to_json.py
+
+      - name: Push JSON to Turso DB
+        env:
+          TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
+          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+        run: |
+          cd web
+          npm install --no-audit --no-fund
+          node scripts/import-jyes-from-json.mjs
