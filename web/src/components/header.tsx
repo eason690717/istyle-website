@@ -51,14 +51,17 @@ export function Header() {
           </a>
         </nav>
 
-        {/* Mobile：只顯示電話按鈕（最短路徑） */}
-        <a
-          href={`tel:${SITE.phoneRaw}`}
-          className="btn-gold rounded-full px-4 py-2 text-xs md:hidden"
-          aria-label="撥打電話"
-        >
-          來電預約
-        </a>
+        {/* Mobile：搜尋 + 電話 */}
+        <div className="flex items-center gap-2 md:hidden">
+          <HeaderSearch />
+          <a
+            href={`tel:${SITE.phoneRaw}`}
+            className="btn-gold rounded-full px-3 py-2 text-xs"
+            aria-label="撥打電話"
+          >
+            來電
+          </a>
+        </div>
       </div>
 
       {/* Mobile 底部導覽（簡單列出） */}
