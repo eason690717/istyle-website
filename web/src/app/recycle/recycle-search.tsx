@@ -425,19 +425,61 @@ function PriceCard({ item }: { item: PriceItem }) {
   );
 }
 
+// 緊湊列表：手機版單頁不滾動 + 桌面版完整表格
 function ResultTable({ items }: { items: PriceItem[] }) {
   return (
-    <div className="mt-4 overflow-x-auto rounded-lg border border-[var(--border)]">
-      <table className="min-w-full text-sm">
+    <div className="mt-4 rounded-xl border border-[var(--border)] overflow-hidden">
+      {/* === 手機版（< md）：緊湊卡片列，不滾動 === */}
+      <ul className="md:hidden divide-y divide-[var(--border-soft)]">
+        {items.map((p, idx) => (
+          <li
+            key={p.id}
+            className={`flex items-center gap-3 px-3 py-3 transition ${
+              idx % 2 === 0 ? "bg-[#141414]" : "bg-[#181818]"
+            } hover:bg-[#241c12]`}
+          >
+            {/* 左：機型名稱（兩行） + 規格徽章 */}
+            <div className="min-w-0 flex-1">
+              <div className="truncate text-sm font-medium leading-tight text-[var(--fg-strong)]">
+                {p.modelName}
+              </div>
+              <div className="mt-1 flex flex-wrap items-center gap-1 text-[10px]">
+                <span className="rounded bg-[var(--gold)]/15 px-1.5 py-0.5 text-[var(--gold)]">{p.categoryLabel}</span>
+                {p.storage && (
+                  <span className="rounded bg-[var(--bg-soft)] px-1.5 py-0.5 text-[var(--fg-muted)]">{p.storage}</span>
+                )}
+                {p.variant && (
+                  <span className="rounded bg-[var(--bg-soft)] px-1.5 py-0.5 text-[var(--fg-muted)]">{p.variant}</span>
+                )}
+              </div>
+            </div>
+
+            {/* 右：價格 + 預約鈕 */}
+            <div className="flex flex-shrink-0 flex-col items-end gap-1">
+              <div className="font-mono text-base font-semibold text-[var(--gold)] leading-none">
+                {p.minPrice.toLocaleString()}
+              </div>
+              <a
+                href={SITE.lineAddUrl}
+                className="rounded-full bg-[var(--gold)]/15 px-2.5 py-0.5 text-[10px] text-[var(--gold)] hover:bg-[var(--gold)] hover:text-black transition"
+              >
+                預約 →
+              </a>
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      {/* === 桌面版（>= md）：完整表格 === */}
+      <table className="hidden min-w-full text-sm md:table">
         <thead>
           <tr className="bg-[#1f1810] text-[var(--gold)]">
-            <th className="sticky left-0 z-10 bg-[#1f1810] px-3 py-2.5 text-left font-medium">機型</th>
-            <th className="px-3 py-2.5 text-left font-medium">品牌</th>
+            <th className="px-3 py-2.5 text-left font-medium">機型</th>
             <th className="px-3 py-2.5 text-left font-medium">類別</th>
             <th className="px-3 py-2.5 text-left font-medium">容量</th>
             <th className="px-3 py-2.5 text-left font-medium">規格</th>
             <th className="px-3 py-2.5 text-right font-medium">回收價</th>
-            <th className="px-3 py-2.5 text-right font-medium"></th>
+            <th className="px-3 py-2.5 text-right font-medium w-16"></th>
           </tr>
         </thead>
         <tbody>
@@ -448,16 +490,7 @@ function ResultTable({ items }: { items: PriceItem[] }) {
                 idx % 2 === 0 ? "bg-[#141414]" : "bg-[#181818]"
               } hover:bg-[#241c12]`}
             >
-              <td
-                className={`sticky left-0 z-10 px-3 py-2.5 font-medium text-[var(--fg)] ${
-                  idx % 2 === 0 ? "bg-[#141414]" : "bg-[#181818]"
-                } group-hover:bg-[#241c12]`}
-              >
-                {p.modelName}
-              </td>
-              <td className="px-3 py-2.5 text-xs">
-                <span className="rounded bg-[var(--gold)]/15 px-2 py-0.5 text-[var(--gold)]">{p.brand}</span>
-              </td>
+              <td className="px-3 py-2.5 font-medium text-[var(--fg)]">{p.modelName}</td>
               <td className="px-3 py-2.5 text-xs text-[var(--fg-muted)]">{p.categoryLabel}</td>
               <td className="px-3 py-2.5 text-xs">{p.storage || "—"}</td>
               <td className="px-3 py-2.5 text-xs">{p.variant || "—"}</td>
