@@ -213,8 +213,8 @@ export default async function ModelPage({ params }: { params: Promise<Params> })
         )}
 
         {/* CTA */}
-        <div className="mt-10 rounded-xl border border-[var(--gold)] bg-[var(--bg-elevated)] p-6 text-center">
-          <p className="font-serif text-xl text-[var(--gold)]">立即預約維修</p>
+        <div className="glass-card mt-10 rounded-xl p-6 text-center">
+          <p className="text-gold-gradient font-serif text-xl">立即預約維修</p>
           <p className="mt-2 text-sm text-[var(--fg-muted)]">
             到店維修最快 30 分鐘完工，當日取件
           </p>
@@ -247,8 +247,8 @@ export default async function ModelPage({ params }: { params: Promise<Params> })
 function TierLegend({ tier }: { tier: "STANDARD" | "OEM" }) {
   const isOem = tier === "OEM";
   return (
-    <div className={`rounded-lg border p-4 ${isOem ? "border-[var(--gold)] bg-[var(--bg-elevated)]" : "border-[var(--border)] bg-[var(--bg-elevated)]"}`}>
-      <div className={`font-serif text-base ${isOem ? "text-[var(--gold)]" : "text-[var(--gold-soft)]"}`}>
+    <div className={`refined-card p-4 ${isOem ? "border-[var(--gold)] shadow-[0_0_24px_rgba(201,169,110,0.15)]" : ""}`}>
+      <div className={`font-serif text-base ${isOem ? "text-gold-gradient" : "text-[var(--gold-soft)]"}`}>
         {TIER_LABELS[tier]}
       </div>
       <p className="mt-2 text-xs text-[var(--fg-muted)] leading-relaxed">

@@ -58,7 +58,7 @@ export default async function BlogIndexPage() {
           <Link
             key={c.slug}
             href={c.href}
-            className="group overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] transition hover:border-[var(--gold)]"
+            className="refined-card group block overflow-hidden"
           >
             <div className="relative aspect-[16/9] bg-[var(--bg-soft)]">
               <Image src={c.cover} alt={c.title} fill className="object-cover" sizes="400px" />
@@ -67,7 +67,7 @@ export default async function BlogIndexPage() {
               </span>
             </div>
             <div className="p-5">
-              <h2 className="font-serif text-lg text-[var(--gold)] group-hover:text-[var(--gold-bright)]">
+              <h2 className="font-serif text-lg leading-snug text-[var(--gold)] group-hover:text-[var(--gold-bright)]">
                 {c.title}
               </h2>
               <p className="mt-2 text-xs text-[var(--fg-muted)] line-clamp-3 leading-relaxed">
