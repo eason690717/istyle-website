@@ -98,9 +98,33 @@ export default async function BrandPage({ params }: { params: Promise<Params> })
   );
 }
 
-// 推薦項目判定：含「認證」的維修項目為高利潤，視覺強調
+// 推薦項目（含「認證」）：高利潤，視覺強調
 function isRecommendedItem(name: string): boolean {
   return /認證/.test(name);
+}
+
+// 原廠相關（含「原廠」「APPLE」）：高單價，排到後面
+function isOemItem(name: string): boolean {
+  return /原廠|APPLE/i.test(name);
+}
+
+// 排序權重：認證(-1) → 一般(0) → 原廠(1)
+function itemSortWeight(name: string): number {
+  if (isRecommendedItem(name)) return -1;
+  if (isOemItem(name)) return 1;
+  return 0;
+}
+
+// 一般項目自訂權重（玻璃破裂、螢幕損壞優先）
+function commonItemPriority(name: string): number {
+  if (/玻璃破裂/.test(name)) return 0;
+  if (/螢幕破裂|螢幕損壞|液晶/.test(name)) return 1;
+  if (/前鏡頭|後鏡頭|相機/.test(name)) return 2;
+  if (/face\s*id|home/i.test(name)) return 3;
+  if (/聽筒|麥克風|喇叭|響鈴|震動/.test(name)) return 4;
+  if (/充電|尾插/.test(name)) return 5;
+  if (/開機|音量|按鍵/.test(name)) return 6;
+  return 99;
 }
 
 function PriceMatrix({
@@ -129,11 +153,15 @@ function PriceMatrix({
       if (!itemMap.has(p.itemId)) itemMap.set(p.itemId, p.item);
     }
   }
-  // 推薦的項目（認證）排前面，其餘按 sortOrder
+  // 排序：認證電池 → 一般項目（玻璃/螢幕/鏡頭...）→ 原廠相關（後）
   const items = Array.from(itemMap.values()).sort((a, b) => {
-    const aRec = isRecommendedItem(a.name) ? -1 : 0;
-    const bRec = isRecommendedItem(b.name) ? -1 : 0;
-    if (aRec !== bRec) return aRec - bRec;
+    const wa = itemSortWeight(a.name);
+    const wb = itemSortWeight(b.name);
+    if (wa !== wb) return wa - wb;
+    // 同權重組內：先用自訂優先度，再 sortOrder
+    const pa = commonItemPriority(a.name);
+    const pb = commonItemPriority(b.name);
+    if (pa !== pb) return pa - pb;
     return a.sortOrder - b.sortOrder;
   });
 
