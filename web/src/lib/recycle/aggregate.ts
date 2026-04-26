@@ -22,23 +22,26 @@ interface AggregatedRow {
 const ROUND_TO = 100;
 
 // 計算最終對外報價
-// 邏輯：
-// 1. 有 Apple 官方參考價 → 報 = max(官方 × (1 + officialMargin), 同業最低 × competitorDiscount)
-//    取較高，避免比官方還低；但不超過同業最低（不會比同業貴）
-// 2. 無官方價 → 報 = 同業最低 × competitorDiscount
+// 公式：(官方 ×2 + 同業最低 ×1) / 3
+//   - 同業 ≈ 官方 → 接近兩者中間
+//   - 同業 ≫ 官方 → 偏向官方（避免被同業哄抬）
+//   - 同業 < 官方 → 介於兩者間
+//   - 安全上限：不超過同業最大值
+//   - 無官方價 → 同業最低 × discount（預設 0.85）
 function calcFinalPrice(
   competitorPrices: number[],
   officialPrice: number | undefined,
-  officialMargin: number,
+  _officialMargin: number,
   competitorDiscount: number,
 ): number {
   const minComp = competitorPrices.length > 0 ? Math.min(...competitorPrices) : 0;
+  const maxComp = competitorPrices.length > 0 ? Math.max(...competitorPrices) : 0;
   let target: number;
-  if (officialPrice && officialPrice > 0) {
-    const fromOfficial = officialPrice * (1 + officialMargin);
-    const fromCompetitor = minComp * competitorDiscount;
-    target = Math.max(fromOfficial, fromCompetitor);
-    target = Math.min(target, minComp); // 不超過同業最低
+  if (officialPrice && officialPrice > 0 && minComp > 0) {
+    target = (officialPrice * 2 + minComp) / 3;
+    target = Math.min(target, maxComp);
+  } else if (officialPrice && officialPrice > 0) {
+    target = officialPrice * 1.05;
   } else {
     target = minComp * competitorDiscount;
   }

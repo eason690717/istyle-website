@@ -12,9 +12,11 @@ function calc(comps, official) {
   const minComp = comps.length > 0 ? Math.min(...comps) : 0;
   let target;
   if (official && official > 0 && minComp > 0) {
-    // 取「官方 + 同業最低」的中間值（接近官方但保有競爭力）
-    target = (official + minComp) / 2;
-    // 安全上限：不超過同業最大值（避免極端外推）
+    // 加權平均：官方 ×2 + 同業最低 ×1，再除以 3
+    // → 差距小時：靠近中間值
+    // → 差距大時：明顯偏向官方價（最具競爭力且保留利潤）
+    target = (official * 2 + minComp) / 3;
+    // 安全上限
     const maxComp = Math.max(...comps);
     target = Math.min(target, maxComp);
   } else if (official && official > 0) {
