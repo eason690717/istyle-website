@@ -1,25 +1,26 @@
-// 保護 /admin/* 路由：Basic Auth
-// 設定 ADMIN_USER + ADMIN_PASSWORD 環境變數
+// 後台保護：用 cookie session（不再用 Basic Auth 跳彈窗）
+// 未登入訪問 /admin/* → 自動跳 /admin/login
 import { NextRequest, NextResponse } from "next/server";
 
+const COOKIE_NAME = "istyle_admin";
+
 export function middleware(req: NextRequest) {
-  if (!req.nextUrl.pathname.startsWith("/admin")) return NextResponse.next();
+  const { pathname } = req.nextUrl;
+  if (!pathname.startsWith("/admin")) return NextResponse.next();
+  // login 頁本身不擋
+  if (pathname === "/admin/login") return NextResponse.next();
 
-  const expectedUser = process.env.ADMIN_USER || "admin@i-style.store";
-  const expectedPass = process.env.ADMIN_PASSWORD || "istyle2026";
-
-  const auth = req.headers.get("authorization");
-  if (auth?.startsWith("Basic ")) {
-    const decoded = atob(auth.slice(6));
-    const [u, p] = decoded.split(":");
-    if (u === expectedUser && p === expectedPass) {
-      return NextResponse.next();
-    }
+  const expectedSecret = process.env.ADMIN_PASSWORD || "istyle2026Secure";
+  const cookie = req.cookies.get(COOKIE_NAME)?.value;
+  if (cookie === expectedSecret) {
+    return NextResponse.next();
   }
-  return new NextResponse("Authentication required", {
-    status: 401,
-    headers: { "WWW-Authenticate": 'Basic realm="i時代 後台"' },
-  });
+
+  // 未登入 → 跳 login（保留原本目的網址）
+  const url = req.nextUrl.clone();
+  url.pathname = "/admin/login";
+  url.searchParams.set("from", pathname);
+  return NextResponse.redirect(url);
 }
 
 export const config = {

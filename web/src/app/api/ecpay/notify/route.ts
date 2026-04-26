@@ -1,8 +1,9 @@
 // 綠界 AIO 付款 server callback
-// ECPay POST URL-encoded form data；驗證 CheckMacValue → 更新 PaymentLink → 開立發票
+// ECPay POST URL-encoded form data；驗證 CheckMacValue → 更新 PaymentLink → 自動開發票
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { ECPAY, verifyCheckMacValue } from "@/lib/ecpay";
+import { issueInvoice } from "@/lib/ecpay/invoice";
 import { notifyOwner } from "@/lib/notify";
 
 export const dynamic = "force-dynamic";
@@ -65,8 +66,35 @@ export async function POST(req: NextRequest) {
     `綠界交易號：${tradeNo}`,
   ].join("\n")).catch(console.error);
 
-  // 5. TODO：呼叫綠界發票 API 開立電子發票
-  // (需要綠界 invoice merchant 認證才能開，先記錄狀態)
+  // 5. 自動開立電子發票（紙本，無載具）
+  try {
+    const inv = await issueInvoice({
+      relateNumber: merchantTradeNo,
+      customerName: link.customerName || "",
+      customerEmail: link.customerEmail || "",
+      customerPhone: link.customerPhone || "",
+      items: [{
+        ItemName: link.itemName.slice(0, 100),
+        ItemCount: 1,
+        ItemWord: "件",
+        ItemPrice: tradeAmt,
+        ItemTaxType: 1,
+        ItemAmount: tradeAmt,
+      }],
+      totalAmount: tradeAmt,
+    });
+    if (inv.ok && inv.invoiceNumber) {
+      await prisma.paymentLink.update({
+        where: { id: link.id },
+        data: { invoiceNumber: inv.invoiceNumber, invoiceIssuedAt: new Date() },
+      });
+      console.log(`[ecpay/invoice] 開立成功 ${inv.invoiceNumber}`);
+    } else {
+      console.error("[ecpay/invoice] 開立失敗", inv.error);
+    }
+  } catch (e) {
+    console.error("[ecpay/invoice] 例外", e);
+  }
 
   return new Response("1|OK", { status: 200 });
 }
