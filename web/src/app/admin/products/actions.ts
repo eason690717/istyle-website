@@ -6,12 +6,15 @@ import { redirect } from "next/navigation";
 export type ProductFormState = { ok: boolean; error?: string; savedAt?: number };
 
 function slugify(s: string) {
-  return s.toLowerCase()
+  // ASCII-only：Next.js dynamic route 對中文 slug 不穩，純英數 + hyphen 最安全
+  const ascii = s.toLowerCase()
     .replace(/[（）()]/g, "")
     .replace(/[\s_/\\.,'"`]+/g, "-")
-    .replace(/[^a-z0-9一-鿿-]/g, "")
+    .replace(/[^a-z0-9-]/g, "")  // 移除非 ASCII（含中文）
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "");
+  // 全中文商品名 → 變空字串 → 用隨機 hash 兜底
+  return ascii || `p-${Math.random().toString(36).slice(2, 8)}`;
 }
 
 export async function createProduct(_prev: ProductFormState, fd: FormData): Promise<ProductFormState> {
