@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { deleteProduct, toggleProductActive, toggleProductFeatured } from "./actions";
+import { DeleteProductButton } from "./_delete-button";
 
 export const dynamic = "force-dynamic";
 
@@ -117,9 +118,7 @@ export default async function AdminProductsPage() {
                       <Link href={`/shop/${p.slug}`} target="_blank" className="text-[10px] text-[var(--fg-muted)] hover:text-[var(--gold)]">
                         前台預覽
                       </Link>
-                      <form action={deleteProduct.bind(null, p.id)}>
-                        <button className="text-[10px] text-red-400 hover:text-red-300">刪除</button>
-                      </form>
+                      <DeleteProductButton productId={p.id} productName={p.name} action={deleteProduct} />
                     </div>
                   </td>
                 </tr>
