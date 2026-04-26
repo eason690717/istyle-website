@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState, useTransition } from "react";
+import { useMemo, useRef, useState, useTransition } from "react";
 import { createVariant, updateVariant, deleteVariant } from "./actions";
 
 interface Variant {
@@ -604,6 +604,8 @@ function LayerEditor({ index, layer, onChange }: {
   index: number; layer: Layer; onChange: (next: Layer) => void;
 }) {
   const [draft, setDraft] = useState("");
+  const valueInputRef = useRef<HTMLInputElement>(null);
+
   function addValue() {
     const v = draft.trim();
     if (!v) return;
@@ -615,36 +617,57 @@ function LayerEditor({ index, layer, onChange }: {
   function removeValue(v: string) {
     onChange({ ...layer, values: layer.values.filter(x => x !== v) });
   }
+  function focusValueInput() {
+    setTimeout(() => valueInputRef.current?.focus(), 0);
+  }
 
   return (
     <div className="rounded-lg border border-[var(--border-soft)] bg-[var(--bg-elevated)] p-3">
+      {/* 第一格：維度名稱（分類）*/}
       <div className="flex items-center gap-2">
         <span className="rounded-full bg-[var(--gold)]/15 px-2 py-0.5 text-[10px] text-[var(--gold)]">層 {index + 1}</span>
-        <input
-          value={layer.name}
-          onChange={(e) => onChange({ ...layer, name: e.target.value })}
-          placeholder={["維度名稱（例：磅數）", "維度名稱（例：款式）", "維度名稱（例：尺寸）"][index]}
-          className={inputCls + " flex-1 max-w-xs"}
-          maxLength={20}
-        />
-      </div>
-      {layer.name.trim() && (
-        <div className="mt-2 flex flex-wrap items-center gap-1.5">
-          {layer.values.map(v => (
-            <span key={v} className="inline-flex items-center gap-1 rounded-full border border-[var(--gold-soft)] bg-[var(--gold)]/10 px-2.5 py-1 text-xs text-[var(--gold)]">
-              {v}
-              <button type="button" onClick={() => removeValue(v)} className="text-[var(--fg-muted)] hover:text-red-400">×</button>
-            </span>
-          ))}
+        <div className="flex-1 max-w-xs">
+          <label className="mb-0.5 block text-[10px] text-[var(--fg-muted)]">分類名稱（不是值）</label>
           <input
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addValue(); } }}
-            placeholder={layer.values.length === 0 ? `輸入${layer.name.trim()}的值，按 Enter 加` : "+ 再加一個"}
-            className="rounded border border-dashed border-[var(--border)] bg-transparent px-2 py-1 text-xs text-[var(--fg)] outline-none focus:border-[var(--gold)]"
+            value={layer.name}
+            onChange={(e) => onChange({ ...layer, name: e.target.value })}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                if (layer.name.trim()) focusValueInput();
+              }
+            }}
+            placeholder={["例：磅數", "例：款式", "例：尺寸"][index]}
+            className={inputCls + " py-1.5"}
+            maxLength={20}
           />
-          {draft && <button type="button" onClick={addValue} className="text-xs text-[var(--gold)] hover:underline">加入</button>}
-          <span className="ml-1 text-[10px] text-[var(--fg-muted)]">{layer.values.length}/{MAX_PER_LAYER}</span>
+        </div>
+      </div>
+
+      {/* 第二格：選項值（chip 介面）*/}
+      {layer.name.trim() && (
+        <div className="mt-3 rounded border border-dashed border-[var(--border)] bg-[var(--bg)]/50 p-2">
+          <label className="mb-1.5 block text-[10px] text-[var(--fg-muted)]">
+            「{layer.name.trim()}」的選項（按 Enter 加入）
+          </label>
+          <div className="flex flex-wrap items-center gap-1.5">
+            {layer.values.map(v => (
+              <span key={v} className="inline-flex items-center gap-1 rounded-full border border-[var(--gold-soft)] bg-[var(--gold)]/10 px-2.5 py-1 text-xs text-[var(--gold)]">
+                {v}
+                <button type="button" onClick={() => removeValue(v)} className="text-[var(--fg-muted)] hover:text-red-400">×</button>
+              </span>
+            ))}
+            <input
+              ref={valueInputRef}
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addValue(); } }}
+              placeholder={layer.values.length === 0 ? `例：330g（打字後按 Enter）` : "+ 再加一個"}
+              className="min-w-[140px] rounded border border-[var(--border)] bg-[var(--bg-elevated)] px-2 py-1 text-xs text-[var(--fg)] outline-none focus:border-[var(--gold)]"
+            />
+            {draft && <button type="button" onClick={addValue} className="rounded bg-[var(--gold)]/20 px-2 py-0.5 text-xs text-[var(--gold)] hover:bg-[var(--gold)]/30">+ 加入</button>}
+            <span className="ml-1 text-[10px] text-[var(--fg-muted)]">{layer.values.length}/{MAX_PER_LAYER}</span>
+          </div>
         </div>
       )}
     </div>
