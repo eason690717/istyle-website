@@ -51,7 +51,7 @@ export async function refreshRecyclePrices() {
   // 取得設定
   const setting = await prisma.siteSetting.findUnique({ where: { id: 1 } }).catch(() => null);
   const officialMargin = setting?.recycleOfficialMargin ?? 0.4;
-  const competitorDiscount = setting?.recycleCompetitorDiscount ?? 0.7;
+  const competitorDiscount = setting?.recycleCompetitorDiscount ?? 0.85;
 
   const [r1, r2, r3] = await Promise.allSettled([
     scrapeSource1(),

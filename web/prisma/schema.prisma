@@ -239,6 +239,37 @@ model PaymentLink {
 }
 
 // ============================================================
+// 電商商品（保護貼、手機殼、配件、二手機等）
+// ============================================================
+model Product {
+  id            Int       @id @default(autoincrement())
+  slug          String    @unique
+  name          String
+  category      String    // "accessory" | "case" | "screen-protector" | "used-phone" | "tool" | "other"
+  brand         String?   // Apple, Samsung 等（選填）
+  description   String?   // markdown 描述
+  imageUrl      String?   // 主圖
+  imageUrls     String?   // 多圖 JSON array
+  price         Int       // 售價 NTD
+  comparePrice  Int?      // 原價（劃掉顯示折扣）
+  cost          Int?      // 成本（內部用，不顯示）
+  stock         Int       @default(0)
+  isActive      Boolean   @default(true)
+  isFeatured    Boolean   @default(false)
+  // SEO
+  metaTitle     String?
+  metaDescription String?
+  // 排序
+  sortOrder     Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([category])
+  @@index([isActive])
+  @@index([isFeatured])
+}
+
+// ============================================================
 // 自動產生的每週/每日報導文章
 // ============================================================
 model AutoArticle {
@@ -283,8 +314,8 @@ model SiteSetting {
   priceRoundingUnit     Int      @default(100)
   // 二手回收：若有 Apple 官方價，最終報價 = 官方 × (1 + this)
   recycleOfficialMargin Float    @default(0.4)
-  // 二手回收：無官方價時，從同業最低價打折
-  recycleCompetitorDiscount Float @default(0.7)
+  // 二手回收：無官方價時，從同業最低價打折（0.85 = 我們收 85% 同業最低價）
+  recycleCompetitorDiscount Float @default(0.85)
   updatedAt             DateTime @updatedAt
 }
 

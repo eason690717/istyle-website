@@ -62,20 +62,42 @@ const SOURCE2_PAGES: Array<{ url: string; category: Category; priceCol: number }
   { url: "https://www.us3c.com.tw/promotion-recycle-macbook-air", category: "laptop_air", priceCol: 1 },
 ];
 
+// us3c table 結構：[型號, US3C回收價, 機況加碼, Apple官方收購價, vs Apple]
+// 用 thead/th 偵測「官方」欄位的位置，避免抓到「機況加碼」
 export async function scrapeSource2(): Promise<ScrapedRow[]> {
   const results: ScrapedRow[] = [];
   for (const page of SOURCE2_PAGES) {
     try {
       const html = await fetchHtml(page.url);
       const $ = cheerio.load(html);
-      $("table tr").each((_, tr) => {
-        const cells = $(tr).find("td").map((_, td) => $(td).text().trim()).get();
-        if (cells.length < page.priceCol + 1) return;
-        const parsed = parseModelByCategory(cells[0], page.category);
-        const price = parsePriceText(cells[page.priceCol]);
-        if (parsed && price && isReasonablePrice(price, page.category)) {
-          results.push({ ...parsed, price });
+      // 對每個表格獨立處理（us3c 一頁可能多表）
+      $("table").each((_, tbl) => {
+        const $tbl = $(tbl);
+        // 偵測 header row（第一個 tr，含 th 或全部 td 是文字非數字）
+        let officialCol = -1;
+        const headerRow = $tbl.find("tr").first();
+        const headerCells = headerRow.find("th,td").map((_, c) => $(c).text().trim()).get();
+        for (let i = 0; i < headerCells.length; i++) {
+          if (/官方|Apple\s*官網|官網收購/i.test(headerCells[i])) {
+            officialCol = i;
+            break;
+          }
         }
+        $tbl.find("tr").each((rowIdx, tr) => {
+          const cells = $(tr).find("td").map((_, td) => $(td).text().trim()).get();
+          if (cells.length < page.priceCol + 1) return;
+          const parsed = parseModelByCategory(cells[0], page.category);
+          const price = parsePriceText(cells[page.priceCol]);
+          if (!parsed || !price || !isReasonablePrice(price, page.category)) return;
+
+          // 抓官方收購價
+          let officialPrice: number | undefined;
+          if (officialCol > 0 && cells[officialCol]) {
+            const op = parsePriceText(cells[officialCol]);
+            if (op && isReasonablePrice(op, page.category)) officialPrice = op;
+          }
+          results.push({ ...parsed, price, ...(officialPrice ? { officialPrice } : {}) });
+        });
       });
     } catch (e) { console.error(`[source2] ${page.url}`, e); }
   }
