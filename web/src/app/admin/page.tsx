@@ -33,13 +33,14 @@ export default async function AdminDashboard() {
       <h1 className="font-serif text-2xl text-[var(--gold)]">儀表板</h1>
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="待處理預約" value={pendingBookings} hint={`累計 ${allBookings}`} accent />
-        <StatCard label="待付款連結" value={pendingPayments} hint={`已收款 ${paidPayments} 筆`} accent />
-        <StatCard label="累計收款" value={`NT$ ${paidAmount.toLocaleString()}`} hint="所有付款連結" accent />
+        <StatCard label="待處理預約" value={pendingBookings} hint={`累計 ${allBookings}`} accent href="/admin/bookings" />
+        <StatCard label="待付款連結" value={pendingPayments} hint={`已收款 ${paidPayments} 筆`} accent href="/admin/payment-links" />
+        <StatCard label="累計收款" value={`NT$ ${paidAmount.toLocaleString()}`} hint="所有付款連結" accent href="/admin/payment-links" />
         <StatCard
           label="二手回收機型"
           value={recycleCount}
           hint={lastRecycleLog ? `更新 ${new Date(lastRecycleLog.finishedAt).toLocaleString("zh-TW")}` : "未抓取"}
+          href="/admin/recycle"
         />
       </div>
 
@@ -110,12 +111,18 @@ function StatusBadge({ status }: { status: string }) {
   return <span className={`rounded px-2 py-0.5 text-xs ${s.cls}`}>{s.label}</span>;
 }
 
-function StatCard({ label, value, hint, accent }: { label: string; value: number | string; hint?: string; accent?: boolean }) {
-  return (
-    <div className={`rounded-lg border p-4 ${accent ? "border-[var(--gold)] bg-[#1a1410]" : "border-[var(--border)] bg-[var(--bg-elevated)]"}`}>
-      <div className="text-xs text-[var(--fg-muted)]">{label}</div>
+function StatCard({ label, value, hint, accent, href }: { label: string; value: number | string; hint?: string; accent?: boolean; href?: string }) {
+  const cls = `block rounded-lg border p-4 transition ${accent ? "border-[var(--gold)] bg-[#1a1410]" : "border-[var(--border)] bg-[var(--bg-elevated)]"} ${href ? "hover:border-[var(--gold-bright)] hover:bg-[#221810]" : ""}`;
+  const inner = (
+    <>
+      <div className="flex items-center justify-between text-xs text-[var(--fg-muted)]">
+        <span>{label}</span>
+        {href && <span className="text-[var(--gold-soft)]">→</span>}
+      </div>
       <div className="mt-2 font-serif text-2xl text-[var(--gold)]">{value}</div>
       {hint && <div className="mt-1 text-[10px] text-[var(--fg-muted)]">{hint}</div>}
-    </div>
+    </>
   );
+  if (href) return <Link href={href} className={cls}>{inner}</Link>;
+  return <div className={cls}>{inner}</div>;
 }

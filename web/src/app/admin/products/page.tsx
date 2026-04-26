@@ -115,7 +115,7 @@ export default async function AdminProductsPage() {
                       <Link href={`/admin/products/${p.id}`} className="text-[10px] text-[var(--gold)] hover:text-[var(--gold-bright)]">
                         編輯
                       </Link>
-                      <Link href={`/shop/${p.slug}`} target="_blank" className="text-[10px] text-[var(--fg-muted)] hover:text-[var(--gold)]">
+                      <Link href={`/shop/${p.slug}?preview=admin`} target="_blank" className="text-[10px] text-[var(--fg-muted)] hover:text-[var(--gold)]">
                         前台預覽
                       </Link>
                       <DeleteProductButton productId={p.id} productName={p.name} action={deleteProduct} />

@@ -1,10 +1,17 @@
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { SITE } from "@/lib/site-config";
+import { COOKIE_NAME, verifySession } from "@/lib/admin-auth";
 import { ProductPurchase } from "./product-purchase";
 import type { Metadata } from "next";
+
+async function isAdminSession(): Promise<boolean> {
+  const c = await cookies();
+  return verifySession(c.get(COOKIE_NAME)?.value);
+}
 
 export const dynamic = "force-dynamic";
 
@@ -23,18 +30,26 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ProductDetailPage({ params, searchParams }: {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ preview?: string }>;
+}) {
   const { slug } = await params;
+  const { preview } = await searchParams;
+  // 後台預覽模式：?preview=admin 配合 cookie session 才能看未上架
+  const isAdminPreview = preview === "admin" && (await isAdminSession());
+
   const product = await prisma.product.findUnique({
     where: { slug },
     include: {
       variants: {
-        where: { isActive: true },
+        where: isAdminPreview ? undefined : { isActive: true },
         orderBy: [{ sortOrder: "asc" }, { id: "asc" }],
       },
     },
   }).catch(() => null);
-  if (!product || !product.isActive) notFound();
+  if (!product) notFound();
+  if (!product.isActive && !isAdminPreview) notFound();
 
   const hasVariants = product.variants.length > 0;
   // 取所有變體中最低售價當「起價」顯示
@@ -76,6 +91,11 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <div className="mx-auto max-w-5xl px-4 py-12">
+        {isAdminPreview && (
+          <div className="mb-4 rounded-lg border border-yellow-500/50 bg-yellow-950/30 px-4 py-2 text-sm text-yellow-200">
+            🔒 後台預覽模式{!product.isActive && "（此商品未上架，前台訪客看不到）"}
+          </div>
+        )}
         <nav className="mb-6 text-xs text-[var(--fg-muted)]">
           <Link href="/" className="hover:text-[var(--gold)]">首頁</Link>
           {" / "}

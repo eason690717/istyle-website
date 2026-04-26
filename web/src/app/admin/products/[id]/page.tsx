@@ -20,7 +20,7 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
           >
             ⚙ 規格管理（顏色／尺寸／容量）
           </Link>
-          <Link href={`/shop/${product.slug}`} target="_blank" className="text-sm text-[var(--fg-muted)] hover:text-[var(--gold)]">
+          <Link href={`/shop/${product.slug}?preview=admin`} target="_blank" className="text-sm text-[var(--fg-muted)] hover:text-[var(--gold)]">
             前台預覽 →
           </Link>
           <Link href="/admin/products" className="text-sm text-[var(--fg-muted)] hover:text-[var(--gold)]">← 返回列表</Link>
