@@ -6,31 +6,32 @@ import {
   createSession, safeEqual, logAttempt, isIpLocked, getClientIp, isIpAllowed,
 } from "@/lib/admin-auth";
 
-// 通用錯誤訊息（不洩漏哪邊錯）
-const GENERIC_ERROR = "帳號或密碼不正確";
+// 真實但安全的錯誤訊息：
+//   - 帳密錯誤 → 通用訊息（不告知哪邊錯，防探測有效帳號）
+//   - 環境問題（IP/鎖定）→ 明確訊息（讓老闆知道怎麼排除）
+const CRED_ERROR = "帳號或密碼不正確";
 
 export async function loginAction({ user, pwd, hp, from }: { user: string; pwd: string; hp?: string; from?: string }) {
   const hdrs = await headers();
   const ip = getClientIp(hdrs);
   const ua = hdrs.get("user-agent") || undefined;
 
-  // ⭐ IP 白名單（最強保護）— 不在白名單一律拒絕，連嘗試機會都沒有
+  // ⭐ IP 白名單（最高優先 — 直接告知，老闆才知道要更新名單）
   if (!isIpAllowed(ip)) {
     await logAttempt({ ip, user: user.slice(0, 50), success: false, reason: "ip_not_allowed", userAgent: ua });
-    // 通用錯誤訊息（不告知是 IP 問題，避免攻擊者得知白名單機制）
-    return { error: GENERIC_ERROR };
+    return { error: `🚫 此 IP（${ip}）不在允許名單。請聯絡管理員加入白名單。` };
   }
 
-  // 蜜罐欄位（機器人會填）
-  if (hp && hp.length > 0) {
-    await logAttempt({ ip, user: user.slice(0, 50), success: false, reason: "honeypot", userAgent: ua });
-    return { error: GENERIC_ERROR };
-  }
-
-  // 速率限制：15 分鐘內失敗 5 次 → 鎖
+  // 速率限制（清楚告知，避免老闆繼續嘗試加深鎖定）
   if (await isIpLocked(ip)) {
     await logAttempt({ ip, user: user.slice(0, 50), success: false, reason: "ip_locked", userAgent: ua });
-    return { error: "嘗試次數過多，請 15 分鐘後再試" };
+    return { error: "⏱️ 嘗試次數過多（防爆破鎖定）。請等 15 分鐘後再試，或聯絡管理員清除鎖定。" };
+  }
+
+  // 蜜罐（機器人才會觸發，正常使用者看不到）→ 安靜回傳通用錯誤
+  if (hp && hp.length > 0) {
+    await logAttempt({ ip, user: user.slice(0, 50), success: false, reason: "honeypot", userAgent: ua });
+    return { error: CRED_ERROR };
   }
 
   const expectedUser = process.env.ADMIN_USER || "admin@i-style.store";
@@ -42,7 +43,7 @@ export async function loginAction({ user, pwd, hp, from }: { user: string; pwd: 
 
   if (!userOk || !pwdOk) {
     await logAttempt({ ip, user: user.slice(0, 50), success: false, reason: "wrong_credentials", userAgent: ua });
-    return { error: GENERIC_ERROR };
+    return { error: CRED_ERROR };
   }
 
   // 成功 → 建立 session
