@@ -65,14 +65,11 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
       "@type": "Offer",
       url: `${SITE.url}/shop/${product.slug}`,
       priceCurrency: "TWD",
-      price: product.price,
-      availability: product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
       price: displayPrice,
       availability: totalStock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
       seller: { "@type": "Organization", name: SITE.name },
     },
   };
-  // 上面 jsonLd 已經包含一次 price/availability，移除重複
 
   return (
     <>
