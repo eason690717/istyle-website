@@ -239,6 +239,36 @@ model PaymentLink {
 }
 
 // ============================================================
+// 後台 Session + 登入嘗試（防爆破）
+// ============================================================
+model AdminSession {
+  id          Int       @id @default(autoincrement())
+  token       String    @unique
+  user        String
+  ip          String?
+  userAgent   String?
+  createdAt   DateTime  @default(now())
+  expiresAt   DateTime
+  revokedAt   DateTime?
+
+  @@index([token])
+  @@index([expiresAt])
+}
+
+model LoginAttempt {
+  id          Int      @id @default(autoincrement())
+  ip          String
+  user        String?
+  success     Boolean
+  reason      String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+
+  @@index([ip, createdAt])
+  @@index([createdAt])
+}
+
+// ============================================================
 // 電商商品（保護貼、手機殼、配件、二手機等）
 // ============================================================
 model Product {

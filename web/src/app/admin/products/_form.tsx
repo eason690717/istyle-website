@@ -1,4 +1,5 @@
 // 共用商品表單（new + edit 都用）
+import { ImageUpload } from "./_image-upload";
 
 const CATEGORIES = [
   { value: "case", label: "手機殼" },
@@ -46,8 +47,8 @@ export function ProductForm({ defaults = {}, action, submitLabel = "儲存" }: {
         <input name="brand" defaultValue={defaults.brand} className={inputCls} placeholder="例：Apple、Samsung、第三方品牌" />
       </Field>
 
-      <Field label="商品圖片網址" hint="貼 https:// 開頭的圖片連結（推薦：Pexels、Unsplash 或商品照片 CDN）">
-        <input name="imageUrl" defaultValue={defaults.imageUrl} type="url" className={inputCls} placeholder="https://images.pexels.com/photos/..." />
+      <Field label="商品圖片">
+        <ImageUpload name="imageUrl" defaultValue={defaults.imageUrl} />
       </Field>
 
       <Field label="商品描述" hint="支援 Markdown，描述商品特色、規格、保固">

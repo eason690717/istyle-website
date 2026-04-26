@@ -103,20 +103,26 @@ function isRecommendedItem(name: string): boolean {
   return /認證/.test(name);
 }
 
-// 原廠相關（含「原廠」「APPLE」）：高單價，排到後面
 function isOemItem(name: string): boolean {
   return /原廠|APPLE/i.test(name);
 }
 
-// 排序權重：認證(-1) → 一般(0) → 原廠(1)
-function itemSortWeight(name: string): number {
+// 統一優先級（小→大顯示）：
+//  -1 ★ 推薦認證
+//   0 玻璃破裂
+//   1 螢幕破裂
+//   1.5 原廠系列（螢幕/電池/鏡頭）— 介於 螢幕 與 前鏡頭 之間
+//   2 前鏡頭/後鏡頭
+//   3 FACE ID / HOME
+//   4 聽筒/麥/喇叭/震動
+//   5 充電/尾插
+//   6 開機/音量/按鍵
+//   7 容量擴充
+//   8 主機板
+//   99 其他
+function itemPriority(name: string): number {
   if (isRecommendedItem(name)) return -1;
-  if (isOemItem(name)) return 1;
-  return 0;
-}
-
-// 一般項目自訂權重（玻璃破裂、螢幕損壞優先）
-function commonItemPriority(name: string): number {
+  if (isOemItem(name)) return 1.5; // 原廠系列：移到 螢幕破裂 之後、前鏡頭 之前
   if (/玻璃破裂/.test(name)) return 0;
   if (/螢幕破裂|螢幕損壞|液晶/.test(name)) return 1;
   if (/前鏡頭|後鏡頭|相機/.test(name)) return 2;
@@ -124,6 +130,8 @@ function commonItemPriority(name: string): number {
   if (/聽筒|麥克風|喇叭|響鈴|震動/.test(name)) return 4;
   if (/充電|尾插/.test(name)) return 5;
   if (/開機|音量|按鍵/.test(name)) return 6;
+  if (/容量|擴充/.test(name)) return 7;
+  if (/主機板|機板|cpu/i.test(name)) return 8;
   return 99;
 }
 
@@ -153,14 +161,10 @@ function PriceMatrix({
       if (!itemMap.has(p.itemId)) itemMap.set(p.itemId, p.item);
     }
   }
-  // 排序：認證電池 → 一般項目（玻璃/螢幕/鏡頭...）→ 原廠相關（後）
+  // 排序：認證 → 玻璃 → 螢幕 → 原廠系列 → 前鏡頭 → ... 用統一 itemPriority 函式
   const items = Array.from(itemMap.values()).sort((a, b) => {
-    const wa = itemSortWeight(a.name);
-    const wb = itemSortWeight(b.name);
-    if (wa !== wb) return wa - wb;
-    // 同權重組內：先用自訂優先度，再 sortOrder
-    const pa = commonItemPriority(a.name);
-    const pb = commonItemPriority(b.name);
+    const pa = itemPriority(a.name);
+    const pb = itemPriority(b.name);
     if (pa !== pb) return pa - pb;
     return a.sortOrder - b.sortOrder;
   });

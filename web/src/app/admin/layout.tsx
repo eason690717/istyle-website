@@ -1,4 +1,8 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { COOKIE_NAME, verifySession } from "@/lib/admin-auth";
+import { logoutAction } from "./login/actions";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -18,7 +22,13 @@ const NAV = [
   { href: "/admin/settings", label: "設定" },
 ];
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  // login 頁不套這個 layout 的驗證
+  const cookieStore = await cookies();
+  const token = cookieStore.get(COOKIE_NAME)?.value;
+  const ok = await verifySession(token);
+  if (!ok) redirect("/admin/login");
+
   return (
     <div className="min-h-screen bg-[var(--bg)]">
       <div className="border-b border-[var(--border)] bg-[var(--bg-elevated)]">
@@ -26,13 +36,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Link href="/admin" className="font-serif text-lg text-[var(--gold)]">
             i時代 後台
           </Link>
-          <nav className="flex flex-wrap gap-4 text-sm">
+          <nav className="flex flex-wrap items-center gap-4 text-sm">
             {NAV.map(item => (
               <Link key={item.href} href={item.href} className="text-[var(--fg)] transition hover:text-[var(--gold)]">
                 {item.label}
               </Link>
             ))}
             <Link href="/" className="text-xs text-[var(--fg-muted)]">↗ 看前台</Link>
+            <form action={logoutAction}>
+              <button className="rounded border border-[var(--border)] px-2 py-1 text-xs text-[var(--fg-muted)] hover:border-red-500/50 hover:text-red-400" type="submit">
+                登出
+              </button>
+            </form>
           </nav>
         </div>
       </div>
