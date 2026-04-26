@@ -3,34 +3,43 @@
 // 三大模組：AIO（金流）、E-Invoice（發票）、Logistics（物流）
 import { createHash } from "node:crypto";
 
-const IS_PROD = process.env.NODE_ENV === "production" && !!process.env.ECPAY_PROD;
+// 金流與發票獨立切換（金流先正式上線，發票等申請通過再切）
+const IS_PROD_PAYMENT = process.env.NODE_ENV === "production" && !!process.env.ECPAY_PROD;
+const IS_PROD_INVOICE = process.env.NODE_ENV === "production" && !!process.env.ECPAY_INVOICE_PROD;
 
 // 測試帳號（綠界提供）— 可直接用做 sandbox
-const TEST = {
+const TEST_PAYMENT = {
   merchantId: "3002607",
   hashKey: "pwFHCqoQZGmho4w6",
   hashIv: "EkRm7iFT261dpevs",
+};
+const TEST_INVOICE = {
   invoiceMerchantId: "2000132",
   invoiceHashKey: "ejCk326UnaZWKisg",
   invoiceHashIv: "q9jcZX8Ib9LM8wYk",
 };
 
-const PROD = {
+const PROD_PAYMENT = {
   merchantId: process.env.ECPAY_MERCHANT_ID || "",
   hashKey: process.env.ECPAY_HASH_KEY || "",
   hashIv: process.env.ECPAY_HASH_IV || "",
+};
+const PROD_INVOICE = {
   invoiceMerchantId: process.env.ECPAY_INVOICE_MERCHANT_ID || "",
   invoiceHashKey: process.env.ECPAY_INVOICE_HASH_KEY || "",
   invoiceHashIv: process.env.ECPAY_INVOICE_HASH_IV || "",
 };
 
-export const ECPAY = IS_PROD ? PROD : TEST;
+export const ECPAY = {
+  ...(IS_PROD_PAYMENT ? PROD_PAYMENT : TEST_PAYMENT),
+  ...(IS_PROD_INVOICE ? PROD_INVOICE : TEST_INVOICE),
+};
 
-export const ECPAY_AIO_URL = IS_PROD
+export const ECPAY_AIO_URL = IS_PROD_PAYMENT
   ? "https://payment.ecpay.com.tw/Cashier/AioCheckOut/V5"
   : "https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5";
 
-export const ECPAY_INVOICE_URL = IS_PROD
+export const ECPAY_INVOICE_URL = IS_PROD_INVOICE
   ? "https://einvoice.ecpay.com.tw/B2CInvoice/Issue"
   : "https://einvoice-stage.ecpay.com.tw/B2CInvoice/Issue";
 
