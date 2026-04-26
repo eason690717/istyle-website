@@ -164,44 +164,67 @@ function NewVariantForm({ productId, basePrice, onCancel }: {
   productId: number; basePrice: number; onCancel: () => void;
 }) {
   const [pending, start] = useTransition();
+  const [showAdvanced, setShowAdvanced] = useState(false);
+
   return (
     <div className="rounded-xl border border-[var(--gold)] bg-[var(--bg-elevated)] p-5">
       <h3 className="font-medium text-[var(--gold)]">新增規格</h3>
+      <p className="mt-1 text-xs text-[var(--fg-muted)]">最少只需填名稱 + 價格 + 庫存</p>
       <form
         action={(fd) => start(async () => { await createVariant(productId, fd); onCancel(); })}
         className="mt-3 space-y-3"
       >
-        <Field label="規格名稱" required hint="例：黑色 128GB / L 號 紅色 / 16吋 M3 Max">
-          <input name="name" required className={inputCls} placeholder="例：黑色 128GB" />
-        </Field>
-        <Field label="選項值（選填，JSON 格式）" hint='例: {"顏色":"黑","容量":"128GB"}'>
-          <input name="optionValues" className={inputCls + " font-mono text-xs"} placeholder='{"顏色":"黑","容量":"128GB"}' />
-        </Field>
-        <div className="grid gap-3 sm:grid-cols-3">
+        {/* 主要欄位：名稱 + 價格 + 庫存（一排） */}
+        <div className="grid gap-3 sm:grid-cols-[2fr_1fr_1fr]">
+          <Field label="規格名稱" required hint="例：黑色 / M 號 / 128GB / 330g">
+            <input name="name" required autoFocus className={inputCls} placeholder="例：黑色 M" />
+          </Field>
           <Field label="售價（NTD）" required>
             <input name="price" type="number" required defaultValue={basePrice} className={inputCls + " font-mono"} />
           </Field>
-          <Field label="原價（劃掉顯示）">
-            <input name="comparePrice" type="number" className={inputCls + " font-mono"} />
-          </Field>
-          <Field label="成本（內部）">
-            <input name="cost" type="number" className={inputCls + " font-mono"} />
-          </Field>
-        </div>
-        <div className="grid gap-3 sm:grid-cols-3">
           <Field label="庫存">
             <input name="stock" type="number" defaultValue={10} className={inputCls + " font-mono"} />
           </Field>
-          <Field label="SKU">
-            <input name="sku" className={inputCls + " font-mono text-xs"} placeholder="ABC-001" />
-          </Field>
-          <Field label="排序">
-            <input name="sortOrder" type="number" defaultValue={0} className={inputCls + " font-mono"} />
-          </Field>
         </div>
-        <Field label="變體圖片網址（選填）">
-          <input name="imageUrl" type="url" className={inputCls} placeholder="https://..." />
-        </Field>
+
+        {/* 進階：摺疊的選項 */}
+        <div className="rounded-lg border border-[var(--border-soft)]">
+          <button
+            type="button"
+            onClick={() => setShowAdvanced(s => !s)}
+            className="flex w-full items-center justify-between px-3 py-2 text-xs text-[var(--fg-muted)] hover:text-[var(--gold)]"
+          >
+            <span>{showAdvanced ? "▾" : "▸"} 進階選項（原價、成本、SKU、圖片、JSON 選項值）</span>
+            <span className="text-[10px]">{showAdvanced ? "收合" : "通常不必填"}</span>
+          </button>
+          {showAdvanced && (
+            <div className="space-y-3 border-t border-[var(--border-soft)] p-3">
+              <div className="grid gap-3 sm:grid-cols-3">
+                <Field label="原價（劃掉顯示）">
+                  <input name="comparePrice" type="number" className={inputCls + " font-mono"} />
+                </Field>
+                <Field label="成本（內部）">
+                  <input name="cost" type="number" className={inputCls + " font-mono"} />
+                </Field>
+                <Field label="SKU">
+                  <input name="sku" className={inputCls + " font-mono text-xs"} placeholder="ABC-001" />
+                </Field>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <Field label="排序（小→大）">
+                  <input name="sortOrder" type="number" defaultValue={0} className={inputCls + " font-mono"} />
+                </Field>
+                <Field label="變體圖片網址">
+                  <input name="imageUrl" type="url" className={inputCls} placeholder="https://..." />
+                </Field>
+              </div>
+              <Field label="選項值 JSON" hint='例: {"顏色":"黑","容量":"128GB"} — 用「⭐ 通用組合產生器」會自動填，手動加可留空'>
+                <input name="optionValues" className={inputCls + " font-mono text-xs"} placeholder='{"顏色":"黑","容量":"128GB"}' />
+              </Field>
+            </div>
+          )}
+        </div>
+
         <div className="flex gap-3">
           <button type="submit" disabled={pending} className="btn-gold flex-1 rounded-full py-2 text-sm font-semibold disabled:opacity-50">
             {pending ? "建立中..." : "建立規格"}
