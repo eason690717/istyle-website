@@ -68,10 +68,19 @@ export function buildCheckMacValue(params: Record<string, string>, hashKey: stri
   const mac = createHash("sha256").update(encoded).digest("hex").toUpperCase();
 
   if (env("ECPAY_DEBUG") === "1") {
-    console.log("[ECPay] sorted keys:", sortedKeys);
-    console.log("[ECPay] raw len:", raw.length, "first120:", raw.slice(0, 120), "...last80:", raw.slice(-80));
-    console.log("[ECPay] encoded first160:", encoded.slice(0, 160));
-    console.log("[ECPay] CheckMacValue:", mac);
+    // 一次印一行 JSON，Vercel 才不會吞掉多 line 的 console.log
+    console.log("ECPAY_DBG " + JSON.stringify({
+      keys: sortedKeys,
+      hashKeyLen: hashKey.length,
+      hashIvLen: hashIv.length,
+      hashKeyTail: hashKey.slice(-3),  // 確認沒帶垃圾字元
+      hashIvTail: hashIv.slice(-3),
+      rawLen: raw.length,
+      rawFirst200: raw.slice(0, 200),
+      rawLast100: raw.slice(-100),
+      encodedFirst300: encoded.slice(0, 300),
+      mac,
+    }));
   }
   return mac;
 }
