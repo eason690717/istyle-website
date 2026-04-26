@@ -2,8 +2,9 @@
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import {
-  COOKIE_NAME, SESSION_DAYS,
-  createSession, safeEqual, logAttempt, isIpLocked, getClientIp, isIpAllowed,
+  COOKIE_NAME, TRUSTED_COOKIE, SESSION_DAYS, TRUST_DAYS,
+  createSession, createTrustedDevice, isTrustedDevice,
+  safeEqual, logAttempt, isIpLocked, getClientIp, isIpAllowed,
 } from "@/lib/admin-auth";
 
 // 真實但安全的錯誤訊息：
@@ -16,10 +17,17 @@ export async function loginAction({ user, pwd, hp, from }: { user: string; pwd: 
   const ip = getClientIp(hdrs);
   const ua = hdrs.get("user-agent") || undefined;
 
-  // ⭐ IP 白名單（最高優先 — 直接告知，老闆才知道要更新名單）
-  if (!isIpAllowed(ip)) {
+  // ⭐ 信任裝置（第一次在白名單 IP 登入後，此瀏覽器永久通行）
+  const cookieStore = await cookies();
+  const trustToken = cookieStore.get(TRUSTED_COOKIE)?.value;
+  const trusted = await isTrustedDevice(trustToken);
+
+  // 不信任的裝置 → IP 白名單檢查
+  if (!trusted && !isIpAllowed(ip)) {
     await logAttempt({ ip, user: user.slice(0, 50), success: false, reason: "ip_not_allowed", userAgent: ua });
-    return { error: `🚫 此 IP（${ip}）不在允許名單。請聯絡管理員加入白名單。` };
+    return {
+      error: `🚫 此 IP（${ip}）不在允許名單。\n\n您可以：\n1. 切換到家用網路或 4G\n2. 在已信任的電腦登入後，未來此電腦不論在哪都能用\n3. 聯絡管理員加白名單`,
+    };
   }
 
   // 速率限制（清楚告知，避免老闆繼續嘗試加深鎖定）
@@ -50,14 +58,25 @@ export async function loginAction({ user, pwd, hp, from }: { user: string; pwd: 
   const token = await createSession({ user: expectedUser, ip, userAgent: ua });
   await logAttempt({ ip, user: expectedUser, success: true, userAgent: ua });
 
-  const cookieStore = await cookies();
   cookieStore.set(COOKIE_NAME, token, {
     httpOnly: true,
     secure: true,
-    sameSite: "strict", // 強化：strict 防 CSRF
+    sameSite: "strict",
     path: "/",
     maxAge: SESSION_DAYS * 24 * 3600,
   });
+
+  // 同時設定「信任裝置」cookie — 之後此瀏覽器不論在哪 IP 都能登入
+  if (!trusted) {
+    const trToken = await createTrustedDevice({ user: expectedUser, ip, userAgent: ua });
+    cookieStore.set(TRUSTED_COOKIE, trToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax", // lax 才能跨頁面持久
+      path: "/",
+      maxAge: TRUST_DAYS * 24 * 3600,
+    });
+  }
 
   redirect(from && from.startsWith("/admin") ? from : "/admin");
 }

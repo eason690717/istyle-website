@@ -3,7 +3,9 @@ import { prisma } from "@/lib/prisma";
 import crypto from "node:crypto";
 
 export const COOKIE_NAME = "istyle_sess";
+export const TRUSTED_COOKIE = "istyle_trust";
 export const SESSION_DAYS = 7;
+export const TRUST_DAYS = 365;  // 信任裝置 1 年
 
 // 隨機 token（256 bit）
 export function genToken(): string {
@@ -43,6 +45,34 @@ export async function createSession(args: {
 export async function verifySession(token: string | undefined | null): Promise<boolean> {
   if (!token) return false;
   const sess = await prisma.adminSession.findUnique({ where: { token } }).catch(() => null);
+  if (!sess) return false;
+  if (sess.revokedAt) return false;
+  if (sess.expiresAt < new Date()) return false;
+  return true;
+}
+
+// === 信任裝置 ====================================================
+// 第一次成功登入後，此瀏覽器/裝置永久信任（1 年），下次無視 IP 白名單
+export async function createTrustedDevice(args: { user: string; ip?: string; userAgent?: string }): Promise<string> {
+  const token = genToken();
+  const expiresAt = new Date(Date.now() + TRUST_DAYS * 86400_000);
+  await prisma.adminSession.create({
+    data: {
+      token: `trust_${token}`,
+      user: args.user,
+      ip: args.ip || null,
+      userAgent: args.userAgent?.slice(0, 500) || null,
+      expiresAt,
+    },
+  });
+  return token;
+}
+
+export async function isTrustedDevice(trustToken: string | undefined | null): Promise<boolean> {
+  if (!trustToken) return false;
+  const sess = await prisma.adminSession.findUnique({
+    where: { token: `trust_${trustToken}` },
+  }).catch(() => null);
   if (!sess) return false;
   if (sess.revokedAt) return false;
   if (sess.expiresAt < new Date()) return false;
