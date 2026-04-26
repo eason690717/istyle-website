@@ -13,7 +13,13 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
     <div className="max-w-2xl">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="font-serif text-2xl text-[var(--gold)]">編輯商品</h1>
-        <div className="flex gap-3">
+        <div className="flex items-center gap-3">
+          <Link
+            href={`/admin/products/${product.id}/variants`}
+            className="rounded-full border border-[var(--gold)] bg-[var(--gold)]/10 px-4 py-1.5 text-sm font-medium text-[var(--gold)] hover:bg-[var(--gold)]/20"
+          >
+            ⚙ 規格管理（顏色／尺寸／容量）
+          </Link>
           <Link href={`/shop/${product.slug}`} target="_blank" className="text-sm text-[var(--fg-muted)] hover:text-[var(--gold)]">
             前台預覽 →
           </Link>
