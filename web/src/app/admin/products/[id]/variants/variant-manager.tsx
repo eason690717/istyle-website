@@ -333,10 +333,31 @@ function QuickTemplate({ productId, basePrice, template, label }: {
 
 // ─── 通用 3 層組合產生器 ────────────────────────────────────
 const MAX_PER_LAYER = 10;
+const PRESETS_KEY = "istyle_matrix_presets_v1";
 
 interface Layer {
   name: string;        // 維度名稱，例如「磅數」「顏色」「尺寸」
   values: string[];    // 該維度的值，例如 ["330g","280g","240g"]
+}
+interface MatrixPreset {
+  id: string;
+  name: string;
+  layers: Layer[];
+  createdAt: number;
+}
+
+function loadPresets(): MatrixPreset[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = localStorage.getItem(PRESETS_KEY);
+    if (!raw) return [];
+    const arr = JSON.parse(raw);
+    return Array.isArray(arr) ? arr : [];
+  } catch { return []; }
+}
+function savePresets(list: MatrixPreset[]) {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(PRESETS_KEY, JSON.stringify(list));
 }
 
 function MatrixBuilder({ productId, basePrice, hasVariants }: {
@@ -350,6 +371,35 @@ function MatrixBuilder({ productId, basePrice, hasVariants }: {
   ]);
   const [previewing, setPreviewing] = useState(false);
   const [pending, start] = useTransition();
+  const [presets, setPresets] = useState<MatrixPreset[]>([]);
+  // 進入頁面後載入 localStorage 範本
+  useMemo(() => { if (typeof window !== "undefined") setPresets(loadPresets()); }, []);
+
+  function saveCurrentAsPreset() {
+    const active = layers.filter(l => l.name.trim() && l.values.length > 0);
+    if (active.length === 0) { alert("請先填好至少一層維度＋值"); return; }
+    const name = prompt("為這組規格命名（例：團服 GD款 / iPhone 15 全色）：");
+    if (!name?.trim()) return;
+    const id = Date.now().toString(36);
+    const next = [...presets, { id, name: name.trim(), layers: layers.map(l => ({ name: l.name, values: [...l.values] })), createdAt: Date.now() }];
+    setPresets(next);
+    savePresets(next);
+  }
+  function applyPreset(p: MatrixPreset) {
+    const cloned: Layer[] = [
+      p.layers[0] ? { name: p.layers[0].name, values: [...p.layers[0].values] } : { name: "", values: [] },
+      p.layers[1] ? { name: p.layers[1].name, values: [...p.layers[1].values] } : { name: "", values: [] },
+      p.layers[2] ? { name: p.layers[2].name, values: [...p.layers[2].values] } : { name: "", values: [] },
+    ];
+    setLayers(cloned);
+    setOverrides({});
+  }
+  function deletePreset(id: string) {
+    if (!confirm("刪除此範本？")) return;
+    const next = presets.filter(p => p.id !== id);
+    setPresets(next);
+    savePresets(next);
+  }
 
   // 計算組合（只用有名稱+至少一個值的層）
   const activeLayers = layers.filter(l => l.name.trim() && l.values.length > 0);
@@ -430,6 +480,23 @@ function MatrixBuilder({ productId, basePrice, hasVariants }: {
         <div className="mt-4 space-y-4">
           {!previewing ? (
             <>
+              {/* 已存範本：點即套用 */}
+              {presets.length > 0 && (
+                <div className="rounded-lg border border-[var(--border-soft)] bg-[var(--bg)] p-3">
+                  <div className="mb-2 text-[10px] text-[var(--fg-muted)]">📚 已存範本（點選載入）</div>
+                  <div className="flex flex-wrap gap-2">
+                    {presets.map(p => (
+                      <span key={p.id} className="inline-flex items-center gap-1 rounded-full border border-[var(--gold-soft)] bg-[var(--gold)]/10 pl-3 pr-1 py-1 text-xs">
+                        <button type="button" onClick={() => applyPreset(p)} className="text-[var(--gold)] hover:underline" title={p.layers.filter(l => l.name).map(l => `${l.name}(${l.values.length})`).join(" × ")}>
+                          {p.name}
+                        </button>
+                        <button type="button" onClick={() => deletePreset(p.id)} className="ml-1 rounded-full px-1.5 text-[var(--fg-muted)] hover:bg-red-500/20 hover:text-red-400" title="刪除範本">×</button>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {layers.map((layer, idx) => (
                 <LayerEditor
                   key={idx}
@@ -444,21 +511,32 @@ function MatrixBuilder({ productId, basePrice, hasVariants }: {
               ))}
               <p className="text-[10px] text-[var(--fg-muted)]">提示：用不到的層留白即可（清掉維度名稱該層就會跳過）</p>
 
-              <div className="flex items-center justify-between rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] px-4 py-3">
+              <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] px-4 py-3">
                 <div className="text-sm">
                   {combos.length === 0
                     ? <span className="text-[var(--fg-muted)]">填好維度＋值後可預覽</span>
                     : <span className="text-[var(--fg)]">將產生 <strong className="text-[var(--gold)]">{combos.length}</strong> 個規格組合</span>
                   }
                 </div>
-                <button
-                  type="button"
-                  disabled={combos.length === 0}
-                  onClick={() => setPreviewing(true)}
-                  className="btn-gold rounded-full px-5 py-1.5 text-sm font-semibold disabled:opacity-40"
-                >
-                  預覽 →
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    disabled={combos.length === 0}
+                    onClick={saveCurrentAsPreset}
+                    className="rounded-full border border-[var(--gold-soft)] bg-[var(--gold)]/5 px-4 py-1.5 text-xs text-[var(--gold)] hover:bg-[var(--gold)]/15 disabled:opacity-40"
+                    title="存到瀏覽器，下次同類商品可直接載入"
+                  >
+                    💾 存為範本
+                  </button>
+                  <button
+                    type="button"
+                    disabled={combos.length === 0}
+                    onClick={() => setPreviewing(true)}
+                    className="btn-gold rounded-full px-5 py-1.5 text-sm font-semibold disabled:opacity-40"
+                  >
+                    預覽 →
+                  </button>
+                </div>
               </div>
             </>
           ) : (
