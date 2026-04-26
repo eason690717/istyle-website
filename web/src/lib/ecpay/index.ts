@@ -43,22 +43,34 @@ export const ECPAY_INVOICE_URL = IS_PROD_INVOICE
   ? "https://einvoice.ecpay.com.tw/B2CInvoice/Issue"
   : "https://einvoice-stage.ecpay.com.tw/B2CInvoice/Issue";
 
-// CheckMacValue：依官方規格做 URL encode + SHA-256（V2 算法）
+// CheckMacValue：依綠界官方 SDK 規格做 URL encode + SHA-256
+// 參考: ECPay 官方 Node SDK 的 dotNetUrlEncode + genCheckMacValue
+// 官方 SDK 規則:
+//   - 排序 key (case-insensitive)
+//   - encodeURIComponent 之後再強制把 ! ' ( ) * 編碼成 %21 %27 %28 %29 %2A
+//   - 全部轉小寫後 SHA-256
+//   - 注意: 空白保持 %20，不轉 +（這是常見錯誤點）
 export function buildCheckMacValue(params: Record<string, string>, hashKey: string, hashIv: string): string {
-  const sortedKeys = Object.keys(params).filter(k => k !== "CheckMacValue").sort();
+  const sortedKeys = Object.keys(params)
+    .filter(k => k !== "CheckMacValue")
+    .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
   const raw = `HashKey=${hashKey}&${sortedKeys.map(k => `${k}=${params[k]}`).join("&")}&HashIV=${hashIv}`;
-  // 綠界 .NET URL encoder 的特殊處理
   const encoded = encodeURIComponent(raw)
-    .toLowerCase()
-    .replace(/%20/g, "+")
-    .replace(/%2d/g, "-")
-    .replace(/%5f/g, "_")
-    .replace(/%2e/g, ".")
-    .replace(/%21/g, "!")
-    .replace(/%2a/g, "*")
-    .replace(/%28/g, "(")
-    .replace(/%29/g, ")");
-  return createHash("sha256").update(encoded).digest("hex").toUpperCase();
+    .replace(/'/g, "%27")
+    .replace(/!/g, "%21")
+    .replace(/\*/g, "%2A")
+    .replace(/\(/g, "%28")
+    .replace(/\)/g, "%29")
+    .toLowerCase();
+  const mac = createHash("sha256").update(encoded).digest("hex").toUpperCase();
+
+  if (process.env.ECPAY_DEBUG === "1") {
+    console.log("[ECPay] sorted keys:", sortedKeys);
+    console.log("[ECPay] raw len:", raw.length, "first120:", raw.slice(0, 120), "...last80:", raw.slice(-80));
+    console.log("[ECPay] encoded first160:", encoded.slice(0, 160));
+    console.log("[ECPay] CheckMacValue:", mac);
+  }
+  return mac;
 }
 
 export function verifyCheckMacValue(params: Record<string, string>, hashKey: string, hashIv: string): boolean {
