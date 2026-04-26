@@ -23,11 +23,21 @@ const NAV = [
 ];
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  // login 頁不套這個 layout 的驗證
+  // 注意：layout 也包到 /admin/login，所以「沒 token」時不能 redirect（會無限循環）
+  // middleware 已經幫 /admin/* (除 login 外) 沒 token 時 redirect 到 login
+  // 這裡只處理「token 存在但無效」（例如已登出/過期）→ 清除 + 跳 login
   const cookieStore = await cookies();
   const token = cookieStore.get(COOKIE_NAME)?.value;
-  const ok = await verifySession(token);
-  if (!ok) redirect("/admin/login");
+  if (token) {
+    const ok = await verifySession(token);
+    if (!ok) {
+      cookieStore.delete(COOKIE_NAME);
+      redirect("/admin/login");
+    }
+  } else {
+    // 沒 token → 應該是 /admin/login 頁（middleware 已過濾其他路徑）→ 不顯示 admin nav
+    return <>{children}</>;
+  }
 
   return (
     <div className="min-h-screen bg-[var(--bg)]">
