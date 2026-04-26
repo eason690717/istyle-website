@@ -58,24 +58,23 @@ export function HeroSearch() {
 
   return (
     <div ref={containerRef} className="relative w-full max-w-2xl">
-      <div className="relative">
-        <input
-          type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onFocus={() => results.length > 0 && setOpen(true)}
-          placeholder="輸入您的機型立刻看報價（例：iPhone 15 Pro）"
-          className="w-full rounded-full border-2 border-[var(--gold)] bg-[var(--bg-elevated)] px-6 py-4 text-base text-[var(--fg)] outline-none placeholder:text-[var(--fg-muted)] focus:border-[var(--gold-bright)]"
-          autoComplete="off"
-        />
-        <div className="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 text-[var(--gold)]">
-          {loading ? (
-            <span className="text-xs">查詢中…</span>
-          ) : (
-            <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="11" cy="11" r="8" />
-              <path d="m21 21-4.3-4.3" />
-            </svg>
+      {/* 動態金光邊框（旋轉漸層 + 呼吸光暈，吸引點擊）*/}
+      <div className="hero-search-glow">
+        <div className="hero-search-inner">
+          <svg viewBox="0 0 24 24" className="mr-3 h-5 w-5 flex-shrink-0 text-[var(--gold)]" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.3-4.3" />
+          </svg>
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onFocus={() => results.length > 0 && setOpen(true)}
+            placeholder="輸入您的機型立刻看報價（例：iPhone 15 Pro）"
+            autoComplete="off"
+          />
+          {loading && (
+            <span className="ml-2 flex-shrink-0 text-xs text-[var(--gold)]">查詢中…</span>
           )}
         </div>
       </div>
