@@ -8,10 +8,11 @@ export const metadata: Metadata = {
 
 const NAV = [
   { href: "/admin", label: "儀表板" },
+  { href: "/admin/products", label: "📦 商品" },
   { href: "/admin/bookings", label: "預約" },
   { href: "/admin/payment-links", label: "付款連結" },
   { href: "/admin/orders", label: "訂單" },
-  { href: "/admin/prices", label: "報價" },
+  { href: "/admin/prices", label: "維修報價" },
   { href: "/admin/recycle", label: "回收價" },
   { href: "/admin/cron", label: "自動排程" },
   { href: "/admin/settings", label: "設定" },

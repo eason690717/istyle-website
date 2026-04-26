@@ -3,22 +3,30 @@
 // 訂單 = 一組維修項目（可包含多機型多項目，到店取件或寄送）
 import { createContext, useContext, useEffect, useState, useCallback } from "react";
 
+export type CartKind = "repair" | "product";
+
 export interface CartItem {
-  // 唯一 key
-  key: string;          // `${modelId}-${itemId}-${tier}`
-  // 顯示
-  modelId: number;
-  modelSlug: string;
-  modelName: string;
-  brandSlug: string;
-  brandName: string;
-  itemId: number;
-  itemName: string;
-  tier: "STANDARD" | "OEM";
-  tierLabel: string;
-  // 價格 + 數量
+  key: string;
+  kind: CartKind;
+  // 共通
+  title: string;          // 顯示標題
+  subtitle?: string;      // 副標（規格/配件）
+  imageUrl?: string;
   unitPrice: number;
   qty: number;
+  // 維修專用
+  modelId?: number;
+  modelSlug?: string;
+  modelName?: string;
+  brandSlug?: string;
+  brandName?: string;
+  itemId?: number;
+  itemName?: string;
+  tier?: "STANDARD" | "OEM";
+  tierLabel?: string;
+  // 商品專用
+  productId?: number;
+  productSlug?: string;
 }
 
 interface CartState {
@@ -28,7 +36,7 @@ interface CartState {
 }
 
 interface CartActions {
-  add: (item: Omit<CartItem, "qty" | "key">) => void;
+  add: (item: Omit<CartItem, "qty" | "key"> & { key?: string }) => void;
   remove: (key: string) => void;
   setQty: (key: string, qty: number) => void;
   clear: () => void;
@@ -38,8 +46,9 @@ const CartContext = createContext<(CartState & CartActions) | null>(null);
 
 const STORAGE_KEY = "istyle-cart-v1";
 
-function buildKey(modelId: number, itemId: number, tier: string) {
-  return `${modelId}-${itemId}-${tier}`;
+function buildKey(item: { kind: CartKind; modelId?: number; itemId?: number; tier?: string; productId?: number }) {
+  if (item.kind === "product") return `prod-${item.productId}`;
+  return `repair-${item.modelId}-${item.itemId}-${item.tier}`;
 }
 
 function loadCart(): CartItem[] {
@@ -74,12 +83,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const add: CartActions["add"] = useCallback((item) => {
     setItems(prev => {
-      const key = buildKey(item.modelId, item.itemId, item.tier);
+      const key = item.key || buildKey(item);
       const existing = prev.find(x => x.key === key);
       if (existing) {
         return prev.map(x => x.key === key ? { ...x, qty: x.qty + 1 } : x);
       }
-      return [...prev, { ...item, key, qty: 1 }];
+      return [...prev, { ...item, key, qty: 1 } as CartItem];
     });
   }, []);
 

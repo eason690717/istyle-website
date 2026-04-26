@@ -22,7 +22,7 @@ export function CartButton() {
   );
 }
 
-// 加入購物車按鈕（用在 quote/[brand]/[model] 頁）
+// 加入維修項目到購物車（用在 quote/[brand]/[model] 頁）
 export function AddToCartButton({
   modelId, modelSlug, modelName, brandSlug, brandName,
   itemId, itemName, tier, tierLabel, unitPrice,
@@ -36,7 +36,7 @@ export function AddToCartButton({
   size?: "sm" | "md";
 }) {
   const { add, items } = useCart();
-  const key = `${modelId}-${itemId}-${tier}`;
+  const key = `repair-${modelId}-${itemId}-${tier}`;
   const inCart = items.find(x => x.key === key);
 
   const cls = size === "md"
@@ -45,7 +45,14 @@ export function AddToCartButton({
 
   return (
     <button
-      onClick={() => add({ modelId, modelSlug, modelName, brandSlug, brandName, itemId, itemName, tier, tierLabel, unitPrice })}
+      onClick={() => add({
+        kind: "repair",
+        title: `${modelName} ${itemName}`,
+        subtitle: tierLabel,
+        unitPrice,
+        modelId, modelSlug, modelName, brandSlug, brandName,
+        itemId, itemName, tier, tierLabel,
+      })}
       className={`${cls} ${
         inCart
           ? "border border-[var(--gold)] bg-[var(--gold)]/15 text-[var(--gold)]"
@@ -54,6 +61,38 @@ export function AddToCartButton({
       type="button"
     >
       {inCart ? `✓ 已加入 ×${inCart.qty}` : "加入訂單"}
+    </button>
+  );
+}
+
+// 加入商品到購物車（用在 /shop/[slug] 頁）
+export function AddProductButton({
+  productId, productSlug, name, imageUrl, unitPrice, size = "md",
+}: {
+  productId: number; productSlug: string; name: string;
+  imageUrl?: string | null; unitPrice: number;
+  size?: "sm" | "md" | "lg";
+}) {
+  const { add, items } = useCart();
+  const key = `prod-${productId}`;
+  const inCart = items.find(x => x.key === key);
+  const cls = size === "lg" ? "px-8 py-3 text-base" : size === "md" ? "px-5 py-2 text-sm" : "px-3 py-1 text-xs";
+
+  return (
+    <button
+      onClick={() => add({
+        kind: "product",
+        title: name,
+        unitPrice,
+        productId, productSlug,
+        imageUrl: imageUrl || undefined,
+      })}
+      className={`rounded-full ${cls} ${
+        inCart ? "border border-[var(--gold)] bg-[var(--gold)]/15 text-[var(--gold)]" : "btn-gold"
+      } transition`}
+      type="button"
+    >
+      {inCart ? `✓ 已加入 ×${inCart.qty}` : "加入購物車"}
     </button>
   );
 }

@@ -51,9 +51,9 @@ export function CheckoutForm() {
           shippingFee,
           note,
           items: items.map(it => ({
-            modelName: it.modelName,
-            itemName: it.itemName,
-            tierLabel: it.tierLabel,
+            modelName: it.modelName || it.title,
+            itemName: it.itemName || (it.kind === "product" ? "商品" : ""),
+            tierLabel: it.tierLabel || it.subtitle || "",
             unitPrice: it.unitPrice,
             qty: it.qty,
           })),

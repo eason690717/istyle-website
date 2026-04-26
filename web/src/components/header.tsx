@@ -5,8 +5,8 @@ import { HeaderSearch } from "./header-search";
 import { CartButton } from "./cart-button";
 
 const NAV = [
+  { href: "/shop", label: "商城" },
   { href: "/quote", label: "維修報價" },
-  { href: "/services", label: "服務項目" },
   { href: "/recycle", label: "二手回收" },
   { href: "/blog", label: "維修知識" },
   { href: "/booking", label: "線上預約" },

@@ -39,23 +39,32 @@ const NOISE_PATTERNS = [
 // 模型代碼括號（如 "(S9380)"、"(SM-G990)"、"(A3084)"）
 const MODEL_CODE_REGEX = /\s*[（(]\s*[A-Z][A-Z0-9-]*\s*[）)]\s*/g;
 
-export function normalizeModelName(raw: string | null | undefined, brandHint?: string): string {
+export function normalizeModelName(raw: string | null | undefined, _brandHint?: string): string {
   if (!raw) return "";
   let n = raw;
 
-  // 1. 移除品牌前綴（中英文不分大小寫）
+  // 1. 移除類別前綴（jyes：平板/手機/筆電…）
+  n = n.replace(/^(平板|手機|筆電|筆記型電腦|遊戲主機|主機)\s+/i, "");
+
+  // 2. 移除品牌前綴（中英文不分大小寫）
   const brandKeys = Object.keys(BRAND_NORM)
     .map(b => b.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
     .join("|");
   n = n.replace(new RegExp(`^(${brandKeys})\\s+`, "i"), "");
 
-  // 2. 移除括號內的型號代碼
+  // 3. 再次移除類別前綴（品牌後可能還有）
+  n = n.replace(/^(平板|手機|筆電|筆記型電腦)\s+/i, "");
+
+  // 4. 移除括號內的型號代碼
   n = n.replace(MODEL_CODE_REGEX, " ");
 
-  // 3. 移除行銷冗詞
+  // 5. 移除行銷冗詞
   for (const re of NOISE_PATTERNS) n = n.replace(re, "");
 
-  // 4. 統一空白
+  // 6. 統一「N 代」→「N」（避免 "iPad Air 4 代" vs "iPad Air 4" 不同）
+  n = n.replace(/(\d+)\s*代/g, "$1");
+
+  // 7. 統一空白
   n = n.replace(/\s+/g, " ").trim();
 
   return n;

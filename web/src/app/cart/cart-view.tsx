@@ -36,24 +36,32 @@ export function CartView() {
               }`}
             >
               <div className="min-w-0 flex-1">
-                <Link
-                  href={`/quote/${it.brandSlug}/${it.modelSlug}`}
-                  className="text-sm font-medium text-[var(--fg-strong)] hover:text-[var(--gold)]"
-                >
-                  {it.modelName}
-                </Link>
+                {it.kind === "repair" && it.brandSlug && it.modelSlug ? (
+                  <Link
+                    href={`/quote/${it.brandSlug}/${it.modelSlug}`}
+                    className="text-sm font-medium text-[var(--fg-strong)] hover:text-[var(--gold)]"
+                  >
+                    {it.title}
+                  </Link>
+                ) : it.kind === "product" && it.productSlug ? (
+                  <Link
+                    href={`/shop/${it.productSlug}`}
+                    className="text-sm font-medium text-[var(--fg-strong)] hover:text-[var(--gold)]"
+                  >
+                    {it.title}
+                  </Link>
+                ) : (
+                  <span className="text-sm font-medium text-[var(--fg-strong)]">{it.title}</span>
+                )}
                 <div className="mt-1 flex flex-wrap items-center gap-2 text-xs">
-                  <span className="rounded bg-[var(--gold)]/15 px-2 py-0.5 text-[var(--gold)]">
-                    {it.brandName}
-                  </span>
-                  <span className="text-[var(--fg-muted)]">{it.itemName}</span>
                   <span className={`rounded px-2 py-0.5 text-[10px] ${
-                    it.tier === "OEM"
-                      ? "bg-[var(--gold)] text-black font-medium"
-                      : "bg-[var(--bg-soft)] text-[var(--gold-soft)]"
+                    it.kind === "product"
+                      ? "bg-[var(--accent-cool)]/20 text-[var(--accent-cool)]"
+                      : "bg-[var(--gold)]/15 text-[var(--gold)]"
                   }`}>
-                    {it.tierLabel}
+                    {it.kind === "product" ? "商品" : "維修"}
                   </span>
+                  {it.subtitle && <span className="text-[var(--fg-muted)]">{it.subtitle}</span>}
                 </div>
                 <div className="mt-2 text-xs text-[var(--fg-muted)]">
                   單價 {formatTwd(it.unitPrice)}
