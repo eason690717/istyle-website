@@ -25,8 +25,26 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const product = await prisma.product.findUnique({ where: { slug } }).catch(() => null);
+  const product = await prisma.product.findUnique({
+    where: { slug },
+    include: {
+      variants: {
+        where: { isActive: true },
+        orderBy: [{ sortOrder: "asc" }, { id: "asc" }],
+      },
+    },
+  }).catch(() => null);
   if (!product || !product.isActive) notFound();
+
+  const hasVariants = product.variants.length > 0;
+  // 取所有變體中最低售價當「起價」顯示
+  const minVariantPrice = hasVariants
+    ? Math.min(...product.variants.map(v => v.price))
+    : null;
+  const displayPrice = hasVariants && minVariantPrice ? minVariantPrice : product.price;
+  const totalStock = hasVariants
+    ? product.variants.reduce((s, v) => s + v.stock, 0)
+    : product.stock;
 
   // 同分類其他商品
   const related = await prisma.product.findMany({
@@ -49,9 +67,12 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
       priceCurrency: "TWD",
       price: product.price,
       availability: product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      price: displayPrice,
+      availability: totalStock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
       seller: { "@type": "Organization", name: SITE.name },
     },
   };
+  // 上面 jsonLd 已經包含一次 price/availability，移除重複
 
   return (
     <>

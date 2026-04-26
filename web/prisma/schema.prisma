@@ -275,28 +275,50 @@ model Product {
   id            Int       @id @default(autoincrement())
   slug          String    @unique
   name          String
-  category      String    // "accessory" | "case" | "screen-protector" | "used-phone" | "tool" | "other"
-  brand         String?   // Apple, Samsung 等（選填）
-  description   String?   // markdown 描述
-  imageUrl      String?   // 主圖
-  imageUrls     String?   // 多圖 JSON array
-  price         Int       // 售價 NTD
-  comparePrice  Int?      // 原價（劃掉顯示折扣）
-  cost          Int?      // 成本（內部用，不顯示）
-  stock         Int       @default(0)
+  category      String
+  brand         String?
+  description   String?
+  imageUrl      String?
+  imageUrls     String?
+  price         Int       // 預設/起價（無變體時用此）
+  comparePrice  Int?
+  cost          Int?
+  stock         Int       @default(0)  // 無變體時用此
   isActive      Boolean   @default(true)
   isFeatured    Boolean   @default(false)
-  // SEO
+  optionLabels  String?   // 規格標籤（如 "顏色,容量"）CSV
   metaTitle     String?
   metaDescription String?
-  // 排序
   sortOrder     Int       @default(0)
+  variants      ProductVariant[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
   @@index([category])
   @@index([isActive])
   @@index([isFeatured])
+}
+
+// 商品規格變體（顏色/容量/尺寸 任意組合）
+// product 可有 0-N 個 variant；有 variant 時 price/stock 用 variant 的
+model ProductVariant {
+  id            Int       @id @default(autoincrement())
+  productId     Int
+  product       Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name          String    // 顯示名稱「黑色 128GB」
+  optionValues  String?   // JSON: {"顏色":"黑","容量":"128GB"}
+  price         Int
+  comparePrice  Int?
+  cost          Int?
+  stock         Int       @default(0)
+  sku           String?   @unique
+  imageUrl      String?
+  sortOrder     Int       @default(0)
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([productId])
 }
 
 // ============================================================
