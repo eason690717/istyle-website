@@ -53,13 +53,26 @@ export function CheckoutForm() {
           shipping,
           shippingFee,
           note,
-          items: items.map(it => ({
-            modelName: it.modelName || it.title,
-            itemName: it.itemName || (it.kind === "product" ? "商品" : ""),
-            tierLabel: it.tierLabel || it.subtitle || "",
-            unitPrice: it.unitPrice,
-            qty: it.qty,
-          })),
+          items: items.map(it => {
+            // 商品：title 已包含「名稱（規格）」，不要再加假 itemName/tierLabel
+            // 維修：modelName/itemName/tierLabel 三段分開存
+            if (it.kind === "product") {
+              return {
+                modelName: it.title,
+                itemName: "",
+                tierLabel: "",
+                unitPrice: it.unitPrice,
+                qty: it.qty,
+              };
+            }
+            return {
+              modelName: it.modelName || it.title,
+              itemName: it.itemName || "",
+              tierLabel: it.tierLabel || it.subtitle || "",
+              unitPrice: it.unitPrice,
+              qty: it.qty,
+            };
+          }),
           subtotal,
           total,
         });
@@ -84,8 +97,12 @@ export function CheckoutForm() {
           {items.map(it => (
             <li key={it.key} className="flex items-center justify-between gap-3 bg-[#141414] px-4 py-2.5 text-sm">
               <div className="min-w-0 flex-1">
-                <div className="truncate text-[var(--fg)]">{it.modelName} · {it.itemName}</div>
-                <div className="text-[10px] text-[var(--fg-muted)]">{it.tierLabel} × {it.qty}</div>
+                <div className="truncate text-[var(--fg)]">
+                  {it.kind === "product" ? it.title : [it.modelName, it.itemName].filter(Boolean).join(" · ")}
+                </div>
+                <div className="text-[10px] text-[var(--fg-muted)]">
+                  {[it.tierLabel || it.subtitle, `× ${it.qty}`].filter(Boolean).join(" ")}
+                </div>
               </div>
               <div className="font-mono text-[var(--gold)]">{formatTwd(it.unitPrice * it.qty)}</div>
             </li>
