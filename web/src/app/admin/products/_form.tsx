@@ -1,5 +1,7 @@
-// 共用商品表單（new + edit 都用）
+"use client";
+import { useActionState } from "react";
 import { ImageUpload } from "./_image-upload";
+import type { ProductFormState } from "./actions";
 
 const CATEGORIES = [
   { value: "case", label: "手機殼" },
@@ -23,11 +25,27 @@ interface Defaults {
 
 export function ProductForm({ defaults = {}, action, submitLabel = "儲存" }: {
   defaults?: Defaults;
-  action: (fd: FormData) => Promise<void> | void;
+  action: (prev: ProductFormState, fd: FormData) => Promise<ProductFormState>;
   submitLabel?: string;
 }) {
+  const [state, formAction, pending] = useActionState<ProductFormState, FormData>(
+    action,
+    { ok: true }
+  );
+
   return (
-    <form action={action} className="space-y-5">
+    <form action={formAction} className="space-y-5">
+      {state.error && (
+        <div className="rounded-lg border border-red-500/60 bg-red-950/40 px-4 py-3 text-sm text-red-200">
+          <strong className="mr-2">儲存失敗：</strong>{state.error}
+        </div>
+      )}
+      {state.ok && state.savedAt && !pending && (
+        <div className="rounded-lg border border-green-500/40 bg-green-950/30 px-4 py-2 text-sm text-green-300">
+          ✓ 已儲存
+        </div>
+      )}
+
       <Field label="商品名稱" required>
         <input name="name" required defaultValue={defaults.name} className={inputCls} placeholder="例：iPhone 16 Pro Max 防摔保護殼" />
       </Field>
@@ -86,8 +104,12 @@ export function ProductForm({ defaults = {}, action, submitLabel = "儲存" }: {
         </div>
       </div>
 
-      <button type="submit" className="btn-gold w-full rounded-full py-3 text-sm font-semibold">
-        {submitLabel}
+      <button
+        type="submit"
+        disabled={pending}
+        className="btn-gold w-full rounded-full py-3 text-sm font-semibold disabled:opacity-50"
+      >
+        {pending ? "儲存中..." : submitLabel}
       </button>
     </form>
   );

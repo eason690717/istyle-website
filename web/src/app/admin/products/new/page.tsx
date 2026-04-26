@@ -15,14 +15,12 @@ export default function NewProductPage() {
         <div className="flex items-start gap-3 text-sm text-[var(--fg)]">
           <span className="text-xl">💡</span>
           <div>
-            <p className="font-medium text-[var(--gold)]">需要設定多種規格（顏色 / 尺寸 / 容量）？</p>
+            <p className="font-medium text-[var(--gold)]">建立後直接進入規格設定</p>
             <p className="mt-1 text-xs text-[var(--fg-muted)]">
-              先填基本資料 → 點下方「建立商品」 → 跳到編輯頁後 → 點右上角
-              <span className="mx-1 rounded border border-[var(--gold)] px-1.5 py-0.5 text-[var(--gold)]">⚙ 規格管理</span>
-              即可使用「⭐ 通用組合產生器」一鍵建立所有變體。
+              填好基本資料按下方按鈕 → 自動跳到「規格管理」頁，可用「⭐ 通用組合產生器」一鍵建立顏色／尺寸／容量等所有變體。
             </p>
             <p className="mt-1 text-[10px] text-[var(--fg-muted)]">
-              沒有變體的商品：售價直接用此頁的「售價」欄位
+              沒有變體的商品：跳過規格頁，直接用此頁的「售價」欄位即可
             </p>
           </div>
         </div>
