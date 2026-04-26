@@ -36,10 +36,11 @@ export async function loginAction({ user, pwd, hp, from }: { user: string; pwd: 
     return { error: "⏱️ 嘗試次數過多（防爆破鎖定）。請等 15 分鐘後再試，或聯絡管理員清除鎖定。" };
   }
 
-  // 蜜罐（機器人才會觸發，正常使用者看不到）→ 安靜回傳通用錯誤
+  // 蜜罐（已停用 — 因瀏覽器自動填充工具會填到隱藏欄位，誤判正常使用者為機器人）
+  // 仍保留欄位但不再阻擋，只記錄供日後分析
   if (hp && hp.length > 0) {
-    await logAttempt({ ip, user: user.slice(0, 50), success: false, reason: "honeypot", userAgent: ua });
-    return { error: CRED_ERROR };
+    await logAttempt({ ip, user: user.slice(0, 50), success: false, reason: "honeypot_warn", userAgent: ua });
+    // 不 return，繼續驗證
   }
 
   const expectedUser = process.env.ADMIN_USER || "admin@i-style.store";
