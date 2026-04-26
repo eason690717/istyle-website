@@ -8,7 +8,7 @@ const Schema = z.object({
   name: z.string().min(1).max(50),
   phone: z.string().regex(/^0\d{8,9}$/),
   email: z.string().email().or(z.literal("")).optional(),
-  shipping: z.enum(["IN_STORE", "CVS_711", "HOME"]),
+  shipping: z.enum(["IN_STORE", "CVS_711", "CVS_FAMI", "CVS_HILIFE", "SF", "LALA"]),
   shippingFee: z.number().int().min(0).max(500),
   note: z.string().max(500).optional(),
   items: z.array(z.object({
@@ -23,9 +23,12 @@ const Schema = z.object({
 });
 
 const SHIPPING_LABEL: Record<string, string> = {
-  IN_STORE: "門市自取",
-  CVS_711: "7-11 取貨",
-  HOME: "宅配到府",
+  IN_STORE: "門市自取（板橋江子翠）",
+  CVS_711: "7-11 賣貨便取貨付款",
+  CVS_FAMI: "全家 賣貨便取貨付款",
+  CVS_HILIFE: "萊爾富 取貨付款",
+  SF: "順豐速運（手動處理）",
+  LALA: "拉拉快遞（手動處理）",
 };
 
 function genToken(): string {

@@ -7,11 +7,14 @@ import { formatTwd } from "@/lib/pricing";
 import { SITE } from "@/lib/site-config";
 import { createCheckoutPaymentLink } from "./actions";
 
-type ShippingOpt = "IN_STORE" | "CVS_711" | "HOME";
-const SHIPPING_OPTIONS: { value: ShippingOpt; label: string; fee: number; hint: string }[] = [
-  { value: "IN_STORE", label: "門市自取（板橋江子翠）", fee: 0, hint: "最快、零運費" },
-  { value: "CVS_711", label: "7-11 取貨", fee: 60, hint: "綠界 7-11 取貨．3-5 工作日" },
-  { value: "HOME", label: "宅配到府", fee: 100, hint: "順豐／黑貓．1-2 工作日" },
+type ShippingOpt = "IN_STORE" | "CVS_711" | "CVS_FAMI" | "CVS_HILIFE" | "SF" | "LALA";
+const SHIPPING_OPTIONS: { value: ShippingOpt; label: string; fee: number; hint: string; auto: boolean }[] = [
+  { value: "IN_STORE", label: "門市自取（板橋江子翠）", fee: 0, hint: "現場驗貨．零運費", auto: true },
+  { value: "CVS_711", label: "7-11 賣貨便取貨付款", fee: 60, hint: "綠界自動寄件．3-5 工作日", auto: true },
+  { value: "CVS_FAMI", label: "全家 賣貨便取貨付款", fee: 60, hint: "綠界自動寄件．3-5 工作日", auto: true },
+  { value: "CVS_HILIFE", label: "萊爾富 取貨付款", fee: 60, hint: "綠界自動寄件．3-5 工作日", auto: true },
+  { value: "SF", label: "順豐速運（外島/急件）", fee: 100, hint: "店家手動寄出．運費後續確認", auto: false },
+  { value: "LALA", label: "拉拉快遞（台北/新北 當日達）", fee: 200, hint: "LINE 確認時段．運費依距離", auto: false },
 ];
 
 export function CheckoutForm() {
@@ -23,7 +26,7 @@ export function CheckoutForm() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
-  const [shipping, setShipping] = useState<"IN_STORE" | "CVS_711" | "HOME">("IN_STORE");
+  const [shipping, setShipping] = useState<ShippingOpt>("IN_STORE");
   const [note, setNote] = useState("");
 
   const shippingFee = SHIPPING_OPTIONS.find(s => s.value === shipping)?.fee || 0;
@@ -129,7 +132,14 @@ export function CheckoutForm() {
                   className="accent-[var(--gold)]"
                 />
                 <div>
-                  <div className="text-sm font-medium text-[var(--fg)]">{opt.label}</div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium text-[var(--fg)]">{opt.label}</span>
+                    {opt.auto ? (
+                      <span className="rounded bg-[var(--success)]/15 px-1.5 py-0.5 text-[9px] text-[var(--success)]">⚡ 自動</span>
+                    ) : (
+                      <span className="rounded bg-[var(--gold-soft)]/20 px-1.5 py-0.5 text-[9px] text-[var(--gold-soft)]">✋ 手動</span>
+                    )}
+                  </div>
                   <div className="text-[10px] text-[var(--fg-muted)]">{opt.hint}</div>
                 </div>
               </div>
