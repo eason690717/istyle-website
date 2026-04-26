@@ -3,9 +3,12 @@
 // 三大模組：AIO（金流）、E-Invoice（發票）、Logistics（物流）
 import { createHash } from "node:crypto";
 
+// 防禦性：Vercel 後台貼值常常帶到尾端換行，會讓 CheckMacValue 永遠算錯
+const env = (k: string) => (process.env[k] || "").trim();
+
 // 金流與發票獨立切換（金流先正式上線，發票等申請通過再切）
-const IS_PROD_PAYMENT = process.env.NODE_ENV === "production" && !!process.env.ECPAY_PROD;
-const IS_PROD_INVOICE = process.env.NODE_ENV === "production" && !!process.env.ECPAY_INVOICE_PROD;
+const IS_PROD_PAYMENT = process.env.NODE_ENV === "production" && !!env("ECPAY_PROD");
+const IS_PROD_INVOICE = process.env.NODE_ENV === "production" && !!env("ECPAY_INVOICE_PROD");
 
 // 測試帳號（綠界提供）— 可直接用做 sandbox
 const TEST_PAYMENT = {
@@ -20,14 +23,14 @@ const TEST_INVOICE = {
 };
 
 const PROD_PAYMENT = {
-  merchantId: process.env.ECPAY_MERCHANT_ID || "",
-  hashKey: process.env.ECPAY_HASH_KEY || "",
-  hashIv: process.env.ECPAY_HASH_IV || "",
+  merchantId: env("ECPAY_MERCHANT_ID"),
+  hashKey: env("ECPAY_HASH_KEY"),
+  hashIv: env("ECPAY_HASH_IV"),
 };
 const PROD_INVOICE = {
-  invoiceMerchantId: process.env.ECPAY_INVOICE_MERCHANT_ID || "",
-  invoiceHashKey: process.env.ECPAY_INVOICE_HASH_KEY || "",
-  invoiceHashIv: process.env.ECPAY_INVOICE_HASH_IV || "",
+  invoiceMerchantId: env("ECPAY_INVOICE_MERCHANT_ID"),
+  invoiceHashKey: env("ECPAY_INVOICE_HASH_KEY"),
+  invoiceHashIv: env("ECPAY_INVOICE_HASH_IV"),
 };
 
 export const ECPAY = {
@@ -64,7 +67,7 @@ export function buildCheckMacValue(params: Record<string, string>, hashKey: stri
     .toLowerCase();
   const mac = createHash("sha256").update(encoded).digest("hex").toUpperCase();
 
-  if (process.env.ECPAY_DEBUG === "1") {
+  if (env("ECPAY_DEBUG") === "1") {
     console.log("[ECPay] sorted keys:", sortedKeys);
     console.log("[ECPay] raw len:", raw.length, "first120:", raw.slice(0, 120), "...last80:", raw.slice(-80));
     console.log("[ECPay] encoded first160:", encoded.slice(0, 160));
