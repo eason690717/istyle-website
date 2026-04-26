@@ -63,7 +63,7 @@ export default function AboutPage() {
         <GoogleMap height={400} />
       </div>
 
-      <div className="mt-6 rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] p-6">
+      <div className="refined-card mt-6 p-6">
         <p className="text-[var(--fg)]"><strong>地址</strong>：{SITE.address.street}</p>
         <p className="mt-2 text-[var(--fg)]"><strong>電話</strong>：<a href={`tel:${SITE.phoneRaw}`} className="text-[var(--gold)]">{SITE.phone}</a></p>
         <p className="mt-2 text-[var(--fg)]"><strong>LINE</strong>：<a href={SITE.lineAddUrl} className="text-[var(--gold)]">{SITE.lineId}</a></p>

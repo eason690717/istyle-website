@@ -3,7 +3,7 @@ import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import {
   COOKIE_NAME, SESSION_DAYS,
-  createSession, safeEqual, logAttempt, isIpLocked, getClientIp,
+  createSession, safeEqual, logAttempt, isIpLocked, getClientIp, isIpAllowed,
 } from "@/lib/admin-auth";
 
 // 通用錯誤訊息（不洩漏哪邊錯）
@@ -13,6 +13,13 @@ export async function loginAction({ user, pwd, hp, from }: { user: string; pwd: 
   const hdrs = await headers();
   const ip = getClientIp(hdrs);
   const ua = hdrs.get("user-agent") || undefined;
+
+  // ⭐ IP 白名單（最強保護）— 不在白名單一律拒絕，連嘗試機會都沒有
+  if (!isIpAllowed(ip)) {
+    await logAttempt({ ip, user: user.slice(0, 50), success: false, reason: "ip_not_allowed", userAgent: ua });
+    // 通用錯誤訊息（不告知是 IP 問題，避免攻擊者得知白名單機制）
+    return { error: GENERIC_ERROR };
+  }
 
   // 蜜罐欄位（機器人會填）
   if (hp && hp.length > 0) {

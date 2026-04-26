@@ -59,21 +59,28 @@ export function HeaderSearch() {
           </svg>
         </button>
       ) : (
-        <div className="relative">
-          <input
-            autoFocus
-            type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="搜尋機型..."
-            className="w-56 rounded-full border border-[var(--gold)] bg-[var(--bg-elevated)] px-4 py-1.5 text-sm text-[var(--fg)] outline-none focus:border-[var(--gold-bright)]"
-          />
-          <button
-            onClick={() => { setOpen(false); setQuery(""); }}
-            className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-[var(--fg-muted)]"
-          >
-            ✕
-          </button>
+        <div className="hero-search-glow w-56">
+          <div className="hero-search-inner !py-1.5 !px-3">
+            <svg viewBox="0 0 24 24" className="mr-2 h-3.5 w-3.5 flex-shrink-0 text-[var(--gold)]" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.3-4.3" />
+            </svg>
+            <input
+              autoFocus
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="搜尋機型..."
+              className="!text-sm"
+            />
+            <button
+              onClick={() => { setOpen(false); setQuery(""); }}
+              className="ml-2 flex-shrink-0 text-xs text-[var(--fg-muted)] hover:text-[var(--gold)]"
+              aria-label="關閉"
+            >
+              ✕
+            </button>
+          </div>
         </div>
       )}
 

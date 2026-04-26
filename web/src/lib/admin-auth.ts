@@ -92,3 +92,24 @@ export function getClientIp(headers: Headers): string {
     "unknown"
   );
 }
+
+// IP 白名單（最強保護 — 只允許指定 IP 登入後台）
+// 設定 ADMIN_ALLOWED_IPS env，CSV 格式：
+//   "193.186.4.172,1.2.3.4"
+// 留空 = 不限制（任何 IP 都能嘗試登入）
+// 支援 CIDR 簡化：尾段 * 通配（如 "193.186.4.*"）
+export function isIpAllowed(ip: string): boolean {
+  const allowList = process.env.ADMIN_ALLOWED_IPS?.trim();
+  if (!allowList) return true; // 沒設白名單 → 全部允許
+  if (!ip || ip === "unknown") return false;
+  const allowed = allowList.split(",").map(s => s.trim()).filter(Boolean);
+  for (const pattern of allowed) {
+    if (pattern === ip) return true;
+    // 通配符：193.186.4.* / 193.186.*.* 等
+    if (pattern.includes("*")) {
+      const re = new RegExp("^" + pattern.replace(/\./g, "\\.").replace(/\*/g, "\\d+") + "$");
+      if (re.test(ip)) return true;
+    }
+  }
+  return false;
+}

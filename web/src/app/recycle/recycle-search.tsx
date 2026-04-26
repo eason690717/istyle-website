@@ -196,27 +196,29 @@ export function RecycleSearch({
 
   return (
     <div className="mt-8">
-      {/* 搜尋框 — 高質感、發光焦點 */}
-      <div className="refined-search relative flex items-center px-5 py-4">
-        <svg className="mr-3 h-5 w-5 flex-shrink-0 text-[var(--gold)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-        <input
-          type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="搜尋機型（如：Air 4、iPhone 15 Pro 256）"
-          autoFocus
-        />
-        {query && (
-          <button
-            onClick={() => setQuery("")}
-            className="ml-2 flex h-6 w-6 items-center justify-center rounded-full text-[var(--fg-muted)] transition hover:bg-[var(--bg-soft)] hover:text-[var(--gold)]"
-            aria-label="清除"
-          >
-            ✕
-          </button>
-        )}
+      {/* 搜尋框 — 動態金光邊框（與 hero 一致） */}
+      <div className="hero-search-glow">
+        <div className="hero-search-inner">
+          <svg className="mr-3 h-5 w-5 flex-shrink-0 text-[var(--gold)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="搜尋機型（如：Air 4、iPhone 15 Pro 256）"
+            autoFocus
+          />
+          {query && (
+            <button
+              onClick={() => setQuery("")}
+              className="ml-2 flex h-6 w-6 items-center justify-center rounded-full text-[var(--fg-muted)] transition hover:bg-[var(--bg-soft)] hover:text-[var(--gold)]"
+              aria-label="清除"
+            >
+              ✕
+            </button>
+          )}
+        </div>
       </div>
 
       {/* 類別 Tabs */}
