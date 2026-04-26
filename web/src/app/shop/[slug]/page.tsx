@@ -3,7 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { SITE } from "@/lib/site-config";
-import { AddProductButton } from "@/components/cart-button";
+import { ProductPurchase } from "./product-purchase";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -104,11 +104,15 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             )}
             <h1 className="mt-2 font-serif text-2xl text-[var(--fg-strong)] md:text-3xl">{product.name}</h1>
 
+            {/* 價格 — 有變體時顯示「起」 */}
             <div className="mt-6 flex items-baseline gap-3">
               <span className="text-gold-gradient font-serif text-3xl font-bold">
-                NT$ {product.price.toLocaleString()}
+                NT$ {displayPrice.toLocaleString()}
               </span>
-              {product.comparePrice && product.comparePrice > product.price && (
+              {hasVariants && minVariantPrice !== Math.max(...product.variants.map(v => v.price)) && (
+                <span className="text-xs text-[var(--fg-muted)]">起（依規格）</span>
+              )}
+              {!hasVariants && product.comparePrice && product.comparePrice > product.price && (
                 <>
                   <span className="text-sm text-[var(--fg-muted)] line-through">
                     NT$ {product.comparePrice.toLocaleString()}
@@ -121,8 +125,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             </div>
 
             <div className="mt-3 text-sm text-[var(--fg-muted)]">
-              {product.stock > 0 ? (
-                <span className="text-[var(--success)]">✓ 現貨 {product.stock} 件</span>
+              {totalStock > 0 ? (
+                <span className="text-[var(--success)]">✓ 現貨 {totalStock} 件{hasVariants ? "（含各規格）" : ""}</span>
               ) : (
                 <span className="text-red-400">✗ 暫時缺貨</span>
               )}
@@ -134,18 +138,27 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               </div>
             )}
 
-            {product.stock > 0 && (
-              <div className="mt-8">
-                <AddProductButton
-                  productId={product.id}
-                  productSlug={product.slug}
-                  name={product.name}
-                  imageUrl={product.imageUrl}
-                  unitPrice={product.price}
-                  size="lg"
-                />
-              </div>
-            )}
+            {/* 規格選擇器 + 加入購物車（client component）*/}
+            <ProductPurchase
+              product={{
+                id: product.id,
+                slug: product.slug,
+                name: product.name,
+                imageUrl: product.imageUrl,
+                price: product.price,
+                stock: product.stock,
+              }}
+              variants={product.variants.map(v => ({
+                id: v.id,
+                name: v.name,
+                optionValues: v.optionValues,
+                price: v.price,
+                comparePrice: v.comparePrice,
+                stock: v.stock,
+                imageUrl: v.imageUrl,
+              }))}
+            />
+
 
             {/* 信任訊號 */}
             <div className="mt-8 grid grid-cols-2 gap-3 text-xs text-[var(--fg-muted)]">
