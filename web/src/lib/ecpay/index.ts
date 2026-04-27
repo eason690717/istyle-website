@@ -125,10 +125,13 @@ export function buildAioPaymentForm(args: {
     ReturnURL: args.returnUrl,
     ChoosePayment: args.paymentType || "ALL",
     EncryptType: "1",
+    // 對齊官方 ECPay SDK 預設欄位（少一個都可能讓綠界判斷不出付款方式）
+    PlatformID: "",
+    InvoiceMark: "N",
+    IgnorePayment: "",
+    DeviceSource: "",
   };
   if (args.clientBackUrl) params.ClientBackURL = args.clientBackUrl;
-  // CustomField1 暫時不送（懷疑跟綠界正式環境某種驗證衝突）
-  // if (args.customField1) params.CustomField1 = args.customField1;
 
   params.CheckMacValue = buildCheckMacValue(params, ECPAY.hashKey, ECPAY.hashIv);
   return params;
