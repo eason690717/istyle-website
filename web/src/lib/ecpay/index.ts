@@ -7,8 +7,10 @@ import { createHash } from "node:crypto";
 const env = (k: string) => (process.env[k] || "").trim();
 
 // 金流與發票獨立切換（金流先正式上線，發票等申請通過再切）
-const IS_PROD_PAYMENT = process.env.NODE_ENV === "production" && !!env("ECPAY_PROD");
-const IS_PROD_INVOICE = process.env.NODE_ENV === "production" && !!env("ECPAY_INVOICE_PROD");
+// ECPAY_FORCE_TEST=1 → 強制走綠界公開測試帳號 3002607（除錯用，正式環境也可以開）
+const FORCE_TEST = env("ECPAY_FORCE_TEST") === "1";
+const IS_PROD_PAYMENT = !FORCE_TEST && process.env.NODE_ENV === "production" && !!env("ECPAY_PROD");
+const IS_PROD_INVOICE = !FORCE_TEST && process.env.NODE_ENV === "production" && !!env("ECPAY_INVOICE_PROD");
 
 // 測試帳號（綠界提供）— 可直接用做 sandbox
 const TEST_PAYMENT = {
