@@ -28,11 +28,13 @@ export async function initiatePayment(args: InitiatePaymentArgs) {
     },
   });
 
+  // 🔬 ECPAY_TEST_SIMPLE=1 時用純 ASCII，隔離特殊字元問題（測試完拔掉）
+  const useSimple = process.env.ECPAY_TEST_SIMPLE?.trim() === "1";
   const formFields = buildAioPaymentForm({
     merchantTradeNo,
     totalAmount: link.amount,
-    tradeDesc: `i時代 - ${link.itemName}`.slice(0, 200),
-    itemName: link.itemName,
+    tradeDesc: useSimple ? "TestPayment" : `i時代 - ${link.itemName}`.slice(0, 200),
+    itemName: useSimple ? "TestItem" : link.itemName,
     returnUrl: `${SITE.url}/api/ecpay/notify`,
     clientBackUrl: `${SITE.url}/pay/${link.token}`,
     paymentType: args.paymentType,
