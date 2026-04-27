@@ -1,8 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
+import { cookies } from "next/headers";
 import { SITE } from "@/lib/site-config";
 import { HeaderSearch } from "./header-search";
 import { CartButton } from "./cart-button";
+import { COOKIE_NAME, verifySession } from "@/lib/admin-auth";
 
 const NAV = [
   { href: "/shop", label: "商城" },
@@ -12,7 +14,11 @@ const NAV = [
   { href: "/booking", label: "線上預約" },
 ];
 
-export function Header() {
+export async function Header() {
+  // 檢查是否已登入後台 → 顯示「後台」快速連結
+  const cookieStore = await cookies();
+  const sessionToken = cookieStore.get(COOKIE_NAME)?.value;
+  const isAdmin = sessionToken ? await verifySession(sessionToken) : false;
   return (
     <header className="sticky top-0 z-30 border-b border-[var(--border)] bg-[var(--bg)]/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
@@ -45,6 +51,15 @@ export function Header() {
           ))}
           <HeaderSearch />
           <CartButton />
+          {isAdmin && (
+            <Link
+              href="/admin"
+              className="rounded-full border border-[var(--gold)]/40 px-3 py-1.5 text-xs text-[var(--gold)] transition hover:bg-[var(--gold)]/10"
+              title="後台管理"
+            >
+              🔒 後台
+            </Link>
+          )}
           <a
             href={`tel:${SITE.phoneRaw}`}
             className="btn-gold rounded-full px-4 py-2 text-sm"
@@ -57,6 +72,11 @@ export function Header() {
         <div className="flex items-center gap-2 md:hidden">
           <HeaderSearch />
           <CartButton />
+          {isAdmin && (
+            <Link href="/admin" className="rounded-full border border-[var(--gold)]/40 px-2 py-1 text-[10px] text-[var(--gold)]">
+              🔒
+            </Link>
+          )}
           <a
             href={`tel:${SITE.phoneRaw}`}
             className="btn-gold rounded-full px-3 py-2 text-xs"

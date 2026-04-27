@@ -1,92 +1,14 @@
 "use server";
-import { cookies, headers } from "next/headers";
+// 帳密 / IP 白名單登入已廢棄，全面改 Google OAuth (/api/auth/google)
+// 此檔案只保留 logoutAction 給 admin layout 用
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import {
-  COOKIE_NAME, TRUSTED_COOKIE, SESSION_DAYS, TRUST_DAYS,
-  createSession, createTrustedDevice, isTrustedDevice,
-  safeEqual, logAttempt, isIpLocked, getClientIp, isIpAllowed,
-} from "@/lib/admin-auth";
-
-// 真實但安全的錯誤訊息：
-//   - 帳密錯誤 → 通用訊息（不告知哪邊錯，防探測有效帳號）
-//   - 環境問題（IP/鎖定）→ 明確訊息（讓老闆知道怎麼排除）
-const CRED_ERROR = "帳號或密碼不正確";
-
-export async function loginAction({ user, pwd, hp, from }: { user: string; pwd: string; hp?: string; from?: string }) {
-  const hdrs = await headers();
-  const ip = getClientIp(hdrs);
-  const ua = hdrs.get("user-agent") || undefined;
-
-  // ⭐ 信任裝置（第一次在白名單 IP 登入後，此瀏覽器永久通行）
-  const cookieStore = await cookies();
-  const trustToken = cookieStore.get(TRUSTED_COOKIE)?.value;
-  const trusted = await isTrustedDevice(trustToken);
-
-  // 不信任的裝置 → IP 白名單檢查
-  if (!trusted && !isIpAllowed(ip)) {
-    await logAttempt({ ip, user: user.slice(0, 50), success: false, reason: "ip_not_allowed", userAgent: ua });
-    return {
-      error: `🚫 此 IP（${ip}）不在允許名單。\n\n您可以：\n1. 切換到家用網路或 4G\n2. 在已信任的電腦登入後，未來此電腦不論在哪都能用\n3. 聯絡管理員加白名單`,
-    };
-  }
-
-  // 速率限制（清楚告知，避免老闆繼續嘗試加深鎖定）
-  if (await isIpLocked(ip)) {
-    await logAttempt({ ip, user: user.slice(0, 50), success: false, reason: "ip_locked", userAgent: ua });
-    return { error: "⏱️ 嘗試次數過多（防爆破鎖定）。請等 15 分鐘後再試，或聯絡管理員清除鎖定。" };
-  }
-
-  // 蜜罐（已停用 — 因瀏覽器自動填充工具會填到隱藏欄位，誤判正常使用者為機器人）
-  // 仍保留欄位但不再阻擋，只記錄供日後分析
-  if (hp && hp.length > 0) {
-    await logAttempt({ ip, user: user.slice(0, 50), success: false, reason: "honeypot_warn", userAgent: ua });
-    // 不 return，繼續驗證
-  }
-
-  const expectedUser = process.env.ADMIN_USER || "admin@i-style.store";
-  const expectedPwd = process.env.ADMIN_PASSWORD || "istyle2026Secure";
-
-  // constant-time compare
-  const userOk = safeEqual(user.trim(), expectedUser);
-  const pwdOk = safeEqual(pwd, expectedPwd);
-
-  if (!userOk || !pwdOk) {
-    await logAttempt({ ip, user: user.slice(0, 50), success: false, reason: "wrong_credentials", userAgent: ua });
-    return { error: CRED_ERROR };
-  }
-
-  // 成功 → 建立 session
-  const token = await createSession({ user: expectedUser, ip, userAgent: ua });
-  await logAttempt({ ip, user: expectedUser, success: true, userAgent: ua });
-
-  cookieStore.set(COOKIE_NAME, token, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "strict",
-    path: "/",
-    maxAge: SESSION_DAYS * 24 * 3600,
-  });
-
-  // 同時設定「信任裝置」cookie — 之後此瀏覽器不論在哪 IP 都能登入
-  if (!trusted) {
-    const trToken = await createTrustedDevice({ user: expectedUser, ip, userAgent: ua });
-    cookieStore.set(TRUSTED_COOKIE, trToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "lax", // lax 才能跨頁面持久
-      path: "/",
-      maxAge: TRUST_DAYS * 24 * 3600,
-    });
-  }
-
-  redirect(from && from.startsWith("/admin") ? from : "/admin");
-}
+import { COOKIE_NAME, revokeSession } from "@/lib/admin-auth";
 
 export async function logoutAction() {
   const cookieStore = await cookies();
   const token = cookieStore.get(COOKIE_NAME)?.value;
   if (token) {
-    const { revokeSession } = await import("@/lib/admin-auth");
     await revokeSession(token);
   }
   cookieStore.delete(COOKIE_NAME);
