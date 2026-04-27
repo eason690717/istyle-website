@@ -46,24 +46,22 @@ export const ECPAY_INVOICE_URL = IS_PROD_INVOICE
   ? "https://einvoice.ecpay.com.tw/B2CInvoice/Issue"
   : "https://einvoice-stage.ecpay.com.tw/B2CInvoice/Issue";
 
-// CheckMacValue：對齊 Renting 專案的 ecpayUrlEncode（已實戰驗證可用）
-// 演算法:
-//   - 排序 key (case-insensitive)
-//   - encodeURIComponent 之後：%20 → +，並 encode ! ' ( ) * 成 %21 %27 %28 %29 %2a
-//   - 全部轉小寫後 SHA-256
+// CheckMacValue：完全對齊綠界官方 npm SDK ecpay_aio_nodejs (urlencode_dot_net)
+// 來源: /tmp/ecpay-test/node_modules/ecpay_aio_nodejs/lib/ecpay_payment/helper.js
+// 關鍵：encodeURIComponent → toLowerCase → 只 replace ' ~ %20，**不要**動 ! ( ) *
+//   - encodeURIComponent 本來就不會 encode ! ' ( ) * ~（unreserved chars）
+//   - 我們之前手動把 ( ) encode 成 %28 %29 是錯的（綠界要保留原字元）
+//   - 之前這個 bug 隱藏，因為 Renting 的 ItemName 沒含 ( )，沒觸發
 export function buildCheckMacValue(params: Record<string, string>, hashKey: string, hashIv: string): string {
   const sortedKeys = Object.keys(params)
     .filter(k => k !== "CheckMacValue")
     .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
   const raw = `HashKey=${hashKey}&${sortedKeys.map(k => `${k}=${params[k]}`).join("&")}&HashIV=${hashIv}`;
   const encoded = encodeURIComponent(raw)
-    .replace(/%20/g, "+")
-    .replace(/!/g, "%21")
+    .toLowerCase()
     .replace(/'/g, "%27")
-    .replace(/\(/g, "%28")
-    .replace(/\)/g, "%29")
-    .replace(/\*/g, "%2a")
-    .toLowerCase();
+    .replace(/~/g, "%7e")
+    .replace(/%20/g, "+");
   const mac = createHash("sha256").update(encoded).digest("hex").toUpperCase();
 
   if (env("ECPAY_DEBUG") === "1") {
