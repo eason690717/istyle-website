@@ -125,13 +125,10 @@ export function buildAioPaymentForm(args: {
     ReturnURL: args.returnUrl,
     ChoosePayment: args.paymentType || "ALL",
     EncryptType: "1",
-    // 對齊官方 ECPay SDK 預設欄位（少一個都可能讓綠界判斷不出付款方式）
-    PlatformID: "",
-    InvoiceMark: "N",
-    IgnorePayment: "",
-    DeviceSource: "",
   };
   if (args.clientBackUrl) params.ClientBackURL = args.clientBackUrl;
+  // 注意：不送 PlatformID/InvoiceMark/IgnorePayment/DeviceSource —
+  // Renting 沒送也能用，加了反而可能讓綠界 routing 看不到付款方式 → 10300023
 
   params.CheckMacValue = buildCheckMacValue(params, ECPAY.hashKey, ECPAY.hashIv);
   return params;
