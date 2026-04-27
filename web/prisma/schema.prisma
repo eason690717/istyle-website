@@ -418,3 +418,94 @@ model RecycleScrapeLog {
   startedAt   DateTime
   finishedAt  DateTime @default(now())
 }
+
+// ============================================================
+// 自建流量分析（替代 GA / Vercel Analytics 的後台 view）
+// ============================================================
+model PageView {
+  id         Int      @id @default(autoincrement())
+  path       String   // "/shop/p-15"
+  referrer   String?  // "https://www.google.com/" 或 "(direct)"
+  utmSource  String?
+  utmMedium  String?
+  utmCampaign String?
+  sessionId  String   // 30 分鐘活躍 session id（cookie）
+  ipHash     String?  // SHA-256(ip + salt) 隱私保護
+  country    String?  // 從 Vercel headers 取
+  city       String?
+  device     String?  // mobile | tablet | desktop
+  browser    String?
+  os         String?
+  createdAt  DateTime @default(now())
+
+  @@index([path])
+  @@index([sessionId])
+  @@index([createdAt])
+}
+
+// 自定義行為事件（加購、選規格、按 LINE…）
+model AnalyticsEvent {
+  id         Int      @id @default(autoincrement())
+  name       String   // "add_to_cart" | "variant_selected" | "contact_line"
+  path       String?  // 觸發頁面
+  sessionId  String
+  data       String?  // JSON：商品/規格/金額等
+  createdAt  DateTime @default(now())
+
+  @@index([name, createdAt])
+  @@index([sessionId])
+  @@index([createdAt])
+}
+
+// ============================================================
+// 維修進度查詢（客人輸入單號 + 手機末 4 碼查得到）
+// ============================================================
+model RepairTicket {
+  id              Int      @id @default(autoincrement())
+  ticketNumber    String   @unique  // 取件單號 (e.g. "R26042701")
+  customerName    String
+  phoneLast4      String   // 手機末 4 碼，當查詢密碼用（不存全號）
+  deviceModel     String   // 例如 "iPhone 15 Pro"
+  issueDescription String   // 客人陳述問題
+  status          String   @default("RECEIVED")
+  // RECEIVED / DIAGNOSING / AWAITING_PARTS / REPAIRING / DONE / PICKED_UP / CANCELLED
+  estimatedCost   Int?     // NT$ 估價
+  finalCost       Int?     // 實際收費
+  estimatedDoneAt DateTime?
+  pickedUpAt      DateTime?
+  // 進度時間軸（JSON array）：[{at: ISO, status: "DIAGNOSING", note: "...", photos: [url]}]
+  timeline        String   @default("[]")
+  internalNotes   String?  // 店家內部備註，不對客人顯示
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([ticketNumber])
+  @@index([phoneLast4])
+  @@index([createdAt])
+}
+
+// ============================================================
+// 維修真實案例（SEO + 信任）
+// ============================================================
+model CaseStudy {
+  id            Int      @id @default(autoincrement())
+  slug          String   @unique
+  title         String
+  brand         String   // "Apple" / "Samsung" / ...
+  deviceModel   String   // "iPhone 15 Pro Max"
+  issueType     String   // "螢幕破裂" / "電池更換" / "進水"
+  description   String   // Markdown
+  beforePhotos  String   @default("[]")  // JSON array URLs
+  afterPhotos   String   @default("[]")
+  repairMinutes Int?
+  cost          Int?
+  customerInitial String?  // "謝先生"
+  isPublished   Boolean  @default(true)
+  publishedAt   DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([slug])
+  @@index([brand])
+  @@index([publishedAt])
+}
