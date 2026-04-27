@@ -91,6 +91,16 @@ export function verifyCheckMacValue(params: Record<string, string>, hashKey: str
   return received.toUpperCase() === expected;
 }
 
+// 對齊 Renting 的 sanitize：把容易讓綠界解析錯的字元換掉
+// 特別處理：& = # 影響 form-encoded parsing；全形括號 ／ 中文標點符號據實測會讓綠界算錯 MAC
+function sanitizeForECPay(s: string): string {
+  return s
+    .replace(/[&=#]/g, "_")          // form parser killers
+    .replace(/[（）]/g, "")           // 全形括號去掉
+    .replace(/\s+/g, " ")            // 多重空白合併
+    .trim();
+}
+
 // 產生 ECPay AIO 付款表單欄位
 export function buildAioPaymentForm(args: {
   merchantTradeNo: string;       // 唯一交易號（≤ 20 字）
@@ -100,7 +110,7 @@ export function buildAioPaymentForm(args: {
   returnUrl: string;             // server callback (POST)
   clientBackUrl?: string;        // 付款後返回網址
   paymentType?: "Credit" | "ATM" | "CVS" | "ALL";  // 預設 ALL
-  customField1?: string;         // 自訂欄位 1
+  customField1?: string;         // 自訂欄位 1（注意：留空才不影響 MAC）
 }): Record<string, string> {
   const now = new Date();
   const taipei = new Date(now.getTime() + 8 * 3600_000);
@@ -112,14 +122,15 @@ export function buildAioPaymentForm(args: {
     MerchantTradeDate: ts,
     PaymentType: "aio",
     TotalAmount: String(args.totalAmount),
-    TradeDesc: args.tradeDesc.slice(0, 200),
-    ItemName: args.itemName.slice(0, 400),
+    TradeDesc: sanitizeForECPay(args.tradeDesc).slice(0, 200),
+    ItemName: sanitizeForECPay(args.itemName).slice(0, 400),
     ReturnURL: args.returnUrl,
     ChoosePayment: args.paymentType || "ALL",
     EncryptType: "1",
   };
   if (args.clientBackUrl) params.ClientBackURL = args.clientBackUrl;
-  if (args.customField1) params.CustomField1 = args.customField1;
+  // CustomField1 暫時不送（懷疑跟綠界正式環境某種驗證衝突）
+  // if (args.customField1) params.CustomField1 = args.customField1;
 
   params.CheckMacValue = buildCheckMacValue(params, ECPAY.hashKey, ECPAY.hashIv);
   return params;
