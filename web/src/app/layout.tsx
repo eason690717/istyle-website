@@ -7,6 +7,8 @@ import { FloatingCta } from "@/components/floating-cta";
 import { PromoBanner } from "@/components/promo-banner";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Tracker } from "@/components/tracker";
+import { Suspense } from "react";
 import { CartProvider } from "@/lib/cart";
 import { SITE } from "@/lib/site-config";
 
@@ -105,6 +107,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </CartProvider>
         <Analytics />
         <SpeedInsights />
+        <Suspense fallback={null}><Tracker /></Suspense>
       </body>
     </html>
   );

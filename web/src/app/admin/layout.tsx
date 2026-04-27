@@ -18,6 +18,7 @@ const NAV = [
   { href: "/admin/orders", label: "訂單" },
   { href: "/admin/prices", label: "維修報價" },
   { href: "/admin/recycle", label: "回收價" },
+  { href: "/admin/analytics", label: "📊 流量" },
   { href: "/admin/cron", label: "自動排程" },
   { href: "/admin/settings", label: "設定" },
 ];
