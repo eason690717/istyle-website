@@ -8,6 +8,7 @@ import { PromoBanner } from "@/components/promo-banner";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Tracker } from "@/components/tracker";
+import { ExitIntent } from "@/components/exit-intent";
 import { Suspense } from "react";
 import { CartProvider } from "@/lib/cart";
 import { SITE } from "@/lib/site-config";
@@ -108,6 +109,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Analytics />
         <SpeedInsights />
         <Suspense fallback={null}><Tracker /></Suspense>
+        <ExitIntent />
       </body>
     </html>
   );
