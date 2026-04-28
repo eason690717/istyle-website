@@ -590,3 +590,30 @@ model SaleItem {
   @@index([productId])
   @@index([productVariantId])
 }
+
+// ============================================================
+// 庫存異動紀錄（進貨 / 盤點 / 銷售 / 退貨 / 損壞）
+// ============================================================
+model StockMovement {
+  id              Int      @id @default(autoincrement())
+  productId       Int?
+  productVariantId Int?
+  type            String   // RECEIVE | ADJUST | SALE | RETURN | DAMAGE | TRANSFER
+  qty             Int      // 正數=進、負數=出
+  prevStock       Int
+  newStock        Int
+  unitCost        Int?
+  saleId          Int?
+  poNumber        String?
+  supplier        String?
+  reason          String?
+  notes           String?
+  staffId         Int?
+  adminEmail      String?
+  createdAt       DateTime @default(now())
+
+  @@index([productId])
+  @@index([productVariantId])
+  @@index([type, createdAt])
+  @@index([createdAt])
+}

@@ -43,25 +43,41 @@ export async function createSale(args: {
   // 一次 transaction：建 Sale + items，並扣庫存
   try {
     const sale = await prisma.$transaction(async (tx) => {
-      // 庫存檢查 + 預扣
+      // 庫存檢查 + 預扣 + 記 StockMovement
       for (const it of args.items) {
         if (it.itemType === "PRODUCT" && it.productId) {
           const p = await tx.product.findUnique({ where: { id: it.productId } });
           if (!p) throw new Error(`商品 ${it.name} 不存在`);
-          if (p.stock < it.qty) {
-            throw new Error(`商品 ${it.name} 庫存不足（剩 ${p.stock}）`);
-          }
-          await tx.product.update({
-            where: { id: it.productId },
-            data: { stock: { decrement: it.qty } },
+          if (p.stock < it.qty) throw new Error(`商品 ${it.name} 庫存不足（剩 ${p.stock}）`);
+          const newStock = p.stock - it.qty;
+          await tx.product.update({ where: { id: it.productId }, data: { stock: newStock } });
+          await tx.stockMovement.create({
+            data: {
+              type: "SALE",
+              productId: it.productId,
+              qty: -it.qty,
+              prevStock: p.stock,
+              newStock,
+              staffId: staff.staffId,
+              reason: `POS 銷售`,
+            },
           });
         } else if (it.itemType === "VARIANT" && it.productVariantId) {
           const v = await tx.productVariant.findUnique({ where: { id: it.productVariantId } });
           if (!v) throw new Error(`規格 ${it.name} 不存在`);
           if (v.stock < it.qty) throw new Error(`${it.name} 庫存不足（剩 ${v.stock}）`);
-          await tx.productVariant.update({
-            where: { id: it.productVariantId },
-            data: { stock: { decrement: it.qty } },
+          const newStock = v.stock - it.qty;
+          await tx.productVariant.update({ where: { id: it.productVariantId }, data: { stock: newStock } });
+          await tx.stockMovement.create({
+            data: {
+              type: "SALE",
+              productVariantId: it.productVariantId,
+              qty: -it.qty,
+              prevStock: v.stock,
+              newStock,
+              staffId: staff.staffId,
+              reason: `POS 銷售`,
+            },
           });
         }
         // REPAIR / CUSTOM 不扣庫存
@@ -119,12 +135,40 @@ export async function voidSale(saleId: number, reason: string) {
       if (!sale) throw new Error("找不到交易");
       if (sale.paymentStatus === "VOID") throw new Error("已作廢");
 
-      // 庫存還原
+      // 庫存還原 + 記 StockMovement RETURN
       for (const it of sale.items) {
         if (it.itemType === "PRODUCT" && it.productId) {
-          await tx.product.update({ where: { id: it.productId }, data: { stock: { increment: it.qty } } });
+          const p = await tx.product.findUnique({ where: { id: it.productId } });
+          if (!p) continue;
+          const newStock = p.stock + it.qty;
+          await tx.product.update({ where: { id: it.productId }, data: { stock: newStock } });
+          await tx.stockMovement.create({
+            data: {
+              type: "RETURN",
+              productId: it.productId,
+              qty: it.qty,
+              prevStock: p.stock,
+              newStock,
+              staffId: staff.staffId,
+              reason: `POS 作廢: ${reason}`,
+            },
+          });
         } else if (it.itemType === "VARIANT" && it.productVariantId) {
-          await tx.productVariant.update({ where: { id: it.productVariantId }, data: { stock: { increment: it.qty } } });
+          const v = await tx.productVariant.findUnique({ where: { id: it.productVariantId } });
+          if (!v) continue;
+          const newStock = v.stock + it.qty;
+          await tx.productVariant.update({ where: { id: it.productVariantId }, data: { stock: newStock } });
+          await tx.stockMovement.create({
+            data: {
+              type: "RETURN",
+              productVariantId: it.productVariantId,
+              qty: it.qty,
+              prevStock: v.stock,
+              newStock,
+              staffId: staff.staffId,
+              reason: `POS 作廢: ${reason}`,
+            },
+          });
         }
       }
 
