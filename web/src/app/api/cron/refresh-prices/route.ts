@@ -1,16 +1,16 @@
 // 每週自動更新維修報價（cerphone 全品牌）
 import { NextRequest, NextResponse } from "next/server";
 import { scrapeCerphoneAll } from "@/lib/cerphone/scraper";
+import { checkCronAuth } from "@/lib/cron-auth";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300; // cerphone 10 個品牌頁需時較長
 
 export async function GET(req: NextRequest) {
-  const expected = process.env.CRON_SECRET;
-  const auth = req.headers.get("authorization");
-  const secret = req.nextUrl.searchParams.get("secret");
-  if (expected && auth !== `Bearer ${expected}` && secret !== expected) {
-    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const auth = checkCronAuth(req);
+  if (!auth.ok) {
+    console.error("[cron/refresh-prices]", auth.reason);
+    return NextResponse.json({ error: "unauthorized", reason: auth.reason }, { status: 401 });
   }
 
   try {

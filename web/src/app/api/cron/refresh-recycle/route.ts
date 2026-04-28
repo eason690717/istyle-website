@@ -3,20 +3,16 @@
 // 也可手動呼叫：GET /api/cron/refresh-recycle?secret=...
 import { NextRequest, NextResponse } from "next/server";
 import { refreshRecyclePrices } from "@/lib/recycle/aggregate";
+import { checkCronAuth } from "@/lib/cron-auth";
 
 export const maxDuration = 60; // 秒
 export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
-  // 驗證：來自 Vercel Cron，或帶 secret
-  const authHeader = req.headers.get("authorization");
-  const secret = req.nextUrl.searchParams.get("secret");
-  const expected = process.env.CRON_SECRET;
-  const isVercelCron = authHeader === `Bearer ${expected}`;
-  const isManualCall = expected && secret === expected;
-
-  if (expected && !isVercelCron && !isManualCall) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const auth = checkCronAuth(req);
+  if (!auth.ok) {
+    console.error("[cron/refresh-recycle]", auth.reason);
+    return NextResponse.json({ error: "unauthorized", reason: auth.reason }, { status: 401 });
   }
 
   try {

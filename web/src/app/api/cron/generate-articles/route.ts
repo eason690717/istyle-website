@@ -5,16 +5,16 @@ import {
   generateBrandGuide,
   generateModelTroublePost,
 } from "@/lib/auto-blog";
+import { checkCronAuth } from "@/lib/cron-auth";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
 
 export async function GET(req: NextRequest) {
-  const expected = process.env.CRON_SECRET;
-  const auth = req.headers.get("authorization");
-  const secret = req.nextUrl.searchParams.get("secret");
-  if (expected && auth !== `Bearer ${expected}` && secret !== expected) {
-    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const auth = checkCronAuth(req);
+  if (!auth.ok) {
+    console.error("[cron/generate-articles]", auth.reason);
+    return NextResponse.json({ error: "unauthorized", reason: auth.reason }, { status: 401 });
   }
 
   try {
