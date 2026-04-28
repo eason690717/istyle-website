@@ -513,3 +513,80 @@ model CaseStudy {
   @@index([brand])
   @@index([publishedAt])
 }
+
+// ============================================================
+// POS 系統（店內結帳）
+// ============================================================
+
+model StaffMember {
+  id        Int      @id @default(autoincrement())
+  code      String   @unique
+  name      String
+  pinHash   String
+  role      String   @default("CASHIER")
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  sessions  StaffSession[]
+  sales     Sale[]
+}
+
+model StaffSession {
+  id         Int       @id @default(autoincrement())
+  token      String    @unique
+  staffId    Int
+  staff      StaffMember @relation(fields: [staffId], references: [id])
+  expiresAt  DateTime
+  createdAt  DateTime  @default(now())
+  revokedAt  DateTime?
+
+  @@index([staffId])
+}
+
+model Sale {
+  id              Int      @id @default(autoincrement())
+  saleNumber      String   @unique
+  staffId         Int
+  staff           StaffMember @relation(fields: [staffId], references: [id])
+  customerName    String?
+  customerPhone   String?
+  subtotal        Int
+  discount        Int      @default(0)
+  total           Int
+  paymentMethod   String
+  paymentStatus   String   @default("PAID")
+  paidAt          DateTime?
+  notes           String?
+  repairTicketId  Int?
+  invoiceNumber   String?
+  invoiceIssuedAt DateTime?
+  voidedAt        DateTime?
+  voidReason      String?
+  createdAt       DateTime @default(now())
+  items           SaleItem[]
+
+  @@index([saleNumber])
+  @@index([staffId])
+  @@index([createdAt])
+  @@index([paymentStatus])
+}
+
+model SaleItem {
+  id              Int      @id @default(autoincrement())
+  saleId          Int
+  sale            Sale     @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  itemType        String
+  productId       Int?
+  productVariantId Int?
+  repairPriceId   Int?
+  name            String
+  sku             String?
+  qty             Int      @default(1)
+  unitPrice       Int
+  lineTotal       Int
+  notes           String?
+
+  @@index([saleId])
+  @@index([productId])
+  @@index([productVariantId])
+}

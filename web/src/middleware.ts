@@ -84,16 +84,26 @@ export function middleware(req: NextRequest) {
   }
 
   // === 7. 後台保護 ===
-  if (!pathname.startsWith("/admin")) return NextResponse.next();
-  if (pathname === "/admin/login") return NextResponse.next();
-
-  const cookie = req.cookies.get(COOKIE_NAME)?.value;
-  if (!cookie) {
-    const url = req.nextUrl.clone();
-    url.pathname = "/admin/login";
-    url.searchParams.set("from", pathname);
-    return NextResponse.redirect(url);
+  if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
+    const cookie = req.cookies.get(COOKIE_NAME)?.value;
+    if (!cookie) {
+      const url = req.nextUrl.clone();
+      url.pathname = "/admin/login";
+      url.searchParams.set("from", pathname);
+      return NextResponse.redirect(url);
+    }
   }
+
+  // === 8. POS 結帳台保護（店員 PIN）===
+  if (pathname.startsWith("/pos") && pathname !== "/pos/login") {
+    const staffCookie = req.cookies.get("istyle_staff")?.value;
+    if (!staffCookie) {
+      const url = req.nextUrl.clone();
+      url.pathname = "/pos/login";
+      return NextResponse.redirect(url);
+    }
+  }
+
   return NextResponse.next();
 }
 
@@ -107,6 +117,7 @@ function doRedirect(req: NextRequest, dest: string) {
 export const config = {
   matcher: [
     "/admin/:path*",
+    "/pos/:path*",
     "/pages/:path*",
     "/products/:path*",
     "/collections/:path*",

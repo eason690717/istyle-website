@@ -15,6 +15,8 @@ const NAV = [
   { href: "/admin/products", label: "📦 商品" },
   { href: "/admin/repairs", label: "🔧 維修單" },
   { href: "/admin/cases", label: "📋 案例" },
+  { href: "/admin/sales", label: "💰 交易" },
+  { href: "/admin/staff", label: "👥 店員" },
   { href: "/admin/bookings", label: "預約" },
   { href: "/admin/payment-links", label: "付款連結" },
   { href: "/admin/orders", label: "訂單" },
