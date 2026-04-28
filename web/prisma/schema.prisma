@@ -72,7 +72,11 @@ model RepairPrice {
   cerphonePriceRaw  String?
   cerphonePrice     Int?
   calculatedPrice   Int?
-  manualOverride    Int?
+  // === 手動異動價（優先於 calculatedPrice）===
+  manualOverride    Int?        // 異動後的售價
+  overrideReason    String?     // 異動原因（admin 看得到）
+  overriddenAt      DateTime?   // 異動時間
+  overriddenBy      String?     // 異動者 email
   partsCost         Int?
   outsourceCost     Int?
   laborCost         Int?
