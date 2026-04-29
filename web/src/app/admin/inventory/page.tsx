@@ -23,39 +23,27 @@ export default async function InventoryHomePage() {
     <div className="space-y-6">
       <h1 className="font-serif text-2xl text-[var(--gold)]">📦 庫存管理</h1>
 
-      {/* 三大入口卡片 — 手機友善大按鈕 */}
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-        <Link
-          href="/admin/inventory/receive"
-          className="group flex items-center gap-4 rounded-2xl border-2 border-[var(--border)] bg-[var(--bg-elevated)] p-6 transition hover:border-green-500"
-        >
-          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-green-500/20 text-3xl">📥</div>
-          <div>
-            <div className="font-serif text-lg text-[var(--gold)] group-hover:text-green-400">進貨</div>
-            <div className="text-xs text-[var(--fg-muted)]">掃條碼／語音 → +庫存</div>
-          </div>
+      {/* 入口卡片 — 手機友善大按鈕 */}
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+        <Link href="/admin/inventory/receive" className="group flex flex-col items-center justify-center rounded-2xl border-2 border-[var(--border)] bg-[var(--bg-elevated)] p-4 transition hover:border-green-500">
+          <div className="text-3xl">📥</div>
+          <div className="mt-2 font-serif text-base text-[var(--gold)] group-hover:text-green-400">進貨</div>
+          <div className="text-[10px] text-[var(--fg-muted)]">掃條碼／語音</div>
         </Link>
-
-        <Link
-          href="/admin/inventory/count"
-          className="group flex items-center gap-4 rounded-2xl border-2 border-[var(--border)] bg-[var(--bg-elevated)] p-6 transition hover:border-blue-500"
-        >
-          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-blue-500/20 text-3xl">📊</div>
-          <div>
-            <div className="font-serif text-lg text-[var(--gold)] group-hover:text-blue-400">盤點</div>
-            <div className="text-xs text-[var(--fg-muted)]">實際數對系統數，秒抓誤差</div>
-          </div>
+        <Link href="/admin/inventory/count" className="group flex flex-col items-center justify-center rounded-2xl border-2 border-[var(--border)] bg-[var(--bg-elevated)] p-4 transition hover:border-blue-500">
+          <div className="text-3xl">📊</div>
+          <div className="mt-2 font-serif text-base text-[var(--gold)] group-hover:text-blue-400">盤點</div>
+          <div className="text-[10px] text-[var(--fg-muted)]">秒抓誤差</div>
         </Link>
-
-        <Link
-          href="/admin/inventory/movements"
-          className="group flex items-center gap-4 rounded-2xl border-2 border-[var(--border)] bg-[var(--bg-elevated)] p-6 transition hover:border-[var(--gold)]"
-        >
-          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-[var(--gold)]/20 text-3xl">📋</div>
-          <div>
-            <div className="font-serif text-lg text-[var(--gold)] group-hover:text-[var(--gold-bright)]">異動紀錄</div>
-            <div className="text-xs text-[var(--fg-muted)]">完整稽核 trail</div>
-          </div>
+        <Link href="/admin/inventory/import" className="group flex flex-col items-center justify-center rounded-2xl border-2 border-[var(--border)] bg-[var(--bg-elevated)] p-4 transition hover:border-purple-500">
+          <div className="text-3xl">📑</div>
+          <div className="mt-2 font-serif text-base text-[var(--gold)] group-hover:text-purple-400">CSV 匯入</div>
+          <div className="text-[10px] text-[var(--fg-muted)]">批次進貨</div>
+        </Link>
+        <Link href="/admin/inventory/movements" className="group flex flex-col items-center justify-center rounded-2xl border-2 border-[var(--border)] bg-[var(--bg-elevated)] p-4 transition hover:border-[var(--gold)]">
+          <div className="text-3xl">📋</div>
+          <div className="mt-2 font-serif text-base text-[var(--gold)] group-hover:text-[var(--gold-bright)]">異動紀錄</div>
+          <div className="text-[10px] text-[var(--fg-muted)]">完整稽核</div>
         </Link>
       </div>
 

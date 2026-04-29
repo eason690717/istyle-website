@@ -196,7 +196,7 @@ export function PosTerminal({
         </div>
       </header>
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 flex-col overflow-hidden md:flex-row">
         {/* 左：商品 / 維修選單 */}
         <main className="flex flex-1 flex-col overflow-hidden">
           {/* Tabs + 搜尋 */}
@@ -271,8 +271,8 @@ export function PosTerminal({
           </div>
         </main>
 
-        {/* 右：購物車 */}
-        <aside className="flex w-[380px] shrink-0 flex-col border-l border-[var(--border)] bg-[var(--bg-elevated)]">
+        {/* 右：購物車（手機上是底部 / 桌機是右側） */}
+        <aside className="flex shrink-0 flex-col border-t border-[var(--border)] bg-[var(--bg-elevated)] md:max-h-screen md:w-[380px] md:border-l md:border-t-0">
           <div className="flex items-center justify-between border-b border-[var(--border)] p-3">
             <span className="font-serif text-base text-[var(--gold)]">🛒 購物車（{cart.reduce((s, c) => s + c.qty, 0)} 件）</span>
             {cart.length > 0 && <button onClick={clearCart} className="text-xs text-red-400 hover:underline">清空</button>}
