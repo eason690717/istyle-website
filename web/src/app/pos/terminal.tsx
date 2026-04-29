@@ -474,7 +474,12 @@ export function PosTerminal({
 
           <div className="flex-1 overflow-y-auto p-2">
             {cart.length === 0 ? (
-              <div className="py-12 text-center text-xs text-[var(--fg-muted)]">點左邊商品/維修加入</div>
+              <div className="flex flex-col items-center justify-center py-12 text-center">
+                <div className="text-5xl opacity-60">🛒</div>
+                <div className="mt-3 text-sm font-medium text-[var(--fg)]">購物車空空的</div>
+                <div className="mt-1 text-xs text-[var(--fg-muted)]">點左邊商品 / 維修</div>
+                <div className="text-xs text-[var(--fg-muted)]">或按 📷 掃條碼加入</div>
+              </div>
             ) : (
               <div className="space-y-1.5">
                 {cart.map(c => (
