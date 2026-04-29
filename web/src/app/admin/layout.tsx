@@ -18,6 +18,7 @@ const NAV = [
   { href: "/admin/cases", label: "📋 案例" },
   { href: "/admin/sales", label: "💰 POS 交易" },
   { href: "/admin/all-sales", label: "📊 全銷售" },
+  { href: "/admin/customers", label: "👤 客戶" },
   { href: "/admin/staff", label: "👥 店員" },
   { href: "/admin/bookings", label: "預約" },
   { href: "/admin/payment-links", label: "付款連結" },
