@@ -20,7 +20,7 @@ interface Defaults {
   name?: string; slug?: string; category?: string; brand?: string;
   description?: string; imageUrl?: string;
   price?: number; comparePrice?: number | null; cost?: number | null;
-  stock?: number; isActive?: boolean; isFeatured?: boolean; sortOrder?: number;
+  stock?: number; isActive?: boolean; isFeatured?: boolean; tracksSerial?: boolean; sortOrder?: number;
 }
 
 export function ProductForm({ defaults = {}, action, submitLabel = "儲存" }: {
@@ -103,6 +103,16 @@ export function ProductForm({ defaults = {}, action, submitLabel = "儲存" }: {
           </label>
         </div>
       </div>
+
+      <label className="flex cursor-pointer items-start gap-2 rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] p-3 text-sm">
+        <input name="tracksSerial" type="checkbox" defaultChecked={defaults.tracksSerial ?? false} className="mt-0.5 h-4 w-4 accent-[var(--gold)]" />
+        <div>
+          <div className="font-medium text-[var(--fg)]">📱 追蹤序號 / IMEI（3C 商品建議開）</div>
+          <div className="mt-0.5 text-[10px] text-[var(--fg-muted)]">
+            開啟後：進貨要逐筆掃 IMEI、POS 結帳要選哪個序號賣出、保固頁能查到原始售出紀錄
+          </div>
+        </div>
+      </label>
 
       <button
         type="submit"

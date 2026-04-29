@@ -41,6 +41,7 @@ export async function createProduct(_prev: ProductFormState, fd: FormData): Prom
         stock: parseInt(fd.get("stock")?.toString() || "0"),
         isActive: fd.get("isActive") === "on",
         isFeatured: fd.get("isFeatured") === "on",
+        tracksSerial: fd.get("tracksSerial") === "on",
         sortOrder: parseInt(fd.get("sortOrder")?.toString() || "0"),
       },
     });
@@ -74,6 +75,7 @@ export async function updateProduct(id: number, _prev: ProductFormState, fd: For
         stock: parseInt(fd.get("stock")?.toString() || "0"),
         isActive: fd.get("isActive") === "on",
         isFeatured: fd.get("isFeatured") === "on",
+        tracksSerial: fd.get("tracksSerial") === "on",
         sortOrder: parseInt(fd.get("sortOrder")?.toString() || "0"),
       },
     });

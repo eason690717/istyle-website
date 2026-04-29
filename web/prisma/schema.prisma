@@ -292,7 +292,8 @@ model Product {
   price         Int       // 預設/起價（無變體時用此）
   comparePrice  Int?
   cost          Int?
-  stock         Int       @default(0)  // 無變體時用此
+  stock         Int       @default(0)  // 無變體時用此（tracksSerial 時這欄是 cache，正解 = COUNT(ProductSerial WHERE IN_STOCK)）
+  tracksSerial  Boolean   @default(false)  // ⭐ 是否追蹤序號 / IMEI（3C 商品開）
   isActive      Boolean   @default(true)
   isFeatured    Boolean   @default(false)
   optionLabels  String?   // 規格標籤（如 "顏色,容量"）CSV
@@ -586,6 +587,7 @@ model SaleItem {
   repairPriceId   Int?
   name            String
   sku             String?
+  serial          String?  // 賣出時記錄的序號 / IMEI（保固查詢用）
   qty             Int      @default(1)
   unitPrice       Int
   lineTotal       Int
@@ -594,6 +596,7 @@ model SaleItem {
   @@index([saleId])
   @@index([productId])
   @@index([productVariantId])
+  @@index([serial])
 }
 
 // ============================================================
@@ -621,4 +624,29 @@ model StockMovement {
   @@index([productVariantId])
   @@index([type, createdAt])
   @@index([createdAt])
+}
+
+// ============================================================
+// 序號 / IMEI 追蹤（3C 商品必備）
+// ============================================================
+model ProductSerial {
+  id              Int       @id @default(autoincrement())
+  productId       Int
+  productVariantId Int?
+  serial          String    // IMEI 或序號（每個商品不重複）
+  status          String    @default("IN_STOCK")  // IN_STOCK | SOLD | RESERVED | DAMAGED | RETURNED
+  cost            Int?      // 進貨成本
+  receivedAt      DateTime  @default(now())
+  soldAt          DateTime?
+  saleId          Int?
+  saleItemId      Int?
+  notes           String?
+  receivedBy      String?   // adminEmail / staffCode
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@unique([productId, serial])
+  @@index([serial])
+  @@index([status, productId])
+  @@index([saleId])
 }

@@ -60,6 +60,8 @@ interface ProductOption {
   price: number;
   stock: number;
   imageUrl: string | null;
+  tracksSerial: boolean;
+  availableSerials?: Array<{ id: number; serial: string }>;
 }
 
 interface RepairOption {
@@ -83,6 +85,8 @@ interface CartLine {
   unitPrice: number;
   qty: number;
   stock?: number;
+  serial?: string;          // 序號（IMEI），tracksSerial 商品必填
+  productSerialId?: number;
 }
 
 const PAYMENT_METHODS = [
@@ -134,6 +138,8 @@ export function PosTerminal({
   const [customDialog, setCustomDialog] = useState(false);
   const [customLabel, setCustomLabel] = useState("");
   const [customPrice, setCustomPrice] = useState("");
+  const [serialPicker, setSerialPicker] = useState<ProductOption | null>(null);
+  const [serialFilter, setSerialFilter] = useState("");
 
   const filteredProducts = useMemo(() => {
     if (!search.trim()) return products.slice(0, 60);
@@ -148,6 +154,15 @@ export function PosTerminal({
   }, [search, repairs]);
 
   function addProduct(p: ProductOption) {
+    // 序號商品：必須開選 IMEI 對話框
+    if (p.tracksSerial) {
+      if (!p.availableSerials || p.availableSerials.length === 0) {
+        alert("此商品已無庫存（無可用序號）");
+        return;
+      }
+      setSerialPicker(p);
+      return;
+    }
     const key = `p${p.id}`;
     const existing = cart.find(c => c.key === key);
     if (existing) {
@@ -167,6 +182,28 @@ export function PosTerminal({
         stock: p.stock,
       }]);
     }
+  }
+
+  function addProductSerial(p: ProductOption, picked: { id: number; serial: string }) {
+    // 已加入過同 serial → 不重複
+    if (cart.some(c => c.productSerialId === picked.id)) {
+      alert("此序號已在購物車");
+      return;
+    }
+    setCart([...cart, {
+      key: `psrl${picked.id}`,
+      itemType: p.variantId ? "VARIANT" : "PRODUCT",
+      productId: p.productId,
+      productVariantId: p.variantId ?? undefined,
+      name: `${p.name} [${picked.serial}]`,
+      sku: p.sku,
+      unitPrice: p.price,
+      qty: 1,
+      serial: picked.serial,
+      productSerialId: picked.id,
+    }]);
+    setSerialPicker(null);
+    if ("vibrate" in navigator) (navigator as Navigator).vibrate(30);
   }
 
   function addRepair(r: RepairOption) {
@@ -230,6 +267,8 @@ export function PosTerminal({
           sku: c.sku ?? undefined,
           qty: c.qty,
           unitPrice: c.unitPrice,
+          serial: c.serial,
+          productSerialId: c.productSerialId,
         })),
         subtotal,
         discount,
@@ -440,6 +479,38 @@ export function PosTerminal({
           </div>
         </aside>
       </div>
+
+      {/* 序號選擇 dialog（IMEI / serial 商品專用）*/}
+      {serialPicker && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" onClick={() => { setSerialPicker(null); setSerialFilter(""); }}>
+          <div className="w-full max-w-md rounded-2xl border border-[var(--gold)]/40 bg-[var(--bg-elevated)] p-5" onClick={(e) => e.stopPropagation()}>
+            <h3 className="font-serif text-lg text-[var(--gold)]">📱 選擇 IMEI / 序號</h3>
+            <p className="mt-1 text-xs text-[var(--fg-muted)]">{serialPicker.name} · 庫存 {serialPicker.availableSerials?.length || 0} 件</p>
+            <input
+              value={serialFilter}
+              onChange={(e) => setSerialFilter(e.target.value)}
+              placeholder="搜尋 IMEI 末幾碼"
+              autoFocus
+              className="mt-3 w-full rounded border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-sm font-mono"
+            />
+            <div className="mt-3 max-h-72 overflow-y-auto space-y-1">
+              {(serialPicker.availableSerials || []).filter(s => !serialFilter || s.serial.includes(serialFilter)).map(s => (
+                <button
+                  key={s.id}
+                  onClick={() => addProductSerial(serialPicker, s)}
+                  className="block w-full rounded border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-left font-mono text-sm hover:border-[var(--gold)] hover:bg-[var(--gold)]/10"
+                >
+                  {s.serial}
+                </button>
+              ))}
+              {(serialPicker.availableSerials || []).filter(s => !serialFilter || s.serial.includes(serialFilter)).length === 0 && (
+                <div className="py-4 text-center text-xs text-[var(--fg-muted)]">沒有符合的序號</div>
+              )}
+            </div>
+            <button onClick={() => { setSerialPicker(null); setSerialFilter(""); }} className="mt-4 w-full rounded-full border border-[var(--border)] py-2 text-sm">取消</button>
+          </div>
+        </div>
+      )}
 
       {/* 客製品項 dialog */}
       {customDialog && (

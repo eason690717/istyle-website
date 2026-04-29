@@ -72,6 +72,7 @@ export default async function SaleReceiptPage({ params }: { params: Promise<{ id
           {sale.items.map(i => (
             <div key={i.id} className="mb-2 text-sm">
               <div className="text-gray-900">{i.name}</div>
+              {i.serial && <div className="text-[10px] text-gray-600">IMEI: <span className="font-mono">{i.serial}</span></div>}
               <div className="flex justify-between text-xs text-gray-600">
                 <span>${fmt(i.unitPrice)} × {i.qty}</span>
                 <span className="font-mono">${fmt(i.lineTotal)}</span>

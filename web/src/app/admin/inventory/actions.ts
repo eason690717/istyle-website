@@ -32,6 +32,7 @@ export async function searchProduct(query: string) {
       stock: variant.stock,
       price: variant.price,
       imageUrl: variant.imageUrl ?? variant.product.imageUrl,
+      tracksSerial: variant.product.tracksSerial,
     };
   }
 
@@ -49,6 +50,7 @@ export async function searchProduct(query: string) {
       stock: productExact.stock,
       price: productExact.price,
       imageUrl: productExact.imageUrl,
+      tracksSerial: productExact.tracksSerial,
     };
   }
 
@@ -72,10 +74,96 @@ export async function searchProduct(query: string) {
       stock: product.stock,
       price: product.price,
       imageUrl: product.imageUrl,
+      tracksSerial: product.tracksSerial,
     };
   }
 
   return null;
+}
+
+// === 進貨單筆序號（IMEI）— tracksSerial 商品專用 ===
+export async function receiveSerial(args: {
+  productId: number;
+  productVariantId?: number;
+  serial: string;
+  cost?: number;
+  notes?: string;
+}) {
+  const adminEmail = await getAdminEmail();
+  const serial = args.serial.trim();
+  if (!serial) return { ok: false, error: "請輸入序號" };
+
+  // 重複檢查
+  const existing = await prisma.productSerial.findFirst({
+    where: { productId: args.productId, serial },
+  });
+  if (existing) return { ok: false, error: `序號 ${serial} 已存在 (status: ${existing.status})` };
+
+  try {
+    await prisma.$transaction(async (tx) => {
+      await tx.productSerial.create({
+        data: {
+          productId: args.productId,
+          productVariantId: args.productVariantId ?? null,
+          serial,
+          status: "IN_STOCK",
+          cost: args.cost ?? null,
+          notes: args.notes || null,
+          receivedBy: adminEmail,
+        },
+      });
+
+      // 同時 +1 到 Product/Variant.stock 維持一致
+      if (args.productVariantId) {
+        const v = await tx.productVariant.findUnique({ where: { id: args.productVariantId } });
+        if (v) {
+          await tx.productVariant.update({ where: { id: args.productVariantId }, data: { stock: v.stock + 1 } });
+          await tx.stockMovement.create({
+            data: {
+              type: "RECEIVE",
+              productVariantId: args.productVariantId,
+              qty: 1,
+              prevStock: v.stock,
+              newStock: v.stock + 1,
+              unitCost: args.cost ?? null,
+              reason: `序號進貨 ${serial}`,
+              adminEmail,
+            },
+          });
+        }
+      } else {
+        const p = await tx.product.findUnique({ where: { id: args.productId } });
+        if (p) {
+          await tx.product.update({ where: { id: args.productId }, data: { stock: p.stock + 1 } });
+          await tx.stockMovement.create({
+            data: {
+              type: "RECEIVE",
+              productId: args.productId,
+              qty: 1,
+              prevStock: p.stock,
+              newStock: p.stock + 1,
+              unitCost: args.cost ?? null,
+              reason: `序號進貨 ${serial}`,
+              adminEmail,
+            },
+          });
+        }
+      }
+    });
+    revalidatePath("/admin/inventory");
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : String(e) };
+  }
+}
+
+// === 列出某商品的所有序號 ===
+export async function listProductSerials(productId: number, status?: string) {
+  return prisma.productSerial.findMany({
+    where: { productId, ...(status ? { status } : {}) },
+    orderBy: { receivedAt: "desc" },
+    take: 200,
+  }).catch(() => []);
 }
 
 // === 進貨：批次 +qty ===

@@ -40,6 +40,7 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
           stock: product.stock,
           isActive: product.isActive,
           isFeatured: product.isFeatured,
+          tracksSerial: product.tracksSerial,
           sortOrder: product.sortOrder,
         }}
         action={updateProduct.bind(null, product.id)}

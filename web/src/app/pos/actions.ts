@@ -13,6 +13,8 @@ interface SaleItemInput {
   sku?: string;
   qty: number;
   unitPrice: number;
+  serial?: string;
+  productSerialId?: number;
 }
 
 function genSaleNumber(): string {
@@ -106,6 +108,7 @@ export async function createSale(args: {
               repairPriceId: it.repairPriceId ?? null,
               name: it.name,
               sku: it.sku ?? null,
+              serial: it.serial ?? null,
               qty: it.qty,
               unitPrice: it.unitPrice,
               lineTotal: it.unitPrice * it.qty,
@@ -113,6 +116,20 @@ export async function createSale(args: {
           },
         },
       });
+      // === 序號商品：把對應 ProductSerial 標記 SOLD ===
+      for (const it of args.items) {
+        if (it.productSerialId) {
+          await tx.productSerial.update({
+            where: { id: it.productSerialId },
+            data: {
+              status: "SOLD",
+              soldAt: new Date(),
+              saleId: sale.id,
+            },
+          });
+        }
+      }
+
       return sale;
     });
 
@@ -165,6 +182,12 @@ export async function voidSale(saleId: number, reason: string) {
       const sale = await tx.sale.findUnique({ where: { id: saleId }, include: { items: true } });
       if (!sale) throw new Error("找不到交易");
       if (sale.paymentStatus === "VOID") throw new Error("已作廢");
+
+      // 序號還原（SOLD → IN_STOCK）
+      await tx.productSerial.updateMany({
+        where: { saleId },
+        data: { status: "IN_STOCK", soldAt: null, saleId: null },
+      });
 
       // 庫存還原 + 記 StockMovement RETURN
       for (const it of sale.items) {

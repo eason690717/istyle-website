@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { BarcodeScanner } from "@/components/barcode-scanner";
 import { VoiceInputButton } from "@/components/voice-input-button";
-import { searchProduct, receiveStock } from "../actions";
+import { searchProduct, receiveStock, receiveSerial } from "../actions";
 
 interface FoundItem {
   kind: "PRODUCT" | "VARIANT";
@@ -15,6 +15,7 @@ interface FoundItem {
   stock: number;
   price: number;
   imageUrl: string | null;
+  tracksSerial?: boolean;
 }
 
 interface ReceiveLine {
@@ -22,6 +23,14 @@ interface ReceiveLine {
   found: FoundItem;
   qty: number;
   unitCost?: number;
+}
+
+interface SerialEntry {
+  found: FoundItem;
+  serial: string;
+  cost?: number;
+  status: "pending" | "ok" | "error";
+  message?: string;
 }
 
 export function ReceiveTerminal() {
@@ -37,6 +46,13 @@ export function ReceiveTerminal() {
   const [notes, setNotes] = useState("");
   const [pending, startTransition] = useTransition();
   const [searchError, setSearchError] = useState<string | null>(null);
+  // === 序號商品專屬狀態 ===
+  const [serialMode, setSerialMode] = useState<FoundItem | null>(null);  // 進入序號掃描模式
+  const [serialInput, setSerialInput] = useState("");
+  const [serialCost, setSerialCost] = useState("");
+  const [serialEntries, setSerialEntries] = useState<SerialEntry[]>([]);
+  const [serialBusy, setSerialBusy] = useState(false);
+  const [serialScan, setSerialScan] = useState(false);
 
   async function lookup(q: string) {
     if (!q.trim()) return;
@@ -48,8 +64,43 @@ export function ReceiveTerminal() {
       setSearchError(`找不到「${q}」— 請先去 /admin/products 建立商品`);
       return;
     }
+    // 序號商品 → 進入序號模式（不加到批次清單）
+    if (r.tracksSerial) {
+      setSerialMode(r);
+      setQuery("");
+      return;
+    }
     addLine(r);
     setQuery("");
+  }
+
+  async function submitSerial() {
+    if (!serialMode || !serialInput.trim()) return;
+    setSerialBusy(true);
+    const cost = serialCost ? Number(serialCost) : undefined;
+    const r = await receiveSerial({
+      productId: serialMode.productId,
+      productVariantId: serialMode.variantId ?? undefined,
+      serial: serialInput.trim(),
+      cost,
+    });
+    setSerialBusy(false);
+    if (r.ok) {
+      setSerialEntries(es => [{ found: serialMode, serial: serialInput.trim(), cost, status: "ok" }, ...es]);
+      setSerialInput("");
+      if ("vibrate" in navigator) (navigator as Navigator).vibrate(50);
+    } else {
+      setSerialEntries(es => [{ found: serialMode, serial: serialInput.trim(), status: "error", message: r.error }, ...es]);
+      if ("vibrate" in navigator) (navigator as Navigator).vibrate([100, 50, 100]);
+    }
+  }
+
+  function exitSerialMode() {
+    setSerialMode(null);
+    setSerialInput("");
+    setSerialCost("");
+    setSerialEntries([]);
+    router.refresh();
   }
 
   function addLine(found: FoundItem) {
@@ -223,6 +274,75 @@ export function ReceiveTerminal() {
           onDetected={(code) => { setShowScan(false); lookup(code); }}
           onClose={() => setShowScan(false)}
         />
+      )}
+
+      {serialScan && (
+        <BarcodeScanner
+          onDetected={(code) => { setSerialScan(false); setSerialInput(code); }}
+          onClose={() => setSerialScan(false)}
+        />
+      )}
+
+      {/* === 序號（IMEI）進貨模式 === */}
+      {serialMode && (
+        <div className="fixed inset-0 z-50 flex flex-col bg-[#0a0706]">
+          <div className="flex items-center justify-between border-b border-[var(--border)] bg-[var(--bg-elevated)] p-3">
+            <div>
+              <div className="text-xs text-[var(--fg-muted)]">📱 序號進貨模式</div>
+              <div className="text-sm">{serialMode.name}</div>
+            </div>
+            <button onClick={exitSerialMode} className="rounded-full border border-[var(--border)] px-3 py-1 text-xs">完成</button>
+          </div>
+          <div className="flex-1 overflow-y-auto p-3 space-y-3">
+            <div className="rounded-lg border-2 border-[var(--gold)]/40 bg-[var(--bg-elevated)] p-3">
+              <div className="flex gap-2">
+                <input
+                  value={serialInput}
+                  onChange={(e) => setSerialInput(e.target.value.toUpperCase())}
+                  onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); submitSerial(); } }}
+                  placeholder="輸入或掃 IMEI / 序號"
+                  autoFocus
+                  inputMode="text"
+                  className="flex-1 rounded-lg border border-[var(--border)] bg-[var(--bg)] px-3 py-3 text-base font-mono focus:border-[var(--gold)] focus:outline-none"
+                />
+                <button
+                  onClick={() => setSerialScan(true)}
+                  className="rounded-lg bg-gradient-to-r from-green-600 to-green-700 px-3 text-sm font-semibold text-white"
+                >
+                  📷
+                </button>
+              </div>
+              <div className="mt-2 flex gap-2">
+                <input
+                  type="number"
+                  value={serialCost}
+                  onChange={(e) => setSerialCost(e.target.value)}
+                  placeholder="進貨成本（選填，套用所有後續序號）"
+                  inputMode="numeric"
+                  className="flex-1 rounded border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-sm"
+                />
+                <button onClick={submitSerial} disabled={serialBusy || !serialInput.trim()} className="btn-gold rounded-full px-4 py-2 text-sm font-bold disabled:opacity-50">
+                  {serialBusy ? "..." : "+ 加入"}
+                </button>
+              </div>
+              <p className="mt-2 text-[10px] text-[var(--fg-muted)]">小技巧：按 Enter 直接送出，掃完一支立刻可掃下一支</p>
+            </div>
+
+            <div>
+              <h3 className="mb-2 text-xs text-[var(--fg-muted)]">本次進貨 {serialEntries.filter(e => e.status === "ok").length} 件成功 / {serialEntries.filter(e => e.status === "error").length} 件失敗</h3>
+              <div className="space-y-1">
+                {serialEntries.map((e, i) => (
+                  <div key={i} className={`flex items-center justify-between rounded border px-3 py-2 text-xs ${e.status === "ok" ? "border-green-500/30 bg-green-500/5" : "border-red-500/30 bg-red-500/5"}`}>
+                    <div className="font-mono">{e.serial}</div>
+                    <div className={e.status === "ok" ? "text-green-400" : "text-red-400"}>
+                      {e.status === "ok" ? "✓ 已加入" : `✗ ${e.message || "失敗"}`}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

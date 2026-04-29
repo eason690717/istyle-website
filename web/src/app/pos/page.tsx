@@ -25,8 +25,24 @@ export default async function PosPage() {
     take: 100,
     include: {
       variants: { where: { isActive: true } },
+      _count: { select: { } },
     },
   }).catch(() => []);
+
+  // 對 tracksSerial 商品，撈所有 IN_STOCK 序號供 POS 選
+  const serializedProductIds = products.filter(p => p.tracksSerial).map(p => p.id);
+  const serials = serializedProductIds.length
+    ? await prisma.productSerial.findMany({
+        where: { productId: { in: serializedProductIds }, status: "IN_STOCK" },
+        select: { id: true, productId: true, serial: true, productVariantId: true },
+        orderBy: { receivedAt: "asc" },
+      })
+    : [];
+  const serialsByProduct = new Map<number, Array<{ id: number; serial: string; productVariantId: number | null }>>();
+  serials.forEach(s => {
+    if (!serialsByProduct.has(s.productId)) serialsByProduct.set(s.productId, []);
+    serialsByProduct.get(s.productId)!.push({ id: s.id, serial: s.serial, productVariantId: s.productVariantId });
+  });
 
   // 載入熱門維修報價（前 30 個機型）
   const repairs = await prisma.repairPrice.findMany({
@@ -60,6 +76,8 @@ export default async function PosPage() {
     price: number;
     stock: number;
     imageUrl: string | null;
+    tracksSerial: boolean;
+    availableSerials?: Array<{ id: number; serial: string }>;
   }
   const productOptions: ProductOpt[] = products.flatMap((p): ProductOpt[] => {
     if (p.variants.length === 0) {
@@ -72,6 +90,8 @@ export default async function PosPage() {
         price: p.price,
         stock: p.stock,
         imageUrl: p.imageUrl,
+        tracksSerial: p.tracksSerial,
+        availableSerials: p.tracksSerial ? (serialsByProduct.get(p.id)?.map(s => ({ id: s.id, serial: s.serial })) || []) : undefined,
       }];
     }
     return p.variants.map((v): ProductOpt => ({
@@ -83,6 +103,10 @@ export default async function PosPage() {
       price: v.price,
       stock: v.stock,
       imageUrl: v.imageUrl ?? p.imageUrl,
+      tracksSerial: p.tracksSerial,
+      availableSerials: p.tracksSerial
+        ? (serialsByProduct.get(p.id)?.filter(s => s.productVariantId === v.id).map(s => ({ id: s.id, serial: s.serial })) || [])
+        : undefined,
     }));
   });
 
