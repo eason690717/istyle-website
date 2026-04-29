@@ -115,7 +115,10 @@ export function middleware(req: NextRequest) {
     }
   }
 
-  return NextResponse.next();
+  // 注入 pathname header — 讓 layout 元件能判斷現在頁面是 admin / pos / public
+  const res = NextResponse.next();
+  res.headers.set("x-pathname", pathname);
+  return res;
 }
 
 function doRedirect(req: NextRequest, dest: string) {
@@ -126,17 +129,8 @@ function doRedirect(req: NextRequest, dest: string) {
 }
 
 export const config = {
+  // 匹配所有頁面（除 next 內部 / API / 靜態資源），這樣 x-pathname 才能注入到所有頁
   matcher: [
-    "/admin/:path*",
-    "/pos/:path*",
-    "/m/:path*",
-    "/m",
-    "/pages/:path*",
-    "/products/:path*",
-    "/collections/:path*",
-    "/blogs/:path*",
-    "/blogs",
-    "/search",
-    "/account/:path*",
+    "/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|llms.txt).*)",
   ],
 };

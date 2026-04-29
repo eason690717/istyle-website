@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { Noto_Sans_TC, Noto_Serif_TC } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/header";
@@ -12,6 +13,15 @@ import { ExitIntent } from "@/components/exit-intent";
 import { Suspense } from "react";
 import { CartProvider } from "@/lib/cart";
 import { SITE } from "@/lib/site-config";
+
+// 判斷現在是不是內部頁（admin/pos/m），用來隱藏前台 header/footer
+async function isInternalPage(): Promise<boolean> {
+  try {
+    const h = await headers();
+    const path = h.get("x-pathname") || "";
+    return path.startsWith("/admin") || path.startsWith("/pos") || path.startsWith("/m");
+  } catch { return false; }
+}
 
 const notoSans = Noto_Sans_TC({
   variable: "--font-noto-sans",
@@ -89,7 +99,9 @@ const jsonLd = {
   knowsAbout: ["手機維修", "iPhone維修", "iPad維修", "MacBook維修", "Switch維修", "Dyson維修", "二手機回收"],
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const internal = await isInternalPage();
+
   return (
     <html lang="zh-TW" className={`${notoSans.variable} ${notoSerif.variable} h-full`}>
       <head>
@@ -98,18 +110,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="flex min-h-full flex-col bg-[var(--bg)] text-[var(--fg)] antialiased pb-14 md:pb-0">
-        <CartProvider>
-          <PromoBanner />
-          <Header />
+      <body className={`flex min-h-full flex-col bg-[var(--bg)] text-[var(--fg)] antialiased ${internal ? "" : "pb-14 md:pb-0"}`}>
+        {internal ? (
+          // 內部後台 / POS / 行動站：純淨布局，沒有前台 chrome
           <main className="flex-1">{children}</main>
-          <Footer />
-          <FloatingCta />
-        </CartProvider>
+        ) : (
+          // 公開前台：Header + Footer + Banner + Cart + Exit Intent
+          <CartProvider>
+            <PromoBanner />
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <FloatingCta />
+          </CartProvider>
+        )}
         <Analytics />
         <SpeedInsights />
-        <Suspense fallback={null}><Tracker /></Suspense>
-        <ExitIntent />
+        {!internal && <Suspense fallback={null}><Tracker /></Suspense>}
+        {!internal && <ExitIntent />}
       </body>
     </html>
   );
