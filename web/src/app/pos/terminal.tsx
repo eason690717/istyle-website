@@ -5,6 +5,7 @@ import Link from "next/link";
 import { logoutAction } from "./login/actions";
 import { createSale } from "./actions";
 import { BarcodeScanner } from "@/components/barcode-scanner";
+import { toast } from "@/components/toast";
 
 // 客戶搜尋小元件 — 輸入電話/姓名 autocomplete 帶入歷史客戶
 function CustomerSearchInput({ value, name, onChange }: {
@@ -146,6 +147,8 @@ export function PosTerminal({
   // POS 條碼掃描
   const [posScan, setPosScan] = useState(false);
   const [scanError, setScanError] = useState<string | null>(null);
+  // 結帳成功動畫
+  const [successAnim, setSuccessAnim] = useState<{ total: number; method: string } | null>(null);
 
   const filteredProducts = useMemo(() => {
     if (!search.trim()) return products.slice(0, 60);
@@ -163,7 +166,7 @@ export function PosTerminal({
     // 序號商品：必須開選 IMEI 對話框
     if (p.tracksSerial) {
       if (!p.availableSerials || p.availableSerials.length === 0) {
-        alert("此商品已無庫存（無可用序號）");
+        toast.error("此商品已無庫存（無可用序號）");
         return;
       }
       setSerialPicker(p);
@@ -172,10 +175,10 @@ export function PosTerminal({
     const key = `p${p.id}`;
     const existing = cart.find(c => c.key === key);
     if (existing) {
-      if (p.stock > 0 && existing.qty >= p.stock) { alert("庫存不足"); return; }
+      if (p.stock > 0 && existing.qty >= p.stock) { toast.error("庫存不足"); return; }
       setCart(cart.map(c => c.key === key ? { ...c, qty: c.qty + 1 } : c));
     } else {
-      if (p.stock <= 0) { alert("庫存為 0"); return; }
+      if (p.stock <= 0) { toast.error("庫存為 0"); return; }
       setCart([...cart, {
         key,
         itemType: p.variantId ? "VARIANT" : "PRODUCT",
@@ -193,7 +196,7 @@ export function PosTerminal({
   function addProductSerial(p: ProductOption, picked: { id: number; serial: string }) {
     // 已加入過同 serial → 不重複
     if (cart.some(c => c.productSerialId === picked.id)) {
-      alert("此序號已在購物車");
+      toast.warning("此序號已在購物車");
       return;
     }
     setCart([...cart, {
@@ -247,7 +250,7 @@ export function PosTerminal({
       if (c.key !== key) return [c];
       const newQty = c.qty + delta;
       if (newQty <= 0) return [];
-      if (c.stock !== undefined && newQty > c.stock) { alert("庫存不足"); return [c]; }
+      if (c.stock !== undefined && newQty > c.stock) { toast.error("庫存不足"); return [c]; }
       return [{ ...c, qty: newQty }];
     }));
   }
@@ -311,15 +314,41 @@ export function PosTerminal({
         notes: notes.trim() || undefined,
       });
       if (r.ok && r.saleId) {
-        router.push(`/pos/sales/${r.saleId}`);
+        // 顯示成功動畫 → 1.5 秒後跳收據
+        setSuccessAnim({ total, method: paymentMethod });
+        if ("vibrate" in navigator) (navigator as Navigator).vibrate([60, 30, 80]);
+        setTimeout(() => router.push(`/pos/sales/${r.saleId}`), 1500);
       } else {
-        alert("結帳失敗：" + (r.error || "未知錯誤"));
+        toast.error("結帳失敗：" + (r.error || "未知錯誤"));
       }
     });
   }
 
   return (
     <div className="flex h-screen flex-col bg-[#0a0706] text-[var(--fg)]">
+      {/* === 結帳成功全螢幕動畫 === */}
+      {successAnim && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/95 backdrop-blur" style={{ animation: "fadeIn 0.2s" }}>
+          <div className="text-center" style={{ animation: "successPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)" }}>
+            <div className="mx-auto flex h-32 w-32 items-center justify-center rounded-full bg-green-500 text-7xl text-white shadow-[0_0_60px_rgba(34,197,94,0.6)]">
+              ✓
+            </div>
+            <div className="mt-6 font-serif text-3xl text-[var(--gold)]">結帳成功</div>
+            <div className="mt-2 font-mono text-5xl font-bold text-white">${successAnim.total.toLocaleString()}</div>
+            <div className="mt-3 text-sm text-[var(--fg-muted)]">{PAYMENT_METHODS.find(m => m.value === successAnim.method)?.label}</div>
+            <div className="mt-6 text-xs text-[var(--fg-muted)]">收據準備中...</div>
+          </div>
+          <style jsx>{`
+            @keyframes successPop {
+              0% { transform: scale(0.6); opacity: 0; }
+              60% { transform: scale(1.1); opacity: 1; }
+              100% { transform: scale(1); opacity: 1; }
+            }
+            @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+          `}</style>
+        </div>
+      )}
+
       {/* Top bar */}
       <header className="flex items-center justify-between border-b border-[var(--border)] bg-[var(--bg-elevated)] px-4 py-3">
         <div className="flex items-center gap-3">

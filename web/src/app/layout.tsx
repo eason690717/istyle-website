@@ -10,6 +10,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Tracker } from "@/components/tracker";
 import { ExitIntent } from "@/components/exit-intent";
+import { ToastContainer } from "@/components/toast";
 import { Suspense } from "react";
 import { CartProvider } from "@/lib/cart";
 import { SITE } from "@/lib/site-config";
@@ -126,6 +127,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         )}
         <Analytics />
         <SpeedInsights />
+        <ToastContainer />
         {!internal && <Suspense fallback={null}><Tracker /></Suspense>}
         {!internal && <ExitIntent />}
       </body>

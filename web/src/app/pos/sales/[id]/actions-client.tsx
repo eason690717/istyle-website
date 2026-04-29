@@ -2,6 +2,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { voidSale } from "../../actions";
+import { toast } from "@/components/toast";
 
 export function ReceiptActions({ saleId, canVoid }: { saleId: number; canVoid: boolean }) {
   const [pending, startTransition] = useTransition();
@@ -16,8 +17,8 @@ export function ReceiptActions({ saleId, canVoid }: { saleId: number; canVoid: b
     if (!reason || !reason.trim()) return;
     startTransition(async () => {
       const r = await voidSale(saleId, reason.trim());
-      if (r.ok) router.refresh();
-      else alert("作廢失敗：" + (r.error || ""));
+      if (r.ok) { toast.success("已作廢"); router.refresh(); }
+      else toast.error(r.error || "作廢失敗");
     });
   }
 

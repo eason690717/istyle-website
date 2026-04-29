@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { BarcodeScanner } from "@/components/barcode-scanner";
 import { VoiceInputButton } from "@/components/voice-input-button";
 import { searchProduct, adjustStock } from "../actions";
+import { toast } from "@/components/toast";
 
 interface FoundItem {
   kind: "PRODUCT" | "VARIANT";
@@ -58,7 +59,7 @@ export function CountTerminal() {
   async function save() {
     if (!current) return;
     const n = Number(actualStock);
-    if (isNaN(n) || n < 0) { alert("請輸入合法庫存數"); return; }
+    if (isNaN(n) || n < 0) { toast.error("請輸入合法庫存數"); return; }
     startTransition(async () => {
       const r = await adjustStock({
         productId: current.kind === "PRODUCT" ? current.productId : undefined,
@@ -69,6 +70,7 @@ export function CountTerminal() {
       if (r.ok) {
         if ("vibrate" in navigator) (navigator as Navigator).vibrate([50, 50, 100]);
         const diff = r.diff ?? 0;
+        toast.success(`已更新庫存（${diff > 0 ? "+" : ""}${diff}）`);
         setHistory(h => [{
           key: `${current.kind}-${current.productId}-${current.variantId}-${Date.now()}`,
           found: current,
@@ -79,7 +81,7 @@ export function CountTerminal() {
         setActualStock("");
         router.refresh();
       } else {
-        alert("失敗：" + (r.error || ""));
+        toast.error(r.error || "盤點失敗");
       }
     });
   }

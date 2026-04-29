@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { BarcodeScanner } from "@/components/barcode-scanner";
 import { VoiceInputButton } from "@/components/voice-input-button";
 import { searchProduct, receiveStock, receiveSerial, quickCreateProduct, quickReceiveUsedDevice } from "../actions";
+import { toast } from "@/components/toast";
 
 interface FoundItem {
   kind: "PRODUCT" | "VARIANT";
@@ -116,7 +117,7 @@ export function ReceiveTerminal() {
 
   // === inline 建立商品 + 進貨（搜不到時自動展開）===
   async function submitCreate(form: { name: string; price: string; cost: string; qty: string; tracksSerial: boolean }) {
-    if (!form.name.trim() || !form.price) { alert("名稱、售價必填"); return; }
+    if (!form.name.trim() || !form.price) { toast.error("名稱、售價必填"); return; }
     const r = await quickCreateProduct({
       name: form.name,
       price: Number(form.price),
@@ -124,7 +125,7 @@ export function ReceiveTerminal() {
       tracksSerial: form.tracksSerial,
       initialStock: form.tracksSerial ? 0 : Math.max(1, Number(form.qty) || 1),
     });
-    if (!r.ok) { alert(r.error); return; }
+    if (!r.ok) { toast.error(r.error); return; }
     setCreateOpen(false); setSearchError(null); setQuery("");
     if (r.product.tracksSerial) {
       // 序號商品 → 進入序號模式逐筆掃 IMEI
@@ -141,14 +142,14 @@ export function ReceiveTerminal() {
       });
     } else {
       router.refresh();
-      alert(`✅ 已建立並入庫 ${r.product.name}（${r.product.stock} 件）`);
+      toast.success(`已建立並入庫 ${r.product.name}（${r.product.stock} 件）`);
     }
   }
 
   // === 二手機快速進貨 ===
   async function submitUsed() {
-    if (!usedForm.name.trim() || !usedForm.imei.trim()) { alert("機型 + IMEI 必填"); return; }
-    if (!usedForm.price || !usedForm.cost) { alert("售價 + 成本必填"); return; }
+    if (!usedForm.name.trim() || !usedForm.imei.trim()) { toast.error("機型 + IMEI 必填"); return; }
+    if (!usedForm.price || !usedForm.cost) { toast.error("售價 + 成本必填"); return; }
     setUsedBusy(true);
     const r = await quickReceiveUsedDevice({
       productName: usedForm.name,
@@ -203,11 +204,11 @@ export function ReceiveTerminal() {
       });
       if (r.ok) {
         if ("vibrate" in navigator) (navigator as Navigator).vibrate([50, 50, 100]);
-        alert(`✅ 進貨完成 ${r.count} 項`);
+        toast.success(`進貨完成 ${r.count} 項`);
         setLines([]); setPoNumber(""); setSupplier(""); setNotes("");
         router.refresh();
       } else {
-        alert("❌ " + (r.error || "失敗"));
+        toast.error(r.error || "進貨失敗");
       }
     });
   }

@@ -2,6 +2,7 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { searchProduct, receiveStock } from "../actions";
+import { toast } from "@/components/toast";
 
 interface ParsedRow {
   rowIndex: number;
@@ -67,7 +68,7 @@ export function ImportTerminal() {
 
   async function execute() {
     const valid = rows.filter(r => r.status === "found");
-    if (valid.length === 0) { alert("沒有可匯入的有效資料"); return; }
+    if (valid.length === 0) { toast.error("沒有可匯入的有效資料"); return; }
     if (!confirm(`確定匯入 ${valid.length} 筆？\n進貨單號：${poNumber || "（無）"}\n供應商：${supplier || "（無）"}`)) return;
     startTransition(async () => {
       const r = await receiveStock({
@@ -81,10 +82,10 @@ export function ImportTerminal() {
         supplier: supplier || undefined,
       });
       if (r.ok) {
-        alert(`✅ 匯入完成 ${r.count} 筆`);
+        toast.success(`匯入完成 ${r.count} 筆`);
         setText(""); setRows([]); setPoNumber(""); setSupplier("");
       } else {
-        alert("❌ " + (r.error || ""));
+        toast.error(r.error || "匯入失敗");
       }
     });
   }
