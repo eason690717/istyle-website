@@ -1,6 +1,6 @@
 "use client";
 import { useState, useMemo, useTransition, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { logoutAction } from "./login/actions";
 import { createSale } from "./actions";
@@ -101,13 +101,34 @@ export function PosTerminal({
   repairs: RepairOption[];
 }) {
   const router = useRouter();
+  const sp = useSearchParams();
   const [tab, setTab] = useState<"products" | "repairs">("products");
   const [search, setSearch] = useState("");
   const [cart, setCart] = useState<CartLine[]>([]);
   const [discount, setDiscount] = useState(0);
-  const [customerName, setCustomerName] = useState("");
-  const [customerPhone, setCustomerPhone] = useState("");
-  const [notes, setNotes] = useState("");
+  const [customerName, setCustomerName] = useState(sp?.get("customer") || "");
+  const [customerPhone, setCustomerPhone] = useState(sp?.get("phone") || "");
+  const [notes, setNotes] = useState(sp?.get("repair") ? `維修單 #${sp.get("repair")}` : "");
+
+  // 從 URL query 自動帶入維修單資料（從 /admin/repairs/[id] 跳過來）
+  useEffect(() => {
+    const label = sp?.get("label");
+    const amount = sp?.get("amount");
+    const repairId = sp?.get("repair");
+    if (label && amount && cart.length === 0 && repairId) {
+      const price = Number(amount);
+      if (!isNaN(price) && price > 0) {
+        setCart([{
+          key: `r-quick-${repairId}`,
+          itemType: "CUSTOM",
+          name: decodeURIComponent(label),
+          unitPrice: price,
+          qty: 1,
+        }]);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [pending, startTransition] = useTransition();
   const [showCheckout, setShowCheckout] = useState(false);
   const [customDialog, setCustomDialog] = useState(false);

@@ -41,6 +41,21 @@ export default async function EditRepairPage({ params }: { params: Promise<{ id:
         internalNotes={t.internalNotes}
       />
 
+      {/* 結帳快速 deeplink — 把維修單轉成 POS 結帳 */}
+      {(t.status === "DONE" || t.status === "PICKED_UP") && (
+        <section className="rounded-lg border-2 border-[var(--gold)]/40 bg-[var(--gold)]/5 p-4">
+          <h2 className="font-serif text-base text-[var(--gold)]">💰 結帳</h2>
+          <p className="mt-1 text-xs text-[var(--fg-muted)]">在 POS 結帳台快速建立此維修的銷售紀錄</p>
+          <Link
+            href={`/pos?repair=${t.id}&label=${encodeURIComponent(`維修 ${t.deviceModel} - ${t.issueDescription}`.slice(0, 80))}&amount=${t.finalCost ?? t.estimatedCost ?? 0}&customer=${encodeURIComponent(t.customerName)}&phone=${t.phoneLast4}`}
+            target="_blank"
+            className="mt-3 inline-block rounded-full bg-gradient-to-r from-[var(--gold)] to-[var(--gold-bright)] px-5 py-2 text-sm font-bold text-black"
+          >
+            → 帶資料到 POS 結帳
+          </Link>
+        </section>
+      )}
+
       <section className="rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] p-4">
         <h2 className="mb-3 font-serif text-base text-[var(--gold)]">📋 進度紀錄（{timeline.length} 筆）</h2>
         {timeline.length === 0 ? (
