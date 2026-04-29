@@ -235,6 +235,11 @@ model PaymentLink {
   status          String    @default("PENDING")  // PENDING | PAID | EXPIRED | CANCELLED
   expiresAt       DateTime?
   notes           String?
+  // 物流出貨
+  shippingProvider String?
+  trackingNumber  String?
+  shippingNote    String?
+  shippedAt       DateTime?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
