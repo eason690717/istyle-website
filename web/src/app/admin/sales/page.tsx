@@ -54,7 +54,10 @@ export default async function AdminSalesPage({
           <h1 className="font-serif text-2xl text-[var(--gold)]">💰 交易紀錄</h1>
           <p className="mt-1 text-xs text-[var(--fg-muted)]">POS 結帳台 + 線上訂單統一檢視</p>
         </div>
-        <Link href="/pos" target="_blank" className="btn-gold rounded-full px-4 py-2 text-sm">→ 開 POS</Link>
+        <div className="flex gap-2">
+          <Link href="/admin/sales/report" className="rounded-full border border-[var(--gold)]/40 px-4 py-2 text-sm text-[var(--gold)]">📅 日結報表</Link>
+          <Link href="/pos" target="_blank" className="btn-gold rounded-full px-4 py-2 text-sm">→ 開 POS</Link>
+        </div>
       </div>
 
       {/* KPI */}
