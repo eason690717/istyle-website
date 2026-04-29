@@ -60,11 +60,30 @@ export default async function LocalAreaPage({ params }: { params: Promise<{ area
     areaServed: { "@type": "City", name: a.fullName },
   };
 
+  // FAQPage JSON-LD（Google rich snippet + AI 引用友善）
+  const faqs = [
+    { q: `${a.zhName}有手機維修推薦嗎？`, a: `i時代位於板橋江子翠，距離${a.zhName}約 ${a.distanceMin === 0 ? "0" : a.distanceMin} 分鐘車程。${a.distanceMin === 0 ? "我們就在這裡" : "可預約後攜帶過來，或寄送維修，免運送回"}。14 年技術經驗，10,000+ 次維修，現場 30 分鐘完工。` },
+    { q: `${a.zhName}換 iPhone 螢幕大概多少錢？`, a: `視機型而定。可在 i時代官網 /quote/apple 查詢精準報價，或加 LINE @i-style 詢問。LINE 預約現折 NT$100。` },
+    { q: `i時代${a.zhName}服務區域可以到府嗎？`, a: `${a.distanceMin <= 15 ? "板橋門市可以接駁" : "目前以門市送件 + 寄送維修為主"}。寄送：透過 7-11 / 全家 賣貨便寄到板橋門市，修好後免運送回。` },
+    { q: `${a.zhName}附近有哪些手機維修服務？`, a: `i時代提供 iPhone、iPad、MacBook、Switch、Samsung、Pixel、Sony、ASUS、OPPO、Xiaomi 全方位維修，包含換螢幕、換電池、進水救援、主機板維修、資料救援等。` },
+    { q: `修${a.zhName}的手機需要先預約嗎？`, a: `加 LINE 預約現場可享 NT$100 折扣，並能優先受理。LINE: @i-style 或致電 ${SITE.phone}。` },
+  ];
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map(f => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+
   const otherAreas = LOCAL_AREAS.filter(x => x.slug !== a.slug);
 
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
       <div className="mx-auto max-w-4xl px-4 py-8">
         {/* Hero */}
@@ -87,7 +106,7 @@ export default async function LocalAreaPage({ params }: { params: Promise<{ area
           <div className="mt-6 grid grid-cols-3 gap-3">
             <Stat label="技術經驗" value={`${SITE.experienceYears()} 年`} />
             <Stat label="累計修機" value={SITE.repairsCount} />
-            <Stat label="距離 {a.zhName}" value={a.distanceMin === 0 ? "0 分鐘" : `${a.distanceMin} 分鐘`} />
+            <Stat label={`距離 ${a.zhName}`} value={a.distanceMin === 0 ? "0 分鐘" : `${a.distanceMin} 分鐘`} />
           </div>
 
           <div className="mt-6 flex flex-wrap gap-3">
@@ -156,6 +175,19 @@ export default async function LocalAreaPage({ params }: { params: Promise<{ area
           <a href={SITE.lineAddUrl} className="btn-gold mt-4 inline-block rounded-full px-8 py-3 text-sm font-semibold">
             💬 LINE 預約
           </a>
+        </section>
+
+        {/* FAQ section（搭配 JSON-LD） */}
+        <section className="mt-10">
+          <h2 className="font-serif text-2xl text-[var(--gold)]">常見問題 FAQ</h2>
+          <div className="mt-4 space-y-3">
+            {faqs.map((f, i) => (
+              <details key={i} className="rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] p-4">
+                <summary className="cursor-pointer font-medium text-[var(--fg)]">{f.q}</summary>
+                <p className="mt-2 text-sm text-[var(--fg-muted)]">{f.a}</p>
+              </details>
+            ))}
+          </div>
         </section>
 
         {/* 其他地區 */}
