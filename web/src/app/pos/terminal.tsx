@@ -1,9 +1,55 @@
 "use client";
-import { useState, useMemo, useTransition } from "react";
+import { useState, useMemo, useTransition, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { logoutAction } from "./login/actions";
 import { createSale } from "./actions";
+
+// 客戶搜尋小元件 — 輸入電話/姓名 autocomplete 帶入歷史客戶
+function CustomerSearchInput({ value, name, onChange }: {
+  value: string; name: string;
+  onChange: (name: string, phone: string) => void;
+}) {
+  const [results, setResults] = useState<Array<{ name: string; phone: string }>>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const q = value.trim();
+    if (q.length < 2) { setResults([]); return; }
+    const timer = setTimeout(async () => {
+      setLoading(true);
+      try {
+        const res = await fetch(`/api/pos/customer-search?q=${encodeURIComponent(q)}`);
+        const data = await res.json();
+        setResults(data.results || []);
+      } finally { setLoading(false); }
+    }, 250);
+    return () => clearTimeout(timer);
+  }, [value]);
+
+  return (
+    <div className="space-y-1.5">
+      <input value={name} onChange={(e) => onChange(e.target.value, value)} placeholder="客戶姓名" className="w-full rounded border border-[var(--border)] bg-[var(--bg)] px-2 py-1.5" />
+      <input value={value} onChange={(e) => onChange(name, e.target.value.replace(/\D/g, ""))} placeholder="客戶電話 (autocomplete)" inputMode="numeric" className="w-full rounded border border-[var(--border)] bg-[var(--bg)] px-2 py-1.5" />
+      {results.length > 0 && (
+        <div className="max-h-40 overflow-y-auto rounded border border-[var(--gold)]/30 bg-[var(--bg-elevated)]">
+          {results.map((r, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => { onChange(r.name, r.phone); setResults([]); }}
+              className="block w-full border-b border-[var(--border)] px-2 py-1.5 text-left text-xs last:border-0 hover:bg-[var(--gold)]/10"
+            >
+              <div>{r.name || "—"}</div>
+              <div className="font-mono text-[10px] text-[var(--fg-muted)]">{r.phone}</div>
+            </button>
+          ))}
+        </div>
+      )}
+      {loading && <div className="text-[10px] text-[var(--fg-muted)]">查詢中...</div>}
+    </div>
+  );
+}
 
 interface ProductOption {
   id: string;
@@ -320,8 +366,11 @@ export function PosTerminal({
             <details className="text-xs">
               <summary className="cursor-pointer text-[var(--fg-muted)]">＋ 客戶 / 備註（可選）</summary>
               <div className="mt-2 space-y-1.5">
-                <input value={customerName} onChange={(e) => setCustomerName(e.target.value)} placeholder="客戶姓名" className="w-full rounded border border-[var(--border)] bg-[var(--bg)] px-2 py-1.5" />
-                <input value={customerPhone} onChange={(e) => setCustomerPhone(e.target.value)} placeholder="客戶電話" className="w-full rounded border border-[var(--border)] bg-[var(--bg)] px-2 py-1.5" />
+                <CustomerSearchInput
+                  value={customerPhone}
+                  name={customerName}
+                  onChange={(name, phone) => { setCustomerName(name); setCustomerPhone(phone); }}
+                />
                 <input value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="備註" className="w-full rounded border border-[var(--border)] bg-[var(--bg)] px-2 py-1.5" />
               </div>
             </details>
