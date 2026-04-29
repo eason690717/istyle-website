@@ -382,7 +382,8 @@ export function PosTerminal({
         {/* 手機底部購物車按鈕（fixed，常駐） */}
         <button
           onClick={() => setMobileCartOpen(true)}
-          className="fixed bottom-4 right-4 z-40 flex items-center gap-2 rounded-full bg-gradient-to-r from-[var(--gold)] to-[var(--gold-bright)] px-5 py-3 text-sm font-bold text-black shadow-lg shadow-[var(--gold)]/40 md:hidden"
+          className="fixed right-4 z-40 flex items-center gap-2 rounded-full bg-gradient-to-r from-[var(--gold)] to-[var(--gold-bright)] px-5 py-3 text-sm font-bold text-black shadow-lg shadow-[var(--gold)]/40 md:hidden"
+          style={{ bottom: "calc(1rem + env(safe-area-inset-bottom))" }}
         >
           🛒 {cart.reduce((s, c) => s + c.qty, 0)} 件 · ${total.toLocaleString()}
         </button>

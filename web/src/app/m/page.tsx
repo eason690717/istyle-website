@@ -30,7 +30,13 @@ export default async function MobileHomePage() {
   ]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0d0908] via-[#1a1410] to-[#0d0908] p-4 pb-12">
+    <div
+      className="min-h-screen bg-gradient-to-br from-[#0d0908] via-[#1a1410] to-[#0d0908] p-4"
+      style={{
+        paddingTop: "calc(1rem + env(safe-area-inset-top))",
+        paddingBottom: "calc(3rem + env(safe-area-inset-bottom))",
+      }}
+    >
       <div className="mx-auto max-w-md space-y-4">
         {/* Header */}
         <div className="flex items-center justify-between">
