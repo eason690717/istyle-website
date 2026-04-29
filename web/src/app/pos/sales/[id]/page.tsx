@@ -96,6 +96,11 @@ export default async function SaleReceiptPage({ params }: { params: Promise<{ id
           <div className="mt-2 flex justify-between text-xs text-gray-600">
             <span>付款方式</span><span>{PAYMENT_LABEL[sale.paymentMethod] || sale.paymentMethod}</span>
           </div>
+          {sale.invoiceNumber && (
+            <div className="mt-1 flex justify-between text-xs text-gray-600">
+              <span>電子發票</span><span className="font-mono">{sale.invoiceNumber}</span>
+            </div>
+          )}
         </div>
 
         {sale.notes && (

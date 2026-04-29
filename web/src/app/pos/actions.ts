@@ -2,6 +2,7 @@
 import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
 import { POS_COOKIE, verifyStaffSession } from "@/lib/pos-auth";
+import { issueInvoice } from "@/lib/ecpay/invoice";
 
 interface SaleItemInput {
   itemType: "PRODUCT" | "VARIANT" | "REPAIR" | "CUSTOM";
@@ -114,6 +115,36 @@ export async function createSale(args: {
       });
       return sale;
     });
+
+    // === 自動開立電子發票（綠界 B2C，失敗不擋結帳）===
+    if (args.total > 0) {
+      try {
+        const inv = await issueInvoice({
+          relateNumber: sale.saleNumber,
+          customerName: args.customerName || "",
+          customerPhone: args.customerPhone || "",
+          items: args.items.map(it => ({
+            ItemName: it.name.slice(0, 100),
+            ItemCount: it.qty,
+            ItemWord: "件",
+            ItemPrice: it.unitPrice,
+            ItemTaxType: 1 as const,
+            ItemAmount: it.unitPrice * it.qty,
+          })),
+          totalAmount: args.total,
+        });
+        if (inv.ok && inv.invoiceNumber) {
+          await prisma.sale.update({
+            where: { id: sale.id },
+            data: { invoiceNumber: inv.invoiceNumber, invoiceIssuedAt: new Date() },
+          });
+        } else {
+          console.error("[pos/invoice] failed:", inv.error);
+        }
+      } catch (e) {
+        console.error("[pos/invoice] exception", e);
+      }
+    }
 
     return { ok: true, saleId: sale.id };
   } catch (e) {
