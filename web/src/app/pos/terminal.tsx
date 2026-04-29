@@ -140,6 +140,8 @@ export function PosTerminal({
   const [customPrice, setCustomPrice] = useState("");
   const [serialPicker, setSerialPicker] = useState<ProductOption | null>(null);
   const [serialFilter, setSerialFilter] = useState("");
+  // 手機購物車抽屜（行動裝置上預設收起）
+  const [mobileCartOpen, setMobileCartOpen] = useState(false);
 
   const filteredProducts = useMemo(() => {
     if (!search.trim()) return products.slice(0, 60);
@@ -377,11 +379,27 @@ export function PosTerminal({
           </div>
         </main>
 
-        {/* 右：購物車（手機上是底部 / 桌機是右側） */}
-        <aside className="flex shrink-0 flex-col border-t border-[var(--border)] bg-[var(--bg-elevated)] md:max-h-screen md:w-[380px] md:border-l md:border-t-0">
+        {/* 手機底部購物車按鈕（fixed，常駐） */}
+        <button
+          onClick={() => setMobileCartOpen(true)}
+          className="fixed bottom-4 right-4 z-40 flex items-center gap-2 rounded-full bg-gradient-to-r from-[var(--gold)] to-[var(--gold-bright)] px-5 py-3 text-sm font-bold text-black shadow-lg shadow-[var(--gold)]/40 md:hidden"
+        >
+          🛒 {cart.reduce((s, c) => s + c.qty, 0)} 件 · ${total.toLocaleString()}
+        </button>
+
+        {/* Mobile 購物車 backdrop */}
+        {mobileCartOpen && (
+          <div className="fixed inset-0 z-40 bg-black/60 md:hidden" onClick={() => setMobileCartOpen(false)} />
+        )}
+
+        {/* 右：購物車 — 桌機 sidebar / 手機 bottom drawer */}
+        <aside className={`fixed bottom-0 left-0 right-0 z-50 flex max-h-[85vh] flex-col rounded-t-3xl border-t-2 border-[var(--gold)]/40 bg-[var(--bg-elevated)] transition-transform md:static md:max-h-screen md:w-[380px] md:rounded-none md:border-l md:border-t-0 md:border-l-[var(--border)] ${mobileCartOpen ? "translate-y-0" : "translate-y-full md:translate-y-0"}`}>
           <div className="flex items-center justify-between border-b border-[var(--border)] p-3">
             <span className="font-serif text-base text-[var(--gold)]">🛒 購物車（{cart.reduce((s, c) => s + c.qty, 0)} 件）</span>
-            {cart.length > 0 && <button onClick={clearCart} className="text-xs text-red-400 hover:underline">清空</button>}
+            <div className="flex items-center gap-2">
+              {cart.length > 0 && <button onClick={clearCart} className="text-xs text-red-400 hover:underline">清空</button>}
+              <button onClick={() => setMobileCartOpen(false)} className="rounded-full border border-[var(--border)] px-2 py-0.5 text-xs md:hidden">✕ 收起</button>
+            </div>
           </div>
 
           <div className="flex-1 overflow-y-auto p-2">

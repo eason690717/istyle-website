@@ -104,6 +104,17 @@ export function middleware(req: NextRequest) {
     }
   }
 
+  // === 9. /m 行動工作站（admin OR staff 都可進）===
+  if (pathname.startsWith("/m")) {
+    const adminTok = req.cookies.get(COOKIE_NAME)?.value;
+    const staffTok = req.cookies.get("istyle_staff")?.value;
+    if (!adminTok && !staffTok) {
+      const url = req.nextUrl.clone();
+      url.pathname = "/admin/login";
+      return NextResponse.redirect(url);
+    }
+  }
+
   return NextResponse.next();
 }
 
@@ -118,6 +129,8 @@ export const config = {
   matcher: [
     "/admin/:path*",
     "/pos/:path*",
+    "/m/:path*",
+    "/m",
     "/pages/:path*",
     "/products/:path*",
     "/collections/:path*",

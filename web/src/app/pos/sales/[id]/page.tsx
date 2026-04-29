@@ -98,9 +98,26 @@ export default async function SaleReceiptPage({ params }: { params: Promise<{ id
             <span>付款方式</span><span>{PAYMENT_LABEL[sale.paymentMethod] || sale.paymentMethod}</span>
           </div>
           {sale.invoiceNumber && (
-            <div className="mt-1 flex justify-between text-xs text-gray-600">
-              <span>電子發票</span><span className="font-mono">{sale.invoiceNumber}</span>
-            </div>
+            <>
+              <div className="mt-1 flex justify-between text-xs text-gray-600">
+                <span>電子發票</span><span className="font-mono">{sale.invoiceNumber}</span>
+              </div>
+              {sale.invoiceIssuedAt && (
+                <div className="flex justify-between text-[10px] text-gray-500">
+                  <span>開立時間</span><span>{new Date(sale.invoiceIssuedAt).toLocaleString("zh-TW", { hour12: false })}</span>
+                </div>
+              )}
+              <div className="mt-2 print:hidden">
+                <a
+                  href={`https://www.einvoice.nat.gov.tw/portal/btc/qry/InvNoQry?Apo=${sale.invoiceNumber}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block text-[10px] text-blue-600 underline"
+                >
+                  → 至財政部電子發票整合平台查驗
+                </a>
+              </div>
+            </>
           )}
         </div>
 

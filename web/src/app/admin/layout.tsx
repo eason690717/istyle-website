@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 
 const NAV = [
   { href: "/admin", label: "儀表板" },
+  { href: "/m", label: "📱 行動站" },
   { href: "/admin/products", label: "📦 商品" },
   { href: "/admin/inventory", label: "📦 庫存" },
   { href: "/admin/serials", label: "📱 序號" },

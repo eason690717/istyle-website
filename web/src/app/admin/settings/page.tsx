@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { SITE } from "@/lib/site-config";
 
@@ -9,6 +10,14 @@ export default async function AdminSettingsPage() {
   return (
     <div className="space-y-6">
       <h1 className="font-serif text-2xl text-[var(--gold)]">站台設定</h1>
+
+      {/* 子設定入口 */}
+      <div className="grid gap-3 md:grid-cols-2">
+        <Link href="/admin/settings/printer" className="rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] p-4 hover:border-[var(--gold)]">
+          <div className="font-serif text-base text-[var(--gold)]">🖨 收據印表機</div>
+          <div className="mt-1 text-xs text-[var(--fg-muted)]">推薦機型 + 設定步驟 + 紙本發票流程</div>
+        </Link>
+      </div>
 
       <div className="rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] p-5 text-sm">
         <h2 className="font-serif text-lg text-[var(--gold)]">公司資訊</h2>
