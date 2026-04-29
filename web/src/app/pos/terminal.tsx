@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { logoutAction } from "./login/actions";
 import { createSale } from "./actions";
+import { BarcodeScanner } from "@/components/barcode-scanner";
 
 // 客戶搜尋小元件 — 輸入電話/姓名 autocomplete 帶入歷史客戶
 function CustomerSearchInput({ value, name, onChange }: {
@@ -142,6 +143,9 @@ export function PosTerminal({
   const [serialFilter, setSerialFilter] = useState("");
   // 手機購物車抽屜（行動裝置上預設收起）
   const [mobileCartOpen, setMobileCartOpen] = useState(false);
+  // POS 條碼掃描
+  const [posScan, setPosScan] = useState(false);
+  const [scanError, setScanError] = useState<string | null>(null);
 
   const filteredProducts = useMemo(() => {
     if (!search.trim()) return products.slice(0, 60);
@@ -248,6 +252,32 @@ export function PosTerminal({
     }));
   }
   function removeLine(key: string) { setCart(cart.filter(c => c.key !== key)); }
+
+  // 條碼掃描處理：先試對 IMEI（序號商品的某筆 in-stock），再對 SKU（一般商品）
+  function handleScan(code: string) {
+    setScanError(null);
+    const trimmed = code.trim();
+
+    // 1. 試找序號（IMEI / serial）
+    for (const p of products) {
+      if (!p.tracksSerial || !p.availableSerials) continue;
+      const found = p.availableSerials.find(s => s.serial === trimmed);
+      if (found) {
+        addProductSerial(p, found);
+        return;
+      }
+    }
+    // 2. 試找 SKU 完全比對
+    const exact = products.find(p => p.sku === trimmed);
+    if (exact) { addProduct(exact); return; }
+    // 3. 模糊找 SKU contains
+    const partial = products.find(p => (p.sku || "").includes(trimmed));
+    if (partial) { addProduct(partial); return; }
+    // 4. 都找不到
+    setScanError(`找不到條碼「${trimmed}」— 請確認商品已建立 / IMEI 已進貨`);
+    if ("vibrate" in navigator) (navigator as Navigator).vibrate([100, 50, 100]);
+  }
+
   function clearCart() {
     if (cart.length > 0 && !confirm("清空購物車？")) return;
     setCart([]); setDiscount(0); setCustomerName(""); setCustomerPhone(""); setNotes("");
@@ -323,13 +353,23 @@ export function PosTerminal({
                 className="rounded-lg border border-[var(--gold)]/40 px-3 py-2 text-sm text-[var(--gold)] hover:bg-[var(--gold)]/10"
               >＋ 客製</button>
             </div>
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder={tab === "products" ? "搜尋商品名稱或 SKU" : "搜尋機型或維修項目（如 iPhone 15、螢幕）"}
-              className="mt-2 w-full rounded-lg border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-sm focus:border-[var(--gold)] focus:outline-none"
-            />
+            <div className="mt-2 flex gap-2">
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder={tab === "products" ? "搜尋商品名稱 / SKU / IMEI" : "搜尋機型或維修項目（如 iPhone 15、螢幕）"}
+                className="flex-1 rounded-lg border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-sm focus:border-[var(--gold)] focus:outline-none"
+              />
+              {tab === "products" && (
+                <button
+                  onClick={() => setPosScan(true)}
+                  className="rounded-lg bg-gradient-to-r from-green-600 to-green-700 px-3 text-sm font-semibold text-white"
+                  title="掃條碼 / IMEI"
+                >📷</button>
+              )}
+            </div>
+            {scanError && <p className="mt-2 text-center text-xs text-red-400">{scanError}</p>}
           </div>
 
           {/* 商品 grid / 維修列表 */}
@@ -498,6 +538,14 @@ export function PosTerminal({
           </div>
         </aside>
       </div>
+
+      {/* POS 條碼掃描 — 自動找 SKU 或 IMEI 加入購物車 */}
+      {posScan && (
+        <BarcodeScanner
+          onDetected={(code) => { setPosScan(false); handleScan(code); }}
+          onClose={() => setPosScan(false)}
+        />
+      )}
 
       {/* 序號選擇 dialog（IMEI / serial 商品專用）*/}
       {serialPicker && (

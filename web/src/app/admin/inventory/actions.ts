@@ -275,3 +275,166 @@ export async function adjustStock(args: {
     return { ok: false, error: e instanceof Error ? e.message : String(e) };
   }
 }
+
+// === 進貨頁找不到商品時，inline 快速建立 ===
+// 必填: name + price，選填: cost + tracksSerial + initialStock
+export async function quickCreateProduct(args: {
+  name: string;
+  price: number;
+  cost?: number;
+  tracksSerial?: boolean;
+  initialStock?: number;
+  category?: string;
+  brand?: string;
+}) {
+  if (!args.name.trim()) return { ok: false as const, error: "請填商品名稱" };
+  if (!Number.isFinite(args.price) || args.price < 0) return { ok: false as const, error: "請填合法售價" };
+
+  // ASCII slug 避免中文 dynamic route 404
+  const ts = Date.now().toString(36);
+  const ascii = args.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 30);
+  const slug = ascii ? `${ascii}-${ts}` : `p-${ts}`;
+  const adminEmail = await getAdminEmail();
+
+  try {
+    const product = await prisma.product.create({
+      data: {
+        slug,
+        name: args.name.trim(),
+        category: args.category?.trim() || "other",
+        brand: args.brand?.trim() || null,
+        price: args.price,
+        cost: args.cost ?? null,
+        stock: 0,
+        tracksSerial: args.tracksSerial ?? false,
+        isActive: true,
+      },
+    });
+
+    // 普通商品 + 有設初始量 → 直接記一筆 RECEIVE
+    if (!args.tracksSerial && args.initialStock && args.initialStock > 0) {
+      await prisma.$transaction(async (tx) => {
+        await tx.product.update({ where: { id: product.id }, data: { stock: args.initialStock } });
+        await tx.stockMovement.create({
+          data: {
+            type: "RECEIVE",
+            productId: product.id,
+            qty: args.initialStock!,
+            prevStock: 0,
+            newStock: args.initialStock!,
+            unitCost: args.cost ?? null,
+            reason: "新建商品 + 初始進貨",
+            adminEmail,
+          },
+        });
+      });
+    }
+
+    revalidatePath("/admin/inventory");
+    revalidatePath("/admin/products");
+
+    return {
+      ok: true as const,
+      product: {
+        id: product.id,
+        name: product.name,
+        slug: product.slug,
+        price: product.price,
+        stock: args.initialStock || 0,
+        tracksSerial: product.tracksSerial,
+        imageUrl: null as string | null,
+      },
+    };
+  } catch (e) {
+    return { ok: false as const, error: e instanceof Error ? e.message : String(e) };
+  }
+}
+
+// === 二手機快速進貨：一筆 = 一台機（含 IMEI）===
+// 場景：客人來賣 二手 iPhone 14 Pro，店家收進並上架
+// 流程：找 / 建商品（自動 tracksSerial=true） + 直接加一筆 IMEI
+export async function quickReceiveUsedDevice(args: {
+  productName: string;     // 「iPhone 14 Pro 黑色 256GB」
+  imei: string;
+  price: number;          // 預定售價（給客人的）
+  cost: number;           // 收購成本（付給原機主）
+  notes?: string;
+}) {
+  if (!args.productName.trim()) return { ok: false as const, error: "請填機型名稱" };
+  if (!args.imei.trim()) return { ok: false as const, error: "請填 IMEI" };
+  if (!Number.isFinite(args.price) || args.price < 0) return { ok: false as const, error: "售價無效" };
+  if (!Number.isFinite(args.cost) || args.cost < 0) return { ok: false as const, error: "成本無效" };
+
+  const adminEmail = await getAdminEmail();
+  const name = args.productName.trim();
+  const imei = args.imei.trim();
+
+  try {
+    // 找有沒有同名商品（且 tracksSerial=true，表示是二手分類）
+    let product = await prisma.product.findFirst({
+      where: { name, tracksSerial: true, isActive: true },
+    });
+
+    if (!product) {
+      // 新建二手機商品（自動 tracksSerial=true、category="used"）
+      const ts = Date.now().toString(36);
+      const ascii = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 30);
+      const slug = ascii ? `used-${ascii}-${ts}` : `used-${ts}`;
+      product = await prisma.product.create({
+        data: {
+          slug,
+          name,
+          category: "used",
+          price: args.price,
+          cost: args.cost,
+          stock: 0,
+          tracksSerial: true,
+          isActive: true,
+        },
+      });
+    }
+
+    // 檢查 IMEI 是否已存在
+    const existing = await prisma.productSerial.findFirst({
+      where: { productId: product.id, serial: imei },
+    });
+    if (existing) return { ok: false as const, error: `IMEI ${imei} 已存在 (狀態：${existing.status})` };
+
+    // 一個 transaction：加序號 + 更新商品庫存 + 異動紀錄
+    await prisma.$transaction(async (tx) => {
+      await tx.productSerial.create({
+        data: {
+          productId: product!.id,
+          serial: imei,
+          status: "IN_STOCK",
+          cost: args.cost,
+          notes: args.notes || "二手機收進",
+          receivedBy: adminEmail,
+        },
+      });
+      const p = await tx.product.findUnique({ where: { id: product!.id } });
+      const newStock = (p?.stock || 0) + 1;
+      await tx.product.update({ where: { id: product!.id }, data: { stock: newStock } });
+      await tx.stockMovement.create({
+        data: {
+          type: "RECEIVE",
+          productId: product!.id,
+          qty: 1,
+          prevStock: (p?.stock || 0),
+          newStock,
+          unitCost: args.cost,
+          reason: `二手機收進 IMEI ${imei}`,
+          notes: args.notes || null,
+          adminEmail,
+        },
+      });
+    });
+
+    revalidatePath("/admin/inventory");
+    revalidatePath("/admin/serials");
+
+    return { ok: true as const, productId: product.id, productName: product.name };
+  } catch (e) {
+    return { ok: false as const, error: e instanceof Error ? e.message : String(e) };
+  }
+}
