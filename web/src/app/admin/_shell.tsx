@@ -3,67 +3,134 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-// Admin nav 分組（最重要的擺最上、依工作流分類）
-const NAV_GROUPS = [
+// 每組有自己的色系（accent + 標題顏色 + active 背景）+ 每個 item 都配 icon 統一風格
+type NavItem = { href: string; icon: string; label: string; external?: boolean };
+type NavGroup = { title: string; icon: string; color: string; items: NavItem[] };
+
+const NAV_GROUPS: NavGroup[] = [
   {
-    title: "🏠 主畫面",
+    title: "主畫面",
+    icon: "🏠",
+    color: "amber",
     items: [
-      { href: "/admin", label: "儀表板" },
-      { href: "/m", label: "📱 行動工作站" },
-      { href: "/", label: "↗ 看前台", external: true },
+      { href: "/admin", icon: "📊", label: "儀表板" },
+      { href: "/m", icon: "📱", label: "行動工作站", external: true },
+      { href: "/", icon: "🌐", label: "看前台", external: true },
     ],
   },
   {
-    title: "🛒 銷售",
+    title: "銷售",
+    icon: "🛒",
+    color: "emerald",
     items: [
-      { href: "/pos", label: "💰 開 POS 結帳台", external: true },
-      { href: "/admin/sales", label: "POS 交易" },
-      { href: "/admin/sales/report", label: "📅 日結報表" },
-      { href: "/admin/all-sales", label: "📊 全銷售（含線上）" },
-      { href: "/admin/payment-links", label: "付款連結" },
-      { href: "/admin/orders", label: "線上訂單" },
-      { href: "/admin/shipping", label: "📦 出貨" },
+      { href: "/pos", icon: "🏪", label: "開 POS 結帳台", external: true },
+      { href: "/admin/sales", icon: "🧾", label: "POS 交易紀錄" },
+      { href: "/admin/sales/report", icon: "📅", label: "日結報表" },
+      { href: "/admin/all-sales", icon: "📈", label: "全銷售（含線上）" },
+      { href: "/admin/payment-links", icon: "🔗", label: "付款連結" },
+      { href: "/admin/orders", icon: "💳", label: "線上訂單" },
+      { href: "/admin/shipping", icon: "🚚", label: "出貨" },
     ],
   },
   {
-    title: "📦 商品庫存",
+    title: "商品庫存",
+    icon: "📦",
+    color: "blue",
     items: [
-      { href: "/admin/products", label: "商品管理" },
-      { href: "/admin/inventory", label: "庫存儀表板" },
-      { href: "/admin/inventory/receive", label: "📥 進貨" },
-      { href: "/admin/inventory/count", label: "📊 盤點" },
-      { href: "/admin/inventory/import", label: "📑 CSV 批次" },
-      { href: "/admin/inventory/movements", label: "異動紀錄" },
-      { href: "/admin/serials", label: "📱 IMEI 序號" },
+      { href: "/admin/products", icon: "🛍️", label: "商品管理" },
+      { href: "/admin/inventory", icon: "📊", label: "庫存儀表板" },
+      { href: "/admin/inventory/receive", icon: "📥", label: "進貨" },
+      { href: "/admin/inventory/count", icon: "🔢", label: "盤點" },
+      { href: "/admin/inventory/import", icon: "📑", label: "CSV 批次匯入" },
+      { href: "/admin/inventory/movements", icon: "📜", label: "異動紀錄" },
+      { href: "/admin/serials", icon: "🏷️", label: "IMEI / 序號" },
     ],
   },
   {
-    title: "🔧 維修",
+    title: "維修",
+    icon: "🔧",
+    color: "orange",
     items: [
-      { href: "/admin/repairs", label: "維修單" },
-      { href: "/admin/cases", label: "📋 案例集" },
-      { href: "/admin/prices", label: "維修報價" },
-      { href: "/admin/recycle", label: "二手回收價" },
+      { href: "/admin/repairs", icon: "🛠️", label: "維修單" },
+      { href: "/admin/cases", icon: "📚", label: "案例集" },
+      { href: "/admin/prices", icon: "💵", label: "維修報價" },
+      { href: "/admin/recycle", icon: "♻️", label: "二手回收價" },
     ],
   },
   {
-    title: "👤 客戶 / 預約",
+    title: "客戶 / 預約",
+    icon: "👤",
+    color: "purple",
     items: [
-      { href: "/admin/customers", label: "客戶資料庫" },
-      { href: "/admin/bookings", label: "預約" },
+      { href: "/admin/customers", icon: "👥", label: "客戶資料庫" },
+      { href: "/admin/bookings", icon: "📆", label: "預約" },
     ],
   },
   {
-    title: "⚙️ 系統",
+    title: "系統",
+    icon: "⚙️",
+    color: "slate",
     items: [
-      { href: "/admin/staff", label: "👥 店員" },
-      { href: "/admin/analytics", label: "📊 流量分析" },
-      { href: "/admin/cron", label: "自動排程" },
-      { href: "/admin/settings", label: "設定" },
-      { href: "/admin/settings/printer", label: "🖨 印表機" },
+      { href: "/admin/staff", icon: "🧑", label: "店員" },
+      { href: "/admin/analytics", icon: "📈", label: "流量分析" },
+      { href: "/admin/cron", icon: "⏰", label: "自動排程" },
+      { href: "/admin/settings", icon: "⚙️", label: "全站設定" },
+      { href: "/admin/settings/printer", icon: "🖨️", label: "印表機" },
     ],
   },
 ];
+
+// 色系對應（每組獨立風格）
+const COLOR_STYLES: Record<string, { titleText: string; titleBg: string; accentBar: string; activeBg: string; activeText: string; hoverText: string }> = {
+  amber: {
+    titleText: "text-amber-400",
+    titleBg: "bg-amber-500/10",
+    accentBar: "bg-amber-500",
+    activeBg: "bg-amber-500/20 border-amber-500/40",
+    activeText: "text-amber-300",
+    hoverText: "hover:text-amber-300",
+  },
+  emerald: {
+    titleText: "text-emerald-400",
+    titleBg: "bg-emerald-500/10",
+    accentBar: "bg-emerald-500",
+    activeBg: "bg-emerald-500/20 border-emerald-500/40",
+    activeText: "text-emerald-300",
+    hoverText: "hover:text-emerald-300",
+  },
+  blue: {
+    titleText: "text-blue-400",
+    titleBg: "bg-blue-500/10",
+    accentBar: "bg-blue-500",
+    activeBg: "bg-blue-500/20 border-blue-500/40",
+    activeText: "text-blue-300",
+    hoverText: "hover:text-blue-300",
+  },
+  orange: {
+    titleText: "text-orange-400",
+    titleBg: "bg-orange-500/10",
+    accentBar: "bg-orange-500",
+    activeBg: "bg-orange-500/20 border-orange-500/40",
+    activeText: "text-orange-300",
+    hoverText: "hover:text-orange-300",
+  },
+  purple: {
+    titleText: "text-purple-400",
+    titleBg: "bg-purple-500/10",
+    accentBar: "bg-purple-500",
+    activeBg: "bg-purple-500/20 border-purple-500/40",
+    activeText: "text-purple-300",
+    hoverText: "hover:text-purple-300",
+  },
+  slate: {
+    titleText: "text-slate-400",
+    titleBg: "bg-slate-500/10",
+    accentBar: "bg-slate-500",
+    activeBg: "bg-slate-500/20 border-slate-500/40",
+    activeText: "text-slate-300",
+    hoverText: "hover:text-slate-300",
+  },
+};
 
 export function AdminShell({ children, logoutAction }: { children: React.ReactNode; logoutAction: () => Promise<void> }) {
   const pathname = usePathname();
@@ -78,15 +145,16 @@ export function AdminShell({ children, logoutAction }: { children: React.ReactNo
   return (
     <div className="flex min-h-screen bg-[var(--bg)]">
       {/* === 桌機側邊欄 === */}
-      <aside className="hidden md:flex w-60 shrink-0 flex-col border-r border-[var(--border)] bg-[var(--bg-elevated)]">
-        <Link href="/admin" className="border-b border-[var(--border)] p-4 font-serif text-lg text-[var(--gold)]">
-          i時代 後台
+      <aside className="hidden md:flex w-64 shrink-0 flex-col border-r border-[var(--border)] bg-[#0d0908]">
+        <Link href="/admin" className="flex items-center gap-2 border-b border-[var(--border)] p-4">
+          <span className="font-serif text-lg text-[var(--gold)]">i時代</span>
+          <span className="text-xs text-[var(--fg-muted)]">後台</span>
         </Link>
         <SidebarContent isActive={isActive} />
         <div className="border-t border-[var(--border)] p-3">
           <form action={logoutAction}>
-            <button className="w-full rounded-lg border border-[var(--border)] px-3 py-2 text-xs text-[var(--fg-muted)] hover:border-red-500/50 hover:text-red-400" type="submit">
-              登出
+            <button type="submit" className="flex w-full items-center justify-center gap-2 rounded-lg border border-[var(--border)] py-2 text-xs text-[var(--fg-muted)] hover:border-red-500/50 hover:text-red-400">
+              <span>🚪</span> 登出
             </button>
           </form>
         </div>
@@ -95,14 +163,10 @@ export function AdminShell({ children, logoutAction }: { children: React.ReactNo
       {/* === 主內容區 === */}
       <div className="flex min-w-0 flex-1 flex-col">
         {/* 手機頂欄（漢堡） */}
-        <header className="sticky top-0 z-20 flex items-center justify-between border-b border-[var(--border)] bg-[var(--bg-elevated)] p-3 md:hidden">
-          <button
-            onClick={() => setDrawerOpen(true)}
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-[var(--border)] text-xl"
-            aria-label="選單"
-          >☰</button>
+        <header className="sticky top-0 z-20 flex items-center justify-between border-b border-[var(--border)] bg-[#0d0908] p-3 md:hidden" style={{ paddingTop: "calc(0.75rem + env(safe-area-inset-top))" }}>
+          <button onClick={() => setDrawerOpen(true)} className="flex h-10 w-10 items-center justify-center rounded-lg border border-[var(--border)] text-xl" aria-label="選單">☰</button>
           <Link href="/admin" className="font-serif text-base text-[var(--gold)]">i時代 後台</Link>
-          <Link href="/" className="text-xs text-[var(--fg-muted)]">↗ 前台</Link>
+          <Link href="/" className="text-xs text-[var(--fg-muted)]">↗</Link>
         </header>
 
         <main className="flex-1 p-4 md:p-6">{children}</main>
@@ -111,23 +175,31 @@ export function AdminShell({ children, logoutAction }: { children: React.ReactNo
       {/* === 手機側拉抽屜 === */}
       {drawerOpen && (
         <>
-          <div className="fixed inset-0 z-40 bg-black/60 md:hidden" onClick={() => setDrawerOpen(false)} />
-          <aside className="fixed inset-y-0 left-0 z-50 flex w-72 flex-col bg-[var(--bg-elevated)] shadow-xl md:hidden">
+          <div className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm md:hidden" onClick={() => setDrawerOpen(false)} />
+          <aside
+            className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-[#0d0908] shadow-2xl md:hidden"
+            style={{ paddingTop: "env(safe-area-inset-top)", paddingBottom: "env(safe-area-inset-bottom)" }}
+          >
             <div className="flex items-center justify-between border-b border-[var(--border)] p-4">
-              <span className="font-serif text-lg text-[var(--gold)]">i時代 後台</span>
-              <button onClick={() => setDrawerOpen(false)} className="text-xl text-[var(--fg-muted)]">✕</button>
+              <div className="flex items-center gap-2">
+                <span className="font-serif text-lg text-[var(--gold)]">i時代</span>
+                <span className="text-xs text-[var(--fg-muted)]">後台</span>
+              </div>
+              <button onClick={() => setDrawerOpen(false)} className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--border)] text-base text-[var(--fg-muted)]">✕</button>
             </div>
-            <div className="flex-1 overflow-y-auto" onClick={(e) => {
-              // 點到連結就收抽屜
-              const t = e.target as HTMLElement;
-              if (t.tagName === "A") setDrawerOpen(false);
-            }}>
+            <div
+              className="flex-1 overflow-y-auto"
+              onClick={(e) => {
+                const t = e.target as HTMLElement;
+                if (t.tagName === "A") setDrawerOpen(false);
+              }}
+            >
               <SidebarContent isActive={isActive} />
             </div>
             <div className="border-t border-[var(--border)] p-3">
               <form action={logoutAction}>
-                <button className="w-full rounded-lg border border-[var(--border)] px-3 py-2 text-xs text-[var(--fg-muted)] hover:border-red-500/50 hover:text-red-400" type="submit">
-                  登出
+                <button type="submit" className="flex w-full items-center justify-center gap-2 rounded-lg border border-[var(--border)] py-2 text-xs text-[var(--fg-muted)] hover:border-red-500/50 hover:text-red-400">
+                  <span>🚪</span> 登出
                 </button>
               </form>
             </div>
@@ -140,28 +212,44 @@ export function AdminShell({ children, logoutAction }: { children: React.ReactNo
 
 function SidebarContent({ isActive }: { isActive: (href: string) => boolean }) {
   return (
-    <nav className="flex-1 overflow-y-auto p-3 text-sm">
-      {NAV_GROUPS.map(group => (
-        <div key={group.title} className="mb-4">
-          <div className="mb-1 px-2 text-[10px] font-medium uppercase tracking-wider text-[var(--fg-muted)]">
-            {group.title}
+    <nav className="flex-1 overflow-y-auto py-2">
+      {NAV_GROUPS.map(group => {
+        const c = COLOR_STYLES[group.color];
+        return (
+          <div key={group.title} className="mb-1">
+            {/* 分組標題（彩色色塊） */}
+            <div className={`mx-2 mb-1 mt-3 flex items-center gap-2 rounded-md ${c.titleBg} px-3 py-1.5`}>
+              <span className="text-base">{group.icon}</span>
+              <span className={`text-xs font-bold uppercase tracking-wider ${c.titleText}`}>{group.title}</span>
+            </div>
+
+            {/* 該組 items */}
+            <div className="space-y-0.5 px-2">
+              {group.items.map(item => {
+                const active = isActive(item.href);
+                const cls = `relative flex items-center gap-2.5 rounded-lg border px-3 py-2 text-sm transition ${
+                  active
+                    ? `${c.activeBg} ${c.activeText} font-medium`
+                    : `border-transparent text-[var(--fg)] hover:bg-white/5 ${c.hoverText}`
+                }`;
+                const content = (
+                  <>
+                    {/* 左側 accent bar — active 時亮起 */}
+                    {active && <span className={`absolute left-0 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r ${c.accentBar}`} />}
+                    <span className="text-base shrink-0 w-5 text-center">{item.icon}</span>
+                    <span className="truncate">{item.label}</span>
+                    {item.external && <span className="ml-auto text-[10px] opacity-60">↗</span>}
+                  </>
+                );
+                if (item.external) {
+                  return <a key={item.href} href={item.href} target="_blank" rel="noopener noreferrer" className={cls}>{content}</a>;
+                }
+                return <Link key={item.href} href={item.href} className={cls}>{content}</Link>;
+              })}
+            </div>
           </div>
-          <div className="space-y-0.5">
-            {group.items.map(item => {
-              const active = isActive(item.href);
-              const cls = `block rounded-lg px-3 py-2 text-sm transition ${
-                active
-                  ? "bg-[var(--gold)]/15 font-medium text-[var(--gold)]"
-                  : "text-[var(--fg)] hover:bg-[var(--bg)] hover:text-[var(--gold-bright)]"
-              }`;
-              if (item.external) {
-                return <a key={item.href} href={item.href} target="_blank" rel="noopener noreferrer" className={cls}>{item.label}</a>;
-              }
-              return <Link key={item.href} href={item.href} className={cls}>{item.label}</Link>;
-            })}
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </nav>
   );
 }
