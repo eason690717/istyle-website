@@ -78,6 +78,7 @@ export default function CoursesPage() {
             14 年現役維修師親授．實機練習．結業送進貨折扣
           </p>
           <p className="mt-2 text-sm text-[var(--fg-muted)]">
+            分 iPhone 班 / Android 班 / 全系列班<br />
             主力 1-2 級實作（換螢幕 / 電池 / 充電孔 / 周邊模組）<br />
             <span className="text-[10px]">⚠️ 不教主機板 BGA — 短期班學不會，我們不騙你</span>
           </p>
@@ -163,8 +164,15 @@ function Stat({ label, value }: { label: string; value: string }) {
   );
 }
 
+const BRAND_BADGES: Record<string, { icon: string; label: string; color: string }> = {
+  apple: { icon: "🍎", label: "Apple", color: "from-zinc-600 to-zinc-700" },
+  android: { icon: "🤖", label: "Android", color: "from-emerald-600 to-emerald-700" },
+  all: { icon: "🌟", label: "全系列", color: "from-[var(--gold)] to-amber-600" },
+};
+
 function CourseCard({ c }: { c: typeof COURSES[number] }) {
   const isPopular = c.popular;
+  const badge = BRAND_BADGES[c.brandFocus];
   const lineMsg = encodeURIComponent(`你好！想了解「${c.title}」課程的排課時間 + 報名方式`);
   const lineUrl = `${SITE.lineAddUrl}?text=${lineMsg}`;
   return (
@@ -175,7 +183,11 @@ function CourseCard({ c }: { c: typeof COURSES[number] }) {
         </div>
       )}
       <div className="mb-3">
-        <div className="text-xs text-[var(--fg-muted)]">L{c.level}・{c.durationLabel}</div>
+        <div className={`mb-2 inline-flex items-center gap-1 rounded-full bg-gradient-to-r ${badge.color} px-2.5 py-0.5 text-[10px] font-medium text-white`}>
+          <span>{badge.icon}</span>
+          <span>{badge.label}</span>
+        </div>
+        <div className="text-xs text-[var(--fg-muted)]">{c.durationLabel}</div>
         <h3 className="mt-1 font-serif text-xl text-[var(--gold)]">{c.title}</h3>
         <p className="mt-1 text-xs text-[var(--fg-muted)]">{c.subtitle}</p>
       </div>
