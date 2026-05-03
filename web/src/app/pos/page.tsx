@@ -110,5 +110,29 @@ export default async function PosPage() {
     }));
   });
 
-  return <PosTerminal staff={staff} products={productOptions} repairs={repairOptions} />;
+  // 最近 30 天熱賣商品 ID（給 POS 快選欄）
+  const since = new Date(Date.now() - 30 * 86400_000);
+  const topSold = await prisma.saleItem.groupBy({
+    by: ["productId", "productVariantId"],
+    where: {
+      sale: { createdAt: { gte: since }, paymentStatus: "PAID" },
+      itemType: { in: ["PRODUCT", "VARIANT"] },
+    },
+    _sum: { qty: true },
+    orderBy: { _sum: { qty: "desc" } },
+    take: 10,
+  }).catch(() => []);
+
+  // 把熱賣 ID 對應到 productOptions
+  const topSoldIds = new Set<string>();
+  for (const t of topSold) {
+    if (t.productVariantId) topSoldIds.add(`variant:${t.productVariantId}`);
+    else if (t.productId) topSoldIds.add(`product:${t.productId}`);
+  }
+  const favorites = productOptions.filter(p => topSoldIds.has(p.id)).slice(0, 8);
+
+  // 維修按品牌分組
+  const repairBrands = Array.from(new Set(repairOptions.map(r => r.brand))).sort();
+
+  return <PosTerminal staff={staff} products={productOptions} repairs={repairOptions} favorites={favorites} repairBrands={repairBrands} />;
 }

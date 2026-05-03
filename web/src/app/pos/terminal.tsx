@@ -66,6 +66,31 @@ interface ProductOption {
   availableSerials?: Array<{ id: number; serial: string }>;
 }
 
+// 商品 tile（被多處複用：熱賣 + 全部商品）
+function ProductTile({ p, onAdd, hot }: { p: ProductOption; onAdd: (p: ProductOption) => void; hot?: boolean }) {
+  return (
+    <button
+      onClick={() => onAdd(p)}
+      disabled={p.stock <= 0}
+      className={`group relative overflow-hidden rounded-lg border bg-[var(--bg-elevated)] text-left transition active:scale-95 disabled:opacity-40 ${hot ? "border-orange-500/40 hover:border-orange-400" : "border-[var(--border)] hover:border-[var(--gold)]"}`}
+    >
+      {hot && <span className="absolute right-1 top-1 z-10 rounded-full bg-orange-500 px-1.5 py-0.5 text-[9px] font-bold text-white shadow">HOT</span>}
+      {p.imageUrl ? (
+        <img src={p.imageUrl} alt="" className="aspect-square w-full object-cover" />
+      ) : (
+        <div className="aspect-square w-full bg-[var(--bg)] flex items-center justify-center text-3xl text-[var(--fg-muted)]">📦</div>
+      )}
+      <div className="p-2">
+        <div className="line-clamp-2 text-xs leading-tight min-h-[28px]">{p.name}</div>
+        <div className="mt-1 flex items-center justify-between">
+          <span className="font-mono text-sm font-bold text-[var(--gold)]">${p.price.toLocaleString()}</span>
+          <span className={`text-[10px] ${p.stock > 0 ? "text-green-400" : "text-red-400"}`}>{p.stock > 0 ? `${p.stock}` : "缺"}</span>
+        </div>
+      </div>
+    </button>
+  );
+}
+
 interface RepairOption {
   id: number;
   name: string;
@@ -100,16 +125,19 @@ const PAYMENT_METHODS = [
 ];
 
 export function PosTerminal({
-  staff, products, repairs,
+  staff, products, repairs, favorites = [], repairBrands = [],
 }: {
   staff: { staffId: number; name: string; role: string; code: string };
   products: ProductOption[];
   repairs: RepairOption[];
+  favorites?: ProductOption[];
+  repairBrands?: string[];
 }) {
   const router = useRouter();
   const sp = useSearchParams();
   const [tab, setTab] = useState<"products" | "repairs">("products");
   const [search, setSearch] = useState("");
+  const [repairBrand, setRepairBrand] = useState<string>("");  // 維修品牌過濾
   const [cart, setCart] = useState<CartLine[]>([]);
   const [discount, setDiscount] = useState(0);
   const [customerName, setCustomerName] = useState(sp?.get("customer") || "");
@@ -157,10 +185,14 @@ export function PosTerminal({
   }, [search, products]);
 
   const filteredRepairs = useMemo(() => {
-    if (!search.trim()) return repairs.slice(0, 60);
-    const q = search.toLowerCase();
-    return repairs.filter(r => r.name.toLowerCase().includes(q)).slice(0, 60);
-  }, [search, repairs]);
+    let list = repairs;
+    if (repairBrand) list = list.filter(r => r.brand === repairBrand);
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      list = list.filter(r => r.name.toLowerCase().includes(q));
+    }
+    return list.slice(0, 80);
+  }, [search, repairs, repairBrand]);
 
   function addProduct(p: ProductOption) {
     // 序號商品：必須開選 IMEI 對話框
@@ -349,17 +381,19 @@ export function PosTerminal({
         </div>
       )}
 
-      {/* Top bar */}
-      <header className="flex items-center justify-between border-b border-[var(--border)] bg-[var(--bg-elevated)] px-4 py-3">
-        <div className="flex items-center gap-3">
-          <span className="font-serif text-lg text-[var(--gold)]">🛒 POS</span>
-          <span className="rounded-full border border-[var(--border)] px-3 py-1 text-xs">
-            {staff.name} <span className="text-[var(--fg-muted)]">({staff.code})</span>
-          </span>
+      {/* Top bar — 精簡版 */}
+      <header
+        className="flex items-center justify-between border-b border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-2.5 md:px-4"
+        style={{ paddingTop: "calc(0.625rem + env(safe-area-inset-top))" }}
+      >
+        <div className="flex items-center gap-2">
+          <span className="font-serif text-base text-[var(--gold)]">🛒</span>
+          <span className="text-sm font-medium">{staff.name}</span>
+          <span className="text-[10px] text-[var(--fg-muted)]">{staff.code}</span>
         </div>
-        <div className="flex gap-2 text-xs">
-          <Link href="/admin/sales" className="rounded-full border border-[var(--border)] px-3 py-1 text-[var(--fg-muted)] hover:text-[var(--gold)]">交易紀錄</Link>
-          <form action={logoutAction}><button className="rounded-full border border-red-500/40 px-3 py-1 text-red-400 hover:bg-red-500/10">登出</button></form>
+        <div className="flex gap-1.5 text-xs">
+          <Link href="/admin/sales" target="_blank" className="rounded-full px-2 py-1 text-[var(--fg-muted)] hover:text-[var(--gold)]" title="交易紀錄">📊</Link>
+          <form action={logoutAction}><button className="rounded-full px-2 py-1 text-[var(--fg-muted)] hover:text-red-400" title="登出">⏏</button></form>
         </div>
       </header>
 
@@ -404,46 +438,70 @@ export function PosTerminal({
           {/* 商品 grid / 維修列表 */}
           <div className="flex-1 overflow-y-auto p-3">
             {tab === "products" ? (
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                {filteredProducts.map(p => (
-                  <button
-                    key={p.id}
-                    onClick={() => addProduct(p)}
-                    disabled={p.stock <= 0}
-                    className="group overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] text-left transition hover:border-[var(--gold)] disabled:opacity-40"
-                  >
-                    {p.imageUrl ? (
-                      <img src={p.imageUrl} alt="" className="aspect-square w-full object-cover" />
-                    ) : (
-                      <div className="aspect-square w-full bg-[var(--bg)] flex items-center justify-center text-3xl text-[var(--fg-muted)]">📦</div>
-                    )}
-                    <div className="p-2">
-                      <div className="line-clamp-2 text-xs">{p.name}</div>
-                      <div className="mt-1 flex items-center justify-between">
-                        <span className="font-mono text-sm text-[var(--gold)]">${p.price.toLocaleString()}</span>
-                        <span className={`text-[10px] ${p.stock > 0 ? "text-green-400" : "text-red-400"}`}>庫存 {p.stock}</span>
-                      </div>
+              <>
+                {/* 🔥 最近熱賣（30 天 top 8）*/}
+                {favorites.length > 0 && !search.trim() && (
+                  <section className="mb-4">
+                    <div className="mb-2 flex items-center gap-2">
+                      <span className="text-base">🔥</span>
+                      <span className="text-xs font-bold uppercase tracking-wider text-orange-400">近 30 天熱賣</span>
                     </div>
-                  </button>
-                ))}
-                {filteredProducts.length === 0 && <div className="col-span-full py-12 text-center text-sm text-[var(--fg-muted)]">沒有符合的商品</div>}
-              </div>
+                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                      {favorites.map(p => (
+                        <ProductTile key={`fav-${p.id}`} p={p} onAdd={addProduct} hot />
+                      ))}
+                    </div>
+                  </section>
+                )}
+
+                {/* 全部商品 */}
+                {favorites.length > 0 && !search.trim() && (
+                  <div className="mb-2 flex items-center gap-2">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[var(--fg-muted)]">全部商品</span>
+                  </div>
+                )}
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                  {filteredProducts.map(p => <ProductTile key={p.id} p={p} onAdd={addProduct} />)}
+                  {filteredProducts.length === 0 && <div className="col-span-full py-12 text-center text-sm text-[var(--fg-muted)]">沒有符合的商品</div>}
+                </div>
+              </>
             ) : (
-              <div className="space-y-1.5">
-                {filteredRepairs.map(r => (
-                  <button
-                    key={r.id}
-                    onClick={() => addRepair(r)}
-                    className="flex w-full items-center justify-between rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] p-3 text-left transition hover:border-[var(--gold)]"
-                  >
-                    <div className="min-w-0 flex-1">
-                      <div className="text-sm">{r.name} {r.isOverridden && <span className="text-xs">🏷</span>}</div>
-                    </div>
-                    <span className="ml-3 shrink-0 font-mono text-sm text-[var(--gold)]">${r.price.toLocaleString()}</span>
-                  </button>
-                ))}
-                {filteredRepairs.length === 0 && <div className="py-12 text-center text-sm text-[var(--fg-muted)]">沒有符合的維修項目</div>}
-              </div>
+              <>
+                {/* 維修品牌過濾 chips */}
+                {repairBrands.length > 0 && (
+                  <div className="mb-3 flex flex-wrap gap-1.5">
+                    <button
+                      onClick={() => setRepairBrand("")}
+                      className={`rounded-full px-3 py-1 text-xs transition ${repairBrand === "" ? "bg-[var(--gold)] text-black font-medium" : "border border-[var(--border)] text-[var(--fg-muted)]"}`}
+                    >全部 ({repairs.length})</button>
+                    {repairBrands.map(b => {
+                      const c = repairs.filter(r => r.brand === b).length;
+                      return (
+                        <button
+                          key={b}
+                          onClick={() => setRepairBrand(b)}
+                          className={`rounded-full px-3 py-1 text-xs transition ${repairBrand === b ? "bg-[var(--gold)] text-black font-medium" : "border border-[var(--border)] text-[var(--fg-muted)]"}`}
+                        >{b} ({c})</button>
+                      );
+                    })}
+                  </div>
+                )}
+                <div className="space-y-1.5">
+                  {filteredRepairs.map(r => (
+                    <button
+                      key={r.id}
+                      onClick={() => addRepair(r)}
+                      className="flex w-full items-center justify-between rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] p-3 text-left transition hover:border-[var(--gold)]"
+                    >
+                      <div className="min-w-0 flex-1">
+                        <div className="text-sm">{r.name} {r.isOverridden && <span className="text-xs">🏷</span>}</div>
+                      </div>
+                      <span className="ml-3 shrink-0 font-mono text-sm text-[var(--gold)]">${r.price.toLocaleString()}</span>
+                    </button>
+                  ))}
+                  {filteredRepairs.length === 0 && <div className="py-12 text-center text-sm text-[var(--fg-muted)]">沒有符合的維修項目</div>}
+                </div>
+              </>
             )}
           </div>
         </main>
