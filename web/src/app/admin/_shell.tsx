@@ -38,6 +38,7 @@ const NAV_GROUPS: NavGroup[] = [
     color: "blue",
     items: [
       { href: "/admin/products", icon: "🛍️", label: "商品管理" },
+      { href: "/admin/bundles", icon: "🎁", label: "套餐組合" },
       { href: "/admin/inventory", icon: "📊", label: "庫存儀表板" },
       { href: "/admin/inventory/receive", icon: "📥", label: "進貨" },
       { href: "/admin/inventory/count", icon: "🔢", label: "盤點" },

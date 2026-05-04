@@ -219,8 +219,17 @@ const PAYMENT_METHODS = [
   { value: "TRANSFER", label: "🏦 轉帳", color: "from-gray-600 to-gray-700" },
 ];
 
+interface BundleOption {
+  id: number;
+  name: string;
+  description: string | null;
+  price: number;
+  imageUrl: string | null;
+  items: Array<{ productId?: number; productVariantId?: number; qty: number; name: string; unitPrice: number }>;
+}
+
 export function PosTerminal({
-  staff, products, repairs, favorites = [], repairBrands = [], todayKpi,
+  staff, products, repairs, favorites = [], repairBrands = [], todayKpi, bundles = [],
 }: {
   staff: { staffId: number; name: string; role: string; code: string };
   products: ProductOption[];
@@ -228,6 +237,7 @@ export function PosTerminal({
   favorites?: ProductOption[];
   repairBrands?: string[];
   todayKpi?: { count: number; revenue: number; myCount: number; myRevenue: number };
+  bundles?: BundleOption[];
 }) {
   const router = useRouter();
   const sp = useSearchParams();
@@ -374,6 +384,19 @@ export function PosTerminal({
     }]);
     setSerialPicker(null);
     if ("vibrate" in navigator) (navigator as Navigator).vibrate(30);
+  }
+
+  function addBundle(b: BundleOption) {
+    // 套餐：以 CUSTOM 一筆加入購物車（保留套餐名 + 套餐價，不分拆扣庫存）
+    // 庫存扣減的精確版本將來可改成自動分拆 itemType=PRODUCT/VARIANT 各加一行
+    setCart([...cart, {
+      key: `bundle-${b.id}-${Date.now()}`,
+      itemType: "CUSTOM",
+      name: `🎁 ${b.name}（${b.items.length} 項）`,
+      unitPrice: b.price,
+      qty: 1,
+    }]);
+    if ("vibrate" in navigator) (navigator as Navigator).vibrate(40);
   }
 
   function addRepair(r: RepairOption) {
@@ -582,6 +605,36 @@ export function PosTerminal({
           <div className="flex-1 overflow-y-auto p-3">
             {tab === "products" ? (
               <>
+                {/* 🎁 套餐快選 */}
+                {bundles.length > 0 && !search.trim() && (
+                  <section className="mb-4">
+                    <div className="mb-2 flex items-center gap-2">
+                      <span className="text-base">🎁</span>
+                      <span className="text-xs font-bold uppercase tracking-wider text-purple-400">套餐組合</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
+                      {bundles.map(b => {
+                        const itemsTotal = b.items.reduce((s, i) => s + i.unitPrice * i.qty, 0);
+                        const savings = itemsTotal - b.price;
+                        return (
+                          <button
+                            key={b.id}
+                            onClick={() => addBundle(b)}
+                            className="group relative overflow-hidden rounded-lg border-2 border-purple-500/40 bg-gradient-to-br from-purple-900/30 to-[var(--bg-elevated)] p-3 text-left transition active:scale-95 hover:border-purple-400"
+                          >
+                            <div className="text-xs font-medium line-clamp-2 min-h-[28px]">{b.name}</div>
+                            <div className="mt-1 text-[10px] text-[var(--fg-muted)]">{b.items.length} 項</div>
+                            <div className="mt-2 flex items-baseline gap-1">
+                              <span className="font-mono text-base font-bold text-purple-300">${b.price.toLocaleString()}</span>
+                              {savings > 0 && <span className="rounded bg-red-500/30 px-1 text-[9px] text-red-300">省 {savings}</span>}
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </section>
+                )}
+
                 {/* 🔥 最近熱賣（30 天 top 8）*/}
                 {favorites.length > 0 && !search.trim() && (
                   <section className="mb-4">

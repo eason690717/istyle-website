@@ -134,6 +134,30 @@ export default async function PosPage() {
   // 維修按品牌分組
   const repairBrands = Array.from(new Set(repairOptions.map(r => r.brand))).sort();
 
+  // 套餐組合（POS 一鍵加入）
+  const bundlesRaw = await prisma.productBundle.findMany({
+    where: { isActive: true },
+    orderBy: { sortOrder: "asc" },
+  }).catch(() => []);
+  const bundles = bundlesRaw.map(b => {
+    const items = JSON.parse(b.items || "[]") as Array<{ productId?: number; productVariantId?: number; qty: number; label?: string }>;
+    return {
+      id: b.id,
+      name: b.name,
+      description: b.description,
+      price: b.price,
+      imageUrl: b.imageUrl,
+      // 解析成 POS 可加入的格式（帶 product info）
+      items: items.map(it => {
+        const opt = productOptions.find(p =>
+          (it.productId && p.productId === it.productId && !p.variantId) ||
+          (it.productVariantId && p.variantId === it.productVariantId)
+        );
+        return { ...it, name: opt?.name || it.label || "未知商品", unitPrice: opt?.price || 0 };
+      }),
+    };
+  });
+
   // 今日 KPI（站內 staff 看到士氣激勵）
   const today = new Date(); today.setHours(0, 0, 0, 0);
   const [todayCount, todayRevenue, myCount, myRevenue] = await Promise.all([
@@ -144,5 +168,5 @@ export default async function PosPage() {
   ]);
   const todayKpi = { count: todayCount, revenue: todayRevenue, myCount, myRevenue };
 
-  return <PosTerminal staff={staff} products={productOptions} repairs={repairOptions} favorites={favorites} repairBrands={repairBrands} todayKpi={todayKpi} />;
+  return <PosTerminal staff={staff} products={productOptions} repairs={repairOptions} favorites={favorites} repairBrands={repairBrands} todayKpi={todayKpi} bundles={bundles} />;
 }

@@ -650,3 +650,24 @@ model ProductSerial {
   @@index([status, productId])
   @@index([saleId])
 }
+
+// ============================================================
+// 商品套餐組合（POS 一鍵加入：螢幕保護貼套組、新機開箱組⋯）
+// ============================================================
+model ProductBundle {
+  id          Int      @id @default(autoincrement())
+  name        String   // "iPhone 開箱套組"
+  description String?
+  price       Int      // 套餐固定售價（與 items 加總可不同，當折扣用）
+  // items 是 JSON array: [{productId?, productVariantId?, qty, label?}]
+  // 用 JSON 而非關聯表，是為了讓 POS 加入購物車時轉成 SaleItem 自由
+  items       String   // JSON
+  imageUrl    String?
+  category    String?
+  isActive    Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isActive, sortOrder])
+}
