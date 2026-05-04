@@ -212,33 +212,36 @@ export function AdminShell({ children, logoutAction }: { children: React.ReactNo
 
 function SidebarContent({ isActive }: { isActive: (href: string) => boolean }) {
   return (
-    <nav className="flex-1 overflow-y-auto py-2">
-      {NAV_GROUPS.map(group => {
+    <nav className="flex-1 overflow-y-auto py-1">
+      {NAV_GROUPS.map((group, gi) => {
         const c = COLOR_STYLES[group.color];
+        // 群組之間用一條淡分隔線（不是邊框，是輕薄的分隔）
         return (
-          <div key={group.title} className="mb-1">
-            {/* 分組標題（彩色色塊） */}
-            <div className={`mx-2 mb-1 mt-3 flex items-center gap-2 rounded-md ${c.titleBg} px-3 py-1.5`}>
+          <div key={group.title} className={gi === 0 ? "" : "mt-1 border-t border-white/[0.04]"}>
+            {/* 分組標題：左側彩色直條 + icon + 文字（沒有方框） */}
+            <div className="flex items-center gap-2 px-3 py-2.5 pl-4">
+              <span className={`h-3.5 w-1 rounded-full ${c.accentBar}`} />
               <span className="text-base">{group.icon}</span>
-              <span className={`text-xs font-bold uppercase tracking-wider ${c.titleText}`}>{group.title}</span>
+              <span className={`text-[11px] font-bold uppercase tracking-[0.1em] ${c.titleText}`}>{group.title}</span>
             </div>
 
-            {/* 該組 items */}
-            <div className="space-y-0.5 px-2">
+            {/* 該組 items（純列表，無框） */}
+            <div className="pb-1">
               {group.items.map(item => {
                 const active = isActive(item.href);
-                const cls = `relative flex items-center gap-2.5 rounded-lg border px-3 py-2 text-sm transition ${
+                // 純列表設計：無框、無 padding 邊距凹陷、active 整列彩色背景
+                const cls = `relative flex items-center gap-2.5 px-4 py-2 text-sm transition ${
                   active
-                    ? `${c.activeBg} ${c.activeText} font-medium`
-                    : `border-transparent text-[var(--fg)] hover:bg-white/5 ${c.hoverText}`
+                    ? `${c.activeBg.split(" ")[0]} ${c.activeText} font-medium`  // 只用第一個 class（背景），不用 border
+                    : `text-[var(--fg)] hover:bg-white/5 ${c.hoverText}`
                 }`;
                 const content = (
                   <>
-                    {/* 左側 accent bar — active 時亮起 */}
-                    {active && <span className={`absolute left-0 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r ${c.accentBar}`} />}
-                    <span className="text-base shrink-0 w-5 text-center">{item.icon}</span>
+                    {/* 左側 active 標示條（更明顯） */}
+                    {active && <span className={`absolute left-0 top-0 h-full w-[3px] ${c.accentBar}`} />}
+                    <span className="text-base shrink-0 w-5 text-center opacity-90">{item.icon}</span>
                     <span className="truncate">{item.label}</span>
-                    {item.external && <span className="ml-auto text-[10px] opacity-60">↗</span>}
+                    {item.external && <span className="ml-auto text-[10px] opacity-50">↗</span>}
                   </>
                 );
                 if (item.external) {

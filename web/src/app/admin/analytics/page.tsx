@@ -89,18 +89,31 @@ export default async function AnalyticsPage({
     }),
   ]);
 
-  // 每小時 / 每天 桶分組
+  // 每小時 / 每天 桶分組（先初始化所有 bucket 為 0，避免「沒資料的日期」消失）
   const buckets = new Map<string, number>();
   const bucketSize = range === "today" ? "hour" : "day";
+  if (bucketSize === "hour") {
+    for (let h = 0; h < 24; h++) buckets.set(`${h.toString().padStart(2, "0")}:00`, 0);
+  } else {
+    const days = range === "7d" ? 7 : 30;
+    const now = new Date();
+    for (let i = days - 1; i >= 0; i--) {
+      const d = new Date(now.getTime() - i * 86400_000);
+      const k = `${d.getMonth() + 1}/${d.getDate()}`;
+      buckets.set(k, 0);
+    }
+  }
   hourly.forEach((r) => {
     const d = new Date(r.createdAt);
     const k = bucketSize === "hour"
       ? `${d.getHours().toString().padStart(2, "0")}:00`
       : `${d.getMonth() + 1}/${d.getDate()}`;
-    buckets.set(k, (buckets.get(k) || 0) + 1);
+    if (buckets.has(k)) buckets.set(k, (buckets.get(k) || 0) + 1);
   });
-  const trend = Array.from(buckets.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+  // Map 是插入順序 — bucketSize=day 時順序已正確（過去到現在），不要再 sort
+  const trend = Array.from(buckets.entries());
   const maxTrend = Math.max(1, ...trend.map(([, v]) => v));
+  const totalTrend = trend.reduce((s, [, v]) => s + v, 0);
 
   // 折扣顯示工具
   const fmt = (n: number) => n.toLocaleString();
@@ -135,23 +148,58 @@ export default async function AnalyticsPage({
         <Card label="平均 PV/訪客" value={uniqueSessions > 0 ? (totalViews / uniqueSessions).toFixed(1) : "—"} />
       </div>
 
-      {/* 趨勢圖（純 CSS bars） */}
+      {/* 趨勢圖 — 修正：bar 在獨立高度容器，label 另起一列；max 標尺 */}
       <Section title={`${RANGES[range].label} 流量趨勢（${bucketSize === "hour" ? "每小時" : "每日"}）`}>
-        {trend.length === 0 ? (
-          <Empty />
+        {totalTrend === 0 ? (
+          <Empty hint="此區間還沒有訪客紀錄" />
         ) : (
-          <div className="flex h-32 items-end gap-1">
-            {trend.map(([label, count]) => (
-              <div key={label} className="flex flex-1 flex-col items-center gap-1">
-                <div
-                  className="w-full rounded-sm bg-[var(--gold)] opacity-80 transition hover:opacity-100"
-                  style={{ height: `${(count / maxTrend) * 100}%`, minHeight: count > 0 ? "2px" : "0" }}
-                  title={`${label}: ${count}`}
-                />
-                <span className="text-[10px] text-[var(--fg-muted)]">{label}</span>
+          <>
+            <div className="flex items-baseline justify-between text-[10px] text-[var(--fg-muted)] mb-1">
+              <span>峰值 {fmt(maxTrend)} PV</span>
+              <span>合計 {fmt(totalTrend)} PV</span>
+            </div>
+            {/* 圖表 grid 區（含 horizontal grid lines） */}
+            <div className="relative h-40 rounded-md bg-black/30 p-2">
+              {/* horizontal grid lines */}
+              <div className="absolute inset-2 flex flex-col justify-between pointer-events-none">
+                {[0, 1, 2, 3].map(i => (
+                  <div key={i} className="border-t border-white/[0.06]" />
+                ))}
               </div>
-            ))}
-          </div>
+              <div className="relative flex h-full items-end gap-[2px]">
+                {trend.map(([label, count]) => {
+                  const heightPct = (count / maxTrend) * 100;
+                  return (
+                    <div
+                      key={label}
+                      className={`group relative flex-1 rounded-t transition cursor-default ${count > 0 ? "bg-gradient-to-t from-[var(--gold)]/60 to-[var(--gold)] hover:from-[var(--gold)]/80 hover:to-[var(--gold-bright)]" : "bg-white/[0.03]"}`}
+                      style={{ height: count > 0 ? `${Math.max(heightPct, 4)}%` : "100%" }}
+                      title={`${label}: ${count} PV`}
+                    >
+                      {count > 0 && (
+                        <span className="absolute -top-5 left-1/2 -translate-x-1/2 rounded bg-black/80 px-1.5 py-0.5 text-[9px] font-mono text-[var(--gold-bright)] opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap">
+                          {count}
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            {/* x-axis labels — 太多時只顯示首/中/尾，避免擠 */}
+            <div className="mt-1 flex gap-[2px] text-[9px] text-[var(--fg-muted)]">
+              {trend.map(([label], i) => {
+                // 30 天時每 3 個顯示一個
+                const showEvery = trend.length > 14 ? 3 : 1;
+                const visible = i === 0 || i === trend.length - 1 || i % showEvery === 0;
+                return (
+                  <div key={label} className="flex-1 text-center" style={{ visibility: visible ? "visible" : "hidden" }}>
+                    {label}
+                  </div>
+                );
+              })}
+            </div>
+          </>
         )}
       </Section>
 
