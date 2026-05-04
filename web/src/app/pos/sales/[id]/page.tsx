@@ -32,7 +32,13 @@ export default async function SaleReceiptPage({ params }: { params: Promise<{ id
       {/* 操作列（列印時隱藏） */}
       <div className="mx-auto mb-4 flex max-w-md justify-between print:hidden">
         <Link href="/pos" className="rounded-full border border-[var(--border)] px-4 py-2 text-xs">← 回 POS</Link>
-        <ReceiptActions saleId={sale.id} canVoid={staff.role === "MANAGER" && sale.paymentStatus !== "VOID"} />
+        <ReceiptActions
+          saleId={sale.id}
+          canVoid={staff.role === "MANAGER"}
+          status={sale.paymentStatus}
+          total={sale.total}
+          items={sale.items.map(i => ({ id: i.id, name: i.name, qty: i.qty, unitPrice: i.unitPrice, lineTotal: i.lineTotal, serial: i.serial }))}
+        />
       </div>
 
       {/* 收據主體 — 模擬 80mm 熱感紙寬度 */}
@@ -49,6 +55,18 @@ export default async function SaleReceiptPage({ params }: { params: Promise<{ id
             <div className="mb-2 rounded border-2 border-red-500 bg-red-50 p-2 text-center text-sm font-bold text-red-600">
               ⚠️ 已作廢
               {sale.voidReason && <div className="mt-0.5 text-xs font-normal">原因：{sale.voidReason}</div>}
+            </div>
+          )}
+          {sale.paymentStatus === "REFUNDED" && (
+            <div className="mb-2 rounded border-2 border-orange-500 bg-orange-50 p-2 text-center text-sm font-bold text-orange-600">
+              ↩ 已全額退款
+              {sale.voidReason && <div className="mt-0.5 text-xs font-normal">{sale.voidReason}</div>}
+            </div>
+          )}
+          {sale.paymentStatus === "PARTIAL_REFUND" && (
+            <div className="mb-2 rounded border-2 border-orange-400 bg-orange-50 p-2 text-center text-sm font-bold text-orange-600">
+              ↩ 部分退款
+              {sale.voidReason && <div className="mt-0.5 text-xs font-normal">{sale.voidReason}</div>}
             </div>
           )}
           <div className="flex justify-between text-sm">

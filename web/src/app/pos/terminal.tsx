@@ -66,6 +66,101 @@ interface ProductOption {
   availableSerials?: Array<{ id: number; serial: string }>;
 }
 
+// 歷史交易快查 dialog
+function LookupDialog({ onClose }: { onClose: () => void }) {
+  const [q, setQ] = useState("");
+  const [results, setResults] = useState<Array<{
+    id: number; saleNumber: string; total: number; paymentStatus: string;
+    customerName: string | null; customerPhone: string | null; createdAt: string;
+    staffName: string; itemCount: number; firstItemName: string; serials: string[];
+  }>>([]);
+  const [loading, setLoading] = useState(false);
+
+  // debounce search
+  useEffect(() => {
+    if (!q.trim()) { setResults([]); return; }
+    const t = setTimeout(async () => {
+      setLoading(true);
+      try {
+        const r = await fetch(`/api/pos/lookup?q=${encodeURIComponent(q.trim())}`);
+        const data = await r.json();
+        setResults(data.results || []);
+      } finally { setLoading(false); }
+    }, 250);
+    return () => clearTimeout(t);
+  }, [q]);
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/70 p-4 pt-16 backdrop-blur-sm" onClick={onClose}>
+      <div
+        className="w-full max-w-xl rounded-2xl border border-[var(--gold)]/40 bg-[var(--bg-elevated)] p-4 shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+        style={{ animation: "popIn 0.2s ease" }}
+      >
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-serif text-base text-[var(--gold)]">🔍 查歷史交易</h3>
+          <button onClick={onClose} className="text-[var(--fg-muted)] hover:text-[var(--fg)]">✕</button>
+        </div>
+        <input
+          autoFocus
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="銷售單號 / IMEI / 客戶姓名 / 電話末 4 碼"
+          className="w-full rounded-lg border border-[var(--border)] bg-[var(--bg)] px-3 py-2.5 text-sm focus:border-[var(--gold)] focus:outline-none"
+        />
+        <p className="mt-1 text-[10px] text-[var(--fg-muted)]">提示：保固查詢用 IMEI；客人說「上週謝先生那單」用姓名搜</p>
+
+        <div className="mt-3 max-h-96 overflow-y-auto space-y-2">
+          {loading && <div className="text-center text-xs text-[var(--fg-muted)] py-4">查詢中...</div>}
+          {!loading && q.trim() && results.length === 0 && <div className="text-center text-xs text-[var(--fg-muted)] py-8">沒找到符合的交易</div>}
+          {results.map(s => {
+            const d = new Date(s.createdAt);
+            const daysAgo = Math.floor((Date.now() - d.getTime()) / 86400_000);
+            const inWarranty = daysAgo <= 90;  // 預設 3 個月保固
+            return (
+              <a
+                key={s.id}
+                href={`/pos/sales/${s.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block rounded-lg border border-[var(--border)] bg-[var(--bg)] p-3 hover:border-[var(--gold)]"
+              >
+                <div className="flex items-start justify-between">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 text-xs">
+                      <span className="font-mono text-[var(--gold)]">{s.saleNumber}</span>
+                      {s.paymentStatus === "VOID" && <span className="rounded bg-red-500/20 px-1.5 py-0.5 text-[10px] text-red-400">已作廢</span>}
+                      {s.paymentStatus === "PAID" && (
+                        <span className={`rounded px-1.5 py-0.5 text-[10px] ${inWarranty ? "bg-green-500/20 text-green-400" : "bg-[var(--border)] text-[var(--fg-muted)]"}`}>
+                          {inWarranty ? `保固中 (剩 ${90 - daysAgo} 天)` : `保固已過`}
+                        </span>
+                      )}
+                    </div>
+                    <div className="mt-1 truncate text-sm">{s.firstItemName}{s.itemCount > 1 ? ` 等 ${s.itemCount} 項` : ""}</div>
+                    <div className="mt-0.5 flex flex-wrap gap-2 text-[10px] text-[var(--fg-muted)]">
+                      {s.customerName && <span>👤 {s.customerName}</span>}
+                      {s.customerPhone && <span className="font-mono">{s.customerPhone}</span>}
+                      <span>{d.toLocaleString("zh-TW", { hour12: false, dateStyle: "short", timeStyle: "short" })}（{daysAgo} 天前）</span>
+                      <span>👤 {s.staffName}</span>
+                    </div>
+                    {s.serials.length > 0 && (
+                      <div className="mt-1 flex flex-wrap gap-1">
+                        {s.serials.map(sn => <span key={sn} className="rounded bg-purple-500/20 px-1.5 py-0.5 font-mono text-[10px] text-purple-300">{sn}</span>)}
+                      </div>
+                    )}
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-base text-[var(--gold)]">${s.total.toLocaleString()}</span>
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      </div>
+      <style>{`@keyframes popIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }`}</style>
+    </div>
+  );
+}
+
 // 商品 tile（被多處複用：熱賣 + 全部商品）
 function ProductTile({ p, onAdd, hot }: { p: ProductOption; onAdd: (p: ProductOption) => void; hot?: boolean }) {
   return (
@@ -125,13 +220,14 @@ const PAYMENT_METHODS = [
 ];
 
 export function PosTerminal({
-  staff, products, repairs, favorites = [], repairBrands = [],
+  staff, products, repairs, favorites = [], repairBrands = [], todayKpi,
 }: {
   staff: { staffId: number; name: string; role: string; code: string };
   products: ProductOption[];
   repairs: RepairOption[];
   favorites?: ProductOption[];
   repairBrands?: string[];
+  todayKpi?: { count: number; revenue: number; myCount: number; myRevenue: number };
 }) {
   const router = useRouter();
   const sp = useSearchParams();
@@ -177,6 +273,39 @@ export function PosTerminal({
   const [scanError, setScanError] = useState<string | null>(null);
   // 結帳成功動畫
   const [successAnim, setSuccessAnim] = useState<{ total: number; method: string } | null>(null);
+  // 歷史交易快查
+  const [lookupOpen, setLookupOpen] = useState(false);
+
+  // ⌨️ 鍵盤熱鍵（桌機老手用）— 必須在所有 state 宣告後
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      const tag = (e.target as HTMLElement)?.tagName;
+      const inField = tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT";
+      if (e.key === "Escape") {
+        if (showCheckout) { setShowCheckout(false); e.preventDefault(); return; }
+        if (lookupOpen) { setLookupOpen(false); e.preventDefault(); return; }
+        if (customDialog) { setCustomDialog(false); e.preventDefault(); return; }
+        if (posScan) { setPosScan(false); e.preventDefault(); return; }
+        if (mobileCartOpen) { setMobileCartOpen(false); e.preventDefault(); return; }
+      }
+      if (inField) return;
+      // F2 / Ctrl+Enter → 結帳
+      if ((e.key === "F2" || (e.key === "Enter" && e.ctrlKey)) && cart.length > 0) {
+        setShowCheckout(true); e.preventDefault();
+      }
+      // F3 → 查歷史
+      if (e.key === "F3") { setLookupOpen(true); e.preventDefault(); }
+      // F4 → 客製品項
+      if (e.key === "F4") { setCustomDialog(true); e.preventDefault(); }
+      // / → 聚焦搜尋
+      if (e.key === "/") {
+        const input = document.querySelector<HTMLInputElement>('input[placeholder*="搜尋"]');
+        input?.focus(); e.preventDefault();
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [cart.length, showCheckout, lookupOpen, customDialog, posScan, mobileCartOpen]);
 
   const filteredProducts = useMemo(() => {
     if (!search.trim()) return products.slice(0, 60);
@@ -381,17 +510,31 @@ export function PosTerminal({
         </div>
       )}
 
-      {/* Top bar — 精簡版 */}
+      {/* Top bar — 精簡版 + 今日 KPI */}
       <header
-        className="flex items-center justify-between border-b border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-2.5 md:px-4"
+        className="flex items-center justify-between gap-2 border-b border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-2.5 md:px-4"
         style={{ paddingTop: "calc(0.625rem + env(safe-area-inset-top))" }}
       >
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <span className="font-serif text-base text-[var(--gold)]">🛒</span>
           <span className="text-sm font-medium">{staff.name}</span>
-          <span className="text-[10px] text-[var(--fg-muted)]">{staff.code}</span>
+          <span className="hidden sm:inline text-[10px] text-[var(--fg-muted)]">{staff.code}</span>
         </div>
-        <div className="flex gap-1.5 text-xs">
+        {todayKpi && (
+          <div className="flex flex-1 items-center justify-center gap-3 text-[11px] sm:text-xs">
+            <div className="text-center">
+              <div className="text-[9px] text-[var(--fg-muted)]">今日</div>
+              <div className="font-mono text-[var(--gold-bright)]">${todayKpi.revenue.toLocaleString()} <span className="opacity-60">×{todayKpi.count}</span></div>
+            </div>
+            <div className="hidden sm:block w-px h-6 bg-[var(--border)]" />
+            <div className="hidden sm:block text-center">
+              <div className="text-[9px] text-[var(--fg-muted)]">我的</div>
+              <div className="font-mono text-emerald-400">${todayKpi.myRevenue.toLocaleString()} <span className="opacity-60">×{todayKpi.myCount}</span></div>
+            </div>
+          </div>
+        )}
+        <div className="flex gap-1.5 text-xs shrink-0">
+          <button onClick={() => setLookupOpen(true)} className="rounded-full px-2 py-1 text-[var(--fg-muted)] hover:text-[var(--gold)]" title="查歷史交易">🔍</button>
           <Link href="/admin/sales" target="_blank" className="rounded-full px-2 py-1 text-[var(--fg-muted)] hover:text-[var(--gold)]" title="交易紀錄">📊</Link>
           <form action={logoutAction}><button className="rounded-full px-2 py-1 text-[var(--fg-muted)] hover:text-red-400" title="登出">⏏</button></form>
         </div>
@@ -630,6 +773,9 @@ export function PosTerminal({
           </div>
         </aside>
       </div>
+
+      {/* 歷史交易查詢 dialog（保固查詢用）*/}
+      {lookupOpen && <LookupDialog onClose={() => setLookupOpen(false)} />}
 
       {/* POS 條碼掃描 — 自動找 SKU 或 IMEI 加入購物車 */}
       {posScan && (

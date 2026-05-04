@@ -40,6 +40,7 @@ export default async function AdminBookingsPage() {
                 <th className="px-3 py-2">預約時間</th>
                 <th className="px-3 py-2">需求</th>
                 <th className="px-3 py-2">狀態</th>
+                <th className="px-3 py-2">動作</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--border-soft)]">
@@ -74,6 +75,17 @@ export default async function AdminBookingsPage() {
                         儲存
                       </button>
                     </form>
+                  </td>
+                  <td className="px-3 py-2 whitespace-nowrap">
+                    <a
+                      href={`/pos?customer=${encodeURIComponent(b.contactName)}&phone=${encodeURIComponent(b.contactPhone)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="rounded-full bg-emerald-500/20 px-2 py-1 text-[10px] text-emerald-300 hover:bg-emerald-500/30"
+                      title="開 POS 結帳並帶入客戶資料"
+                    >
+                      🛒 結帳
+                    </a>
                   </td>
                 </tr>
               ))}

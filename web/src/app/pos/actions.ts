@@ -170,6 +170,75 @@ export async function createSale(args: {
   }
 }
 
+// 部分退款：選擇要退的 SaleItem ids，每件退到庫存
+export async function refundSale(saleId: number, args: { reason: string; itemIds: number[]; refundAmount: number }) {
+  const cs = await cookies();
+  const tok = cs.get(POS_COOKIE)?.value;
+  const staff = await verifyStaffSession(tok);
+  if (!staff) return { ok: false, error: "請重新登入" };
+  if (staff.role !== "MANAGER") return { ok: false, error: "僅店長可退款" };
+
+  if (args.itemIds.length === 0) return { ok: false, error: "請至少選一項退款" };
+  if (args.refundAmount <= 0) return { ok: false, error: "退款金額無效" };
+
+  try {
+    await prisma.$transaction(async (tx) => {
+      const sale = await tx.sale.findUnique({ where: { id: saleId }, include: { items: true } });
+      if (!sale) throw new Error("找不到交易");
+      if (sale.paymentStatus === "VOID") throw new Error("已作廢的交易無法退款");
+      if (sale.paymentStatus === "REFUNDED") throw new Error("此交易已全額退款");
+      if (args.refundAmount > sale.total) throw new Error("退款金額不可超過原交易總額");
+
+      // 對選中的每項：庫存還原 + 序號還原 + 標記
+      for (const itemId of args.itemIds) {
+        const it = sale.items.find(i => i.id === itemId);
+        if (!it) continue;
+        // 庫存
+        if (it.itemType === "PRODUCT" && it.productId) {
+          const p = await tx.product.findUnique({ where: { id: it.productId } });
+          if (p) {
+            const newStock = p.stock + it.qty;
+            await tx.product.update({ where: { id: it.productId }, data: { stock: newStock } });
+            await tx.stockMovement.create({
+              data: { type: "RETURN", productId: it.productId, qty: it.qty, prevStock: p.stock, newStock, staffId: staff.staffId, reason: `退款 ${args.reason}` },
+            });
+          }
+        } else if (it.itemType === "VARIANT" && it.productVariantId) {
+          const v = await tx.productVariant.findUnique({ where: { id: it.productVariantId } });
+          if (v) {
+            const newStock = v.stock + it.qty;
+            await tx.productVariant.update({ where: { id: it.productVariantId }, data: { stock: newStock } });
+            await tx.stockMovement.create({
+              data: { type: "RETURN", productVariantId: it.productVariantId, qty: it.qty, prevStock: v.stock, newStock, staffId: staff.staffId, reason: `退款 ${args.reason}` },
+            });
+          }
+        }
+        // 序號還原（若有）
+        if (it.serial) {
+          await tx.productSerial.updateMany({
+            where: { serial: it.serial, saleId },
+            data: { status: "IN_STOCK", soldAt: null, saleId: null, saleItemId: null },
+          });
+        }
+      }
+
+      // 標記 sale 狀態
+      const isFullRefund = args.refundAmount >= sale.total;
+      await tx.sale.update({
+        where: { id: saleId },
+        data: {
+          paymentStatus: isFullRefund ? "REFUNDED" : "PARTIAL_REFUND",
+          voidReason: `退款 NT$${args.refundAmount.toLocaleString()}：${args.reason}`,
+          voidedAt: new Date(),
+        },
+      });
+    });
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : String(e) };
+  }
+}
+
 export async function voidSale(saleId: number, reason: string) {
   const cs = await cookies();
   const tok = cs.get(POS_COOKIE)?.value;

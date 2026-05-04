@@ -134,5 +134,15 @@ export default async function PosPage() {
   // 維修按品牌分組
   const repairBrands = Array.from(new Set(repairOptions.map(r => r.brand))).sort();
 
-  return <PosTerminal staff={staff} products={productOptions} repairs={repairOptions} favorites={favorites} repairBrands={repairBrands} />;
+  // 今日 KPI（站內 staff 看到士氣激勵）
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const [todayCount, todayRevenue, myCount, myRevenue] = await Promise.all([
+    prisma.sale.count({ where: { createdAt: { gte: today }, paymentStatus: "PAID" } }).catch(() => 0),
+    prisma.sale.aggregate({ where: { createdAt: { gte: today }, paymentStatus: "PAID" }, _sum: { total: true } }).then(r => r._sum.total || 0).catch(() => 0),
+    prisma.sale.count({ where: { createdAt: { gte: today }, paymentStatus: "PAID", staffId: staff.staffId } }).catch(() => 0),
+    prisma.sale.aggregate({ where: { createdAt: { gte: today }, paymentStatus: "PAID", staffId: staff.staffId }, _sum: { total: true } }).then(r => r._sum.total || 0).catch(() => 0),
+  ]);
+  const todayKpi = { count: todayCount, revenue: todayRevenue, myCount, myRevenue };
+
+  return <PosTerminal staff={staff} products={productOptions} repairs={repairOptions} favorites={favorites} repairBrands={repairBrands} todayKpi={todayKpi} />;
 }
