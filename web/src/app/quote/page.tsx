@@ -36,8 +36,22 @@ async function getBrands() {
   }
 }
 
+// 拉維修價的最新自動更新時間 + 機型總數
+async function getRefreshStats() {
+  try {
+    const [modelCount, latest] = await Promise.all([
+      prisma.deviceModel.count({ where: { isActive: true } }),
+      prisma.repairPrice.findFirst({
+        orderBy: { updatedAt: "desc" },
+        select: { updatedAt: true },
+      }),
+    ]);
+    return { modelCount, lastUpdated: latest?.updatedAt };
+  } catch { return { modelCount: 0, lastUpdated: null }; }
+}
+
 export default async function QuoteIndex() {
-  const brands = await getBrands();
+  const [brands, refreshStats] = await Promise.all([getBrands(), getRefreshStats()]);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-12">
@@ -48,6 +62,22 @@ export default async function QuoteIndex() {
         <p className="mt-4 text-sm text-[var(--fg-muted)]">
           選擇品牌 → 機型 → 維修項目，即時看到完整報價
         </p>
+
+        {/* 自動更新 banner — 跟二手回收同款 */}
+        <div className="mx-auto mt-5 inline-flex flex-col items-center gap-1 rounded-2xl border border-[var(--gold)]/30 bg-[var(--gold)]/5 px-5 py-3 text-xs sm:flex-row sm:gap-4">
+          <span className="flex items-center gap-1.5 text-[var(--gold-bright)]">
+            <span className="h-2 w-2 animate-pulse rounded-full bg-[var(--gold)]" />
+            每週自動比對 cerphone 業界行情
+          </span>
+          <span className="text-[var(--fg-muted)]">
+            目前收錄 <strong className="text-[var(--gold)]">{refreshStats.modelCount.toLocaleString()}</strong> 個機型
+          </span>
+          {refreshStats.lastUpdated && (
+            <span className="text-[var(--fg-muted)]">
+              · 更新於 {new Date(refreshStats.lastUpdated).toLocaleString("zh-TW", { hour12: false, year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}
+            </span>
+          )}
+        </div>
       </div>
 
       <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
