@@ -6,6 +6,22 @@ import { createHash } from "node:crypto";
 // 防禦性：Vercel 後台貼值常常帶到尾端換行，會讓 CheckMacValue 永遠算錯
 const env = (k: string) => (process.env[k] || "").trim();
 
+// 🔬 debug: 一次性印 runtime 看到的 env 狀態（首次模組 import 時）
+if (typeof console !== "undefined" && (process.env.ECPAY_DEBUG || "").trim() === "1") {
+  console.log(`ECPAY_ENV_DBG ${JSON.stringify({
+    NODE_ENV: process.env.NODE_ENV,
+    VERCEL_ENV: process.env.VERCEL_ENV,
+    has_ECPAY_PROD: !!process.env.ECPAY_PROD,
+    ECPAY_PROD_raw: process.env.ECPAY_PROD,
+    ECPAY_PROD_trimmed: env("ECPAY_PROD"),
+    has_FORCE_TEST: !!process.env.ECPAY_FORCE_TEST,
+    FORCE_TEST_raw: process.env.ECPAY_FORCE_TEST,
+    has_MERCHANT_ID: !!process.env.ECPAY_MERCHANT_ID,
+    MERCHANT_ID_trimmed: env("ECPAY_MERCHANT_ID"),
+    timestamp: new Date().toISOString(),
+  })}`);
+}
+
 // 金流與發票獨立切換（金流先正式上線，發票等申請通過再切）
 // ECPAY_FORCE_TEST=1 → 強制走綠界公開測試帳號 3002607（除錯用，正式環境也可以開）
 //
