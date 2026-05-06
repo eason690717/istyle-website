@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { SITE } from "@/lib/site-config";
 import { RecycleSearch } from "./recycle-search";
+import { RelatedReading, PRESET_LINKS } from "@/components/related-reading";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -112,6 +113,8 @@ export default async function RecyclePage() {
       <p className="mt-6 text-center text-xs text-[var(--fg-muted)]">
         ＊ 顯示為基準回收價，最終價格依機況、配件完整度現場核定．市場行情每日更新
       </p>
+
+      <RelatedReading links={PRESET_LINKS.fromRecycle} />
     </div>
   );
 }

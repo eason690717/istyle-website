@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { SITE } from "@/lib/site-config";
 import { SERVICES } from "@/lib/services-catalog";
+import { RelatedReading, PRESET_LINKS } from "@/components/related-reading";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -65,6 +66,8 @@ export default function ServicesIndexPage() {
           </section>
         ))}
       </div>
+
+      <RelatedReading links={PRESET_LINKS.fromService} />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { SITE } from "@/lib/site-config";
+import { RelatedReading, PRESET_LINKS } from "@/components/related-reading";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -72,6 +73,8 @@ export default async function QuoteIndex() {
           找不到您的機型？歡迎來電 <a href={`tel:${SITE.phoneRaw}`} className="text-[var(--gold)]">{SITE.phone}</a> 或 <a href={SITE.lineAddUrl} className="text-[var(--gold)]">加 LINE {SITE.lineId}</a> 詢問
         </p>
       </div>
+
+      <RelatedReading links={PRESET_LINKS.fromQuote} />
     </div>
   );
 }

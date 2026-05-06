@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { SITE } from "@/lib/site-config";
+import { RelatedReading, PRESET_LINKS } from "@/components/related-reading";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -69,6 +70,8 @@ export default async function CasesPage() {
           })}
         </div>
       )}
+
+      <RelatedReading links={PRESET_LINKS.fromCases} />
     </div>
   );
 }

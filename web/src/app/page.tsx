@@ -141,6 +141,36 @@ export default async function HomePage() {
             </Link>
           </div>
 
+          {/* 兩張高曝光輔助卡：換機決策器 + 服務區域 — 解 0 流量問題 */}
+          <div className="mt-8 grid w-full max-w-2xl grid-cols-1 gap-3 sm:grid-cols-2">
+            <Link
+              href="/upgrade-tool"
+              className="group relative overflow-hidden rounded-2xl border-2 border-[var(--gold)]/30 bg-gradient-to-br from-[#1a1410] to-[#0d0908] p-4 text-left transition hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/20"
+            >
+              <div className="text-2xl">⚖️</div>
+              <div className="mt-2 font-serif text-sm font-bold text-[var(--gold)] group-hover:text-[var(--gold-bright)]">
+                修還是換？
+              </div>
+              <p className="mt-1 text-[11px] text-[var(--fg-muted)]">
+                30 秒幫你算 — 維修費 vs 換新省多少
+              </p>
+              <span className="absolute right-3 top-3 text-[var(--gold-soft)] opacity-0 transition group-hover:opacity-100">→</span>
+            </Link>
+            <Link
+              href="/local"
+              className="group relative overflow-hidden rounded-2xl border-2 border-[var(--gold)]/30 bg-gradient-to-br from-[#1a1410] to-[#0d0908] p-4 text-left transition hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/20"
+            >
+              <div className="text-2xl">📍</div>
+              <div className="mt-2 font-serif text-sm font-bold text-[var(--gold)] group-hover:text-[var(--gold-bright)]">
+                你住哪？我們到府嗎
+              </div>
+              <p className="mt-1 text-[11px] text-[var(--fg-muted)]">
+                雙北 27 區服務範圍｜寄送維修免運送回
+              </p>
+              <span className="absolute right-3 top-3 text-[var(--gold-soft)] opacity-0 transition group-hover:opacity-100">→</span>
+            </Link>
+          </div>
+
           {/* 信任徽章 */}
           <div className="mt-8 flex flex-wrap justify-center gap-2 text-xs">
             <Badge>★ 14 年技術經驗</Badge>

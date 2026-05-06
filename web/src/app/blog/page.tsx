@@ -3,6 +3,7 @@ import Image from "next/image";
 import { BLOG_POSTS, CATEGORY_LABEL, getCoverImage } from "@/lib/blog-posts";
 import { prisma } from "@/lib/prisma";
 import { SITE } from "@/lib/site-config";
+import { RelatedReading, PRESET_LINKS } from "@/components/related-reading";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -80,6 +81,8 @@ export default async function BlogIndexPage() {
           </Link>
         ))}
       </div>
+
+      <RelatedReading links={PRESET_LINKS.fromBlog} />
     </div>
   );
 }
