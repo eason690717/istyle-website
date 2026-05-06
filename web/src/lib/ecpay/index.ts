@@ -8,9 +8,13 @@ const env = (k: string) => (process.env[k] || "").trim();
 
 // 金流與發票獨立切換（金流先正式上線，發票等申請通過再切）
 // ECPAY_FORCE_TEST=1 → 強制走綠界公開測試帳號 3002607（除錯用，正式環境也可以開）
+//
+// 2026-05-06 註解：拿掉 NODE_ENV === "production" 檢查
+// 原因：Vercel 在某些 runtime（edge / serverless）NODE_ENV 行為不一致，導致明明 ECPAY_PROD=true 卻走測試
+// 改成只看 ECPAY_PROD 這個 explicit flag — 部署 prod 時自己控制，不依賴 NODE_ENV
 const FORCE_TEST = env("ECPAY_FORCE_TEST") === "1";
-const IS_PROD_PAYMENT = !FORCE_TEST && process.env.NODE_ENV === "production" && !!env("ECPAY_PROD");
-const IS_PROD_INVOICE = !FORCE_TEST && process.env.NODE_ENV === "production" && !!env("ECPAY_INVOICE_PROD");
+const IS_PROD_PAYMENT = !FORCE_TEST && !!env("ECPAY_PROD");
+const IS_PROD_INVOICE = !FORCE_TEST && !!env("ECPAY_INVOICE_PROD");
 
 // 測試帳號（綠界提供）— 可直接用做 sandbox
 const TEST_PAYMENT = {
