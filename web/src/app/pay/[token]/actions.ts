@@ -1,6 +1,6 @@
 "use server";
 import { prisma } from "@/lib/prisma";
-import { ECPAY_AIO_URL, buildAioPaymentForm, generateMerchantTradeNo } from "@/lib/ecpay";
+import { getEcpayAioUrl, buildAioPaymentForm, generateMerchantTradeNo } from "@/lib/ecpay";
 import { SITE } from "@/lib/site-config";
 
 interface InitiatePaymentArgs {
@@ -43,7 +43,7 @@ export async function initiatePayment(args: InitiatePaymentArgs) {
 
   return {
     ok: true,
-    formAction: ECPAY_AIO_URL,
+    formAction: getEcpayAioUrl(),
     formFields,
   };
 }

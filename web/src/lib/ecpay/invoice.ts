@@ -3,16 +3,22 @@
 // 與金流共用 MerchantID / HashKey / HashIV
 import crypto from "node:crypto";
 
-import { ECPAY, ECPAY_INVOICE_URL } from "./index";
+import { ECPAY, getEcpayInvoiceUrl } from "./index";
 
-const MERCHANT_ID = ECPAY.invoiceMerchantId || ECPAY.merchantId;
-const HASH_KEY = ECPAY.invoiceHashKey || ECPAY.hashKey;
-const HASH_IV = ECPAY.invoiceHashIv || ECPAY.hashIv;
-const ENDPOINT = ECPAY_INVOICE_URL;
+// 改成 getter — 每次呼叫即時讀（避免 module-level cache 造成 prod 切換失效）
+function getCreds() {
+  return {
+    merchantId: ECPAY.invoiceMerchantId || ECPAY.merchantId,
+    hashKey: ECPAY.invoiceHashKey || ECPAY.hashKey,
+    hashIv: ECPAY.invoiceHashIv || ECPAY.hashIv,
+    endpoint: getEcpayInvoiceUrl(),
+  };
+}
 
 // AES-128-CBC 加密（綠界發票 v3 格式）
 function aesEncrypt(data: string): string {
-  const cipher = crypto.createCipheriv("aes-128-cbc", HASH_KEY, HASH_IV);
+  const c = getCreds();
+  const cipher = crypto.createCipheriv("aes-128-cbc", c.hashKey, c.hashIv);
   const encoded = encodeURIComponent(data)
     .replace(/!/g, "%21").replace(/'/g, "%27")
     .replace(/\(/g, "%28").replace(/\)/g, "%29")
@@ -23,7 +29,8 @@ function aesEncrypt(data: string): string {
 }
 
 function aesDecrypt(encrypted: string): string {
-  const decipher = crypto.createDecipheriv("aes-128-cbc", HASH_KEY, HASH_IV);
+  const c = getCreds();
+  const decipher = crypto.createDecipheriv("aes-128-cbc", c.hashKey, c.hashIv);
   let dec = decipher.update(encrypted, "base64", "utf8");
   dec += decipher.final("utf8");
   return decodeURIComponent(dec);
@@ -56,13 +63,14 @@ export interface IssueInvoiceArgs {
 
 // 開立發票
 export async function issueInvoice(args: IssueInvoiceArgs): Promise<{ ok: boolean; invoiceNumber?: string; error?: string; raw?: unknown }> {
-  if (!MERCHANT_ID || !HASH_KEY || !HASH_IV) {
+  const c = getCreds();
+  if (!c.merchantId || !c.hashKey || !c.hashIv) {
     return { ok: false, error: "ECPay env not configured" };
   }
 
   // 預設：紙本發票，無捐贈
   const data = {
-    MerchantID: MERCHANT_ID,
+    MerchantID: c.merchantId,
     RelateNumber: args.relateNumber.slice(0, 30),
     CustomerName: (args.customerName || "").slice(0, 60),
     CustomerEmail: args.customerEmail || "",
@@ -91,13 +99,13 @@ export async function issueInvoice(args: IssueInvoiceArgs): Promise<{ ok: boolea
   const encrypted = aesEncrypt(json);
 
   const payload = {
-    MerchantID: MERCHANT_ID,
+    MerchantID: c.merchantId,
     RqHeader: { Timestamp: Math.floor(Date.now() / 1000) },
     Data: encrypted,
   };
 
   try {
-    const r = await fetch(ENDPOINT, {
+    const r = await fetch(c.endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),

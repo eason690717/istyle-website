@@ -6,32 +6,6 @@ import { createHash } from "node:crypto";
 // 防禦性：Vercel 後台貼值常常帶到尾端換行，會讓 CheckMacValue 永遠算錯
 const env = (k: string) => (process.env[k] || "").trim();
 
-// 🔬 debug: 一次性印 runtime 看到的 env 狀態（首次模組 import 時）
-if (typeof console !== "undefined" && (process.env.ECPAY_DEBUG || "").trim() === "1") {
-  console.log(`ECPAY_ENV_DBG ${JSON.stringify({
-    NODE_ENV: process.env.NODE_ENV,
-    VERCEL_ENV: process.env.VERCEL_ENV,
-    has_ECPAY_PROD: !!process.env.ECPAY_PROD,
-    ECPAY_PROD_raw: process.env.ECPAY_PROD,
-    ECPAY_PROD_trimmed: env("ECPAY_PROD"),
-    has_FORCE_TEST: !!process.env.ECPAY_FORCE_TEST,
-    FORCE_TEST_raw: process.env.ECPAY_FORCE_TEST,
-    has_MERCHANT_ID: !!process.env.ECPAY_MERCHANT_ID,
-    MERCHANT_ID_trimmed: env("ECPAY_MERCHANT_ID"),
-    timestamp: new Date().toISOString(),
-  })}`);
-}
-
-// 金流與發票獨立切換（金流先正式上線，發票等申請通過再切）
-// ECPAY_FORCE_TEST=1 → 強制走綠界公開測試帳號 3002607（除錯用，正式環境也可以開）
-//
-// 2026-05-06 註解：拿掉 NODE_ENV === "production" 檢查
-// 原因：Vercel 在某些 runtime（edge / serverless）NODE_ENV 行為不一致，導致明明 ECPAY_PROD=true 卻走測試
-// 改成只看 ECPAY_PROD 這個 explicit flag — 部署 prod 時自己控制，不依賴 NODE_ENV
-const FORCE_TEST = env("ECPAY_FORCE_TEST") === "1";
-const IS_PROD_PAYMENT = !FORCE_TEST && !!env("ECPAY_PROD");
-const IS_PROD_INVOICE = !FORCE_TEST && !!env("ECPAY_INVOICE_PROD");
-
 // 測試帳號（綠界提供）— 可直接用做 sandbox
 const TEST_PAYMENT = {
   merchantId: "3002607",
@@ -44,29 +18,42 @@ const TEST_INVOICE = {
   invoiceHashIv: "q9jcZX8Ib9LM8wYk",
 };
 
-const PROD_PAYMENT = {
-  merchantId: env("ECPAY_MERCHANT_ID"),
-  hashKey: env("ECPAY_HASH_KEY"),
-  hashIv: env("ECPAY_HASH_IV"),
-};
-const PROD_INVOICE = {
-  invoiceMerchantId: env("ECPAY_INVOICE_MERCHANT_ID"),
-  invoiceHashKey: env("ECPAY_INVOICE_HASH_KEY"),
-  invoiceHashIv: env("ECPAY_INVOICE_HASH_IV"),
-};
+// ⚠️ 改成 getter — 每次呼叫即時讀 env，不依賴 module-level cache
+// 原因：Vercel serverless 暖機 instance 可能 cache 老的 env 計算結果，導致明明 ECPAY_PROD 已設仍走測試
+function isProdPayment(): boolean {
+  if (env("ECPAY_FORCE_TEST") === "1") return false;
+  return !!env("ECPAY_PROD");
+}
+function isProdInvoice(): boolean {
+  if (env("ECPAY_FORCE_TEST") === "1") return false;
+  return !!env("ECPAY_INVOICE_PROD");
+}
 
+// 改成 getter object：每次存取屬性才讀 env
 export const ECPAY = {
-  ...(IS_PROD_PAYMENT ? PROD_PAYMENT : TEST_PAYMENT),
-  ...(IS_PROD_INVOICE ? PROD_INVOICE : TEST_INVOICE),
+  get merchantId() { return isProdPayment() ? env("ECPAY_MERCHANT_ID") : TEST_PAYMENT.merchantId; },
+  get hashKey() { return isProdPayment() ? env("ECPAY_HASH_KEY") : TEST_PAYMENT.hashKey; },
+  get hashIv() { return isProdPayment() ? env("ECPAY_HASH_IV") : TEST_PAYMENT.hashIv; },
+  get invoiceMerchantId() { return isProdInvoice() ? env("ECPAY_INVOICE_MERCHANT_ID") : TEST_INVOICE.invoiceMerchantId; },
+  get invoiceHashKey() { return isProdInvoice() ? env("ECPAY_INVOICE_HASH_KEY") : TEST_INVOICE.invoiceHashKey; },
+  get invoiceHashIv() { return isProdInvoice() ? env("ECPAY_INVOICE_HASH_IV") : TEST_INVOICE.invoiceHashIv; },
 };
 
-export const ECPAY_AIO_URL = IS_PROD_PAYMENT
-  ? "https://payment.ecpay.com.tw/Cashier/AioCheckOut/V5"
-  : "https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5";
-
-export const ECPAY_INVOICE_URL = IS_PROD_INVOICE
-  ? "https://einvoice.ecpay.com.tw/B2CInvoice/Issue"
-  : "https://einvoice-stage.ecpay.com.tw/B2CInvoice/Issue";
+// URL 改成 getter（被 destructure import 時會失效，請用 getEcpayAioUrl()）
+export function getEcpayAioUrl(): string {
+  return isProdPayment()
+    ? "https://payment.ecpay.com.tw/Cashier/AioCheckOut/V5"
+    : "https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5";
+}
+export function getEcpayInvoiceUrl(): string {
+  return isProdInvoice()
+    ? "https://einvoice.ecpay.com.tw/B2CInvoice/Issue"
+    : "https://einvoice-stage.ecpay.com.tw/B2CInvoice/Issue";
+}
+// Back-compat const exports (computed at module load — 舊 code 用)
+// 但這仍會被 cache，新 code 應改用 getEcpayAioUrl() function
+export const ECPAY_AIO_URL = getEcpayAioUrl();
+export const ECPAY_INVOICE_URL = getEcpayInvoiceUrl();
 
 // CheckMacValue：完全對齊綠界官方 npm SDK ecpay_aio_nodejs (urlencode_dot_net)
 // 來源: /tmp/ecpay-test/node_modules/ecpay_aio_nodejs/lib/ecpay_payment/helper.js
