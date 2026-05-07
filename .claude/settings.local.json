@@ -163,7 +163,11 @@
       "Bash(curl -sI https://www.i-style.store/sitemap.xml)",
       "Bash(curl -sI https://i-style.store/sitemap.xml)",
       "Bash(curl -sI https://www.i-style.store/)",
-      "Bash(curl -s \"https://www.i-style.store/api/_debug/ecpay?key=diag-istyle-2026\")"
+      "Bash(curl -s \"https://www.i-style.store/api/_debug/ecpay?key=diag-istyle-2026\")",
+      "Bash(curl -s \"https://www.i-style.store/api/diag/ecpay?key=diag-istyle-2026\")",
+      "Bash(python -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\('FORCE_TEST:', repr\\(d['rawEnv'].get\\('ECPAY_FORCE_TEST'\\)\\)\\); print\\('merchantId:', d['resolved']['merchantId']\\); print\\('aioUrl:', d['resolved']['aioUrl']\\); print\\('isTest:', d['resolved']['isUsingTestMerchant']\\)\")",
+      "Bash(node scripts/apply-cerphone-log-migration.mjs)",
+      "Bash(git -c user.email=admin@i-style.store -c 'user.name=iStyle Admin' commit -m 'Feat: 維修報價爬蟲監控 — 後台首頁警示 + 詳細記錄表 *)"
     ]
   }
 }

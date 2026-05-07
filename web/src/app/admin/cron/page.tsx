@@ -30,6 +30,11 @@ export default async function AdminCronPage() {
     orderBy: { finishedAt: "desc" },
   }).catch(() => []);
 
+  const cerphoneLogs = await prisma.cerphoneScrapeLog.findMany({
+    take: 40,
+    orderBy: { finishedAt: "desc" },
+  }).catch(() => []);
+
   const articleCount = await prisma.autoArticle.count().catch(() => 0);
   const recentArticles = await prisma.autoArticle.findMany({
     take: 10,
@@ -98,6 +103,48 @@ export default async function AdminCronPage() {
                     <td className="px-3 py-2 text-xs text-red-400 max-w-md truncate">{log.errorMsg || "—"}</td>
                   </tr>
                 ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </section>
+
+      <section>
+        <h2 className="mb-3 font-serif text-lg text-[var(--gold)]">維修報價爬蟲記錄（最近 40 筆）</h2>
+        <div className="overflow-x-auto rounded-lg border border-[var(--border)]">
+          {cerphoneLogs.length === 0 ? (
+            <div className="bg-[var(--bg-elevated)] p-8 text-center text-sm text-[var(--fg-muted)]">尚無記錄。請點上方「立即觸發」</div>
+          ) : (
+            <table className="min-w-full text-sm">
+              <thead className="bg-[var(--bg-soft)] text-left text-xs text-[var(--gold)]">
+                <tr>
+                  <th className="px-3 py-2">時間</th>
+                  <th className="px-3 py-2">範圍</th>
+                  <th className="px-3 py-2">品牌</th>
+                  <th className="px-3 py-2">狀態</th>
+                  <th className="px-3 py-2 text-right">筆數</th>
+                  <th className="px-3 py-2 text-right">耗時 (ms)</th>
+                  <th className="px-3 py-2">錯誤</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[var(--border-soft)]">
+                {cerphoneLogs.map((log, i) => {
+                  const cls = log.status === "success" ? "bg-green-500/20 text-green-300"
+                    : log.status === "partial" ? "bg-amber-500/20 text-amber-300"
+                    : "bg-red-500/20 text-red-300";
+                  const label = log.status === "success" ? "成功" : log.status === "partial" ? "部分" : "失敗";
+                  return (
+                    <tr key={log.id} className={i % 2 === 0 ? "bg-[#141414]" : "bg-[#181818]"}>
+                      <td className="px-3 py-2 text-xs">{new Date(log.finishedAt).toLocaleString("zh-TW")}</td>
+                      <td className="px-3 py-2 text-xs">{log.scope === "summary" ? "summary" : "brand"}</td>
+                      <td className="px-3 py-2 text-xs font-mono">{log.brand ?? "—"}</td>
+                      <td className="px-3 py-2"><span className={`rounded px-2 py-0.5 text-xs ${cls}`}>{label}</span></td>
+                      <td className="px-3 py-2 text-right font-mono">{log.recordCount}</td>
+                      <td className="px-3 py-2 text-right font-mono text-xs">{log.durationMs ?? "—"}</td>
+                      <td className="px-3 py-2 text-xs text-red-400 max-w-md truncate" title={log.errorMsg ?? ""}>{log.errorMsg ?? "—"}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           )}

@@ -429,6 +429,25 @@ model RecycleScrapeLog {
   finishedAt  DateTime @default(now())
 }
 
+// 維修報價爬蟲（cerphone）每次跑完留紀錄，後台首頁監控用
+model CerphoneScrapeLog {
+  id            Int      @id @default(autoincrement())
+  scope         String   // "brand" | "summary"
+  brand         String?  // brand slug，summary 為 null
+  status        String   // "success" | "partial" | "error"
+  recordCount   Int      @default(0)  // brand: 該品牌筆數；summary: 全部筆數
+  priceUpserts  Int?     // summary 用
+  modelUpserts  Int?
+  itemUpserts   Int?
+  errorMsg      String?
+  durationMs    Int?
+  startedAt     DateTime
+  finishedAt    DateTime @default(now())
+
+  @@index([scope, finishedAt])
+  @@index([finishedAt])
+}
+
 // ============================================================
 // 自建流量分析（替代 GA / Vercel Analytics 的後台 view）
 // ============================================================

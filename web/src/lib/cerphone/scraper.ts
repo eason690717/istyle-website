@@ -79,14 +79,16 @@ async function fetchHtml(url: string): Promise<string> {
 export async function scrapeCerphoneAll() {
   const startedAt = new Date();
   const all: ScrapedPrice[] = [];
+  const brandFailures: Array<{ brand: string; error: string }> = [];
 
   for (const brand of BRANDS) {
+    const brandStart = new Date();
+    const beforeCount = all.length;
     try {
       const html = await fetchHtml(brand.url);
       const $ = cheerio.load(html);
 
       let currentSection = brand.name;
-      // 走訪 h2/h3/h4 + table 順序
       $("h2, h3, h4, table").each((_, el) => {
         const tag = (el as { tagName?: string; name?: string }).tagName ?? (el as { name?: string }).name;
         if (tag === "h2" || tag === "h3" || tag === "h4") {
@@ -120,8 +122,36 @@ export async function scrapeCerphoneAll() {
           }
         }
       });
+
+      const brandCount = all.length - beforeCount;
+      // 解析成功但 0 筆 = 視為 partial（可能 cerphone 改版）
+      const status = brandCount === 0 ? "partial" : "success";
+      await prisma.cerphoneScrapeLog.create({
+        data: {
+          scope: "brand",
+          brand: brand.slug,
+          status,
+          recordCount: brandCount,
+          errorMsg: status === "partial" ? "解析成功但 0 筆，可能 cerphone 改版" : null,
+          durationMs: Date.now() - brandStart.getTime(),
+          startedAt: brandStart,
+        },
+      }).catch(err => console.error("[cerphone log brand]", err));
     } catch (e) {
+      const errStr = String(e);
       console.error(`[cerphone] ${brand.slug}`, e);
+      brandFailures.push({ brand: brand.slug, error: errStr });
+      await prisma.cerphoneScrapeLog.create({
+        data: {
+          scope: "brand",
+          brand: brand.slug,
+          status: "error",
+          recordCount: 0,
+          errorMsg: errStr.slice(0, 500),
+          durationMs: Date.now() - brandStart.getTime(),
+          startedAt: brandStart,
+        },
+      }).catch(err => console.error("[cerphone log brand err]", err));
     }
   }
 
@@ -204,12 +234,37 @@ export async function scrapeCerphoneAll() {
     priceUpserts++;
   }
 
+  const finishedAt = new Date();
+  // summary：失敗品牌 > 0 = partial；全失敗 = error
+  const summaryStatus =
+    brandFailures.length === BRANDS.length ? "error"
+    : brandFailures.length > 0 ? "partial"
+    : "success";
+  const summaryErr = brandFailures.length
+    ? brandFailures.map(f => `${f.brand}: ${f.error}`).join(" | ").slice(0, 500)
+    : null;
+  await prisma.cerphoneScrapeLog.create({
+    data: {
+      scope: "summary",
+      brand: null,
+      status: summaryStatus,
+      recordCount: all.length,
+      priceUpserts,
+      modelUpserts,
+      itemUpserts,
+      errorMsg: summaryErr,
+      durationMs: finishedAt.getTime() - startedAt.getTime(),
+      startedAt,
+    },
+  }).catch(err => console.error("[cerphone log summary]", err));
+
   return {
     scrapedCount: all.length,
     priceUpserts,
     modelUpserts,
     itemUpserts,
+    failedBrands: brandFailures.map(f => f.brand),
     startedAt,
-    finishedAt: new Date(),
+    finishedAt,
   };
 }

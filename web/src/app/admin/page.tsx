@@ -15,6 +15,7 @@ export default async function AdminDashboard() {
     pendingRepairs, totalRepairs,
     productCount, customerCount,
     recentBookings, recentSales,
+    lastCerphoneSummary, recentCerphoneFailures,
   ] = await Promise.all([
     prisma.booking.count({ where: { status: "PENDING" } }).catch(() => 0),
     prisma.booking.count().catch(() => 0),
@@ -33,7 +34,20 @@ export default async function AdminDashboard() {
     prisma.sale.findMany({ select: { customerPhone: true }, where: { customerPhone: { not: null } }, distinct: ["customerPhone"] }).then(rs => rs.length).catch(() => 0),
     prisma.booking.findMany({ take: 5, orderBy: { createdAt: "desc" } }).catch(() => []),
     prisma.sale.findMany({ take: 5, orderBy: { createdAt: "desc" }, where: { paymentStatus: "PAID" }, include: { staff: true, _count: { select: { items: true } } } }).catch(() => []),
+    prisma.cerphoneScrapeLog.findFirst({ where: { scope: "summary" }, orderBy: { finishedAt: "desc" } }).catch(() => null),
+    prisma.cerphoneScrapeLog.findMany({
+      where: { scope: "brand", status: { in: ["error", "partial"] }, finishedAt: { gte: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000) } },
+      orderBy: { finishedAt: "desc" },
+      take: 20,
+    }).catch(() => []),
   ]);
+
+  // 報價爬蟲健康度判斷
+  const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
+  const cerphoneStale = !lastCerphoneSummary || (Date.now() - new Date(lastCerphoneSummary.finishedAt).getTime() > 8 * 24 * 60 * 60 * 1000);
+  const cerphoneRecentFails = recentCerphoneFailures.filter(l => Date.now() - new Date(l.finishedAt).getTime() < SEVEN_DAYS);
+  const failedBrandSlugs = Array.from(new Set(cerphoneRecentFails.map(l => l.brand).filter(Boolean))) as string[];
+  const cerphoneAlert = cerphoneStale || failedBrandSlugs.length > 0 || (lastCerphoneSummary && lastCerphoneSummary.status !== "success");
 
   return (
     <div className="space-y-8">
@@ -55,6 +69,31 @@ export default async function AdminDashboard() {
           <KpiCard label="待出貨訂單" value={pendingShipping.toString()} hint="點擊處理" color="blue" href="/admin/shipping" warn={pendingShipping > 0} />
         </div>
       </section>
+
+      {/* 維修報價爬蟲警示（有事才顯示） */}
+      {cerphoneAlert && (
+        <section className="rounded-lg border border-red-500/40 bg-red-500/5 p-4">
+          <h3 className="mb-2 text-sm font-medium text-red-400">⚠️ 維修報價自動更新異常</h3>
+          <ul className="space-y-1 text-xs text-red-200">
+            {cerphoneStale && (
+              <li>
+                · 最近一次成功更新：
+                {lastCerphoneSummary ? new Date(lastCerphoneSummary.finishedAt).toLocaleString("zh-TW", { hour12: false }) : "從未跑過"}
+                （超過 8 天，cron 可能掛了）
+              </li>
+            )}
+            {failedBrandSlugs.length > 0 && (
+              <li>· 最近 7 天失敗品牌：<span className="font-mono">{failedBrandSlugs.join(", ")}</span>（可能 cerphone 改版）</li>
+            )}
+            {lastCerphoneSummary && lastCerphoneSummary.status === "partial" && !cerphoneStale && failedBrandSlugs.length === 0 && (
+              <li>· 上次 summary status = partial：{lastCerphoneSummary.errorMsg}</li>
+            )}
+          </ul>
+          <Link href="/admin/cron" className="mt-2 inline-block rounded-full bg-red-500/20 px-3 py-1.5 text-xs text-red-300 hover:bg-red-500/30">
+            → 看詳細記錄 / 手動觸發
+          </Link>
+        </section>
+      )}
 
       {/* 警示區（有事才顯示） */}
       {(lowStockCount > 0 || pendingShipping > 0 || pendingRepairs > 5) && (
@@ -157,11 +196,17 @@ export default async function AdminDashboard() {
       </div>
 
       {/* 維修系統最後更新 */}
-      {lastRecycleLog && (
-        <p className="text-center text-[10px] text-[var(--fg-muted)]">
-          二手回收價最後更新：{new Date(lastRecycleLog.finishedAt).toLocaleString("zh-TW", { hour12: false })}
-        </p>
-      )}
+      <div className="space-y-1 text-center text-[10px] text-[var(--fg-muted)]">
+        {lastRecycleLog && (
+          <p>二手回收價最後更新：{new Date(lastRecycleLog.finishedAt).toLocaleString("zh-TW", { hour12: false })}</p>
+        )}
+        {lastCerphoneSummary && (
+          <p>
+            維修報價最後更新：{new Date(lastCerphoneSummary.finishedAt).toLocaleString("zh-TW", { hour12: false })}
+            （{lastCerphoneSummary.recordCount} 筆 / {lastCerphoneSummary.priceUpserts} 上稿）
+          </p>
+        )}
+      </div>
     </div>
   );
 }
