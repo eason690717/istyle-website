@@ -44,7 +44,8 @@ export default async function AdminDashboard() {
 
   // 報價爬蟲健康度判斷
   const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
-  const cerphoneStale = !lastCerphoneSummary || (Date.now() - new Date(lastCerphoneSummary.finishedAt).getTime() > 8 * 24 * 60 * 60 * 1000);
+  // 改每日排程後，超過 2 天沒成功就警示
+  const cerphoneStale = !lastCerphoneSummary || (Date.now() - new Date(lastCerphoneSummary.finishedAt).getTime() > 2 * 24 * 60 * 60 * 1000);
   const cerphoneRecentFails = recentCerphoneFailures.filter(l => Date.now() - new Date(l.finishedAt).getTime() < SEVEN_DAYS);
   const failedBrandSlugs = Array.from(new Set(cerphoneRecentFails.map(l => l.brand).filter(Boolean))) as string[];
   const cerphoneAlert = cerphoneStale || failedBrandSlugs.length > 0 || (lastCerphoneSummary && lastCerphoneSummary.status !== "success");
@@ -79,7 +80,7 @@ export default async function AdminDashboard() {
               <li>
                 · 最近一次成功更新：
                 {lastCerphoneSummary ? new Date(lastCerphoneSummary.finishedAt).toLocaleString("zh-TW", { hour12: false }) : "從未跑過"}
-                （超過 8 天，cron 可能掛了）
+                （超過 2 天，cron 可能掛了）
               </li>
             )}
             {failedBrandSlugs.length > 0 && (

@@ -19,7 +19,7 @@ const CRON_JOBS = [
   {
     name: "維修報價更新",
     path: "/api/cron/refresh-prices",
-    schedule: "每週一 04:00（台灣）",
+    schedule: "每日 04:00（台灣）",
     description: "從 cerphone 抓 10 品牌維修報價，套公式 ×1.15 進位百，自動 upsert",
   },
 ];
