@@ -15,6 +15,7 @@ const PRICE_RANGES: Record<Category, PriceRange> = {
   desktop:    { min: 1000,  max: 100000 },
   console:    { min: 200,   max: 30000 },
   dyson:      { min: 100,   max: 20000 },
+  earphone:   { min: 100,   max: 15000 },
 };
 
 export function isReasonablePrice(price: number, category: Category): boolean {

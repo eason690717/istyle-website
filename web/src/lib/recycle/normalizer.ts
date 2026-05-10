@@ -1,5 +1,5 @@
 // 把不同站的機型名稱標準化成 canonical key
-export type Category = "phone" | "tablet" | "laptop_pro" | "laptop_air" | "desktop" | "console" | "dyson";
+export type Category = "phone" | "tablet" | "laptop_pro" | "laptop_air" | "desktop" | "console" | "dyson" | "earphone";
 
 export interface ParsedModel {
   modelKey: string;
@@ -100,12 +100,30 @@ export function parseGenericModel(raw: string, brand: string, category: Category
   return { modelKey, category, brand, modelName: baseName, storage };
 }
 
+// AirPods：us3c 格式 "Apple AirPods Pro 2 MagSafe Lightning A2931 A2699 A2698"
+// 1) 去掉 Apple 前綴
+// 2) 去掉行末 "AXXXX" 型號代碼（多個 model number 用空白分隔）
+// 3) 用剩下的字段當 modelName，例如 "AirPods Pro 2 MagSafe Lightning"
+export function parseAirPods(raw: string): ParsedModel | null {
+  let cleaned = raw.replace(/\s+/g, " ").trim();
+  if (!/airpod/i.test(cleaned)) return null;
+  cleaned = cleaned.replace(/^Apple\s+/i, "");
+  // 去掉 A 開頭 4-5 碼的 model number（可能多個）
+  cleaned = cleaned.replace(/\bA\d{4,5}(?:\s+A\d{4,5})*\s*$/g, "").trim();
+  // 去尾巴雜訊
+  cleaned = cleaned.replace(/[（(].*[）)]/g, "").trim();
+  if (!/airpod/i.test(cleaned)) return null;
+  const modelKey = slugify(`apple-${cleaned}`);
+  return { modelKey, category: "earphone", brand: "Apple", modelName: cleaned };
+}
+
 export function parseModelByCategory(raw: string, hint: Category): ParsedModel | null {
   switch (hint) {
     case "phone": return parseIphone(raw);
     case "tablet": return parseIpad(raw);
     case "laptop_pro": return parseMacBook(raw, "pro");
     case "laptop_air": return parseMacBook(raw, "air");
+    case "earphone": return parseAirPods(raw);
     default: return null;
   }
 }

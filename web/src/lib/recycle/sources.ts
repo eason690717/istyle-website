@@ -104,6 +104,41 @@ export async function scrapeSource2(): Promise<ScrapedRow[]> {
   return results;
 }
 
+// === Source 2 補：us3c speaker-recycle（AirPods 收購價） ======================
+// 表格結構：[品牌, 型號及類型, 收購價, ...]，與一般 source2 的 [型號, 收購價] 不同
+// 故獨立寫；歸檔到 source2（同來源網站）
+export async function scrapeUs3cAirPods(): Promise<ScrapedRow[]> {
+  const results: ScrapedRow[] = [];
+  try {
+    const html = await fetchHtml("https://www.us3c.com.tw/speaker-recycle");
+    const $ = cheerio.load(html);
+    $("table").each((_, tbl) => {
+      const $tbl = $(tbl);
+      // 抓「品牌 / 型號及類型 / 收購價」表頭的 table。us3c 表頭可能不在第 1 列，
+      // 掃前 5 列任一列符合都算（避免空白佔位列）
+      const headerRowsText = $tbl.find("tr").slice(0, 5).map((_, r) =>
+        $(r).find("th,td").map((_, c) => $(c).text().trim()).get().join("|")
+      ).get().join("|");
+      const hasBrandCol = /品牌/.test(headerRowsText);
+      const hasPriceCol = /收購|回收/.test(headerRowsText);
+      if (!hasBrandCol || !hasPriceCol) return;
+
+      $tbl.find("tr").each((_, tr) => {
+        const cells = $(tr).find("td").map((_, c) => $(c).text().trim()).get();
+        if (cells.length < 3) return;
+        const modelCell = cells[1];
+        const priceCell = cells[2];
+        if (!modelCell || !/airpod/i.test(modelCell)) return;
+        const price = strictParsePrice(priceCell) ?? parsePriceText(priceCell);
+        if (!price || !isReasonablePrice(price, "earphone")) return;
+        const parsed = parseModelByCategory(modelCell, "earphone");
+        if (parsed) results.push({ ...parsed, price });
+      });
+    });
+  } catch (e) { console.error("[source2 airpods]", e); }
+  return results;
+}
+
 // === Source 3：jyes（全品牌主頁，含 Samsung、OPPO、vivo、Sony…） =================
 const SOURCE3_PAGES: Array<{ cid: number; brand: string; category: Category }> = [
   { cid: 1,  brand: "Apple",    category: "phone" },

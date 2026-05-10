@@ -19,6 +19,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   desktop: "桌機",
   console: "遊戲主機",
   dyson: "Dyson",
+  earphone: "AirPods",
 };
 
 export default async function RecyclePage() {

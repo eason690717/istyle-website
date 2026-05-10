@@ -2,7 +2,7 @@
 // 公式：往 Apple 官方價靠攏，避免被同業哄抬而虧本收
 // 寫入前統一透過 normalize-model 正規化（資料源頭統一）
 import { prisma } from "@/lib/prisma";
-import { scrapeSource1, scrapeSource2, scrapeSource3, type ScrapedRow } from "./sources";
+import { scrapeSource1, scrapeSource2, scrapeSource3, scrapeUs3cAirPods, type ScrapedRow } from "./sources";
 import { normalizeRecycleRow } from "@/lib/normalize-model";
 
 interface AggregatedRow {
@@ -56,17 +56,23 @@ export async function refreshRecyclePrices() {
   const officialMargin = setting?.recycleOfficialMargin ?? 0.4;
   const competitorDiscount = setting?.recycleCompetitorDiscount ?? 0.85;
 
-  const [r1, r2, r3] = await Promise.allSettled([
+  const [r1, r2, r3, rA] = await Promise.allSettled([
     scrapeSource1(),
     scrapeSource2(),
     scrapeSource3(),
+    scrapeUs3cAirPods(),
   ]);
   const s1 = r1.status === "fulfilled" ? r1.value : [];
-  const s2 = r2.status === "fulfilled" ? r2.value : [];
+  // AirPods 來源同 us3c，併入 s2 一起參與 source2Price 計算
+  const s2 = [
+    ...(r2.status === "fulfilled" ? r2.value : []),
+    ...(rA.status === "fulfilled" ? rA.value : []),
+  ];
   const s3 = r3.status === "fulfilled" ? r3.value : [];
 
   await logScrape("source1", r1.status === "fulfilled" ? "success" : "error", s1.length, startedAt, r1.status === "rejected" ? String(r1.reason) : undefined);
-  await logScrape("source2", r2.status === "fulfilled" ? "success" : "error", s2.length, startedAt, r2.status === "rejected" ? String(r2.reason) : undefined);
+  await logScrape("source2", r2.status === "fulfilled" && rA.status === "fulfilled" ? "success" : "error", s2.length, startedAt,
+    [r2, rA].filter(r => r.status === "rejected").map(r => String((r as PromiseRejectedResult).reason)).join(" | ") || undefined);
   await logScrape("source3", r3.status === "fulfilled" ? "success" : "error", s3.length, startedAt, r3.status === "rejected" ? String(r3.reason) : undefined);
 
   const agg = new Map<string, AggregatedRow>();
