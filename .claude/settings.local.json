@@ -175,7 +175,8 @@
       "Bash(grep -oiE \"airpod[^<]{0,30}\" /tmp/us3c_speaker.html)",
       "Bash(curl -s -A \"Mozilla/5.0\" --max-time 15 \"https://www.jyes.com.tw/recycle.php\")",
       "Bash(node --experimental-vm-modules -e ' *)",
-      "Bash(git -c user.email=admin@i-style.store -c 'user.name=iStyle Admin' commit -m 'Feat: 二手回收新增 AirPods（earphone category） *)"
+      "Bash(git -c user.email=admin@i-style.store -c 'user.name=iStyle Admin' commit -m 'Feat: 二手回收新增 AirPods（earphone category） *)",
+      "Bash(git -c user.email=\"admin@i-style.store\" -c user.name=\"iStyle Admin\" commit -m \"Fix: refresh-recycle maxDuration 60→300（避免 timeout）\")"
     ]
   }
 }

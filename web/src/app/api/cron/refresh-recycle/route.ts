@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { refreshRecyclePrices } from "@/lib/recycle/aggregate";
 import { checkCronAuth } from "@/lib/cron-auth";
 
-export const maxDuration = 60; // 秒
+export const maxDuration = 300; // 秒（4 us3c + 4 second3c + 20 jyes + AirPods，需要時間）
 export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
