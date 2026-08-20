@@ -469,20 +469,51 @@ footer a{ font-size:.8125rem; }
   section{ padding:1rem 0; break-inside:avoid; }
   .tabpanel[hidden]{ display:block !important; }
 }
+
+/* ── Google 地圖連結 ──────────────────────── */
+.mapl{
+  display:inline-flex; align-items:center; gap:.22rem;
+  font-family:var(--mono); font-size:.625rem; letter-spacing:.06em;
+  padding:.12rem .42rem .12rem .3rem; border-radius:4px;
+  background:var(--sea-soft); color:var(--sea); border:0;
+  white-space:nowrap; transition:background .15s;
+}
+.mapl::before{ content:"◉"; font-size:.6rem; }
+.mapl:hover{ background:color-mix(in srgb, var(--sea) 22%, transparent); border:0; }
+
+/* ── 四日總覽 ─────────────────────────────── */
+.overview{ display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft);
+  border-radius:12px; overflow:hidden; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); }
+.ovday{ background:var(--surface); padding:1.35rem 1.4rem; display:flex; flex-direction:column; gap:.55rem; }
+.ovday .d{ font-family:var(--mono); font-size:.625rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); }
+.ovday h4{ font-size:1.0625rem; }
+.ovday .hl{ font-size:.8125rem; color:var(--sea); font-weight:500; }
+.ovday ul{ display:flex; flex-direction:column; gap:.25rem; margin-top:.15rem; }
+.ovday li{ font-size:.8125rem; color:var(--ink-2); padding-left:.9rem; position:relative; line-height:1.55; }
+.ovday li::before{ content:""; position:absolute; left:0; top:.6em; width:4px; height:4px; border-radius:50%; background:var(--line); }
+.ovday .cost{ font-family:var(--mono); font-size:.75rem; color:var(--ink-3); margin-top:auto; padding-top:.6rem; border-top:1px dashed var(--line-soft); }
+
+/* ── 大數字條 ─────────────────────────────── */
+.bigrow{ display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft);
+  border-radius:11px; overflow:hidden; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); }
+.bigrow div{ background:var(--surface); padding:1.15rem 1.25rem; }
+.bigrow dt{ font-family:var(--mono); font-size:.625rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); }
+.bigrow dd{ margin:.3rem 0 0; font-family:var(--mono); font-size:1.25rem; font-weight:500; font-variant-numeric:tabular-nums; }
+.bigrow dd small{ font-size:.7rem; color:var(--ink-3); font-weight:400; margin-left:.15rem; }
 </style>
 
 <header class="topbar">
   <div class="wrap topbar-inner">
     <a href="#top" class="brand">博多<span>晨昏</span>行</a>
     <nav class="navlinks">
-      <a href="#clock">作息</a>
+      <a href="#overview">總覽</a>
       <a href="#flights">航班</a>
-      <a href="#october">十月檔期</a>
+      <a href="#october">挑日子</a>
       <a href="#stay">住宿</a>
-      <a href="#plan">行程</a>
-      <a href="#eat">吃什麼</a>
+      <a href="#plan">每日行程</a>
+      <a href="#eat">必吃</a>
       <a href="#night">夜的福岡</a>
-      <a href="#money">花費</a>
+      <a href="#money">費用</a>
       <a href="#pack">出發前</a>
       <a href="#next">下一趟</a>
     </nav>
@@ -492,270 +523,153 @@ footer a{ font-size:.8125rem; }
 
 <main id="top">
 
-<!-- ══════════ HERO ══════════ -->
 <div class="hero">
   <canvas id="tide" aria-hidden="true"></canvas>
   <div class="wrap hero-inner">
-    <p class="eyebrow">福岡 · 三天兩夜 · 為夜班作息設計</p>
-    <h1>她八點下班，<br>我們去吃<em>早上六點的魚市場</em>。</h1>
+    <p class="eyebrow">福岡 · 四天三夜 · 10/16 – 10/19</p>
+    <h1>清晨的魚市場，<br>入夜的<em>屋台與光</em>。</h1>
     <p class="hero-sub">
-      這份行程不是照著景點排的，是照著<strong>她的睡眠</strong>排的。夜班的身體在凌晨最清醒——
-      而博多的長浜鮮魚市場清晨六點開門、唐戶市場五點就開賣。別人排不進去的時段，剛好是你們最有精神的時候。
-      每天只排一個主場、留兩段補眠，吃海鮮、逛市場、晚上去會發光的神社和屋台。
+      十月平日出發，避開所有連假。中午十一點五十五起飛、下午三點多落地，
+      回程傍晚就到家。三天完整的福岡：市場的海鮮、關門海峽的壽司、會發光的神社、那珂川畔的屋台。
     </p>
     <dl class="hero-meta">
-      <div><dt>行程長度</dt><dd>3<small>天</small> 2<small>夜</small></dd></div>
-      <div><dt>建議檔期</dt><dd>10/16<small>–18</small></dd></div>
-      <div><dt>兩人估算</dt><dd>NT$<span id="heroTotal">26,800</span></dd></div>
-      <div><dt>每天主場</dt><dd>1<small>個</small></dd></div>
-      <div><dt>補眠時段</dt><dd>2<small>段／日</small></dd></div>
+      <div><dt>日期</dt><dd>10/16<small>–19</small></dd></div>
+      <div><dt>天數</dt><dd>4<small>天</small>3<small>夜</small></dd></div>
+      <div><dt>航班</dt><dd>AK<small>1510/1511</small></dd></div>
+      <div><dt>兩人總計</dt><dd>NT$<span id="heroTotal">33,500</span></dd></div>
+      <div><dt>每人</dt><dd>NT$<span id="heroPer">16,750</span></dd></div>
     </dl>
   </div>
 </div>
 
-<!-- ══════════ 作息 ══════════ -->
-<section id="clock">
+<section id="overview">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">01 — 一切從她的班表開始</p>
-      <h2>先把睡眠畫出來，再排行程</h2>
-      <p>
-        她的固定條件只有兩個：<strong>出發當天早上 08:00 才下班</strong>、<strong>9/29 晚上 23:00 要上班</strong>。
-        下面這張圖是整趟行程壓在 24 小時軸上的樣子——先確定睡得夠，剩下的空格才拿來玩。
-      </p>
+      <p class="eyebrow">行程總覽</p>
+      <h2>四天，四個主場</h2>
     </div>
 
-    <div class="card pad">
-      <div class="clockstrip">
-        <div class="clockrow">
-          <span></span>
-          <div class="axis">
-            <b>0</b><b></b><b>2</b><b></b><b>4</b><b></b><b>6</b><b></b><b>8</b><b></b><b>10</b><b></b>
-            <b>12</b><b></b><b>14</b><b></b><b>16</b><b></b><b>18</b><b></b><b>20</b><b></b><b>22</b><b></b>
-          </div>
-        </div>
-
-        <div class="clockrow">
-          <span>9/26 六<br>出發</span>
-          <div class="band">
-            <i data-k="work"  style="grid-column:1/9"></i>
-            <i data-k="go"    style="grid-column:9/10"></i>
-            <i data-k="sleep" style="grid-column:10/14"></i>
-            <i data-k="go"    style="grid-column:14/21"></i>
-            <i data-k="night" style="grid-column:21/25"></i>
-          </div>
-        </div>
-
-        <div class="clockrow">
-          <span>9/27 日<br>主場日</span>
-          <div class="band">
-            <i data-k="night" style="grid-column:1/3"></i>
-            <i data-k="sleep" style="grid-column:3/7"></i>
-            <i data-k="play"  style="grid-column:7/11"></i>
-            <i data-k="sleep" style="grid-column:11/14"></i>
-            <i data-k="play"  style="grid-column:14/19"></i>
-            <i data-k="night" style="grid-column:19/25"></i>
-          </div>
-        </div>
-
-        <div class="clockrow">
-          <span>9/28 一<br>回程</span>
-          <div class="band">
-            <i data-k="night" style="grid-column:1/3"></i>
-            <i data-k="sleep" style="grid-column:3/8"></i>
-            <i data-k="play"  style="grid-column:8/17"></i>
-            <i data-k="go"    style="grid-column:17/25"></i>
-          </div>
-        </div>
-
-        <div class="clockrow">
-          <span>9/29 二<br>上班日</span>
-          <div class="band">
-            <i data-k="go"    style="grid-column:1/3"></i>
-            <i data-k="sleep" style="grid-column:3/15"></i>
-            <i data-k="work"  style="grid-column:24/25"></i>
-          </div>
-        </div>
+    <div class="overview">
+      <div class="ovday">
+        <span class="d">Day 1 · 10/16 五</span>
+        <h4>抵達．屋台夜</h4>
+        <span class="hl">主場：中洲屋台街</span>
+        <ul>
+          <li>11:55 起飛 → 15:15 落地</li>
+          <li>櫛田神社．川端商店街</li>
+          <li>那珂川畔屋台，兩人合點四樣</li>
+          <li>24 小時超市買半額生魚片當宵夜</li>
+        </ul>
+        <span class="cost">當日餐食 ¥6,850／兩人</span>
       </div>
-
-      <div class="legend">
-        <span class="l-work">上班</span>
-        <span class="l-sleep">睡覺／補眠</span>
-        <span class="l-go">移動、飛行、機場</span>
-        <span class="l-play">白天行程</span>
-        <span class="l-night">夜間行程（屋台、夜神社、宵夜）</span>
+      <div class="ovday">
+        <span class="d">Day 2 · 10/17 六</span>
+        <h4>魚市場．發光的神社</h4>
+        <span class="hl">主場：長浜鮮魚市場</span>
+        <ul>
+          <li>06:30 特上海鮮丼 ¥1,050</li>
+          <li>大濠公園．福岡城跡</li>
+          <li>柳橋連合市場邊走邊吃</li>
+          <li>18:00 賽博神社點燈</li>
+        </ul>
+        <span class="cost">當日餐食 ¥11,950／兩人</span>
       </div>
-    </div>
-
-    <div style="display:grid;gap:.85rem;margin-top:1.25rem">
-      <div class="note">
-        <span class="k">關鍵一</span>
-        <div><strong>出發日只能搭下午班機。</strong>她 08:00 下班、回到板橋約 09:00，補眠到 13:00 再出門，
-        14:30 到桃園機場報到，剛好搭 16:25 那班。早上 06:50／07:00／08:00 的班機（含最便宜的虎航）她全部趕不上——
-        這正是 9 月這趟省不下來的根本原因。</div>
+      <div class="ovday">
+        <span class="d">Day 3 · 10/18 日</span>
+        <h4>唐戶市場．關門海峽</h4>
+        <span class="hl">主場：活きいき馬関街</span>
+        <ul>
+          <li>週日 08:00 開的壽司市集</li>
+          <li>一貫一貫挑，¥150 起</li>
+          <li>走路穿越海底回九州</li>
+          <li>門司港燒咖哩</li>
+        </ul>
+        <span class="cost">當日餐食＋交通 ¥19,600／兩人</span>
       </div>
-      <div class="note">
-        <span class="k">關鍵二</span>
-        <div><strong>回程一定要搭晚班機。</strong>21:00 從福岡起飛、22:30 落地桃園、24:00 到家，
-        9/29 整天可以睡滿 12 小時，晚上 23:00 上班完全沒問題。若改搭上午 11:00 那班回台，Day 3 整天等於報廢，
-        票價卻沒差多少。</div>
-      </div>
-      <div class="note warn">
-        <span class="k">關鍵三</span>
-        <div><strong>如果排班能換，把「出發前一晚」換成休假。</strong>那樣她就能搭早上 07:00 的虎航，
-        機票直接少一大截，而且 Day 1 從中午就開始玩——等於用同樣的錢多半天。這是整份規劃裡 CP 值最高的一招。</div>
+      <div class="ovday">
+        <span class="d">Day 4 · 10/19 一</span>
+        <h4>太宰府．回家</h4>
+        <span class="hl">主場：太宰府天滿宮</span>
+        <ul>
+          <li>梅枝餅、隈研吾的星巴克</li>
+          <li>博多阪急 B1 採買明太子</li>
+          <li>17:00 起飛 → 18:30 落地</li>
+          <li>約 20:00 到家</li>
+        </ul>
+        <span class="cost">當日餐食＋交通 ¥5,280／兩人</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════ 航班 ══════════ -->
 <section id="flights">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">02 — 航班</p>
-      <h2>三個方案，價差可以到一倍</h2>
-      <p>
-        台北桃園直飛福岡每天約 6 班，飛行時間 2 小時 10 分左右，中華航空、長榮、星宇、台灣虎航、AirAsia 都有飛。
-        班表分成兩波：<strong>清晨波 06:15–08:00</strong> 和<strong>午後波 13:00–16:40</strong>；回程則是
-        <strong>上午波 10:30–12:30</strong> 和<strong>夜間波 19:00–21:00</strong>。她的班表把清晨波整個排除掉了。
-      </p>
+      <p class="eyebrow">航班</p>
+      <h2>一班中午起飛、一班傍晚落地</h2>
+      <p>桃園直飛福岡每天 6–7 班，飛行 2 小時 20 分。AirAsia 這組是唯一「不用早起、不浪費半天、又最便宜」的組合。</p>
     </div>
 
-    <div class="plans">
-
-      <article class="card plan">
-        <div class="plan-top">
-          <span class="plan-tag t-peak">最貴 · 但照原訂日期</span>
-          <h3>方案 A｜原訂日</h3>
-          <p class="plan-dates">9/26 六 → 9/28 一　三天兩夜</p>
+    <div class="card" style="overflow:hidden;margin-bottom:1.5rem">
+      <div style="padding:1.35rem 1.5rem;border-bottom:1px solid var(--line-soft);display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:baseline">
+        <span class="plan-tag t-best">推薦組合</span>
+        <h3 style="font-size:1.25rem">AirAsia　AK1510 ／ AK1511</h3>
+        <span class="plan-dates">A320 · 186 座 · 每日執飛</span>
+      </div>
+      <div style="display:grid;gap:1px;background:var(--line-soft);grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
+        <div style="background:var(--surface);padding:1.5rem">
+          <span class="flight-h">去程　AK1510</span>
+          <div class="flight-t" style="margin:.55rem 0"><b style="font-size:1.65rem">11:55</b><i></i><b style="font-size:1.65rem">15:15</b></div>
+          <span class="flight-n">桃園 TPE → 福岡 FUK</span>
+          <p style="font-size:.875rem;color:var(--ink-2);margin-top:.6rem">下班後從容到機場，機上補眠兩小時，下午三點多落地。第一天的下午和晚上都還在。</p>
         </div>
-        <div class="plan-price"><small>來回含稅／人 約</small><b>16,000</b><small>–22,000</small></div>
-        <div class="plan-body">
-          <div class="flight">
-            <span class="flight-h">去程 9/26　CI116 中華航空</span>
-            <span class="flight-t"><b>16:25</b><i></i><b>19:35</b></span>
-            <span class="flight-n">桃園 TPE → 福岡 FUK ／ A330-300</span>
-          </div>
-          <div class="flight">
-            <span class="flight-h">回程 9/28　CI117 中華航空</span>
-            <span class="flight-t"><b>21:00</b><i></i><b>22:30</b></span>
-            <span class="flight-n">福岡 FUK → 桃園 TPE ／ A330-300</span>
-          </div>
-          <ul class="why">
-            <li>時間完全吻合她的班表：下班補眠 4 小時再出門，回程玩到傍晚才進機場。</li>
-            <li class="warn">9/25–9/28 是台灣中秋＋教師節四天連假，機票是全年前幾貴的日子。</li>
-            <li class="warn">下午班只有傳統航空有，廉航（虎航）當天沒有她搭得上的班次。</li>
-            <li>實際能玩的時間：Day 1 只剩晚上、Day 2 一整天、Day 3 一整天。</li>
-          </ul>
+        <div style="background:var(--surface);padding:1.5rem">
+          <span class="flight-h">回程　AK1511</span>
+          <div class="flight-t" style="margin:.55rem 0"><b style="font-size:1.65rem">17:00</b><i></i><b style="font-size:1.65rem">18:30</b></div>
+          <span class="flight-n">福岡 FUK → 桃園 TPE</span>
+          <p style="font-size:.875rem;color:var(--ink-2);margin-top:.6rem">最後一天早上還能跑太宰府，下午三點進機場，晚上八點就在家。</p>
         </div>
-      </article>
-
-      <article class="card plan best">
-        <div class="plan-top">
-          <span class="plan-tag t-best">最省 · 首選</span>
-          <h3>方案 B｜十月最低價週</h3>
-          <p class="plan-dates">10/16 五 → 10/18 日　三天兩夜</p>
-        </div>
-        <div class="plan-price"><small>來回含稅／人 約</small><b>7,000</b><small>–9,500（廉航）</small></div>
-        <div class="plan-body">
-          <div class="flight">
-            <span class="flight-h">去程 10/16　IT240 台灣虎航（若前一晚休假）</span>
-            <span class="flight-t"><b>07:00</b><i></i><b>10:20</b></span>
-            <span class="flight-n">最便宜的班次，中午就能開始玩</span>
-          </div>
-          <div class="flight">
-            <span class="flight-h">去程備案　BR102 長榮 / CI116 華航</span>
-            <span class="flight-t"><b>15:35</b><i></i><b>18:50</b></span>
-            <span class="flight-n">若當天早上才下班，改搭這班</span>
-          </div>
-          <div class="flight">
-            <span class="flight-h">回程 10/18　IT241 台灣虎航</span>
-            <span class="flight-t"><b>10:55</b><i></i><b>12:25</b></span>
-            <span class="flight-n">或 JX841 星宇 19:00→20:40 玩滿整天</span>
-          </div>
-          <ul class="why">
-            <li>夾在國慶連假（10/9–11）與光復連假（10/24–26）中間，是十月機票的谷底。</li>
-            <li>虎航 2026 夏季班表促銷的出發區間涵蓋到 10/24，這週剛好在裡面。</li>
-            <li>十月福岡白天 25°C、早晚 18°C，是一年裡最舒服的月份之一。</li>
-            <li class="warn">需要請週五與週一兩天假（若排三天兩夜則只需請週五）。</li>
-          </ul>
-        </div>
-      </article>
-
-      <article class="card plan">
-        <div class="plan-top">
-          <span class="plan-tag t-good">最有特色 · 只請一天假</span>
-          <h3>方案 C｜光復連假</h3>
-          <p class="plan-dates">10/24 六 → 10/26 一　三天兩夜</p>
-        </div>
-        <div class="plan-price"><small>來回含稅／人 約</small><b>9,000</b><small>–13,000</small></div>
-        <div class="plan-body">
-          <div class="flight">
-            <span class="flight-h">去程 10/24　依當日班表選午後波</span>
-            <span class="flight-t"><b>15:35</b><i></i><b>18:50</b></span>
-            <span class="flight-n">10/24–10/26 為光復節連假，不必請假</span>
-          </div>
-          <div class="flight">
-            <span class="flight-h">回程 10/26　CI117 / JX841</span>
-            <span class="flight-t"><b>21:00</b><i></i><b>22:30</b></span>
-            <span class="flight-n">連假最後一天回程較滿，要早點訂</span>
-          </div>
-          <ul class="why">
-            <li><strong>宮地嶽神社「光の道」</strong>一年只有二月下旬和十月下旬看得到，這週正好撞上。</li>
-            <li><strong>糸島牡蠣小屋開季</strong>（約 10 月下旬起），現烤牡蠣 1kg 約 ¥1,300＋炭火費。</li>
-            <li>光復節連假 10/24–10/26 共三天，三天兩夜完全不用請假。</li>
-            <li class="warn">連假票價比方案 B 高約三成，且要提早兩個月訂。</li>
-          </ul>
-        </div>
-      </article>
-    </div>
-
-    <div class="sec-head" style="margin-top:2.5rem;margin-bottom:1.15rem">
-      <p class="eyebrow">全部班次</p>
-      <h2 style="font-size:1.25rem;font-family:var(--body);font-weight:500">台北桃園 ⇄ 福岡 直飛班表</h2>
+      </div>
     </div>
 
     <div class="scroller">
       <table>
-        <thead>
-          <tr><th>方向</th><th>班號</th><th>航空</th><th>起飛</th><th>抵達</th><th>她搭得上嗎</th></tr>
-        </thead>
+        <thead><tr><th>方向</th><th>班號</th><th>航空</th><th>起飛</th><th>抵達</th><th>機型</th><th></th></tr></thead>
         <tbody>
-          <tr><td>去 TPE→FUK</td><td class="num">IT240</td><td>台灣虎航</td><td class="num">07:00</td><td class="num">10:20</td><td><span class="pill no">✗ 08:00 才下班</span></td></tr>
-          <tr><td>去 TPE→FUK</td><td class="num">CI110</td><td>中華航空</td><td class="num">06:50</td><td class="num">09:55</td><td><span class="pill no">✗ 趕不上</span></td></tr>
-          <tr><td>去 TPE→FUK</td><td class="num">BR106</td><td>長榮航空</td><td class="num">08:00</td><td class="num">11:20</td><td><span class="pill no">✗ 趕不上</span></td></tr>
-          <tr><td>去 TPE→FUK</td><td class="num">AK1510</td><td>AirAsia</td><td class="num">11:54</td><td class="num">15:10</td><td><span class="pill mid">△ 很趕，且非每日</span></td></tr>
-          <tr><td>去 TPE→FUK</td><td class="num">BR102</td><td>長榮航空</td><td class="num">15:35</td><td class="num">18:50</td><td><span class="pill ok">✓ 可以</span></td></tr>
-          <tr><td>去 TPE→FUK</td><td class="num">CI116</td><td>中華航空</td><td class="num">16:25</td><td class="num">19:35</td><td><span class="pill ok">✓ 最從容</span></td></tr>
-          <tr><td>回 FUK→TPE</td><td class="num">IT241</td><td>台灣虎航</td><td class="num">10:55</td><td class="num">12:25</td><td><span class="pill mid">最便宜，但少玩一天</span></td></tr>
-          <tr><td>回 FUK→TPE</td><td class="num">CI111</td><td>中華航空</td><td class="num">11:00</td><td class="num">12:30</td><td><span class="pill mid">同上</span></td></tr>
-          <tr><td>回 FUK→TPE</td><td class="num">JX841</td><td>星宇航空</td><td class="num">19:00</td><td class="num">20:40</td><td><span class="pill ok">✓ 玩到傍晚</span></td></tr>
-          <tr><td>回 FUK→TPE</td><td class="num">CI117</td><td>中華航空</td><td class="num">21:00</td><td class="num">22:30</td><td><span class="pill ok">✓✓ 玩滿整天</span></td></tr>
+          <tr><td rowspan="7" style="vertical-align:middle;font-weight:500">桃園<br>→<br>福岡</td>
+              <td class="num">CI110</td><td>中華航空</td><td class="num">06:50</td><td class="num">09:55</td><td>A330-300</td><td><span class="pill no">太早</span></td></tr>
+          <tr><td class="num">IT240</td><td>台灣虎航</td><td class="num">07:00</td><td class="num">10:20</td><td>A320</td><td><span class="pill no">太早</span></td></tr>
+          <tr><td class="num">BR106</td><td>長榮航空</td><td class="num">08:00</td><td class="num">11:20</td><td>B787</td><td><span class="pill no">太早</span></td></tr>
+          <tr style="background:var(--sea-soft)"><td class="num"><strong>AK1510</strong></td><td><strong>AirAsia</strong></td><td class="num"><strong>11:55</strong></td><td class="num"><strong>15:15</strong></td><td>A320</td><td><span class="pill ok">✓ 本行程採用</span></td></tr>
+          <tr><td class="num">BR102</td><td>長榮航空</td><td class="num">15:35</td><td class="num">18:50</td><td>A321</td><td><span class="pill mid">少半天</span></td></tr>
+          <tr><td class="num">JX840</td><td>星宇航空</td><td class="num">16:23</td><td class="num">19:08</td><td>A321neo</td><td><span class="pill mid">少半天</span></td></tr>
+          <tr><td class="num">CI116</td><td>中華航空</td><td class="num">16:25</td><td class="num">19:35</td><td>A330-300</td><td><span class="pill mid">少半天</span></td></tr>
+
+          <tr><td rowspan="6" style="vertical-align:middle;font-weight:500">福岡<br>→<br>桃園</td>
+              <td class="num">IT241</td><td>台灣虎航</td><td class="num">10:55</td><td class="num">12:25</td><td>A320</td><td><span class="pill no">少一天</span></td></tr>
+          <tr><td class="num">CI111</td><td>中華航空</td><td class="num">11:00</td><td class="num">12:30</td><td>A330-300</td><td><span class="pill no">少一天</span></td></tr>
+          <tr><td class="num">BR107</td><td>長榮航空</td><td class="num">約 12:20</td><td class="num">約 14:00</td><td>B787</td><td><span class="pill mid">時刻待確認</span></td></tr>
+          <tr style="background:var(--sea-soft)"><td class="num"><strong>AK1511</strong></td><td><strong>AirAsia</strong></td><td class="num"><strong>17:00</strong></td><td class="num"><strong>18:30</strong></td><td>A320</td><td><span class="pill ok">✓ 本行程採用</span></td></tr>
+          <tr><td class="num">JX841</td><td>星宇航空</td><td class="num">19:00</td><td class="num">20:40</td><td>A321neo</td><td><span class="pill mid">到家 22:30</span></td></tr>
+          <tr><td class="num">CI117</td><td>中華航空</td><td class="num">21:00</td><td class="num">22:30</td><td>A330-300</td><td><span class="pill mid">到家 24:00</span></td></tr>
         </tbody>
       </table>
     </div>
 
     <div class="note warn" style="margin-top:1.15rem">
-      <span class="k">務必確認</span>
-      <div>以上為 2026 年班表的常態時刻，僅供排行程用。<strong>航空公司會依季節調整班次與時間，訂票前請到官網或
-      Trip.com／Google Flights 確認當日實際班表</strong>，尤其是 AirAsia 與星宇的午後班次並非每日執飛。
-      票價區間是依歷史行情估算的，不是即時報價。</div>
+      <span class="k">訂票前</span>
+      <div>以上為 2026 年常態班表。航空公司會依季節微調，長榮 BR107 的時刻未取得可靠來源，標為「約」。
+      訂票前請於航空公司官網或 Google Flights 對照當日實際班表。</div>
     </div>
   </div>
 </section>
 
-<!-- ══════════ 十月檔期 ══════════ -->
 <section id="october">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">03 — 十月哪幾天最便宜</p>
-      <h2>把台灣的連假標出來，答案就很清楚</h2>
-      <p>
-        機票貴不貴，八成看的是<strong>台灣的放假日</strong>，不是日本的。2026 年十月有兩段連假：
-        國慶 10/9–10/11、光復節 10/24–10/26。這兩段前後票價會整段拉高；真正的谷底落在
-        <strong>10/13–10/21</strong> 這一週多。
-      </p>
+      <p class="eyebrow">挑日子</p>
+      <h2>避開兩段連假，機票差一倍</h2>
+      <p>國慶 10/9–11、光復 10/24–26。避開這兩段，十月的平日就是全年最好買的時候。</p>
     </div>
 
     <div class="calwrap">
@@ -763,27 +677,20 @@ footer a{ font-size:.8125rem; }
         <div class="cal">
           <div class="dow">日</div><div class="dow">一</div><div class="dow">二</div><div class="dow">三</div>
           <div class="dow">四</div><div class="dow">五</div><div class="dow">六</div>
-
           <div class="day blank"></div><div class="day blank"></div><div class="day blank"></div><div class="day blank"></div>
           <div class="day low">1</div><div class="day low">2</div><div class="day low">3</div>
-
           <div class="day low">4</div><div class="day low">5</div><div class="day low">6</div><div class="day low">7</div>
-          <div class="day high">8</div><div class="day high">9<em>國慶補假</em></div><div class="day high">10<em>國慶日</em></div>
-
-          <div class="day high">11<em>連假</em></div><div class="day high">12</div><div class="day low">13</div><div class="day low">14</div>
+          <div class="day mid">8</div><div class="day high">9<em>國慶補假</em></div><div class="day high">10<em>國慶日</em></div>
+          <div class="day high">11<em>連假</em></div><div class="day mid">12</div><div class="day low">13</div><div class="day low">14</div>
           <div class="day low">15</div><div class="day low pick">16</div><div class="day low pick">17</div>
-
-          <div class="day low pick">18</div><div class="day low">19</div><div class="day low">20</div><div class="day low">21</div>
-          <div class="day mid">22</div><div class="day high">23</div><div class="day high">24<em>光復連假</em></div>
-
-          <div class="day high">25<em>光復節</em></div><div class="day high">26<em>補假</em></div><div class="day mid">27</div><div class="day mid">28</div>
-          <div class="day mid">29</div><div class="day mid">30</div><div class="day mid">31</div>
+          <div class="day low pick">18</div><div class="day low pick">19</div><div class="day low">20</div><div class="day low">21</div>
+          <div class="day low">22</div><div class="day mid">23</div><div class="day high">24<em>光復連假</em></div>
+          <div class="day high">25<em>光復節</em></div><div class="day high">26<em>補假</em></div><div class="day low">27</div><div class="day low">28</div>
+          <div class="day low">29</div><div class="day mid">30</div><div class="day mid">31</div>
         </div>
         <div class="callegend">
-          <span class="c-low">機票谷底</span>
-          <span class="c-mid">中間價</span>
-          <span class="c-high">連假高點</span>
-          <span style="color:var(--sea)">★ 建議出發</span>
+          <span class="c-low">平日谷底</span><span class="c-mid">中間價</span>
+          <span class="c-high">連假高點</span><span style="color:var(--sea)">★ 本行程</span>
         </div>
       </div>
 
@@ -791,624 +698,370 @@ footer a{ font-size:.8125rem; }
         <div class="window top">
           <span class="rank" style="background:var(--cheap-soft);color:var(--cheap)">1</span>
           <div>
-            <h4>10/16 五 → 10/18 日｜全月最便宜</h4>
-            <p>兩段連假的正中央，需求最低。三天兩夜只要請週五一天假。廉航來回估 NT$7,000–9,500／人。
-            如果她那週的班能排成「週四晚上休」，就能搭 07:00 虎航，Day 1 中午就開始玩。</p>
+            <h4>10/16 五 → 10/19 一　<span class="tag sea">本頁採用</span></h4>
+            <p>票價谷底週。關鍵在 <strong>Day 3 落在週日</strong>——唐戶市場的壽司市集只有週五、六、日與假日才擺，
+            週日 08:00 就開始。要吃到這個，日期必須這樣排。</p>
           </div>
         </div>
         <div class="window top">
-          <span class="rank" style="background:var(--mid-soft);color:var(--mid)">2</span>
+          <span class="rank" style="background:var(--cheap-soft);color:var(--cheap)">2</span>
           <div>
-            <h4>10/24 六 → 10/26 一｜零請假＋一年兩次的光之道</h4>
-            <p>光復節連假，三天兩夜不用請假。同時撞上宮地嶽神社「光の道」的十月檔（每年十月中下旬，
-            確切日期由神社公告）和糸島牡蠣小屋開季。票價高三成，但拿到的東西也最多。</p>
+            <h4>10/13 二 → 10/16 五　純平日最省</h4>
+            <p>四天全平日，十月最便宜的組合。代價是遇不到唐戶市場的壽司市集，Day 3 要改市區行程。</p>
           </div>
         </div>
         <div class="window">
-          <span class="rank" style="background:var(--surface-2);color:var(--ink-3)">3</span>
+          <span class="rank" style="background:var(--mid-soft);color:var(--mid)">3</span>
           <div>
-            <h4>10/2 五 → 10/4 日｜中秋連假剛結束的反差週</h4>
-            <p>大家剛放完假，需求瞬間掉下來，票價通常也很低。缺點是離現在最近，好位子可能已經被掃走。</p>
-          </div>
-        </div>
-        <div class="window">
-          <span class="rank" style="background:var(--peak-soft);color:var(--peak)">✗</span>
-          <div>
-            <h4>10/9 五 → 10/12 一｜國慶連假，最不划算</h4>
-            <p>只要請一天假就有四天，聽起來很甜——但這是十月機票最貴的一段，而且飯店同步漲價。
-            省下來的一天假，會用兩三倍的錢買回來。</p>
+            <h4>10/20 二 → 10/23 五　十月下旬限定</h4>
+            <p>平日票價，加上兩個一年只有這時候的東西：<strong>宮地嶽神社「光の道」</strong>與
+            <strong>糸島牡蠣小屋開季</strong>。有租車的話這檔最值得。</p>
           </div>
         </div>
       </div>
     </div>
-
-    <div class="note" style="margin-top:1.5rem">
-      <span class="k">訂票節奏</span>
-      <div>十月的票<strong>建議提前 6–10 週訂</strong>（也就是現在到九月初）。廉航促銷通常在半夜開賣、開賣後 24 小時內最便宜；
-      傳統航空則是離出發 4–8 週時價格最平穩。設 Google Flights 的價格通知，跌到目標價再下手。</div>
-    </div>
   </div>
 </section>
 
-<!-- ══════════ 住宿 ══════════ -->
 <section id="stay">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">04 — 住哪裡</p>
-      <h2>要有廚房，因為宵夜才是重點</h2>
-      <p>
-        夜班的胃是凌晨才醒的。日本超市晚上 19:00 之後生魚片、壽司會貼 20%–50% 的折扣標籤，
-        買回住處煮一鍋味噌湯配半額刺身丼——這頓宵夜比很多正餐好吃，而且兩人加起來不到 ¥1,000。
-        所以住宿的第一條件不是漂亮，是<strong>有 IH 爐、微波爐、冰箱</strong>。
-      </p>
+      <p class="eyebrow">住宿</p>
+      <h2>三晚，要有廚房</h2>
+      <p>日本超市 19:00 後生魚片、壽司貼 20%–50% 折扣標籤。買回住處煮鍋味噌湯配半額刺身丼，兩人不到 ¥1,000——這是這趟最好吃也最便宜的一餐。</p>
     </div>
-
     <div class="scroller">
       <table>
-        <thead><tr><th>選項</th><th>位置</th><th>每晚（兩人）</th><th>廚房</th><th>適合誰</th></tr></thead>
+        <thead><tr><th>選項</th><th>位置</th><th>每晚（兩人）</th><th>三晚合計</th><th>廚房</th></tr></thead>
         <tbody>
-          <tr>
-            <td><strong>民泊 / Airbnb 1LDK</strong></td>
-            <td>祇園、中洲川端、吳服町</td>
-            <td class="num">¥6,000–9,000<br><small style="color:var(--ink-3)">連假 ¥12,000–18,000</small></td>
-            <td><span class="pill ok">完整廚房＋洗衣機</span></td>
-            <td>本次首選。走路到中洲屋台 5–10 分、到博多站 10–15 分</td>
-          </tr>
-          <tr>
-            <td><strong>民泊 / Airbnb</strong></td>
-            <td>藥院、渡邊通</td>
-            <td class="num">¥5,500–8,500</td>
-            <td><span class="pill ok">完整廚房</span></td>
-            <td>安靜、超市多、地鐵七隈線 3 分到天神。想睡好覺選這區</td>
-          </tr>
-          <tr>
-            <td><strong>東急 STAY 福岡天神</strong></td>
-            <td>天神南站走 5 分</td>
-            <td class="num">¥13,000–18,000</td>
-            <td><span class="pill sea">房內廚具、微波爐、冰箱、洗脫烘</span></td>
-            <td>不想賭民泊品質時的安全牌，位置在天神與中洲之間</td>
-          </tr>
-          <tr>
-            <td><strong>lyf 天神福岡</strong></td>
-            <td>天神南 / 渡邊通之間</td>
-            <td class="num">¥8,000–13,000</td>
-            <td><span class="pill mid">公共廚房、洗衣房</span></td>
-            <td>價格與飯店品質的折衷，共享公寓形式</td>
-          </tr>
+          <tr><td><strong>民泊 / Airbnb 1LDK</strong> <span class="pill sea">建議</span></td>
+            <td>祇園、中洲川端、吳服町 <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=祇園駅福岡" target="_blank" rel="noopener">地圖</a></td>
+            <td class="num">¥6,000–8,500</td><td class="num">¥18,000–25,500<br><small style="color:var(--ink-3)">≈ NT$3,800–5,400</small></td>
+            <td><span class="pill ok">完整廚房＋洗衣機</span></td></tr>
+          <tr><td><strong>民泊 / Airbnb</strong></td>
+            <td>藥院、渡邊通 <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=薬院駅" target="_blank" rel="noopener">地圖</a></td>
+            <td class="num">¥5,500–8,000</td><td class="num">¥16,500–24,000</td>
+            <td><span class="pill ok">完整廚房</span></td></tr>
+          <tr><td><strong>lyf 天神福岡</strong></td>
+            <td>天神南 <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=lyf天神福岡" target="_blank" rel="noopener">地圖</a></td>
+            <td class="num">¥8,000–13,000</td><td class="num">¥24,000–39,000</td>
+            <td><span class="pill mid">公共廚房、洗衣房</span></td></tr>
+          <tr><td><strong>東急 STAY 福岡天神</strong></td>
+            <td>天神南站走 5 分 <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=東急ステイ福岡天神" target="_blank" rel="noopener">地圖</a></td>
+            <td class="num">¥13,000–18,000</td><td class="num">¥39,000–54,000</td>
+            <td><span class="pill sea">房內廚具、洗脫烘</span></td></tr>
         </tbody>
       </table>
     </div>
-
-    <div style="display:grid;gap:.85rem;margin-top:1.25rem">
-      <div class="note">
-        <span class="k">訂房檢查</span>
-        <div>日本合法民泊必須揭示「住宅宿泊事業」登錄編號，訂之前先在頁面找一下。
-        設備欄要確認有 <strong>IHコンロ（電磁爐）／電子レンジ（微波爐）／冷蔵庫／洗濯機</strong>，
-        並看清楚是否寫「自炊可」。再確認<strong>入住時間</strong>——Day 1 大約 20:50 才會到，
-        很多民泊自助入住沒問題，但有些會限 22:00 前。</div>
-      </div>
-      <div class="note warn">
-        <span class="k">別住這裡</span>
-        <div>中洲的<strong>正中心</strong>（春吉、中洲三丁目一帶）晚上是酒店街，招攬拉客多、噪音大，
-        對想好好睡覺的人不友善。訂在中洲<em>川端側</em>或祇園、吳服町，一樣走得到屋台，但安靜很多。</div>
-      </div>
+    <div class="note" style="margin-top:1.15rem">
+      <span class="k">訂房重點</span>
+      <div>設備要有 <strong>IHコンロ／電子レンジ／冷蔵庫／洗濯機</strong>，並確認寫了「自炊可」與合法民泊的「住宅宿泊事業」登錄編號。
+      避開中洲正中心（春吉一帶是酒店街，夜間吵雜）。</div>
     </div>
   </div>
 </section>
 
-<!-- ══════════ 行程 ══════════ -->
 <section id="plan">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">05 — 三天兩夜</p>
-      <h2>一天一個主場，其他都是空白</h2>
-      <p>
-        每一天只安排一個非去不可的地方，其餘時間留給走路、坐下來、回房間睡覺。
-        排太滿的行程對輪班的人特別傷——與其三天塞十個景點，不如把三個地方好好待著，
-        剩下的留給下一趟（反正機票不貴，可以來第二次、第三次）。
-      </p>
+      <p class="eyebrow">每日行程</p>
+      <h2>逐時安排</h2>
+      <p>每個地點都附 Google 地圖連結，點了直接跳轉導航。</p>
     </div>
 
     <div class="daytabs" role="tablist" aria-label="行程日期">
-      <button class="daytab" role="tab" id="tab-d1" aria-controls="d1" aria-selected="true"><b>Day 1</b>抵達．屋台夜</button>
-      <button class="daytab" role="tab" id="tab-d2" aria-controls="d2" aria-selected="false"><b>Day 2</b>魚市場．發光的神社</button>
-      <button class="daytab" role="tab" id="tab-d3" aria-controls="d3" aria-selected="false"><b>Day 3</b>太宰府．回家</button>
+      <button class="daytab" role="tab" id="tab-d1" aria-controls="d1" aria-selected="true"><b>Day 1 · 10/16 五</b>抵達．屋台夜</button>
+      <button class="daytab" role="tab" id="tab-d2" aria-controls="d2" aria-selected="false"><b>Day 2 · 10/17 六</b>魚市場．發光的神社</button>
+      <button class="daytab" role="tab" id="tab-d3" aria-controls="d3" aria-selected="false"><b>Day 3 · 10/18 日</b>唐戶市場．關門海峽</button>
+      <button class="daytab" role="tab" id="tab-d4" aria-controls="d4" aria-selected="false"><b>Day 4 · 10/19 一</b>太宰府．回家</button>
     </div>
 
-    <!-- ── DAY 1 ── -->
     <div class="tabpanel" id="d1" role="tabpanel" aria-labelledby="tab-d1">
-      <div class="dayhead">
-        <h3>Day 1｜抵達．屋台夜</h3>
-        <span class="tag lan">今日主場：中洲屋台街</span>
-        <p>這天什麼都不排。她剛下夜班，先補眠、再上飛機、落地直接去吃屋台。
-        對夜班的人來說，晚上 21:00 才開始的一天反而剛剛好。</p>
-      </div>
-
+      <div class="dayhead"><h3>Day 1｜抵達．屋台夜</h3><span class="tag lan">主場：中洲屋台街</span></div>
       <div class="tl">
-        <div class="ev" data-k="rest">
-          <div class="ev-time">08:00</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>她下班 → 回家補眠</h4><span class="tag">關鍵</span></div>
-            <p>回到板橋約 09:00，睡到 13:00。四小時不多，但足夠撐過飛行與第一晚。</p>
-          </div>
-        </div>
+        <div class="ev" data-k="move"><div class="ev-time">08:00</div><div class="ev-body">
+          <div class="ev-title"><h4>下班 → 直奔桃園機場</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=桃園國際機場第一航廈" target="_blank" rel="noopener">地圖</a></div>
+          <p>板橋轉運站直達客運約 50–60 分；或捷運到台北車站轉機捷直達車 36 分。</p>
+          <div class="ev-cost"><span>客運 <b>NT$90</b></span><span>機捷 <b>NT$150</b></span></div>
+        </div></div>
 
-        <div class="ev" data-k="move">
-          <div class="ev-time">13:20</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>板橋 → 桃園機場</h4></div>
-            <p>板橋轉運站有直達機場的國道客運，約 50–60 分；或搭捷運到台北車站轉機場捷運直達車 36 分。</p>
-            <div class="ev-cost"><span>客運 <b>NT$90</b></span><span>或 機捷 <b>NT$150</b></span></div>
-          </div>
-        </div>
+        <div class="ev" data-k="move"><div class="ev-time">11:55</div><div class="ev-body">
+          <div class="ev-title"><h4>AK1510 起飛 → 15:15 抵達福岡</h4><span class="tag sea">2h20m</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=福岡空港国際線ターミナル" target="_blank" rel="noopener">地圖</a></div>
+          <p>機上補眠兩小時。</p>
+        </div></div>
 
-        <div class="ev" data-k="move">
-          <div class="ev-time">16:25</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>CI116 起飛 → 19:35 抵達福岡</h4><span class="tag sea">2h10m</span></div>
-            <p>上機就睡。福岡機場入境約需 30 分鐘。</p>
-          </div>
-        </div>
+        <div class="ev" data-k="move"><div class="ev-time">15:50</div><div class="ev-body">
+          <div class="ev-title"><h4>國際線 → 國內線 → 地鐵進市區</h4></div>
+          <p>地鐵站在<strong>國內線</strong>航廈，先搭免費接駁巴士（國際線 5 號站牌，10–15 分）。地鐵到博多 5 分、天神 11 分。</p>
+          <div class="ev-cost"><span>接駁車 <b>免費</b></span><span>地鐵 <b>¥260</b>／人</span></div>
+        </div></div>
 
-        <div class="ev" data-k="move">
-          <div class="ev-time">20:15</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>國際線 → 國內線 → 地鐵進市區</h4></div>
-            <p>地鐵站在<strong>國內線</strong>航廈，要先搭免費接駁巴士（國際線 5 號站牌，10–15 分，5–6 分一班）。
-            接著地鐵空港線：到博多 5 分、到天神 11 分。</p>
-            <div class="ev-cost"><span>接駁車 <b>免費</b></span><span>地鐵 <b>¥260</b>／人</span></div>
-          </div>
-        </div>
+        <div class="ev" data-k="rest"><div class="ev-time">16:40</div><div class="ev-body">
+          <div class="ev-title"><h4>入住 → 小睡 90 分鐘</h4></div>
+          <p>設鬧鐘睡到 18:30，晚上才有體力待到半夜。</p>
+        </div></div>
 
-        <div class="ev" data-k="rest">
-          <div class="ev-time">20:50</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>入住．放行李</h4></div>
-            <p>祇園或中洲川端，走出地鐵站就到。只放行李，不要坐下來——坐下就爬不起來了。</p>
-          </div>
-        </div>
+        <div class="ev" data-k="play"><div class="ev-time">18:45</div><div class="ev-body">
+          <div class="ev-title"><h4>櫛田神社</h4><span class="tag free">免費</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=櫛田神社福岡" target="_blank" rel="noopener">地圖</a></div>
+          <p>博多的總鎮守、山笠祭起點，境內常年立著一台巨大飾山笠。傍晚幾乎沒有觀光客。</p>
+        </div></div>
 
-        <div class="ev" data-k="night">
-          <div class="ev-time">21:15</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>中洲屋台街</h4><span class="tag lan">今日主場</span></div>
-            <p>那珂川畔一整排燈籠，18:00 開始擺攤，賣到半夜。<strong>兩人合點 3–4 樣</strong>就好——
-            明太子玉子燒、餃子、串燒、一碗豚骨拉麵分著吃，她食量小，這樣的量剛剛好。
-            屋台的規矩是每人至少點一杯飲料＋一道菜，坐下前先看價目表。</p>
-            <div class="ev-cost"><span>玉子燒 <b>¥600–800</b></span><span>餃子 <b>¥500–700</b></span><span>拉麵 <b>¥800–1,000</b></span><span>串燒 <b>¥150–250</b>／串</span><span>烏龍茶 <b>¥300</b></span><span>生啤 <b>¥800</b></span></div>
-            <div class="ev-cost"><span>合計約 <b>¥2,500–3,500</b>／人</span></div>
-          </div>
-        </div>
+        <div class="ev" data-k="play"><div class="ev-time">19:20</div><div class="ev-body">
+          <div class="ev-title"><h4>川端商店街</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=川端商店街" target="_blank" rel="noopener">地圖</a></div>
+          <p>有頂棚的老商店街，走到底就是中洲。</p>
+        </div></div>
 
-        <div class="ev" data-k="night">
-          <div class="ev-time">22:45</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>那珂川夜散步</h4><span class="tag free">免費</span></div>
-            <p>從屋台走到福博邂逅之橋，河對岸是運河城的燈。十分鐘的路，消化一下再回去。</p>
-          </div>
-        </div>
+        <div class="ev" data-k="night"><div class="ev-time">20:00</div><div class="ev-body">
+          <div class="ev-title"><h4>中洲屋台街</h4><span class="tag lan">主場</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=中洲屋台" target="_blank" rel="noopener">地圖</a></div>
+          <p>那珂川畔一整排燈籠，18:00 擺到半夜。<strong>兩人合點 3–4 樣</strong>：明太子玉子燒、餃子、串燒、一碗拉麵分著吃。
+          屋台規矩：每人至少一飲一菜，坐下前先看價目表。</p>
+          <div class="ev-cost"><span>玉子燒 <b>¥600–800</b></span><span>餃子 <b>¥500–700</b></span><span>拉麵 <b>¥800–1,000</b></span><span>串燒 <b>¥150–250</b></span><span>兩人 <b>¥5,000–6,000</b></span></div>
+        </div></div>
 
-        <div class="ev" data-k="night">
-          <div class="ev-time">23:30</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>超市補貨：明天的早餐與今晚的宵夜</h4><span class="tag sea">省錢關鍵</span></div>
-            <p>MEGA ドン・キホーテ 福岡天神本店 24 小時營業。這個時間生鮮區的<strong>半額シール（半價標籤）</strong>已經貼滿：
-            刺身拼盤、握壽司、天婦羅通常打到 3–5 折。順手買味噌湯包、白飯、雞蛋、牛奶。</p>
-            <div class="ev-cost"><span>半額刺身 <b>¥400–700</b></span><span>味噌湯包 <b>¥200</b></span><span>白飯 <b>¥150</b></span><span>早餐材料 <b>¥600</b></span></div>
-          </div>
-        </div>
+        <div class="ev" data-k="night"><div class="ev-time">22:00</div><div class="ev-body">
+          <div class="ev-title"><h4>福博邂逅之橋．那珂川夜景</h4><span class="tag free">免費</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=福博であい橋" target="_blank" rel="noopener">地圖</a></div>
+          <p>河對岸是運河城的燈。十分鐘的路。</p>
+        </div></div>
 
-        <div class="ev" data-k="night">
-          <div class="ev-time">00:30</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>住處宵夜：熱味噌湯配半額刺身丼</h4></div>
-            <p>這是整趟最便宜也最舒服的一餐。兩人加起來大概 ¥800，而且是在自己的房間、穿睡衣吃。</p>
-            <div class="ev-cost"><span>兩人合計 <b>約 ¥800</b></span></div>
-          </div>
-        </div>
+        <div class="ev" data-k="night"><div class="ev-time">23:00</div><div class="ev-body">
+          <div class="ev-title"><h4>MEGA 唐吉訶德 天神本店（24H）</h4><span class="tag sea">半額時段</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=MEGAドンキホーテ福岡天神本店" target="_blank" rel="noopener">地圖</a></div>
+          <p>這個時間生鮮區<strong>半額シール</strong>已貼滿：刺身、握壽司、天婦羅打 3–5 折。順手買味噌湯包、白飯、雞蛋。</p>
+          <div class="ev-cost"><span>半額刺身 <b>¥400–700</b></span><span>味噌湯包 <b>¥200</b></span><span>白飯 <b>¥150</b></span><span>早餐材料 <b>¥600</b></span></div>
+        </div></div>
+
+        <div class="ev" data-k="night"><div class="ev-time">00:00</div><div class="ev-body">
+          <div class="ev-title"><h4>住處宵夜：熱味噌湯配半額刺身丼</h4></div>
+          <div class="ev-cost"><span>兩人 <b>約 ¥800</b></span></div>
+        </div></div>
       </div>
     </div>
 
-    <!-- ── DAY 2 ── -->
     <div class="tabpanel" id="d2" role="tabpanel" aria-labelledby="tab-d2" hidden>
-      <div class="dayhead">
-        <h3>Day 2｜魚市場．發光的神社</h3>
-        <span class="tag sea">今日主場：長浜鮮魚市場</span>
-        <p>唯一一個排滿的日子，但中間硬塞了三小時補眠。早上吃市場、中午睡覺、傍晚看發光的鳥居、晚上吃海鮮。</p>
-      </div>
+      <div class="dayhead"><h3>Day 2｜魚市場．發光的神社</h3><span class="tag sea">主場：長浜鮮魚市場</span></div>
+      <div class="tl">
+        <div class="ev" data-k="play"><div class="ev-time">06:30</div><div class="ev-body">
+          <div class="ev-title"><h4>長浜鮮魚市場「市場會館」</h4><span class="tag sea">主場</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=福岡市鮮魚市場市場会館" target="_blank" rel="noopener">地圖</a></div>
+          <p>七十年歷史的批發魚市，會館一樓一整排小店<strong>清晨六點開門</strong>。漁市自己人吃飯的地方，又便宜又新鮮。</p>
+          <div class="ev-cost"><span>まさ味・特上海鮮丼（9 種含鮪魚、海膽）<b>¥1,050</b></span></div>
+          <div class="ev-cost"><span>一魚一栄・生魚片七種盛 <b>¥1,600</b></span><span>おきよ・最老的定食店，06:00 開</span></div>
+        </div></div>
 
-      <div class="swap" role="group" aria-label="Day 2 版本">
-        <button type="button" data-swap="d2" data-target="d2a" aria-pressed="true">市區版（省錢）</button>
-        <button type="button" data-swap="d2" data-target="d2b" aria-pressed="false">加碼版（下關唐戶市場）</button>
-      </div>
+        <div class="ev" data-k="play"><div class="ev-time">08:00</div><div class="ev-body">
+          <div class="ev-title"><h4>會館頂樓展望廣場</h4><span class="tag free">免費</span></div>
+          <p>幾乎沒人知道的展望台，看得到博多灣與整片漁港。</p>
+        </div></div>
 
-      <div id="d2a" class="tl">
-        <div class="ev" data-k="rest">
-          <div class="ev-time">06:00</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>自然醒</h4><span class="tag">她的生理時鐘</span></div>
-            <p>夜班的身體這時候本來就是清醒的。一般旅客要硬爬起來的時段，你們是順著身體走。</p>
-          </div>
-        </div>
+        <div class="ev" data-k="play"><div class="ev-time">08:40</div><div class="ev-body">
+          <div class="ev-title"><h4>大濠公園</h4><span class="tag free">免費</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=大濠公園" target="_blank" rel="noopener">地圖</a></div>
+          <p>市中心的大湖，繞一圈 2 公里。旁邊接著<a href="https://www.google.com/maps/search/?api=1&amp;query=福岡城跡" target="_blank" rel="noopener">福岡城跡</a>，可走上天守台看市景。</p>
+        </div></div>
 
-        <div class="ev" data-k="play">
-          <div class="ev-time">06:30</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>長浜鮮魚市場「市場會館」</h4><span class="tag sea">今日主場</span></div>
-            <p>1955 年開到現在、七十年歷史的批發魚市，會館一樓是一整排小店，<strong>清晨六點就開門</strong>。
-            這裡不是觀光客的海鮮丼店，是漁市自己人吃飯的地方，所以又便宜又新鮮。</p>
-            <div class="ev-cost">
-              <span>大衆割烹 まさ味・特上海鮮丼（9 種，含鮪魚、海膽）<b>¥1,050</b></span>
-            </div>
-            <div class="ev-cost">
-              <span>味処 一魚一栄・生魚片拼盤（7 種時令）<b>¥1,600</b></span>
-              <span>おきよ・會館最老的定食店，06:00 開</span>
-            </div>
-            <p style="margin-top:.2rem">她食量小的話：<strong>兩人點一份特上海鮮丼＋一份定食</strong>，剩下的胃留給等一下的市場逛食。</p>
-          </div>
-        </div>
+        <div class="ev" data-k="rest"><div class="ev-time">10:30</div><div class="ev-body">
+          <div class="ev-title"><h4>回住處補眠</h4></div>
+          <p>睡到 13:00。有廚房可以隨便煮碗湯，不必為吃飯特地出門。</p>
+        </div></div>
 
-        <div class="ev" data-k="play">
-          <div class="ev-time">08:00</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>會館頂樓展望廣場</h4><span class="tag free">免費</span></div>
-            <p>市場大樓上面有個幾乎沒人知道的展望台，看得到博多灣和整片漁港。早上的光最好。</p>
-          </div>
-        </div>
+        <div class="ev" data-k="play"><div class="ev-time">13:15</div><div class="ev-body">
+          <div class="ev-title"><h4>柳橋連合市場</h4><span class="tag sea">海鮮</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=柳橋連合市場" target="_blank" rel="noopener">地圖</a></div>
+          <p>「博多的廚房」，昭和初年開到現在，主要客人是廚師。明太子、現炸天婦羅、玉子燒，也有鮮魚店直營食堂賣海鮮丼。
+          每樣買一點邊走邊吃。</p>
+          <div class="ev-cost"><span>小份採買 <b>¥800–1,500</b>／人</span></div>
+        </div></div>
 
-        <div class="ev" data-k="play">
-          <div class="ev-time">08:40</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>大濠公園</h4><span class="tag free">免費</span></div>
-            <p>從魚市場走過去約 15 分鐘。市中心的大湖，繞一圈 2 公里，早上都是在地人在慢跑遛狗。
-            旁邊接著就是福岡城跡與舞鶴公園，也是免費的。</p>
-          </div>
-        </div>
+        <div class="ev" data-k="play"><div class="ev-time">15:00</div><div class="ev-body">
+          <div class="ev-title"><h4>天神 · 大名．下午的冰</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=ViTO天神" target="_blank" rel="noopener">ViTO</a>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=天神地下街" target="_blank" rel="noopener">天神地下街</a></div>
+          <p>ViTO 的義式 gelato，季節限定有青蘋果、八女玉露抹茶——甜度比日式甜點低很多。
+          蛋塔在天神地下街與博多阪急 B1 有現烤攤位。</p>
+          <div class="ev-cost"><span>gelato 雙球 <b>¥550–700</b></span><span>蛋塔 <b>¥200–300</b></span></div>
+        </div></div>
 
-        <div class="ev" data-k="rest">
-          <div class="ev-time">10:00</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>回住處補眠</h4><span class="tag">關鍵</span></div>
-            <p><strong>這一格不要省。</strong>睡到 13:00，晚上才有體力玩到半夜。有廚房的好處也在這——
-            起來可以隨便煮碗湯，不用為了吃飯特地出門。</p>
-          </div>
-        </div>
+        <div class="ev" data-k="night"><div class="ev-time">18:00</div><div class="ev-body">
+          <div class="ev-title"><h4>中司孫太郎稲荷神社「賽博神社」</h4><span class="tag lan">會發光</span><span class="tag free">免費</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=中司孫太郎稲荷神社" target="_blank" rel="noopener">地圖</a></div>
+          <p>傍晚六點，參道兩側十座石燈籠<strong>同時點亮</strong>，燈籠上浮出狐狸圖案，鳥居亮起青白色的「奉納」二字，
+          往上走全是朱紅色的光。白天是很普通的稻荷神社，晚上完全變一個世界。</p>
+          <div class="ev-cost"><span>免費</span><span>地鐵大濠公園站或赤坂站走 15 分</span></div>
+        </div></div>
 
-        <div class="ev" data-k="play">
-          <div class="ev-time">13:15</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>柳橋連合市場</h4><span class="tag sea">海鮮</span></div>
-            <p>被叫做「博多的廚房」，昭和初年開到現在，主要客人是餐廳的廚師。
-            天神南站走五分鐘。裡面有明太子、現炸天婦羅、玉子燒，也有鮮魚店直營的食堂賣海鮮丼。
-            <strong>每樣買一點邊走邊吃</strong>，正好適合食量小的人。</p>
-            <div class="ev-cost"><span>試吃、小份採買 <b>¥800–1,500</b>／人</span></div>
-          </div>
-        </div>
+        <div class="ev" data-k="night"><div class="ev-time">19:30</div><div class="ev-body">
+          <div class="ev-title"><h4>天神．海鮮居酒屋</h4><span class="tag sea">海鮮</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=天神海鮮居酒屋" target="_blank" rel="noopener">地圖</a></div>
+          <p>單點制、不吃到飽。兩人合點刺身三種盛＋一道燒物＋一份炸物。
+          在地必點：胡麻鯖魚、烤喉黑、活烏賊生魚片。</p>
+          <div class="ev-cost"><span>刺身三種盛 <b>¥1,500–2,000</b></span><span>胡麻鯖魚 <b>¥900–1,200</b></span><span>兩人 <b>¥4,000–5,000</b></span></div>
+        </div></div>
 
-        <div class="ev" data-k="play">
-          <div class="ev-time">14:40</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>櫛田神社 → 川端商店街</h4><span class="tag free">免費</span></div>
-            <p>博多的總鎮守，山笠祭的起點，境內常年立著一台巨大的飾山笠。出來接上有頂棚的川端商店街，
-            下雨也不怕。商店街裡的「川端善哉廣場」有名的紅豆湯偏甜，可以只看不吃。</p>
-            <div class="ev-cost"><span>神社 <b>免費</b></span><span>博多町家故鄉館（可略）<b>¥200</b></span></div>
-          </div>
-        </div>
-
-        <div class="ev" data-k="play">
-          <div class="ev-time">16:00</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>天神・下午的冰</h4><span class="tag">她的甜點時間</span></div>
-            <p>ViTO 在天神有幾家分店，義式 gelato，季節限定口味像青蘋果、八女玉露抹茶。
-            義式冰淇淋的甜度比日式甜點低很多，怕甜的人吃這個最安全。
-            蛋塔的話，天神地下街與博多阪急 B1 都有現烤攤位。</p>
-            <div class="ev-cost"><span>gelato 雙球 <b>¥550–700</b></span><span>蛋塔 <b>¥200–300</b>／個</span></div>
-          </div>
-        </div>
-
-        <div class="ev" data-k="night">
-          <div class="ev-time">18:00</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>西公園・中司孫太郎稲荷神社</h4><span class="tag lan">會發光的神社</span><span class="tag free">免費</span></div>
-            <p>被福岡人叫做「<strong>賽博神社</strong>」的地方。天一黑，參道兩側十座石燈籠會在傍晚六點<strong>同時點亮</strong>，
-            燈籠上浮出狐狸的圖案與文字，鳥居則亮起青白色的「奉納」二字，往上走全是朱紅色的光。
-            白天看是一座很普通的稻荷神社，晚上完全變一個世界。不用門票，人也不多。</p>
-            <div class="ev-cost"><span>免費</span><span>地鐵大濠公園站或赤坂站走約 15 分</span></div>
-          </div>
-        </div>
-
-        <div class="ev" data-k="night">
-          <div class="ev-time">19:30</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>天神・海鮮居酒屋</h4><span class="tag sea">海鮮</span></div>
-            <p>選單點制的居酒屋，不要吃到飽。<strong>兩人合點一份三種生魚片拼盤＋一道燒物＋一份炸物</strong>，
-            吃不完的份量正好。福岡在地必點：胡麻鯖魚（ごまさば，生鯖魚拌芝麻醬）、烤喉黑、
-            活烏賊生魚片（呼子直送，透明的那種）。</p>
-            <div class="ev-cost"><span>刺身三種盛 <b>¥1,500–2,000</b></span><span>胡麻鯖魚 <b>¥900–1,200</b></span><span>兩人合計 <b>¥4,000–5,500</b></span></div>
-          </div>
-        </div>
-
-        <div class="ev" data-k="night">
-          <div class="ev-time">21:30</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>超市半額巡禮 → 宵夜</h4></div>
-            <p>回程再刷一次超市。今晚換個吃法：買一盒生魚片、一包烏龍麵，回住處煮鍋熱湯麵。</p>
-            <div class="ev-cost"><span>兩人 <b>約 ¥900</b></span></div>
-          </div>
-        </div>
-      </div>
-
-      <div id="d2b" class="tl" hidden>
-        <div class="ev" data-k="move">
-          <div class="ev-time">05:40</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>博多站 → 門司港</h4><span class="tag">JR 鹿兒島本線</span></div>
-            <p>普通／快速直達，約 1 小時 40 分。想快一點可以搭特急或新幹線到小倉再轉，
-            約 40–60 分但單程要 ¥2,330 起。省錢就搭普通車，反正你們這個時間本來就醒著。</p>
-            <div class="ev-cost"><span>普通車單程 <b>¥1,500</b></span></div>
-          </div>
-        </div>
-
-        <div class="ev" data-k="play">
-          <div class="ev-time">07:30</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>門司港懷舊區</h4><span class="tag free">免費</span></div>
-            <p>大正時代的洋樓群，清晨沒有人，海風很涼。走個 20 分鐘就到渡船口。</p>
-          </div>
-        </div>
-
-        <div class="ev" data-k="move">
-          <div class="ev-time">08:00</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>關門汽船 門司港 → 唐戶</h4></div>
-            <p>從九州坐船到本州，只要 5–6 分鐘。從 JR 門司港站走到搭船處 3 分鐘。</p>
-            <div class="ev-cost"><span>單程 <b>¥400</b>／人</span></div>
-          </div>
-        </div>
-
-        <div class="ev" data-k="play">
-          <div class="ev-time">08:15</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>唐戶市場「活跳跳馬關街」</h4><span class="tag sea">今日主場</span></div>
-            <p>被稱為關門地區的廚房。<strong>只有週五、週六、週日與國定假日</strong>才會變成壽司市集——
-            週五、六 10:00–15:00，週日與假日<strong>08:00</strong>就開始。魚販與壽司攤把一貫一貫的握壽司、
-            海鮮丼、河豚料理擺出來，你自己拿盤子挑，挑完找個位子坐下來吃。
-            對愛海鮮又食量小的人來說，這是全九州最理想的吃法：<strong>想吃什麼就拿一貫，不用整份買。</strong></p>
-            <div class="ev-cost"><span>握壽司 <b>¥150–500</b>／貫</span><span>河豚湯 <b>¥300</b></span><span>海鮮丼 <b>¥1,000–1,500</b></span><span>兩人吃飽 <b>¥2,500–3,500</b></span></div>
-          </div>
-        </div>
-
-        <div class="ev" data-k="play">
-          <div class="ev-time">10:00</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>カモンワーフ 海邊</h4></div>
-            <p>市場旁的海濱商場，坐在外面看關門海峽和大橋。河豚天婦羅、現烤海鮮串在這裡吃。</p>
-          </div>
-        </div>
-
-        <div class="ev" data-k="opt">
-          <div class="ev-time">11:00</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>關門人道海底隧道（可選）</h4><span class="tag free">免費</span></div>
-            <p>走路穿過海底，從本州走回九州，單程 15 分鐘、780 公尺，中間地上有縣界標線可以一腳踩兩縣。</p>
-          </div>
-        </div>
-
-        <div class="ev" data-k="play">
-          <div class="ev-time">13:00</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>門司港燒咖哩</h4></div>
-            <p>門司港的名物，焗烤咖哩飯。份量偏大，兩人可以合吃一份再加一份沙拉。</p>
-            <div class="ev-cost"><span><b>¥1,000–1,400</b></span></div>
-          </div>
-        </div>
-
-        <div class="ev" data-k="rest">
-          <div class="ev-time">16:30</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>回到博多，先睡一下</h4><span class="tag">關鍵</span></div>
-            <p>這個版本的移動量大，回來一定要躺平兩小時，晚上才有力氣去屋台。</p>
-          </div>
-        </div>
-
-        <div class="ev" data-k="night">
-          <div class="ev-time">19:30</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>屋台第二回合（換一攤）</h4><span class="tag lan">夜</span></div>
-            <p>Day 1 去中洲，今天換天神或長浜的屋台街。長浜屋台以拉麵為主、天神的攤位種類最雜。</p>
-          </div>
-        </div>
-
-        <div class="ev" data-k="move">
-          <div class="ev-time">—</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>這個版本的交通成本</h4></div>
-            <div class="ev-cost"><span>JR 來回 <b>¥3,000</b></span><span>船 來回 <b>¥800</b></span><span>合計約 <b>¥3,800</b>／人</span></div>
-            <p>比市區版多花約 NT$800／人，換來的是一個「一貫一貫挑壽司」的市集。
-            <strong>只有週五六日與假日才有</strong>，排行程時務必對一下星期幾。</p>
-          </div>
-        </div>
+        <div class="ev" data-k="night"><div class="ev-time">21:30</div><div class="ev-body">
+          <div class="ev-title"><h4>超市半額 → 宵夜烏龍麵</h4></div>
+          <div class="ev-cost"><span>兩人 <b>約 ¥900</b></span></div>
+        </div></div>
       </div>
     </div>
 
-    <!-- ── DAY 3 ── -->
     <div class="tabpanel" id="d3" role="tabpanel" aria-labelledby="tab-d3" hidden>
-      <div class="dayhead">
-        <h3>Day 3｜太宰府．回家</h3>
-        <span class="tag sea">今日主場：太宰府天滿宮</span>
-        <p>回程班機 21:00 才起飛，所以這天是完整的一天。行李寄放好再出門，17:30 前回到機場就行。</p>
+      <div class="dayhead"><h3>Day 3｜唐戶市場．關門海峽</h3><span class="tag sea">主場：活きいき馬関街</span></div>
+      <div class="tl">
+        <div class="ev" data-k="move"><div class="ev-time">06:10</div><div class="ev-body">
+          <div class="ev-title"><h4>博多站 → 門司港</h4><span class="tag">JR 鹿兒島本線</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=博多駅" target="_blank" rel="noopener">地圖</a></div>
+          <p>普通／快速直達，約 1 小時 40 分。</p>
+          <div class="ev-cost"><span>單程 <b>¥1,500</b>／人</span></div>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">07:50</div><div class="ev-body">
+          <div class="ev-title"><h4>門司港懷舊區</h4><span class="tag free">免費</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=門司港レトロ" target="_blank" rel="noopener">地圖</a></div>
+          <p>大正時代的洋樓群，清晨沒有人，海風很涼。走 20 分鐘就到渡船口。</p>
+        </div></div>
+
+        <div class="ev" data-k="move"><div class="ev-time">08:20</div><div class="ev-body">
+          <div class="ev-title"><h4>關門汽船 門司港 → 唐戶</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=関門汽船門司港のりば" target="_blank" rel="noopener">地圖</a></div>
+          <p>從九州坐船到本州，5–6 分鐘。從 JR 門司港站走到搭船處 3 分鐘。</p>
+          <div class="ev-cost"><span>單程 <b>¥400</b>／人</span></div>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">08:35</div><div class="ev-body">
+          <div class="ev-title"><h4>唐戶市場「活きいき馬関街」</h4><span class="tag sea">主場</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=唐戸市場" target="_blank" rel="noopener">地圖</a></div>
+          <p>關門地區的廚房。<strong>只有週五、六、日與國定假日</strong>變成壽司市集——週五六 10:00–15:00，
+          <strong>週日與假日 08:00 就開始</strong>。魚販與壽司攤把一貫一貫的握壽司、海鮮丼、河豚料理擺出來，
+          自己拿盤子挑，挑完找位子坐下吃。<strong>想吃什麼就拿一貫，不用整份買。</strong></p>
+          <div class="ev-cost"><span>握壽司 <b>¥150–500</b>／貫</span><span>河豚湯 <b>¥300</b></span><span>海鮮丼 <b>¥1,000–1,500</b></span><span>兩人 <b>¥5,000–6,000</b></span></div>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">10:30</div><div class="ev-body">
+          <div class="ev-title"><h4>カモンワーフ 海濱商場</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=カモンワーフ" target="_blank" rel="noopener">地圖</a></div>
+          <p>市場旁的海邊，坐著看關門海峽與大橋。河豚天婦羅、現烤海鮮串在這裡吃。</p>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">11:30</div><div class="ev-body">
+          <div class="ev-title"><h4>關門人道海底隧道</h4><span class="tag free">免費</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=関門トンネル人道" target="_blank" rel="noopener">地圖</a></div>
+          <p>走路穿過海底，從本州走回九州，單程 15 分鐘、780 公尺，中間有縣界標線可以一腳踩兩縣。</p>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">13:00</div><div class="ev-body">
+          <div class="ev-title"><h4>門司港燒咖哩</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=門司港焼きカレー" target="_blank" rel="noopener">地圖</a></div>
+          <p>門司港名物，咖哩飯鋪起司與蛋去焗烤。份量偏大，兩人合吃一份再加沙拉。</p>
+          <div class="ev-cost"><span><b>¥1,000–1,400</b></span></div>
+        </div></div>
+
+        <div class="ev" data-k="move"><div class="ev-time">14:30</div><div class="ev-body">
+          <div class="ev-title"><h4>JR 回博多</h4></div>
+          <div class="ev-cost"><span>單程 <b>¥1,500</b>／人</span></div>
+        </div></div>
+
+        <div class="ev" data-k="rest"><div class="ev-time">16:30</div><div class="ev-body">
+          <div class="ev-title"><h4>回住處補眠兩小時</h4></div>
+          <p>今天移動量大，躺平再出門。</p>
+        </div></div>
+
+        <div class="ev" data-k="night"><div class="ev-time">19:00</div><div class="ev-body">
+          <div class="ev-title"><h4>屋台第二回合：天神或長浜</h4><span class="tag lan">夜</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=長浜屋台" target="_blank" rel="noopener">長浜</a>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=天神屋台" target="_blank" rel="noopener">天神</a></div>
+          <p>長浜屋台以拉麵為主、天神的攤位種類最雜。換一條街，氣氛完全不同。</p>
+          <div class="ev-cost"><span>兩人 <b>¥4,000–5,000</b></span></div>
+        </div></div>
+
+        <div class="ev" data-k="night"><div class="ev-time">22:00</div><div class="ev-body">
+          <div class="ev-title"><h4>超市半額 → 宵夜</h4></div>
+          <div class="ev-cost"><span>兩人 <b>約 ¥800</b></span></div>
+        </div></div>
       </div>
+    </div>
 
-      <div class="swap" role="group" aria-label="Day 3 版本">
-        <button type="button" data-swap="d3" data-target="d3a" aria-pressed="true">太宰府版</button>
-        <button type="button" data-swap="d3" data-target="d3b" aria-pressed="false">耍廢版（不出市區）</button>
-      </div>
+    <div class="tabpanel" id="d4" role="tabpanel" aria-labelledby="tab-d4" hidden>
+      <div class="dayhead"><h3>Day 4｜太宰府．回家</h3><span class="tag sea">主場：太宰府天滿宮</span></div>
+      <div class="tl">
+        <div class="ev" data-k="play"><div class="ev-time">07:00</div><div class="ev-body">
+          <div class="ev-title"><h4>住處自炊早餐</h4></div>
+          <div class="ev-cost"><span>兩人 <b>約 ¥500</b></span></div>
+        </div></div>
 
-      <div id="d3a" class="tl">
-        <div class="ev" data-k="play">
-          <div class="ev-time">07:30</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>住處自炊早餐</h4></div>
-            <p>用前一晚買的材料。省下一餐外食，也不用趕。</p>
-            <div class="ev-cost"><span>兩人 <b>約 ¥500</b></span></div>
-          </div>
-        </div>
+        <div class="ev" data-k="move"><div class="ev-time">08:30</div><div class="ev-body">
+          <div class="ev-title"><h4>退房、寄行李</h4></div>
+          <p>民泊多半可寄放到傍晚，訂房時先問。不行的話博多站與天神站都有投幣式置物櫃。</p>
+          <div class="ev-cost"><span>置物櫃 <b>¥400–700</b></span></div>
+        </div></div>
 
-        <div class="ev" data-k="move">
-          <div class="ev-time">09:00</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>退房、寄行李</h4></div>
-            <p>民泊多半可以寄放到傍晚，訂房時先問。不行的話博多站與天神站都有投幣式置物櫃。</p>
-            <div class="ev-cost"><span>置物櫃 <b>¥400–700</b></span></div>
-          </div>
-        </div>
+        <div class="ev" data-k="move"><div class="ev-time">09:00</div><div class="ev-body">
+          <div class="ev-title"><h4>西鐵福岡（天神）→ 太宰府</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=西鉄福岡天神駅" target="_blank" rel="noopener">地圖</a></div>
+          <p>約 25–30 分，途中在西鐵二日市轉車。買「<strong>太宰府散策きっぷ</strong>」含來回車票與梅枝餅兌換券，比分開買划算。</p>
+          <div class="ev-cost"><span>單程 <b>¥420</b>／人</span></div>
+        </div></div>
 
-        <div class="ev" data-k="move">
-          <div class="ev-time">09:40</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>西鐵福岡（天神）→ 太宰府</h4></div>
-            <p>約 25–30 分，途中在西鐵二日市轉車。買「<strong>太宰府散策きっぷ</strong>」比較划算——
-            來回車票加一張梅枝餅兌換券，比分開買便宜。</p>
-            <div class="ev-cost"><span>單程 <b>¥420</b></span><span>散策きっぷ 含來回＋梅枝餅</span></div>
-          </div>
-        </div>
+        <div class="ev" data-k="play"><div class="ev-time">09:40</div><div class="ev-body">
+          <div class="ev-title"><h4>太宰府天滿宮</h4><span class="tag free">本殿免費</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=太宰府天満宮" target="_blank" rel="noopener">地圖</a></div>
+          <p>學問之神菅原道真的總本社，九州參拜人數最多的神社。從車站到本殿的表參道約 400 公尺，兩側全是店。
+          本殿整修期間有一座被草木覆蓋、像漂浮在空中的「臨時本殿」，是這幾年才看得到的樣子。</p>
+          <div class="ev-cost"><span>本殿 <b>免費</b></span><span>寶物殿（可略）<b>¥500</b></span></div>
+        </div></div>
 
-        <div class="ev" data-k="play">
-          <div class="ev-time">10:20</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>太宰府天滿宮</h4><span class="tag free">本殿免費</span></div>
-            <p>學問之神菅原道真的總本社，也是九州參拜人數最多的神社。從車站到本殿的表參道大約 400 公尺，
-            兩側全是店。本殿正在整修期間會有一座「臨時本殿」——被草木覆蓋、像漂浮在空中的森林，
-            是這幾年才看得到的樣子。</p>
-            <div class="ev-cost"><span>本殿 <b>免費</b></span><span>寶物殿（可略）<b>¥500</b></span></div>
-          </div>
-        </div>
+        <div class="ev" data-k="play"><div class="ev-time">10:40</div><div class="ev-body">
+          <div class="ev-title"><h4>梅枝餅 ＋ 隈研吾的星巴克</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=スターバックス太宰府天満宮表参道店" target="_blank" rel="noopener">星巴克</a></div>
+          <p>梅枝餅是現烤的紅豆餡糯米餅，外皮煎得脆、<strong>甜度很低</strong>。參道中段那家星巴克的門面是隈研吾用
+          兩千根木條交錯搭出來的。</p>
+          <div class="ev-cost"><span>梅枝餅 <b>¥150</b>／個</span></div>
+        </div></div>
 
-        <div class="ev" data-k="play">
-          <div class="ev-time">11:10</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>表參道：梅枝餅 ＋ 隈研吾的星巴克</h4></div>
-            <p>梅枝餅是現烤的紅豆餡糯米餅，外皮煎得脆，<strong>甜度很低</strong>，怕甜的人可以放心。
-            一個 ¥150，趁熱吃。參道中段那家星巴克的門面是隈研吾用兩千根木條交錯搭出來的，值得站著看一分鐘。</p>
-            <div class="ev-cost"><span>梅枝餅 <b>¥150</b>／個</span></div>
-          </div>
-        </div>
+        <div class="ev" data-k="play"><div class="ev-time">12:00</div><div class="ev-body">
+          <div class="ev-title"><h4>回天神吃午餐</h4><span class="tag sea">海鮮</span></div>
+          <p>天神地下街或大名巷子裡的定食店。找「海鮮定食」或「刺身定食」，午間定食份量比晚餐小、價格也低。</p>
+          <div class="ev-cost"><span>午間定食 <b>¥1,000–1,500</b>／人</span></div>
+        </div></div>
 
-        <div class="ev" data-k="play">
-          <div class="ev-time">13:00</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>回天神吃午餐</h4><span class="tag sea">海鮮</span></div>
-            <p>天神地下街或大名巷子裡的定食店。海鮮控可以找「海鮮定食」或「刺身定食」，
-            午間定食普遍 ¥1,000–1,500，份量比晚餐小、價格也低，剛好。</p>
-            <div class="ev-cost"><span>午間定食 <b>¥1,000–1,500</b></span></div>
-          </div>
-        </div>
+        <div class="ev" data-k="play"><div class="ev-time">13:10</div><div class="ev-body">
+          <div class="ev-title"><h4>博多阪急 B1 採買</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=博多阪急" target="_blank" rel="noopener">地圖</a></div>
+          <p>伴手禮一次買齊：明太子、通りもん、和菓子。免稅要同一家店累計滿 ¥5,000，帶護照。
+          藥妝零食去 <a href="https://www.google.com/maps/search/?api=1&amp;query=ドンキホーテ博多" target="_blank" rel="noopener">Don Quijote</a> 較便宜。</p>
+        </div></div>
 
-        <div class="ev" data-k="play">
-          <div class="ev-time">14:30</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>最後採買</h4></div>
-            <p>博多阪急 B1 的食品層是伴手禮一次買齊的地方：明太子、通りもん、各種和菓子。
-            要免稅記得同一家店累計滿 ¥5,000，帶護照。藥妝與零食去 Don Quijote 比較便宜。</p>
-          </div>
-        </div>
+        <div class="ev" data-k="move"><div class="ev-time">14:30</div><div class="ev-body">
+          <div class="ev-title"><h4>取行李 → 地鐵到福岡機場</h4></div>
+          <p>博多站到機場國內線 5 分鐘，再搭免費接駁到國際線 10–15 分。15:00 前抵達，從容報到。</p>
+          <div class="ev-cost"><span>地鐵 <b>¥260</b>／人</span></div>
+        </div></div>
 
-        <div class="ev" data-k="move">
-          <div class="ev-time">16:30</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>取行李 → 地鐵到福岡機場</h4></div>
-            <p>博多站到機場國內線 5 分鐘，再搭免費接駁到國際線 10–15 分。國際線報到建議 18:30 前完成。</p>
-            <div class="ev-cost"><span>地鐵 <b>¥260</b></span></div>
-          </div>
-        </div>
-
-        <div class="ev" data-k="move">
-          <div class="ev-time">21:00</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>CI117 起飛 → 22:30 抵桃園 → 約 24:00 到家</h4><span class="tag">回家</span></div>
-            <p>9/29 整天可以睡滿 12 小時，晚上 23:00 上班完全來得及。</p>
-          </div>
-        </div>
-      </div>
-
-      <div id="d3b" class="tl" hidden>
-        <div class="ev" data-k="play">
-          <div class="ev-time">07:30</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>自炊早餐</h4></div>
-            <p>不趕時間的版本。</p>
-          </div>
-        </div>
-        <div class="ev" data-k="play">
-          <div class="ev-time">08:30</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>住吉神社 晨拜</h4><span class="tag free">免費</span></div>
-            <p>日本全國住吉神社的起源之一，就在博多站走路 10 分鐘的地方，早上幾乎沒有人。
-            千年古木、安靜到只聽得到掃地的聲音。</p>
-          </div>
-        </div>
-        <div class="ev" data-k="move">
-          <div class="ev-time">09:30</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>退房、寄行李</h4></div>
-            <div class="ev-cost"><span>置物櫃 <b>¥400–700</b></span></div>
-          </div>
-        </div>
-        <div class="ev" data-k="play">
-          <div class="ev-time">10:00</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>大濠公園 ＋ 福岡城跡</h4><span class="tag free">免費</span></div>
-            <p>租一台湖畔的小船（¥1,000／30 分）或就在草地上躺著。旁邊的福岡城跡可以走上天守台看市景。</p>
-          </div>
-        </div>
-        <div class="ev" data-k="play">
-          <div class="ev-time">12:30</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>柳橋連合市場 或 博多站午餐</h4><span class="tag sea">海鮮</span></div>
-            <p>Day 2 沒吃夠的攤子回頭補齊。</p>
-          </div>
-        </div>
-        <div class="ev" data-k="play">
-          <div class="ev-time">14:30</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>博多站購物（阪急 B1／KITTE／DEITOS）</h4></div>
-            <p>全部集中在同一棟，行李也在這裡，最省事的一種收尾。</p>
-          </div>
-        </div>
-        <div class="ev" data-k="move">
-          <div class="ev-time">17:00</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>地鐵到機場</h4></div>
-            <div class="ev-cost"><span>地鐵 <b>¥260</b></span></div>
-          </div>
-        </div>
-        <div class="ev" data-k="move">
-          <div class="ev-time">21:00</div>
-          <div class="ev-body">
-            <div class="ev-title"><h4>CI117 起飛 → 22:30 抵桃園</h4></div>
-          </div>
-        </div>
+        <div class="ev" data-k="move"><div class="ev-time">17:00</div><div class="ev-body">
+          <div class="ev-title"><h4>AK1511 起飛 → 18:30 抵桃園 → 約 20:00 到家</h4><span class="tag">回家</span></div>
+        </div></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════ 吃什麼 ══════════ -->
 <section id="eat">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">06 — 吃什麼</p>
-      <h2>海鮮為主、份量拆小、甜點挑不甜的</h2>
-      <p>
-        原則有三條：<strong>不吃到飽</strong>（份量壓力大於享受）、<strong>一份兩人分</strong>（單點制的居酒屋和市場攤位最適合）、
-        <strong>甜點選冰品跟低甜度的</strong>。下面每一項都標了價格，可以照預算挑。
-      </p>
+      <p class="eyebrow">必吃</p>
+      <h2>海鮮為主，份量拆小，甜點挑不甜的</h2>
+      <p>不吃到飽、一份兩人分、甜點選冰品與低甜度的。每一項都可點地圖直接導航。</p>
     </div>
 
     <div class="filters" role="group" aria-label="美食篩選">
       <button class="chip" data-filter="all" aria-pressed="true">全部</button>
       <button class="chip" data-filter="sea" aria-pressed="false">海鮮</button>
-      <button class="chip" data-filter="sweet" aria-pressed="false">甜點（不太甜）</button>
+      <button class="chip" data-filter="sweet" aria-pressed="false">甜點</button>
       <button class="chip" data-filter="yatai" aria-pressed="false">屋台</button>
       <button class="chip" data-filter="night" aria-pressed="false">宵夜／自炊</button>
       <button class="chip" data-filter="cheap" aria-pressed="false">¥1,000 以下</button>
@@ -1417,193 +1070,188 @@ footer a{ font-size:.8125rem; }
     <div class="eats" id="eatGrid">
       <article class="card eat" data-tags="sea cheap">
         <h4>特上海鮮丼</h4><span class="jp">大衆割烹 まさ味・長浜市場會館</span>
-        <p>九種海鮮，含黑鮪魚與海膽。漁市自己人吃的價格，中午前去。</p>
-        <div class="row"><span class="tag sea">海鮮</span><span class="tag free">便宜</span><span class="yen">¥1,050</span></div>
+        <p>九種海鮮，含黑鮪魚與海膽。漁市自己人吃的價格。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=福岡市鮮魚市場市場会館" target="_blank" rel="noopener">地圖</a><span class="tag sea">海鮮</span><span class="yen">¥1,050</span></div>
       </article>
-
       <article class="card eat" data-tags="sea">
         <h4>時令生魚片七種盛</h4><span class="jp">味処 一魚一栄・長浜市場會館</span>
         <p>當日進的七種魚，含鮪魚與鯛魚。兩人分一份剛好。</p>
-        <div class="row"><span class="tag sea">海鮮</span><span class="yen">¥1,600</span></div>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=福岡市鮮魚市場市場会館" target="_blank" rel="noopener">地圖</a><span class="tag sea">海鮮</span><span class="yen">¥1,600</span></div>
       </article>
-
       <article class="card eat" data-tags="sea cheap">
         <h4>一貫一貫挑的握壽司</h4><span class="jp">唐戶市場・活きいき馬関街</span>
         <p>週五六日與假日限定。想吃什麼拿什麼，不用整份買——食量小的人的天堂。</p>
-        <div class="row"><span class="tag sea">海鮮</span><span class="tag free">便宜</span><span class="yen">¥150–500／貫</span></div>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=唐戸市場" target="_blank" rel="noopener">地圖</a><span class="tag sea">海鮮</span><span class="yen">¥150–500／貫</span></div>
       </article>
-
       <article class="card eat" data-tags="sea cheap">
         <h4>河豚湯・河豚壽司</h4><span class="jp">ふぐ・唐戶市場</span>
-        <p>下關是日本河豚的集散地，市場裡的河豚湯一碗才 ¥300。</p>
-        <div class="row"><span class="tag sea">海鮮</span><span class="tag free">便宜</span><span class="yen">¥300 起</span></div>
+        <p>下關是日本河豚的集散地，市場裡的河豚湯一碗 ¥300。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=唐戸市場" target="_blank" rel="noopener">地圖</a><span class="tag sea">海鮮</span><span class="yen">¥300 起</span></div>
       </article>
-
       <article class="card eat" data-tags="sea cheap">
         <h4>胡麻鯖魚</h4><span class="jp">ごまさば</span>
-        <p>福岡限定吃法：生鯖魚拌芝麻醬油，配白飯或直接下酒。外地吃不到這麼新鮮的。</p>
-        <div class="row"><span class="tag sea">海鮮</span><span class="yen">¥900–1,200</span></div>
+        <p>福岡限定吃法：生鯖魚拌芝麻醬油。外地吃不到這麼新鮮的。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=ごまさば福岡" target="_blank" rel="noopener">地圖</a><span class="tag sea">海鮮</span><span class="yen">¥900–1,200</span></div>
       </article>
-
       <article class="card eat" data-tags="sea">
         <h4>活烏賊生魚片</h4><span class="jp">呼子のイカ活き造り</span>
         <p>透明的、還會動的那種。單價高，兩人合點一份當主菜。</p>
-        <div class="row"><span class="tag sea">海鮮</span><span class="yen">¥2,500–3,500</span></div>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=河太郎中洲本店" target="_blank" rel="noopener">地圖</a><span class="tag sea">海鮮</span><span class="yen">¥2,500–3,500</span></div>
       </article>
-
-      <article class="card eat" data-tags="sea">
-        <h4>現烤牡蠣（十月下旬起）</h4><span class="jp">糸島の牡蠣小屋</span>
-        <p>漁港旁的鐵皮小屋自己烤。1 公斤約 ¥1,300 再加炭火費 ¥220–550。要開車去。</p>
-        <div class="row"><span class="tag sea">海鮮</span><span class="tag">需自駕</span><span class="yen">¥1,300／kg</span></div>
-      </article>
-
       <article class="card eat" data-tags="yatai">
         <h4>明太子玉子燒</h4><span class="jp">明太子入り卵焼き・屋台</span>
-        <p>屋台的招牌之一，熱騰騰切開會流出明太子。兩人分一份剛好。</p>
-        <div class="row"><span class="tag lan">屋台</span><span class="yen">¥600–800</span></div>
+        <p>屋台招牌，熱騰騰切開會流出明太子。兩人分一份剛好。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=中洲屋台" target="_blank" rel="noopener">地圖</a><span class="tag lan">屋台</span><span class="yen">¥600–800</span></div>
       </article>
-
       <article class="card eat" data-tags="yatai cheap">
         <h4>博多豚骨拉麵</h4><span class="jp">とんこつラーメン</span>
-        <p>屋台版的偏濃。麵量少、可以「替玉」加麵，食量小的人點一碗兩人分也行。</p>
-        <div class="row"><span class="tag lan">屋台</span><span class="tag free">便宜</span><span class="yen">¥800–1,000</span></div>
+        <p>屋台版偏濃。麵量少、可「替玉」加麵，點一碗兩人分也行。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=長浜屋台" target="_blank" rel="noopener">地圖</a><span class="tag lan">屋台</span><span class="yen">¥800–1,000</span></div>
       </article>
-
       <article class="card eat" data-tags="yatai cheap">
         <h4>博多一口餃子</h4><span class="jp">一口餃子</span>
         <p>比台灣的小一半，一份 8–10 顆。屋台幾乎每攤都有。</p>
-        <div class="row"><span class="tag lan">屋台</span><span class="tag free">便宜</span><span class="yen">¥500–700</span></div>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=中洲屋台" target="_blank" rel="noopener">地圖</a><span class="tag lan">屋台</span><span class="yen">¥500–700</span></div>
       </article>
-
       <article class="card eat" data-tags="yatai cheap">
         <h4>串燒・燒鳥</h4><span class="jp">焼き鳥</span>
-        <p>一串一串點，最適合控制份量。福岡特有的「豚バラ」（五花肉串）必點。</p>
-        <div class="row"><span class="tag lan">屋台</span><span class="tag free">便宜</span><span class="yen">¥150–250／串</span></div>
+        <p>一串一串點，最好控制份量。福岡特有的「豚バラ」五花肉串必點。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=天神屋台" target="_blank" rel="noopener">地圖</a><span class="tag lan">屋台</span><span class="yen">¥150–250／串</span></div>
       </article>
-
       <article class="card eat" data-tags="sweet">
         <h4>義式冰淇淋</h4><span class="jp">ViTO・天神</span>
-        <p>季節限定口味有青蘋果、八女玉露抹茶。義式 gelato 甜度低、乳脂少，怕甜的人最安全的選擇。</p>
-        <div class="row"><span class="tag">甜點</span><span class="yen">¥550–700</span></div>
+        <p>季節限定有青蘋果、八女玉露抹茶。甜度比日式甜點低很多。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=ViTO天神" target="_blank" rel="noopener">地圖</a><span class="tag">甜點</span><span class="yen">¥550–700</span></div>
       </article>
-
       <article class="card eat" data-tags="sweet cheap">
         <h4>現烤葡式蛋塔</h4><span class="jp">エッグタルト</span>
-        <p>天神地下街與博多阪急 B1 都有現烤攤位。趁熱吃，外酥內軟。</p>
-        <div class="row"><span class="tag">甜點</span><span class="tag free">便宜</span><span class="yen">¥200–300／個</span></div>
+        <p>天神地下街與博多阪急 B1 都有現烤攤位。趁熱吃。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=博多阪急" target="_blank" rel="noopener">地圖</a><span class="tag">甜點</span><span class="yen">¥200–300／個</span></div>
       </article>
-
       <article class="card eat" data-tags="sweet cheap">
         <h4>梅枝餅</h4><span class="jp">梅ヶ枝餅・太宰府表參道</span>
-        <p>現煎的紅豆餡糯米餅，外皮脆、內餡甜度很低。太宰府的參道上一整排都在賣。</p>
-        <div class="row"><span class="tag">甜點</span><span class="tag free">便宜</span><span class="yen">¥150／個</span></div>
+        <p>現煎的紅豆餡糯米餅，外皮脆、甜度很低。參道上一整排都在賣。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=太宰府天満宮表参道" target="_blank" rel="noopener">地圖</a><span class="tag">甜點</span><span class="yen">¥150／個</span></div>
       </article>
-
       <article class="card eat" data-tags="night cheap sea">
         <h4>超市半額生魚片</h4><span class="jp">半額シールの刺身</span>
-        <p>19:00 後開始貼折扣標籤，越晚折越多。買回住處配熱味噌湯，是這趟最划算的一餐。</p>
-        <div class="row"><span class="tag sea">海鮮</span><span class="tag">宵夜</span><span class="yen">¥400–700</span></div>
+        <p>19:00 後開始貼折扣標籤，越晚折越多。配熱味噌湯，這趟最划算的一餐。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=MEGAドンキホーテ福岡天神本店" target="_blank" rel="noopener">地圖</a><span class="tag sea">海鮮</span><span class="tag">宵夜</span><span class="yen">¥400–700</span></div>
       </article>
-
       <article class="card eat" data-tags="night cheap">
         <h4>自炊烏龍麵鍋</h4><span class="jp">うどん鍋</span>
-        <p>超市的冷凍烏龍麵 ¥100 出頭，加高湯包、蔥、蛋。凌晨三點吃這個最舒服。</p>
+        <p>冷凍烏龍麵 ¥100 出頭，加高湯包、蔥、蛋。凌晨三點吃這個最舒服。</p>
         <div class="row"><span class="tag">宵夜</span><span class="tag free">便宜</span><span class="yen">兩人約 ¥400</span></div>
       </article>
-
       <article class="card eat" data-tags="cheap">
         <h4>市場現炸天婦羅</h4><span class="jp">柳橋連合市場</span>
         <p>一片一片買，邊走邊吃。魚漿類的「丸天」是福岡特色。</p>
-        <div class="row"><span class="tag free">便宜</span><span class="yen">¥300–600</span></div>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=柳橋連合市場" target="_blank" rel="noopener">地圖</a><span class="tag free">便宜</span><span class="yen">¥300–600</span></div>
       </article>
-
       <article class="card eat" data-tags="">
         <h4>門司港燒咖哩</h4><span class="jp">焼きカレー</span>
-        <p>咖哩飯上鋪起司與蛋去焗烤，門司港的名物。份量大，兩人合吃一份。</p>
-        <div class="row"><span class="tag">Day 2 加碼版</span><span class="yen">¥1,000–1,400</span></div>
+        <p>咖哩飯鋪起司與蛋去焗烤。份量大，兩人合吃一份。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=門司港焼きカレー" target="_blank" rel="noopener">地圖</a><span class="tag">Day 3</span><span class="yen">¥1,000–1,400</span></div>
+      </article>
+      <article class="card eat" data-tags="sea">
+        <h4>現烤牡蠣</h4><span class="jp">糸島の牡蠣小屋・10 月下旬起</span>
+        <p>漁港旁的鐵皮小屋自己烤。1 公斤約 ¥1,300 加炭火費 ¥220–550。要開車去。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=岐志漁港牡蠣小屋" target="_blank" rel="noopener">地圖</a><span class="tag sea">海鮮</span><span class="yen">¥1,300／kg</span></div>
       </article>
     </div>
 
     <div class="note" style="margin-top:1.5rem">
       <span class="k">點餐句</span>
-      <div>食量小最好用的一句是「<strong>一つを二人で分けてもいいですか？</strong>」（一份兩人分可以嗎）。
-      日本店家幾乎都會答應，有些會多給一個小盤。居酒屋則直接說「<strong>少なめでお願いします</strong>」（請給少一點）。</div>
+      <div>食量小最好用的一句：「<strong>一つを二人で分けてもいいですか？</strong>」（一份兩人分可以嗎）。
+      居酒屋則說「<strong>少なめでお願いします</strong>」（請給少一點）。</div>
     </div>
   </div>
 </section>
 
-<!-- ══════════ 夜的福岡 ══════════ -->
 <section id="night">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">07 — 夜的福岡</p>
-      <h2>會發光的地方，剛好都在你們醒著的時候</h2>
-      <p>福岡的夜晚不只有屋台。以下按「本次去得到」和「下次再來」分開，多數是免費的。</p>
+      <p class="eyebrow">夜的福岡</p>
+      <h2>會發光的地方，多數免費</h2>
     </div>
-
     <div class="eats">
-      <article class="card eat" data-tags="">
+      <article class="card eat">
         <h4>中司孫太郎稲荷神社「賽博神社」</h4><span class="jp">西公園・福岡市中央區</span>
-        <p>傍晚六點，參道上十座石燈籠同時亮起，燈籠面上浮出狐狸的圖案，鳥居打上青白色的「奉納」二字，
-        整條參道被朱紅色的光照亮。SNS 上被叫做賽博神社的就是這裡。白天完全看不出來。</p>
-        <div class="row"><span class="tag free">免費</span><span class="tag lan">18:00 點燈</span><span class="yen">本次 Day 2</span></div>
+        <p>傍晚六點，參道十座石燈籠同時亮起，燈籠面浮出狐狸圖案，鳥居打上青白色的「奉納」二字，
+        整條參道被朱紅色的光照亮。白天完全看不出來。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=中司孫太郎稲荷神社" target="_blank" rel="noopener">地圖</a><span class="tag free">免費</span><span class="tag lan">18:00 點燈</span><span class="yen">Day 2</span></div>
       </article>
-
-      <article class="card eat" data-tags="">
+      <article class="card eat">
         <h4>愛宕神社</h4><span class="jp">福岡市西區・日本三大愛宕之一</span>
         <p>標高 68 公尺的山頂神社，全日本神社裡最有名的夜景點。看得到福岡塔、巨蛋，
-        還有博多灣上能古島與志賀島的燈。本殿本身也有打燈，停車場就能看。</p>
-        <div class="row"><span class="tag free">免費</span><span class="tag lan">夜景</span><span class="yen">Day 2 替代方案</span></div>
+        還有博多灣上能古島與志賀島的燈。本殿本身也有打燈。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=愛宕神社福岡市西区" target="_blank" rel="noopener">地圖</a><span class="tag free">免費</span><span class="tag lan">夜景</span><span class="yen">Day 2 替代</span></div>
       </article>
-
-      <article class="card eat" data-tags="">
+      <article class="card eat">
         <h4>中洲屋台街</h4><span class="jp">那珂川沿い</span>
-        <p>18:00 擺攤到半夜甚至更晚。河面倒映燈籠的光，是福岡最經典的一張畫面。</p>
-        <div class="row"><span class="tag lan">屋台</span><span class="yen">本次 Day 1</span></div>
+        <p>18:00 擺攤到半夜。河面倒映燈籠的光，福岡最經典的一張畫面。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=中洲屋台" target="_blank" rel="noopener">地圖</a><span class="tag lan">屋台</span><span class="yen">Day 1</span></div>
       </article>
-
-      <article class="card eat" data-tags="">
+      <article class="card eat">
         <h4>福岡塔</h4><span class="jp">高 234m・海濱塔</span>
-        <p>八千面單向玻璃包起來的塔，123 公尺高的展望室，被登錄為「戀人聖地」。
-        塔身燈光會隨季節換。想吹冷氣坐著看夜景的話值得上去。</p>
-        <div class="row"><span class="tag mid">需門票</span><span class="yen">約 ¥800</span></div>
+        <p>八千面單向玻璃包起來的塔，123 公尺高的展望室，被登錄為「戀人聖地」。塔身燈光隨季節變換。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=福岡タワー" target="_blank" rel="noopener">地圖</a><span class="tag mid">需門票</span><span class="yen">約 ¥800</span></div>
       </article>
-
-      <article class="card eat" data-tags="">
+      <article class="card eat">
         <h4>宮地嶽神社「光の道」</h4><span class="jp">福津市・一年只有兩次</span>
         <p>800 公尺長的筆直參道，與落入玄界灘的夕陽連成一直線，整條路變成金色。
-        <strong>只有二月下旬與十月下旬看得到。</strong>一般觀覽席當天發整理券免費，特別祈願席要預約付費。
-        確切日期由神社官網公告。</p>
-        <div class="row"><span class="tag free">免費（需整理券）</span><span class="tag sea">方案 C 才遇得到</span></div>
+        <strong>只有二月下旬與十月下旬</strong>。一般觀覽席當天發整理券免費，特別祈願席要預約付費。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=宮地嶽神社" target="_blank" rel="noopener">地圖</a><span class="tag free">免費（需整理券）</span><span class="yen">10/20 檔期</span></div>
       </article>
-
-      <article class="card eat" data-tags="">
+      <article class="card eat">
         <h4>櫻井二見浦・夫婦岩</h4><span class="jp">糸島市</span>
-        <p>面向玄界灘的兩塊大岩以注連繩相連，前方立著白色的海中鳥居。夕陽落在兩石之間。
-        沒有大眾運輸直達，要開車。</p>
-        <div class="row"><span class="tag free">免費</span><span class="tag">需自駕</span><span class="yen">下一趟</span></div>
+        <p>面向玄界灘的兩塊大岩以注連繩相連，前方立著白色的海中鳥居。夕陽落在兩石之間。需開車。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=桜井二見ヶ浦" target="_blank" rel="noopener">地圖</a><span class="tag free">免費</span><span class="tag">需自駕</span><span class="yen">下一趟</span></div>
       </article>
     </div>
   </div>
 </section>
 
-<!-- ══════════ 花費 ══════════ -->
 <section id="money">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">08 — 花多少</p>
-      <h2>拉一下就知道兩個人要準備多少</h2>
-      <p>下面的數字會即時算。預設是方案 B（十月最低價週）＋廉航＋民泊＋省錢吃法。匯率預設 ¥100 ≈ NT$21。</p>
+      <p class="eyebrow">費用</p>
+      <h2>兩個人，四天三夜，逐項算給你看</h2>
+      <p>以 10/16–10/19、AirAsia 來回、民泊三晚、每日一餐外食一餐自炊為基準。日圓以 ¥100 ≈ NT$21 換算。</p>
+    </div>
+
+    <div class="scroller" style="margin-bottom:1.5rem">
+      <table>
+        <thead><tr><th>項目</th><th>明細</th><th>日圓</th><th>台幣（兩人）</th></tr></thead>
+        <tbody>
+          <tr><td><strong>機票</strong></td><td>AK1510／AK1511 來回含稅　NT$8,000 × 2 人</td><td class="num">—</td><td class="num">16,000</td></tr>
+          <tr><td><strong>託運行李</strong></td><td>20kg 一件兩人共用，來回，訂票時加購</td><td class="num">—</td><td class="num">2,400</td></tr>
+          <tr><td><strong>住宿</strong></td><td>民泊 1LDK　¥7,000 × 3 晚</td><td class="num">21,000</td><td class="num">4,410</td></tr>
+          <tr><td><strong>機場往返</strong></td><td>地鐵 ¥260 × 2 趟 × 2 人（接駁巴士免費）</td><td class="num">1,040</td><td class="num">218</td></tr>
+          <tr><td><strong>市內交通</strong></td><td>四天地鐵、西鐵零星車資　¥1,200 × 2 人</td><td class="num">2,400</td><td class="num">504</td></tr>
+          <tr><td><strong>Day 3 唐戶市場</strong></td><td>JR 博多↔門司港 ¥3,000＋關門汽船 ¥800，× 2 人</td><td class="num">7,600</td><td class="num">1,596</td></tr>
+          <tr><td><strong>Day 4 太宰府</strong></td><td>西鐵天神↔太宰府 ¥840 × 2 人</td><td class="num">1,680</td><td class="num">353</td></tr>
+          <tr><td>餐食 Day 1</td><td>屋台 ¥5,500＋超市採買 ¥1,350</td><td class="num">6,850</td><td class="num">1,439</td></tr>
+          <tr><td>餐食 Day 2</td><td>市場早餐 ¥2,650＋柳橋 ¥2,300＋甜點 ¥1,600＋居酒屋 ¥4,500＋宵夜 ¥900</td><td class="num">11,950</td><td class="num">2,510</td></tr>
+          <tr><td>餐食 Day 3</td><td>唐戶壽司 ¥5,500＋燒咖哩 ¥1,200＋屋台 ¥4,500＋宵夜 ¥800</td><td class="num">12,000</td><td class="num">2,520</td></tr>
+          <tr><td>餐食 Day 4</td><td>自炊早餐 ¥500＋梅枝餅 ¥600＋午餐 ¥2,500</td><td class="num">3,600</td><td class="num">756</td></tr>
+          <tr><td><strong>雜支</strong></td><td>置物櫃、賽錢、小額門票</td><td class="num">1,000</td><td class="num">210</td></tr>
+          <tr><td><strong>eSIM</strong></td><td>NT$300 × 2 人</td><td class="num">—</td><td class="num">600</td></tr>
+          <tr><td><strong>台灣端交通</strong></td><td>板橋↔桃園機場客運　NT$90 × 2 趟 × 2 人</td><td class="num">—</td><td class="num">360</td></tr>
+          <tr style="background:var(--sea-soft)"><td colspan="3"><strong>兩人合計</strong>（不含購物與伴手禮）</td><td class="num"><strong>NT$ 33,876</strong></td></tr>
+          <tr style="background:var(--sea-soft)"><td colspan="3"><strong>每人</strong></td><td class="num"><strong>NT$ 16,938</strong></td></tr>
+        </tbody>
+      </table>
     </div>
 
     <div class="calc">
       <div class="controls">
         <div class="ctl">
           <label for="air">機票 來回含稅／人 <b id="airV">NT$8,000</b></label>
-          <input type="range" id="air" min="6000" max="22000" step="500" value="8000">
+          <input type="range" id="air" min="5000" max="16000" step="250" value="8000">
         </div>
         <div class="ctl">
-          <label for="stay">住宿 每晚（兩人共用一間） <b id="stayV">¥7,000</b></label>
+          <label for="stay">住宿 每晚（兩人一間） <b id="stayV">¥7,000</b></label>
           <input type="range" id="stay" min="4000" max="18000" step="500" value="7000">
         </div>
         <div class="ctl">
@@ -1611,31 +1259,24 @@ footer a{ font-size:.8125rem; }
           <input type="range" id="rate" min="19" max="24" step="0.1" value="21">
         </div>
         <div class="ctl">
-          <label>吃飯的鬆緊度</label>
+          <label>吃飯的鬆緊度（每人每天）</label>
           <div class="seg" id="food">
-            <button type="button" data-v="4000" aria-pressed="true">省 ¥4,000／日</button>
-            <button type="button" data-v="5500" aria-pressed="false">標準 ¥5,500</button>
-            <button type="button" data-v="8000" aria-pressed="false">放鬆 ¥8,000</button>
-          </div>
-        </div>
-        <div class="ctl">
-          <label>Day 2 版本</label>
-          <div class="seg" id="d2cost">
-            <button type="button" data-v="0" aria-pressed="true">市區（長浜魚市場）</button>
-            <button type="button" data-v="3800" aria-pressed="false">加碼（下關唐戶）</button>
+            <button type="button" data-v="4300" aria-pressed="true">照本頁 ¥4,300</button>
+            <button type="button" data-v="6000" aria-pressed="false">寬鬆 ¥6,000</button>
+            <button type="button" data-v="8500" aria-pressed="false">放開吃 ¥8,500</button>
           </div>
         </div>
         <div class="ctl">
           <label>Day 3 版本</label>
           <div class="seg" id="d3cost">
-            <button type="button" data-v="1100" aria-pressed="true">太宰府</button>
-            <button type="button" data-v="300" aria-pressed="false">耍廢版</button>
+            <button type="button" data-v="3800" aria-pressed="true">唐戶市場（+¥3,800／人）</button>
+            <button type="button" data-v="0" aria-pressed="false">留在市區</button>
           </div>
         </div>
         <div class="ctl">
-          <label>廉航加購託運行李（一件 15kg 兩人共用，來回）</label>
+          <label>託運行李（20kg 一件兩人共用，來回）</label>
           <div class="seg" id="bag">
-            <button type="button" data-v="1700" aria-pressed="true">要 +NT$1,700</button>
+            <button type="button" data-v="2400" aria-pressed="true">要 +NT$2,400</button>
             <button type="button" data-v="0" aria-pressed="false">只帶手提</button>
           </div>
         </div>
@@ -1643,108 +1284,82 @@ footer a{ font-size:.8125rem; }
 
       <div class="card bill">
         <div class="line"><span>機票 ×2</span><span id="bAir"></span></div>
-        <div class="line"><span>住宿 2 晚</span><span id="bStay"></span></div>
-        <div class="line"><span>吃 3 天 ×2</span><span id="bFood"></span></div>
+        <div class="line"><span>住宿 3 晚</span><span id="bStay"></span></div>
+        <div class="line"><span>吃 4 天 ×2</span><span id="bFood"></span></div>
         <div class="line"><span>日本境內交通 ×2</span><span id="bTrans"></span></div>
-        <div class="line"><span>Day 2／Day 3 行程 ×2</span><span id="bDays"></span></div>
         <div class="line"><span>台灣往返機場 ×2</span><span id="bTw"></span></div>
-        <div class="line"><span>門票、雜支、eSIM ×2</span><span id="bMisc"></span></div>
+        <div class="line"><span>雜支、eSIM ×2</span><span id="bMisc"></span></div>
         <div class="line"><span>託運行李</span><span id="bBag"></span></div>
         <div class="total"><span>兩人合計</span><b id="bTotal"></b></div>
         <div class="per" id="bPer"></div>
         <p style="font-size:.75rem;color:var(--ink-3);margin-top:.9rem;line-height:1.6">
-          不含購物與伴手禮。機票是依歷史行情估的區間，不是即時報價。
+          不含購物與伴手禮。機票依歷史行情估算，AirAsia 開航促銷曾出現單程含稅 NT$2,990。
         </p>
       </div>
     </div>
 
     <div class="sec-head" style="margin-top:2.5rem;margin-bottom:1.15rem">
-      <p class="eyebrow">怎麼省</p>
-      <h2 style="font-size:1.25rem;font-family:var(--body);font-weight:500">省錢的十件事，按效益排序</h2>
+      <p class="eyebrow">省錢</p>
+      <h2 style="font-size:1.25rem;font-family:var(--body);font-weight:500">五件最有效的事</h2>
     </div>
-
     <div class="scroller">
       <table>
         <thead><tr><th>做法</th><th>細節</th><th>兩人可省</th></tr></thead>
         <tbody>
-          <tr><td><strong>避開連假出發</strong></td><td>9/26 中秋連假 → 改 10/16 那一週，同樣三天兩夜</td><td class="num" style="color:var(--cheap)">NT$14,000+</td></tr>
-          <tr><td><strong>把出發前一晚換成休假</strong></td><td>就能搭 07:00 虎航而不是下午的傳統航空，還多玩半天</td><td class="num" style="color:var(--cheap)">NT$6,000+</td></tr>
-          <tr><td><strong>住有廚房的民泊</strong></td><td>比同區飯店便宜，還省下宵夜與早餐的外食費</td><td class="num" style="color:var(--cheap)">NT$3,000</td></tr>
-          <tr><td><strong>超市半額時段採買</strong></td><td>19:00 後生魚片、壽司打 3–5 折，每天省一餐</td><td class="num" style="color:var(--cheap)">NT$1,800</td></tr>
-          <tr><td><strong>兩人共用一件託運行李</strong></td><td>訂票時就加購最便宜，現場加購貴很多</td><td class="num" style="color:var(--cheap)">NT$1,700</td></tr>
-          <tr><td><strong>不買 JR PASS</strong></td><td>三天兩夜以市區為主，怎麼算都回不了本</td><td class="num" style="color:var(--cheap)">NT$2,000+</td></tr>
-          <tr><td><strong>機場走地鐵不搭計程車</strong></td><td>國際線→國內線接駁免費，地鐵到博多 ¥260／5 分鐘</td><td class="num">NT$1,200</td></tr>
-          <tr><td><strong>先算再買一日券</strong></td><td>地鐵一日券 ¥640，一天搭滿三趟才划算；只搭兩趟就別買</td><td class="num">NT$300</td></tr>
-          <tr><td><strong>免稅集中在同一家店</strong></td><td>同店累計滿 ¥5,000 才免稅，別分散在三四家買</td><td class="num">NT$500</td></tr>
-          <tr><td><strong>景點挑免費的</strong></td><td>大濠公園、福岡城跡、櫛田神社、住吉神社、賽博神社、愛宕神社全免費</td><td class="num">NT$1,000</td></tr>
+          <tr><td><strong>避開連假</strong></td><td>10/16 那週 vs 國慶或光復連假</td><td class="num" style="color:var(--cheap)">NT$10,000+</td></tr>
+          <tr><td><strong>住有廚房的民泊</strong></td><td>比同區飯店便宜，還省下宵夜與早餐外食</td><td class="num" style="color:var(--cheap)">NT$4,500</td></tr>
+          <tr><td><strong>超市半額時段採買</strong></td><td>19:00 後刺身、壽司打 3–5 折，每天省一餐</td><td class="num" style="color:var(--cheap)">NT$2,400</td></tr>
+          <tr><td><strong>兩人共用一件託運行李</strong></td><td>訂票時加購最便宜，機場櫃檯最貴</td><td class="num" style="color:var(--cheap)">NT$2,400</td></tr>
+          <tr><td><strong>不買 JR PASS</strong></td><td>四天以市區為主，單程票逐次買比較划算</td><td class="num" style="color:var(--cheap)">NT$2,000+</td></tr>
         </tbody>
       </table>
     </div>
-
     <div class="note" style="margin-top:1.15rem">
       <span class="k">交通票券</span>
-      <div>
-        地鐵單程 ¥260／一日券 ¥640。<strong>FUKUOKA TOURIST CITY PASS</strong>（外國旅客限定）市內版 ¥2,500、
-        含太宰府版 ¥2,800，可搭地鐵、西鐵巴士、西鐵電車、JR 九州與渡輪。
-        西鐵的「福岡市內 1 日自由乘車券」¥1,200。太宰府建議直接買「太宰府散策きっぷ」，含來回車票與梅枝餅。
-        本行程的算法是<strong>單程票逐次買</strong>，通常比買通票便宜。
-      </div>
+      <div>地鐵單程 ¥260／一日券 ¥640（一天搭三趟以上才划算）。
+      FUKUOKA TOURIST CITY PASS 市內 ¥2,500、含太宰府 ¥2,800（外國旅客限定）。
+      太宰府建議買「太宰府散策きっぷ」，含來回車票與梅枝餅。本行程採<strong>單程票逐次買</strong>，最省。</div>
     </div>
   </div>
 </section>
 
-<!-- ══════════ 出發前 ══════════ -->
 <section id="pack">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">09 — 出發前</p>
-      <h2>打包清單（會自動記住勾選）</h2>
-      <p>九月底福岡白天約 25°C、早晚 18–20°C，十月更涼一點，日夜溫差大。洋蔥式穿搭，薄外套一定要帶。</p>
+      <p class="eyebrow">出發前</p>
+      <h2>打包清單</h2>
+      <p>十月福岡白天約 25°C、早晚 18°C，日夜溫差大。洋蔥式穿搭，薄外套一定要帶。勾選會自動記住。</p>
     </div>
-
     <div class="card pad">
       <div class="checks" id="packlist">
-        <div class="checkgroup">
-          <h4>證件與錢</h4>
-          <ul>
-            <li><label><input type="checkbox"><span>護照（效期 6 個月以上）</span></label></li>
-            <li><label><input type="checkbox"><span>電子機票、住宿訂單截圖（存離線）</span></label></li>
-            <li><label><input type="checkbox"><span>Visit Japan Web 入境與海關 QR</span></label></li>
-            <li><label><input type="checkbox"><span>日圓現金（屋台與市場很多只收現金）</span></label></li>
-            <li><label><input type="checkbox"><span>有海外回饋的信用卡</span></label></li>
-            <li><label><input type="checkbox"><span>台灣駕照＋日文譯本（要租車才需要）</span></label></li>
-          </ul>
-        </div>
-        <div class="checkgroup">
-          <h4>夜班生存包</h4>
-          <ul>
-            <li><label><input type="checkbox"><span>眼罩（白天補眠必備）</span></label></li>
-            <li><label><input type="checkbox"><span>耳塞</span></label></li>
-            <li><label><input type="checkbox"><span>頸枕（下午班機補眠）</span></label></li>
-            <li><label><input type="checkbox"><span>常備藥、腸胃藥</span></label></li>
-            <li><label><input type="checkbox"><span>保溫瓶</span></label></li>
-            <li><label><input type="checkbox"><span>行動電源（10,000mAh 以下可帶上機）</span></label></li>
-          </ul>
-        </div>
-        <div class="checkgroup">
-          <h4>因為有廚房才帶</h4>
-          <ul>
-            <li><label><input type="checkbox"><span>環保購物袋 2 個（日本袋子要錢）</span></label></li>
-            <li><label><input type="checkbox"><span>夾鏈袋（裝生鮮、剩菜）</span></label></li>
-            <li><label><input type="checkbox"><span>台灣帶的調味包、泡麵（吃不慣時的救命符）</span></label></li>
-            <li><label><input type="checkbox"><span>折疊餐具或環保筷</span></label></li>
-          </ul>
-        </div>
-        <div class="checkgroup">
-          <h4>其他</h4>
-          <ul>
-            <li><label><input type="checkbox"><span>薄外套或防風外套（早晚 18°C）</span></label></li>
-            <li><label><input type="checkbox"><span>好走的鞋（一天會走 8–12 公里）</span></label></li>
-            <li><label><input type="checkbox"><span>折疊傘（九月底可能有颱風尾）</span></label></li>
-            <li><label><input type="checkbox"><span>eSIM 或分享器（約 NT$250／人）</span></label></li>
-            <li><label><input type="checkbox"><span>離線地圖、Google 翻譯日文包</span></label></li>
-          </ul>
-        </div>
+        <div class="checkgroup"><h4>證件與錢</h4><ul>
+          <li><label><input type="checkbox"><span>護照（效期 6 個月以上）</span></label></li>
+          <li><label><input type="checkbox"><span>電子機票、住宿訂單截圖（存離線）</span></label></li>
+          <li><label><input type="checkbox"><span>Visit Japan Web 入境與海關 QR</span></label></li>
+          <li><label><input type="checkbox"><span>日圓現金（屋台與市場多為現金）</span></label></li>
+          <li><label><input type="checkbox"><span>有海外回饋的信用卡</span></label></li>
+          <li><label><input type="checkbox"><span>台灣駕照＋日文譯本（租車才需要）</span></label></li>
+        </ul></div>
+        <div class="checkgroup"><h4>機上與補眠</h4><ul>
+          <li><label><input type="checkbox"><span>眼罩</span></label></li>
+          <li><label><input type="checkbox"><span>耳塞</span></label></li>
+          <li><label><input type="checkbox"><span>頸枕</span></label></li>
+          <li><label><input type="checkbox"><span>常備藥、腸胃藥</span></label></li>
+          <li><label><input type="checkbox"><span>行動電源（10,000mAh 以下可上機）</span></label></li>
+        </ul></div>
+        <div class="checkgroup"><h4>因為有廚房</h4><ul>
+          <li><label><input type="checkbox"><span>環保購物袋 2 個（日本袋子要錢）</span></label></li>
+          <li><label><input type="checkbox"><span>夾鏈袋（裝生鮮、剩菜）</span></label></li>
+          <li><label><input type="checkbox"><span>台灣帶的調味包、泡麵</span></label></li>
+          <li><label><input type="checkbox"><span>折疊餐具或環保筷</span></label></li>
+        </ul></div>
+        <div class="checkgroup"><h4>其他</h4><ul>
+          <li><label><input type="checkbox"><span>薄外套或防風外套</span></label></li>
+          <li><label><input type="checkbox"><span>好走的鞋（一天走 8–12 公里）</span></label></li>
+          <li><label><input type="checkbox"><span>折疊傘</span></label></li>
+          <li><label><input type="checkbox"><span>eSIM 或分享器</span></label></li>
+          <li><label><input type="checkbox"><span>離線地圖、Google 翻譯日文包</span></label></li>
+        </ul></div>
       </div>
       <button class="resetbtn" id="resetPack" type="button" style="margin-top:1.15rem">清除所有勾選</button>
     </div>
@@ -1768,58 +1383,47 @@ footer a{ font-size:.8125rem; }
   </div>
 </section>
 
-<!-- ══════════ 下一趟 ══════════ -->
 <section id="next">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">10 — 下一趟</p>
+      <p class="eyebrow">下一趟</p>
       <h2>這次沒排進去的，留著就好</h2>
-      <p>
-        機票不貴的話，福岡是可以來三四次的城市。這次先把博多市區走熟，
-        下面三條是完全不同主題的路線——尤其第一條，你們有駕照日文譯本，開車就能解鎖一整片海岸線。
-      </p>
+      <p>機票不貴的話，福岡可以來三四次。這次先走熟博多市區，下面三條是完全不同主題的路線。</p>
     </div>
-
     <div class="nexts">
       <article class="card next">
-        <span class="n">02</span>
-        <span class="when">建議 10 月下旬 – 3 月</span>
+        <span class="n">02</span><span class="when">10 月下旬 – 3 月</span>
         <h4>糸島自駕．海岸線一日</h4>
-        <p>從福岡市開車 40–50 分鐘。沒有大眾運輸能好好玩，這是你們的駕照譯本最值得用的一次。</p>
+        <p>從福岡市開車 40–50 分鐘。沒有大眾運輸能好好玩，這是駕照日文譯本最值得用的一次。</p>
         <ul>
-          <li>櫻井二見浦・夫婦岩與海中鳥居（夕陽）</li>
-          <li>PALM BEACH 等海景咖啡廳</li>
-          <li>志摩の四季 直銷市場買現撈海鮮</li>
-          <li>牡蠣小屋現烤（10 月下旬開季，1kg 約 ¥1,300）</li>
-          <li>糸島食堂・特上海鮮丼</li>
-          <li>白糸瀑布、糸島雷神社</li>
+          <li><a href="https://www.google.com/maps/search/?api=1&amp;query=桜井二見ヶ浦" target="_blank" rel="noopener">櫻井二見浦・夫婦岩</a>（夕陽）</li>
+          <li><a href="https://www.google.com/maps/search/?api=1&amp;query=PALM+BEACH糸島" target="_blank" rel="noopener">PALM BEACH</a> 等海景咖啡廳</li>
+          <li><a href="https://www.google.com/maps/search/?api=1&amp;query=志摩の四季" target="_blank" rel="noopener">志摩の四季</a> 直銷市場買現撈海鮮</li>
+          <li><a href="https://www.google.com/maps/search/?api=1&amp;query=岐志漁港牡蠣小屋" target="_blank" rel="noopener">牡蠣小屋</a>現烤（1kg 約 ¥1,300）</li>
+          <li><a href="https://www.google.com/maps/search/?api=1&amp;query=白糸の滝糸島" target="_blank" rel="noopener">白糸瀑布</a></li>
         </ul>
-        <p style="font-size:.8125rem;color:var(--ink-3)">租車輕自動車一日約 ¥5,000–8,000，加油與過路費另計。需備台灣駕照＋日文譯本＋護照。</p>
+        <p style="font-size:.8125rem;color:var(--ink-3)">租車輕自動車一日約 ¥5,000–8,000，加油與過路費另計。需台灣駕照＋日文譯本＋護照。</p>
       </article>
-
       <article class="card next">
-        <span class="n">03</span>
-        <span class="when">建議 11 月 – 2 月</span>
+        <span class="n">03</span><span class="when">11 月 – 2 月</span>
         <h4>由布院・別府．溫泉兩天</h4>
-        <p>從博多搭特急「由布院之森」約 2 小時。天冷的時候來最值得，配上福岡的冬季海鮮。</p>
+        <p>從博多搭特急「由布院之森」約 2 小時。天冷的時候來最值得。</p>
         <ul>
-          <li>由布院金鱗湖與湯之坪街道</li>
-          <li>別府地獄巡禮、砂湯</li>
-          <li>一泊二食的溫泉旅館（也適合睡不好的人）</li>
+          <li><a href="https://www.google.com/maps/search/?api=1&amp;query=金鱗湖" target="_blank" rel="noopener">金鱗湖</a>與湯之坪街道</li>
+          <li><a href="https://www.google.com/maps/search/?api=1&amp;query=別府地獄めぐり" target="_blank" rel="noopener">別府地獄巡禮</a>、砂湯</li>
+          <li>一泊二食的溫泉旅館</li>
           <li>回程順路小倉、門司港</li>
         </ul>
       </article>
-
       <article class="card next">
-        <span class="n">04</span>
-        <span class="when">只有 2 月下旬與 10 月下旬</span>
+        <span class="n">04</span><span class="when">只有 2 月下旬與 10 月下旬</span>
         <h4>光の道．一年兩次的夕陽</h4>
-        <p>宮地嶽神社 800 公尺的參道與落日連成一線。如果這次選了方案 C，就已經在行程裡了。</p>
+        <p>宮地嶽神社 800 公尺的參道與落日連成一線。</p>
         <ul>
-          <li>宮地嶽神社「光の道」（免費整理券／付費特別席）</li>
-          <li>順遊宗像大社（世界遺產）</li>
+          <li><a href="https://www.google.com/maps/search/?api=1&amp;query=宮地嶽神社" target="_blank" rel="noopener">宮地嶽神社</a>「光の道」</li>
+          <li>順遊 <a href="https://www.google.com/maps/search/?api=1&amp;query=宗像大社" target="_blank" rel="noopener">宗像大社</a>（世界遺產）</li>
           <li>福津海岸線</li>
-          <li>停車場下午三點就會滿，要早到</li>
+          <li>停車場下午三點就滿，要早到</li>
         </ul>
       </article>
     </div>
@@ -1832,21 +1436,21 @@ footer a{ font-size:.8125rem; }
   <div class="wrap">
     <div class="cols">
       <div>
-        <h4>這份規劃的前提</h4>
-        <p>兩人同行．女方夜班、出發日 08:00 下班．回台後 9/29 23:00 上班．預算優先．偏好海鮮、食量小、不吃到飽、不愛太甜、可接受冰品與蛋塔．住宿要有簡易廚房．以大眾運輸為主，備有駕照日文譯本可租車．</p>
+        <h4>行程設定</h4>
+        <p>兩人同行．兩人皆排班、不受連假限制．十月平日出發．預算優先．偏好海鮮、食量小、不吃到飽、不愛太甜、喜歡冰品與蛋塔．住宿需簡易廚房．以大眾運輸為主，備有駕照日文譯本可租車。</p>
       </div>
       <div>
         <h4>價格說明</h4>
-        <p>所有金額為估算區間，用來抓預算而非報價。日圓換算以 ¥100 ≈ NT$21 計。機票依歷史行情推估，實際請以航空公司與比價網站當日報價為準。</p>
+        <p>金額為估算，用來抓預算而非報價。日圓以 ¥100 ≈ NT$21 換算。機票依歷史行情推估，實際以航空公司與比價網站當日報價為準。</p>
       </div>
       <div>
-        <h4>訂票前務必再確認</h4>
-        <p>航班時刻表（航空公司官網）、唐戶市場「活きいき馬関街」的營業日、宮地嶽神社「光の道」的公告日期、糸島牡蠣小屋各店開季日、民泊的入住時間與廚房設備。</p>
+        <h4>訂票前再確認</h4>
+        <p>航班時刻（航空公司官網）、唐戶市場「活きいき馬関街」營業日、宮地嶽神社「光の道」公告日期、糸島牡蠣小屋各店開季日、民泊入住時間與廚房設備。</p>
       </div>
     </div>
     <p class="disclaim">
-      本頁為個人旅遊規劃，非商業旅行社行程，不涉及代訂與收費。資料整理自各航空公司班表、福岡市觀光資訊、
-      各景點與市場官方公告及旅遊媒體報導，最後整理於 2026 年 8 月。
+      本頁為個人旅遊規劃，非商業旅行社行程，不涉及代訂與收費。地圖連結導向 Google 地圖搜尋結果，
+      實際店家位置與營業時間請以現場或官方公告為準。資料整理於 2026 年 8 月。
     </p>
   </div>
 </footer>
@@ -1854,22 +1458,17 @@ footer a{ font-size:.8125rem; }
 <script>
 (function(){
   "use strict";
-
-  /* ── 主題 ── */
-  var root = document.documentElement;
-  var saved = null;
+  var root = document.documentElement, saved = null;
   try { saved = localStorage.getItem("fuk-theme"); } catch(e){}
   if (saved) root.setAttribute("data-theme", saved);
   document.getElementById("theme").addEventListener("click", function(){
     var cur = root.getAttribute("data-theme");
-    var isDark = cur ? cur === "dark"
-      : window.matchMedia("(prefers-color-scheme: dark)").matches;
+    var isDark = cur ? cur === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
     var next = isDark ? "light" : "dark";
     root.setAttribute("data-theme", next);
     try { localStorage.setItem("fuk-theme", next); } catch(e){}
   });
 
-  /* ── 行程頁籤 ── */
   var tabs = Array.prototype.slice.call(document.querySelectorAll(".daytab"));
   tabs.forEach(function(tab){
     tab.addEventListener("click", function(){
@@ -1881,20 +1480,6 @@ footer a{ font-size:.8125rem; }
     });
   });
 
-  /* ── 版本切換 ── */
-  Array.prototype.forEach.call(document.querySelectorAll("[data-swap]"), function(btn){
-    btn.addEventListener("click", function(){
-      var group = btn.getAttribute("data-swap");
-      Array.prototype.forEach.call(
-        document.querySelectorAll('[data-swap="' + group + '"]'), function(b){
-          var on = b === btn;
-          b.setAttribute("aria-pressed", on ? "true" : "false");
-          document.getElementById(b.getAttribute("data-target")).hidden = !on;
-        });
-    });
-  });
-
-  /* ── 美食篩選 ── */
   var chips = Array.prototype.slice.call(document.querySelectorAll(".chip"));
   var eats  = Array.prototype.slice.call(document.querySelectorAll("#eatGrid .eat[data-tags]"));
   chips.forEach(function(chip){
@@ -1908,8 +1493,7 @@ footer a{ font-size:.8125rem; }
     });
   });
 
-  /* ── 費用試算 ── */
-  var state = { air:8000, stay:7000, rate:21, food:4000, d2:0, d3:1100, bag:1700 };
+  var state = { air:8000, stay:7000, rate:21, food:4300, d3:3800, bag:2400 };
   var nt = function(n){ return "NT$" + Math.round(n).toLocaleString("en-US"); };
 
   function segInit(id, key){
@@ -1924,47 +1508,42 @@ footer a{ font-size:.8125rem; }
       });
     });
   }
-  segInit("food","food"); segInit("d2cost","d2"); segInit("d3cost","d3"); segInit("bag","bag");
-
+  segInit("food","food"); segInit("d3cost","d3"); segInit("bag","bag");
   [["air","air"],["stay","stay"],["rate","rate"]].forEach(function(pair){
     var el = document.getElementById(pair[0]);
     el.addEventListener("input", function(){ state[pair[1]] = parseFloat(el.value); render(); });
   });
 
   function render(){
-    var r = state.rate / 100;            // 1 日圓 = r 台幣
+    var r = state.rate / 100;
     var air   = state.air * 2;
-    var stay  = state.stay * 2 * r;      // 2 晚
-    var food  = state.food * 3 * 2 * r;  // 3 天 2 人
-    var trans = (520 + 1300) * 2 * r;    // 機場往返 + 市內
-    var days  = (state.d2 + state.d3) * 2 * r;
-    var tw    = 180 * 2;                 // 板橋往返桃園機場
-    var misc  = 700 * 2 * r + 250 * 2;   // 門票雜支 + eSIM
+    var stay  = state.stay * 3 * r;
+    var food  = state.food * 4 * 2 * r;
+    var trans = (520 + 1200 + 840 + state.d3) * 2 * r;
+    var tw    = 90 * 2 * 2;
+    var misc  = 500 * 2 * r + 300 * 2;
     var bag   = state.bag;
-    var total = air + stay + food + trans + days + tw + misc + bag;
+    var total = air + stay + food + trans + tw + misc + bag;
 
     document.getElementById("airV").textContent  = nt(state.air);
     document.getElementById("stayV").textContent = "¥" + state.stay.toLocaleString("en-US");
     document.getElementById("rateV").textContent = "NT$" + state.rate.toFixed(1);
-
     document.getElementById("bAir").textContent   = nt(air);
     document.getElementById("bStay").textContent  = nt(stay);
     document.getElementById("bFood").textContent  = nt(food);
     document.getElementById("bTrans").textContent = nt(trans);
-    document.getElementById("bDays").textContent  = nt(days);
     document.getElementById("bTw").textContent    = nt(tw);
     document.getElementById("bMisc").textContent  = nt(misc);
     document.getElementById("bBag").textContent   = bag ? nt(bag) : "—";
     document.getElementById("bTotal").textContent = nt(total);
     document.getElementById("bPer").textContent   = "每人約 " + nt(total / 2);
     document.getElementById("heroTotal").textContent = Math.round(total).toLocaleString("en-US");
+    document.getElementById("heroPer").textContent   = Math.round(total/2).toLocaleString("en-US");
   }
   render();
 
-  /* ── 打包清單 ── */
   var boxes = Array.prototype.slice.call(document.querySelectorAll("#packlist input"));
-  var KEY = "fuk-pack";
-  var stored = [];
+  var KEY = "fuk-pack", stored = [];
   try { stored = JSON.parse(localStorage.getItem(KEY) || "[]"); } catch(e){}
   boxes.forEach(function(b,i){
     b.checked = !!stored[i];
@@ -1977,7 +1556,6 @@ footer a{ font-size:.8125rem; }
     try { localStorage.removeItem(KEY); } catch(e){}
   });
 
-  /* ── Hero 潮汐 ── */
   var cv = document.getElementById("tide"), ctx = cv.getContext("2d");
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var t = 0, raf;
@@ -1989,16 +1567,14 @@ footer a{ font-size:.8125rem; }
   function stroke(){
     var w = cv.offsetWidth, h = cv.offsetHeight;
     ctx.clearRect(0,0,w,h);
-    var col = getComputedStyle(root).getPropertyValue("--sea").trim();
-    ctx.strokeStyle = col; ctx.lineWidth = 1;
+    ctx.strokeStyle = getComputedStyle(root).getPropertyValue("--sea").trim();
+    ctx.lineWidth = 1;
     for (var k = 0; k < 7; k++){
       ctx.globalAlpha = 0.05 + k * 0.022;
       ctx.beginPath();
       var base = h * (0.42 + k * 0.085);
       for (var x = 0; x <= w; x += 6){
-        var y = base
-          + Math.sin((x / 190) + t + k * 0.55) * (7 + k * 2.2)
-          + Math.sin((x / 67) - t * 0.7) * 2.4;
+        var y = base + Math.sin((x/190) + t + k*0.55) * (7 + k*2.2) + Math.sin((x/67) - t*0.7) * 2.4;
         if (x === 0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
       }
       ctx.stroke();
