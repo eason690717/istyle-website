@@ -564,6 +564,30 @@ footer a{ font-size:.8125rem; }
 .mbar i[data-t="ok"]{ background:var(--mid-soft); color:var(--mid); }
 .mbar i[data-t="bad"]{ background:var(--peak-soft); color:var(--peak); }
 .mbar i[data-t="mid"]{ background:var(--surface-2); color:var(--ink-3); }
+
+/* ── 圖片版位 ─────────────────────────────── */
+.figure{
+  margin:0; border-radius:12px; overflow:hidden; position:relative;
+  border:1px solid var(--line-soft); background:var(--surface-2); box-shadow:var(--shadow);
+}
+.figure > svg, .figure > img{ display:block; width:100%; height:auto; }
+.figure > img{ object-fit:cover; aspect-ratio:20/11; }
+.figbadge{
+  position:absolute; top:.55rem; right:.55rem; z-index:2;
+  font-family:var(--mono); font-size:.5625rem; letter-spacing:.1em; text-transform:uppercase;
+  padding:.15rem .45rem; border-radius:4px;
+  background:color-mix(in srgb, var(--surface) 82%, transparent);
+  color:var(--ink-3); border:1px solid var(--line-soft); backdrop-filter:blur(6px);
+}
+.figcap{
+  padding:.7rem .9rem; font-size:.75rem; line-height:1.6; color:var(--ink-2);
+  background:var(--surface); border-top:1px solid var(--line-soft);
+}
+.figcap b{ color:var(--ink); font-weight:500; }
+.figcap em{ font-style:normal; font-family:var(--mono); font-size:.6875rem; color:var(--sea); }
+.photogrid{ display:grid; gap:.9rem; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); margin:1.25rem 0; }
+.ev-body .figure{ margin-top:.6rem; max-width:min(100%, 34rem); }
+.hero-fig{ margin-top:2rem; }
 </style>
 
 <header class="topbar">
@@ -578,6 +602,7 @@ footer a{ font-size:.8125rem; }
       <a href="#eat">必吃</a>
       <a href="#exp">體驗</a>
       <a href="#money">費用</a>
+      <a href="#booking">線上預訂</a>
       <a href="#tips">實用須知</a>
     </nav>
     <button class="themebtn" id="theme" type="button" aria-label="切換深淺色">◐</button>
@@ -603,6 +628,21 @@ footer a{ font-size:.8125rem; }
       <div><dt>每人總計</dt><dd>NT$<span id="heroPer">16,460</span></dd></div>
       <div><dt>匯率</dt><dd>1<small>萬盾≈NT$12.5</small></dd></div>
     </dl>
+    <div class="hero-fig"><figure class="figure"><span class="figbadge">示意圖 · 待換實拍</span><svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="巴拿山黃金橋"><rect width="400" height="220" fill="var(--surface-2)"/>
+<g opacity=".12" fill="var(--sea)">
+<path d="M0 118l52-40 46 30 58-46 60 40 54-32 66 44 64-24v76H0z"/></g>
+<g opacity=".2" fill="var(--surface)"><ellipse cx="90" cy="128" rx="70" ry="12"/><ellipse cx="300" cy="140" rx="80" ry="14"/></g>
+<path d="M28 122q172-52 344 6" stroke="var(--lantern)" stroke-width="11" fill="none" opacity=".85" stroke-linecap="round"/>
+<path d="M28 122q172-52 344 6" stroke="var(--surface)" stroke-width="2.5" fill="none" opacity=".35"/>
+<g stroke="var(--lantern)" stroke-width="1.6" opacity=".55">
+<path d="M60 111v-14M100 101v-14M140 94v-14M180 90v-14M220 89v-14M260 92v-14M300 97v-14M340 105v-14"/></g>
+<path d="M60 97q140-40 280 -6" stroke="var(--lantern)" stroke-width="2" fill="none" opacity=".5"/>
+<g fill="var(--ink)" opacity=".42">
+<path d="M84 176q-4-30 6-46 5-9 14-8 6 1 6 9l-2 22 8-30q2-9 9-8 8 1 7 10l-4 28 10-28q3-9 10-7 8 2 6 11l-7 26 9-20q4-8 10-5 7 3 4 11l-12 32q-6 16-22 18l-30 4q-14 2-16-19z"/>
+<path d="M316 182q4-30-6-46-5-9-14-8-6 1-6 9l2 22-8-30q-2-9-9-8-8 1-7 10l4 28-10-28q-3-9-10-7-8 2-6 11l7 26-9-20q-4-8-10-5-7 3-4 11l12 32q6 16 22 18l30 4q14 2 16-19z"/></g>
+<g stroke="var(--ink)" stroke-width=".8" opacity=".18" fill="none">
+<path d="M96 132l6-20M110 128l4-18M300 138l-6-20M286 134l-4-18"/></g>
+</svg><figcaption class="figcap"><b>巴拿山 黃金橋 Cầu Vàng</b>　兩隻巨大石手托著金色步道，懸在海拔約 1,400 公尺的山邊。<em>Day 2 · 09:20</em></figcaption></figure></div>
   </div>
 </div>
 
@@ -976,6 +1016,22 @@ footer a{ font-size:.8125rem; }
           <p>被《富比士》選為世界最美海灘之一的那條。<strong>細白沙、坡度平緩、浪不大</strong>，
           三月的水溫剛好可以下去泡。沙灘上有躺椅出租，一組約 50,000 VND。
           海邊一整排都是海鮮餐廳與咖啡店，走到哪坐到哪。</p>
+          <figure class="figure"><span class="figbadge">示意圖 · 待換實拍</span><svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="美溪海灘日落"><rect width="400" height="220" fill="var(--surface-2)"/>
+<g opacity=".22"><circle cx="200" cy="86" r="30" fill="var(--lantern)"/></g>
+<circle cx="200" cy="86" r="19" fill="var(--lantern)" opacity=".7"/>
+<g stroke="var(--lantern)" stroke-width="1" opacity=".18" fill="none">
+<path d="M0 62h400M0 74h400M0 100h400M0 112h400"/></g>
+<path d="M0 124h400v46H0z" fill="var(--sea)" opacity=".22"/>
+<g stroke="var(--surface)" stroke-width="1" fill="none" opacity=".3">
+<path d="M0 136q40 5 80 0t80 0 80 0 80 0 80 0"/><path d="M0 152q40-5 80 0t80 0 80 0 80 0 80 0"/></g>
+<g fill="var(--lantern)" opacity=".3"><ellipse cx="200" cy="142" rx="10" ry="18"/></g>
+<path d="M0 170h400v50H0z" fill="var(--lantern)" opacity=".14"/>
+<g fill="var(--ink)" opacity=".3">
+<path d="M60 168q-8-16 0-22 8 6 0 22z"/><path d="M52 168h18l-3 6H55z"/>
+<path d="M330 166q-7-14 0-20 7 6 0 20z"/><path d="M323 166h15l-3 6h-9z"/></g>
+<g fill="var(--ink)" opacity=".22"><ellipse cx="130" cy="188" rx="18" ry="4"/><ellipse cx="272" cy="194" rx="16" ry="4"/></g>
+<g stroke="var(--ink)" stroke-width="1.4" opacity=".28" fill="none"><path d="M130 188l-8-14h16z"/><path d="M272 194l-7-12h14z"/></g>
+</svg><figcaption class="figcap"><b>美溪海灘 Mỹ Khê</b>　細白沙、坡度平緩、浪不大，三月水溫剛好可以下去泡。<em>Day 1 · 15:30</em></figcaption></figure>
           <div class="ev-cost"><span>躺椅 <b>50,000 VND</b></span><span>椰子水 <b>30,000 VND</b></span></div>
         </div></div>
 
@@ -993,6 +1049,28 @@ footer a{ font-size:.8125rem; }
           但價格還是在地人的價格。</p>
           <p><strong>吃法：直接走到門口那排大水缸前面挑</strong>——螃蟹、龍蝦、象拔蚌、螺、魚，
           全部活的，指哪隻煮哪隻，然後告訴店員要怎麼料理。秤重計價，挑之前先確認單價。</p>
+          <figure class="figure"><span class="figbadge">示意圖 · 待換實拍</span><svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="美溪海灘大排檔皮皮蝦"><rect width="400" height="220" fill="var(--surface-2)"/>
+<rect width="400" height="220" fill="var(--ink)" opacity=".08"/>
+<g fill="var(--lantern)" opacity=".55">
+<circle cx="44" cy="34" r="9"/><circle cx="90" cy="26" r="7"/><circle cx="310" cy="30" r="8"/><circle cx="356" cy="24" r="6"/>
+<path d="M44 25V6M90 19V6M310 22V6M356 18V6" stroke="var(--lantern)" stroke-width="1"/></g>
+<ellipse cx="200" cy="176" rx="132" ry="20" fill="var(--ink)" opacity=".07"/>
+<ellipse cx="200" cy="156" rx="124" ry="34" fill="var(--surface)" stroke="var(--line)" stroke-width="1.5"/>
+<ellipse cx="200" cy="152" rx="108" ry="27" fill="var(--surface-2)"/>
+<g transform="translate(200 150)">
+<g transform="rotate(-14) translate(-84 -14)">
+<path d="M0 14q6-13 18-13h56q14 0 14 13t-14 13H18Q6 27 0 14z" fill="var(--peak)" opacity=".62"/>
+<g stroke="var(--surface)" stroke-width="1.1" opacity=".5"><path d="M24 2v24M38 2v24M52 2v24M66 2v24"/></g>
+<path d="M88 4q14 2 20 10-6 8-20 10z" fill="var(--peak)" opacity=".45"/>
+<g stroke="var(--peak)" stroke-width="1.2" opacity=".7" fill="none"><path d="M2 8q-14-8-22-4M2 20q-14 8-22 4"/></g>
+<circle cx="10" cy="9" r="1.8" fill="var(--ink)" opacity=".6"/></g>
+<g transform="rotate(10) translate(-70 12)">
+<path d="M0 12q5-11 16-11h48q12 0 12 11t-12 11H16Q5 23 0 12z" fill="var(--peak)" opacity=".48"/>
+<g stroke="var(--surface)" stroke-width="1" opacity=".45"><path d="M20 2v20M32 2v20M44 2v20M56 2v20"/></g>
+<path d="M76 3q12 2 17 9-5 7-17 9z" fill="var(--peak)" opacity=".35"/></g></g>
+<g fill="var(--sea)" opacity=".4"><circle cx="118" cy="140" r="7"/><circle cx="286" cy="146" r="6"/></g>
+<g fill="var(--lantern)" opacity=".35"><path d="M258 128l16-6 4 8-16 6z"/></g>
+</svg><figcaption class="figcap"><b>Quán Bé Mặn</b>　美溪海灘正對面，水缸現挑活海鮮。皮皮蝦椒鹽（tôm tít rang muối）殼酥肉甜。<em>Day 1 · 19:00</em></figcaption></figure>
           <div class="ev-cost"><span><b>皮皮蝦</b>　越南文說 <b>「tôm tít」</b> 或 <b>「bề bề」</b></span></div>
           <div class="ev-cost"><span>蒸 <b>hấp</b></span><span>椒鹽 <b>rang muối</b></span><span>炭烤 <b>nướng</b></span><span>蒜蓉 <b>nướng mỡ hành</b></span></div>
           <p style="margin-top:.35rem"><strong>皮皮蝦建議點「rang muối」椒鹽</strong>——殼酥、肉甜，配冰啤酒最對。
@@ -1170,6 +1248,30 @@ footer a{ font-size:.8125rem; }
           <p>河邊有人賣紙做的蓮花燈，點上蠟燭放進河裡許願，一盞約 10,000–20,000 VND。
           也可以坐小船遊河（<strong>約 150,000–200,000 VND／船</strong>，可議價），
           從水面上看整片燈籠倒影是完全不同的角度。</p>
+          <figure class="figure"><span class="figbadge">示意圖 · 待換實拍</span><svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="會安古鎮燈籠與秋盆河"><rect width="400" height="220" fill="var(--surface-2)"/>
+<rect width="400" height="220" fill="var(--ink)" opacity=".12"/>
+<g opacity=".28" fill="var(--lantern)">
+<rect x="10" y="70" width="66" height="60"/><rect x="84" y="58" width="58" height="72"/>
+<rect x="150" y="76" width="52" height="54"/><rect x="210" y="60" width="62" height="70"/>
+<rect x="280" y="72" width="56" height="58"/><rect x="344" y="64" width="46" height="66"/></g>
+<g opacity=".2" fill="var(--ink)"><path d="M4 72l40-22 40 22zM144 78l32-20 32 20zM274 74l36-22 36 22z"/></g>
+<g><path d="M0 40h400" stroke="var(--line)" stroke-width="1" opacity=".4"/></g>
+<g fill="var(--lantern)">
+<g opacity=".85"><ellipse cx="40" cy="54" rx="9" ry="12"/><path d="M40 42V36" stroke="var(--lantern)" stroke-width="1"/></g>
+<g opacity=".7"><ellipse cx="96" cy="48" rx="8" ry="11"/><path d="M96 37V32" stroke="var(--lantern)" stroke-width="1"/></g>
+<g opacity=".85"><ellipse cx="156" cy="56" rx="9" ry="12"/><path d="M156 44V38" stroke="var(--lantern)" stroke-width="1"/></g>
+<g opacity=".65"><ellipse cx="214" cy="50" rx="8" ry="11"/><path d="M214 39V34" stroke="var(--lantern)" stroke-width="1"/></g>
+<g opacity=".85"><ellipse cx="272" cy="56" rx="9" ry="12"/><path d="M272 44V38" stroke="var(--lantern)" stroke-width="1"/></g>
+<g opacity=".7"><ellipse cx="330" cy="48" rx="8" ry="11"/><path d="M330 37V32" stroke="var(--lantern)" stroke-width="1"/></g>
+<g opacity=".8"><ellipse cx="378" cy="56" rx="8" ry="11"/><path d="M378 45V40" stroke="var(--lantern)" stroke-width="1"/></g></g>
+<path d="M0 132h400v88H0z" fill="var(--sea)" opacity=".18"/>
+<g fill="var(--lantern)" opacity=".26">
+<ellipse cx="40" cy="150" rx="7" ry="16"/><ellipse cx="96" cy="156" rx="6" ry="14"/><ellipse cx="156" cy="150" rx="7" ry="16"/>
+<ellipse cx="214" cy="158" rx="6" ry="14"/><ellipse cx="272" cy="150" rx="7" ry="16"/><ellipse cx="330" cy="156" rx="6" ry="14"/></g>
+<g stroke="var(--surface)" stroke-width=".9" fill="none" opacity=".22">
+<path d="M0 174q50 5 100 0t100 0 100 0 100 0"/><path d="M0 196q50-5 100 0t100 0 100 0 100 0"/></g>
+<g fill="var(--peak)" opacity=".5"><path d="M188 186q12-8 24 0-12 6-24 0z"/><circle cx="200" cy="182" r="2.5" fill="var(--lantern)"/></g>
+</svg><figcaption class="figcap"><b>會安古鎮．秋盆河</b>　天一黑整條街的絲綢燈籠同時亮起，河面倒映一整排暖黃色的光。<em>Day 3 · 18:30 起</em></figcaption></figure>
           <div class="ev-cost"><span>水燈 <b>10,000–20,000 VND</b></span><span>遊船 <b>150,000–200,000 VND</b>／船</span></div>
         </div></div>
 
@@ -1211,6 +1313,26 @@ footer a{ font-size:.8125rem; }
             <p>距古鎮約 15 分鐘車程的水椰林。<strong>坐進圓形的竹編小船</strong>，船夫用單槳在水道間穿梭，
             會用椰葉編蚱蜢、戒指送你，還有船夫會表演「<strong>單船旋轉</strong>」——
             把整艘圓船原地打轉甩水花，全場一起鼓掌那種。很觀光，但真的好玩。</p>
+            <figure class="figure"><span class="figbadge">示意圖 · 待換實拍</span><svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="迦南島椰林竹籃船"><rect width="400" height="220" fill="var(--surface-2)"/>
+<path d="M0 120h400v100H0z" fill="var(--sea)" opacity=".16"/>
+<g fill="var(--cheap)" opacity=".3">
+<path d="M40 120q-4-42 8-58 4 16 4 58zM40 120q-30-30-46-30 14 18 46 30zM40 120q30-30 46-30-14 18-46 30zM40 120q-22-38-42-44 8 22 42 44zM40 120q22-38 42-44-8 22-42 44z"/>
+<path d="M348 124q-4-44 8-60 4 16 4 60zM348 124q-30-30-46-30 14 18 46 30zM348 124q30-30 46-30-14 18-46 30zM348 124q-22-38-42-44 8 22 42 44z"/></g>
+<g fill="var(--cheap)" opacity=".22">
+<path d="M120 116q-3-34 6-46 3 12 3 46zM120 116q-24-24-36-24 10 14 36 24zM120 116q24-24 36-24-10 14-36 24z"/>
+<path d="M268 118q-3-34 6-46 3 12 3 46zM268 118q-24-24-36-24 10 14 36 24zM268 118q24-24 36-24-10 14-36 24z"/></g>
+<g stroke="var(--ink)" stroke-width="2.5" opacity=".25"><path d="M40 120v46M348 124v42M120 116v40M268 118v38"/></g>
+<g transform="translate(200 158)">
+<ellipse cx="0" cy="0" rx="52" ry="20" fill="var(--lantern)" opacity=".55"/>
+<ellipse cx="0" cy="-4" rx="46" ry="16" fill="var(--surface-2)"/>
+<g stroke="var(--lantern)" stroke-width=".9" opacity=".6" fill="none">
+<ellipse cx="0" cy="-4" rx="34" ry="12"/><ellipse cx="0" cy="-4" rx="22" ry="8"/><ellipse cx="0" cy="-4" rx="11" ry="4"/></g>
+<g stroke="var(--lantern)" stroke-width=".7" opacity=".45"><path d="M-46-4h92M-40-12l80 16M-40 4l80-16"/></g>
+<g fill="var(--ink)" opacity=".55"><circle cx="-8" cy="-18" r="6"/><path d="M-14-12h12v12h-12z"/></g>
+<path d="M-2-16l34-22" stroke="var(--ink)" stroke-width="2" opacity=".45"/></g>
+<g stroke="var(--surface)" stroke-width="1" fill="none" opacity=".25">
+<path d="M0 186q50 5 100 0t100 0 100 0 100 0"/><path d="M0 204q50-5 100 0t100 0 100 0 100 0"/></g>
+</svg><figcaption class="figcap"><b>迦南島椰林 Rừng dừa Bảy Mẫu</b>　圓形竹編小船穿梭水椰林，船夫會表演單船旋轉甩水花。<em>Day 4 路線 A · 09:30</em></figcaption></figure>
             <div class="ev-cost"><span>竹籃船 <b>約 150,000 VND</b>／人</span><span>船夫小費 <b>50,000 VND</b></span></div>
             <p style="margin-top:.3rem"><strong>會濕，穿快乾的衣服。</strong>手機建議放防水袋。
             上午去人比較少、太陽也不那麼曬。</p>
@@ -1653,6 +1775,62 @@ footer a{ font-size:.8125rem; }
       <div>在日本要精打細算的東西，在這裡完全不必省。<strong>把預算從「住宿與交通」移到「體驗與吃」</strong>——
       多按兩次摩、多吃一頓海鮮、訂做一件衣服，加起來也才一兩千台幣，
       但這些才是回來之後會一直記得的部分。</div>
+    </div>
+  </div>
+</section>
+
+<section id="booking">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">線上預訂</p>
+      <h2>越南這趟，平台真的省很多事</h2>
+      <p>
+        跟日本相反——<strong>峴港的行程很適合用平台訂</strong>。門票在平台常比現場便宜，
+        接送與一日遊省去語言與議價的麻煩，而且全部線上刷卡、不用帶大筆現金。
+        以下連結會帶你到該項目的搜尋結果頁。
+      </p>
+    </div>
+    <div class="scroller">
+      <table>
+        <thead><tr><th>項目</th><th>為什麼用平台</th><th>參考價</th><th>平台</th></tr></thead>
+        <tbody>
+          <tr style="background:var(--lantern-soft)"><td><strong>巴拿山＋黃金橋門票</strong></td>
+            <td><strong>平台的主力商品，常比現場便宜</strong>。有含來回接送的方案，省去自己叫 Grab 議價</td>
+            <td class="num">NT$1,100–1,600</td>
+            <td><a href="https://www.klook.com/zh-TW/search/?query=巴拿山" target="_blank" rel="noopener">Klook</a>　<a href="https://www.kkday.com/zh-tw/product/productlist?keyword=巴拿山" target="_blank" rel="noopener">KKday</a></td></tr>
+          <tr><td><strong>越南 eSIM / 網卡</strong></td><td>落地就能叫 Grab，這趟全靠它</td><td class="num">NT$150–350</td>
+            <td><a href="https://www.klook.com/zh-TW/search/?query=越南eSIM" target="_blank" rel="noopener">Klook</a>　<a href="https://www.kkday.com/zh-tw/product/productlist?keyword=越南eSIM" target="_blank" rel="noopener">KKday</a></td></tr>
+          <tr><td><strong>峴港機場接送</strong></td><td>比 Grab 貴一點但司機舉牌等，帶行李時省事</td><td class="num">NT$250–450／車</td>
+            <td><a href="https://www.klook.com/zh-TW/search/?query=峴港機場接送" target="_blank" rel="noopener">Klook</a></td></tr>
+          <tr><td><strong>峴港 ↔ 會安 接送</strong></td><td>Day 3 帶行李移動，指定時間到旅館門口接</td><td class="num">NT$300–500／車</td>
+            <td><a href="https://www.klook.com/zh-TW/search/?query=會安接送" target="_blank" rel="noopener">Klook</a></td></tr>
+          <tr><td><strong>迦南島竹籃船</strong></td><td>先訂好不用現場議價，含接送的方案更省事</td><td class="num">NT$200–500</td>
+            <td><a href="https://www.klook.com/zh-TW/search/?query=會安竹籃船" target="_blank" rel="noopener">Klook</a>　<a href="https://www.kkday.com/zh-tw/product/productlist?keyword=會安竹籃船" target="_blank" rel="noopener">KKday</a></td></tr>
+          <tr><td><strong>美山聖地一日遊</strong></td><td>Day 4 路線 B。含車、導覽與門票，自己去要包車</td><td class="num">NT$600–1,200</td>
+            <td><a href="https://www.klook.com/zh-TW/search/?query=美山聖地" target="_blank" rel="noopener">Klook</a></td></tr>
+          <tr><td><strong>Spa 按摩</strong></td><td>可先訂時段與方案，避開現場客滿</td><td class="num">NT$350–700</td>
+            <td><a href="https://www.klook.com/zh-TW/search/?query=峴港按摩" target="_blank" rel="noopener">Klook</a>　<a href="https://www.kkday.com/zh-tw/product/productlist?keyword=峴港按摩" target="_blank" rel="noopener">KKday</a></td></tr>
+          <tr><td><strong>五行山門票</strong></td><td>門票很便宜（55,000 盾），現場買就好，除非要含接送</td><td class="num">NT$70</td>
+            <td><a href="https://www.klook.com/zh-TW/search/?query=五行山" target="_blank" rel="noopener">Klook</a></td></tr>
+          <tr><td><strong>越南電子簽證代辦</strong></td><td>自己上官網辦約 US$25 就好，代辦會加價</td><td class="num">自辦 NT$800</td>
+            <td><span style="color:var(--ink-3);font-size:.8125rem">建議自辦</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="display:grid;gap:.85rem;margin-top:1.15rem">
+      <div class="note">
+        <span class="k">最值得用平台的三項</span>
+        <div><strong>① 巴拿山門票＋接送</strong>（最貴的單項，平台價差最明顯）
+        <strong>② eSIM</strong>（落地就要用）
+        <strong>③ 峴港↔會安接送</strong>（Day 3 帶行李，指定時間門口接最省事）。
+        其餘像五行山、會安古鎮門票都很便宜，現場買就好。</div>
+      </div>
+      <div class="note warn">
+        <span class="k">別在平台訂的</span>
+        <div><strong>海鮮大排檔</strong>——平台上的「海鮮吃到飽」多半是觀光團餐，
+        跟 Quán Bé Mặn 那種自己挑水缸的體驗完全是兩回事，價格還貴一倍。
+        <strong>電子簽證</strong>也自己上官網辦就好，代辦只是幫你填表格。</div>
+      </div>
     </div>
   </div>
 </section>

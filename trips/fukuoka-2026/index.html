@@ -500,6 +500,30 @@ footer a{ font-size:.8125rem; }
 .bigrow dt{ font-family:var(--mono); font-size:.625rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); }
 .bigrow dd{ margin:.3rem 0 0; font-family:var(--mono); font-size:1.25rem; font-weight:500; font-variant-numeric:tabular-nums; }
 .bigrow dd small{ font-size:.7rem; color:var(--ink-3); font-weight:400; margin-left:.15rem; }
+
+/* ── 圖片版位 ─────────────────────────────── */
+.figure{
+  margin:0; border-radius:12px; overflow:hidden; position:relative;
+  border:1px solid var(--line-soft); background:var(--surface-2); box-shadow:var(--shadow);
+}
+.figure > svg, .figure > img{ display:block; width:100%; height:auto; }
+.figure > img{ object-fit:cover; aspect-ratio:20/11; }
+.figbadge{
+  position:absolute; top:.55rem; right:.55rem; z-index:2;
+  font-family:var(--mono); font-size:.5625rem; letter-spacing:.1em; text-transform:uppercase;
+  padding:.15rem .45rem; border-radius:4px;
+  background:color-mix(in srgb, var(--surface) 82%, transparent);
+  color:var(--ink-3); border:1px solid var(--line-soft); backdrop-filter:blur(6px);
+}
+.figcap{
+  padding:.7rem .9rem; font-size:.75rem; line-height:1.6; color:var(--ink-2);
+  background:var(--surface); border-top:1px solid var(--line-soft);
+}
+.figcap b{ color:var(--ink); font-weight:500; }
+.figcap em{ font-style:normal; font-family:var(--mono); font-size:.6875rem; color:var(--sea); }
+.photogrid{ display:grid; gap:.9rem; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); margin:1.25rem 0; }
+.ev-body .figure{ margin-top:.6rem; max-width:min(100%, 34rem); }
+.hero-fig{ margin-top:2rem; }
 </style>
 
 <header class="topbar">
@@ -514,6 +538,7 @@ footer a{ font-size:.8125rem; }
       <a href="#eat">必吃</a>
       <a href="#night">夜的福岡</a>
       <a href="#money">費用</a>
+      <a href="#booking">線上預訂</a>
       <a href="#pack">出發前</a>
       <a href="#next">下一趟</a>
     </nav>
@@ -539,6 +564,27 @@ footer a{ font-size:.8125rem; }
       <div><dt>兩人總計</dt><dd>NT$<span id="heroTotal">35,173</span></dd></div>
       <div><dt>每人</dt><dd>NT$<span id="heroPer">17,587</span></dd></div>
     </dl>
+    <div class="hero-fig"><figure class="figure"><span class="figbadge">示意圖 · 待換實拍</span><svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="中洲屋台街夜景"><rect width="400" height="220" fill="var(--surface-2)"/>
+<g opacity=".22" fill="var(--ink)">
+<rect x="8" y="42" width="34" height="96"/><rect x="48" y="58" width="26" height="80"/>
+<rect x="80" y="30" width="40" height="108"/><rect x="128" y="66" width="22" height="72"/>
+<rect x="300" y="48" width="36" height="90"/><rect x="342" y="62" width="30" height="76"/></g>
+<g opacity=".5" fill="var(--lantern)"><rect x="86" y="38" width="5" height="12"/><rect x="98" y="46" width="5" height="10"/>
+<rect x="308" y="56" width="5" height="10"/><rect x="352" y="70" width="5" height="9"/></g>
+<path d="M0 138h400v82H0z" fill="var(--sea)" opacity=".16"/>
+<g stroke="var(--sea)" stroke-width="1" fill="none" opacity=".3">
+<path d="M0 150q40 5 80 0t80 0 80 0 80 0 80 0"/><path d="M0 166q40-5 80 0t80 0 80 0 80 0 80 0"/>
+<path d="M0 184q40 6 80 0t80 0 80 0 80 0 80 0"/><path d="M0 202q40-6 80 0t80 0 80 0 80 0 80 0"/></g>
+<g transform="translate(150 84)">
+<path d="M0 26h100l-8-16H8z" fill="var(--lantern)" opacity=".85"/>
+<rect x="10" y="26" width="80" height="28" fill="var(--ink)" opacity=".35"/>
+<rect x="14" y="54" width="4" height="14" fill="var(--ink)" opacity=".3"/><rect x="82" y="54" width="4" height="14" fill="var(--ink)" opacity=".3"/>
+<g fill="var(--lantern)"><ellipse cx="16" cy="16" rx="7" ry="9"/><ellipse cx="50" cy="13" rx="7" ry="9"/><ellipse cx="84" cy="16" rx="7" ry="9"/></g>
+<g fill="none" stroke="var(--surface)" stroke-width=".8" opacity=".55">
+<path d="M9 16h14M43 13h14M77 16h14"/></g></g>
+<g fill="var(--lantern)" opacity=".28">
+<ellipse cx="166" cy="160" rx="6" ry="14"/><ellipse cx="200" cy="168" rx="6" ry="16"/><ellipse cx="234" cy="160" rx="6" ry="14"/></g>
+</svg><figcaption class="figcap"><b>中洲屋台街</b>　那珂川畔一整排燈籠，18:00 擺到半夜，約 20 攤。<em>Day 1 · 20:00</em></figcaption></figure></div>
   </div>
 </div>
 
@@ -838,6 +884,27 @@ footer a{ font-size:.8125rem; }
           當晚哪幾攤開要現場看——挑<strong>本地客多、價目表清楚寫在外面</strong>的那攤坐。
           <strong>兩人合點 3–4 樣</strong>：明太子玉子燒、餃子、串燒、一碗拉麵分著吃。
           規矩：每人至少一飲一菜，坐下前先看價目表。</p>
+          <figure class="figure"><span class="figbadge">示意圖 · 待換實拍</span><svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="中洲屋台街夜景"><rect width="400" height="220" fill="var(--surface-2)"/>
+<g opacity=".22" fill="var(--ink)">
+<rect x="8" y="42" width="34" height="96"/><rect x="48" y="58" width="26" height="80"/>
+<rect x="80" y="30" width="40" height="108"/><rect x="128" y="66" width="22" height="72"/>
+<rect x="300" y="48" width="36" height="90"/><rect x="342" y="62" width="30" height="76"/></g>
+<g opacity=".5" fill="var(--lantern)"><rect x="86" y="38" width="5" height="12"/><rect x="98" y="46" width="5" height="10"/>
+<rect x="308" y="56" width="5" height="10"/><rect x="352" y="70" width="5" height="9"/></g>
+<path d="M0 138h400v82H0z" fill="var(--sea)" opacity=".16"/>
+<g stroke="var(--sea)" stroke-width="1" fill="none" opacity=".3">
+<path d="M0 150q40 5 80 0t80 0 80 0 80 0 80 0"/><path d="M0 166q40-5 80 0t80 0 80 0 80 0 80 0"/>
+<path d="M0 184q40 6 80 0t80 0 80 0 80 0 80 0"/><path d="M0 202q40-6 80 0t80 0 80 0 80 0 80 0"/></g>
+<g transform="translate(150 84)">
+<path d="M0 26h100l-8-16H8z" fill="var(--lantern)" opacity=".85"/>
+<rect x="10" y="26" width="80" height="28" fill="var(--ink)" opacity=".35"/>
+<rect x="14" y="54" width="4" height="14" fill="var(--ink)" opacity=".3"/><rect x="82" y="54" width="4" height="14" fill="var(--ink)" opacity=".3"/>
+<g fill="var(--lantern)"><ellipse cx="16" cy="16" rx="7" ry="9"/><ellipse cx="50" cy="13" rx="7" ry="9"/><ellipse cx="84" cy="16" rx="7" ry="9"/></g>
+<g fill="none" stroke="var(--surface)" stroke-width=".8" opacity=".55">
+<path d="M9 16h14M43 13h14M77 16h14"/></g></g>
+<g fill="var(--lantern)" opacity=".28">
+<ellipse cx="166" cy="160" rx="6" ry="14"/><ellipse cx="200" cy="168" rx="6" ry="16"/><ellipse cx="234" cy="160" rx="6" ry="14"/></g>
+</svg><figcaption class="figcap"><b>中洲屋台街</b>　流動攤位、無固定店址，挑本地客多、價目表寫在外面的那攤。<em>Day 1 · 20:00</em></figcaption></figure>
           <div class="ev-cost"><span>玉子燒 <b>¥600–800</b></span><span>餃子 <b>¥500–700</b></span><span>拉麵 <b>¥800–1,000</b></span><span>串燒 <b>¥150–250</b></span><span>兩人 <b>¥5,000–6,000</b></span></div>
         </div></div>
 
@@ -868,6 +935,25 @@ footer a{ font-size:.8125rem; }
           <div class="ev-title"><h4>長浜鮮魚市場「市場會館」</h4><span class="tag sea">主場</span>
           <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=福岡市鮮魚市場市場会館" target="_blank" rel="noopener">地圖</a></div>
           <p>七十年歷史的批發魚市，會館一樓一整排小店<strong>清晨六點開門</strong>。漁市自己人吃飯的地方，又便宜又新鮮。</p>
+          <figure class="figure"><span class="figbadge">示意圖 · 待換實拍</span><svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="長浜鮮魚市場海鮮丼"><rect width="400" height="220" fill="var(--surface-2)"/>
+<g opacity=".13" stroke="var(--ink)" stroke-width="1" fill="none">
+<path d="M0 40h400M0 68h400M0 96h400"/></g>
+<ellipse cx="200" cy="196" rx="120" ry="12" fill="var(--ink)" opacity=".08"/>
+<path d="M104 108h192l-18 74a14 14 0 0 1-14 12H136a14 14 0 0 1-14-12z" fill="var(--surface)" stroke="var(--line)" stroke-width="1.5"/>
+<path d="M96 104h208v10H96z" fill="var(--sea)" opacity=".25"/>
+<g opacity=".9">
+<path d="M126 116l32-8 10 14-30 10z" fill="var(--lantern)" opacity=".75"/>
+<path d="M164 112l34-6 8 15-32 9z" fill="var(--peak)" opacity=".55"/>
+<path d="M204 114l32-7 9 14-31 10z" fill="var(--lantern)" opacity=".6"/>
+<path d="M242 118l30-6 6 13-28 9z" fill="var(--peak)" opacity=".45"/>
+<path d="M140 134l30-7 9 13-29 9z" fill="var(--sea)" opacity=".45"/>
+<path d="M182 132l32-6 8 14-30 8z" fill="var(--lantern)" opacity=".5"/>
+<path d="M222 136l28-6 7 12-27 9z" fill="var(--peak)" opacity=".4"/></g>
+<g fill="none" stroke="var(--ink)" stroke-width=".9" opacity=".3">
+<path d="M126 116l32-8 10 14-30 10zM164 112l34-6 8 15-32 9zM204 114l32-7 9 14-31 10z"/></g>
+<circle cx="200" cy="152" r="12" fill="var(--lantern)" opacity=".6"/>
+<path d="M310 96l26 10-26 10z" fill="var(--sea)" opacity=".35"/>
+</svg><figcaption class="figcap"><b>長浜鮮魚市場 市場會館</b>　まさ味的特上海鮮丼，九種海鮮含黑鮪魚與海膽。<em>Day 2 · 06:30</em></figcaption></figure>
           <div class="ev-cost"><span>まさ味・特上海鮮丼（9 種含鮪魚、海膽）<b>¥1,050</b></span></div>
           <div class="ev-cost"><span>一魚一栄・生魚片七種盛 <b>¥1,600</b></span><span>おきよ・最老的定食店，06:00 開</span></div>
         </div></div>
@@ -911,6 +997,28 @@ footer a{ font-size:.8125rem; }
           <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=中司孫太郎稲荷神社" target="_blank" rel="noopener">地圖</a></div>
           <p>傍晚六點，參道兩側十座石燈籠<strong>同時點亮</strong>，燈籠上浮出狐狸圖案，鳥居亮起青白色的「奉納」二字，
           往上走全是朱紅色的光。白天是很普通的稻荷神社，晚上完全變一個世界。</p>
+          <figure class="figure"><span class="figbadge">示意圖 · 待換實拍</span><svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="中司孫太郎稲荷神社夜間點燈"><rect width="400" height="220" fill="var(--surface-2)"/>
+<rect width="400" height="220" fill="var(--ink)" opacity=".12"/>
+<g fill="var(--peak)" opacity=".55">
+<rect x="96" y="52" width="208" height="11" rx="3"/><rect x="108" y="70" width="184" height="8"/>
+<rect x="122" y="63" width="13" height="130"/><rect x="265" y="63" width="13" height="130"/></g>
+<g fill="var(--peak)" opacity=".3">
+<rect x="146" y="66" width="108" height="6"/><rect x="160" y="72" width="9" height="118"/><rect x="231" y="72" width="9" height="118"/></g>
+<text x="200" y="104" text-anchor="middle" font-size="19" font-family="var(--display)" fill="var(--sea)" opacity=".85">奉納</text>
+<g>
+<rect x="40" y="126" width="20" height="52" rx="2" fill="var(--ink)" opacity=".3"/>
+<rect x="36" y="118" width="28" height="10" rx="2" fill="var(--lantern)" opacity=".75"/>
+<circle cx="50" cy="146" r="7" fill="var(--lantern)" opacity=".8"/>
+<rect x="340" y="126" width="20" height="52" rx="2" fill="var(--ink)" opacity=".3"/>
+<rect x="336" y="118" width="28" height="10" rx="2" fill="var(--lantern)" opacity=".75"/>
+<circle cx="350" cy="146" r="7" fill="var(--lantern)" opacity=".8"/>
+<rect x="82" y="140" width="16" height="42" rx="2" fill="var(--ink)" opacity=".26"/>
+<circle cx="90" cy="154" r="5.5" fill="var(--lantern)" opacity=".65"/>
+<rect x="302" y="140" width="16" height="42" rx="2" fill="var(--ink)" opacity=".26"/>
+<circle cx="310" cy="154" r="5.5" fill="var(--lantern)" opacity=".65"/></g>
+<path d="M0 193h400v27H0z" fill="var(--ink)" opacity=".18"/>
+<g fill="var(--lantern)" opacity=".16"><circle cx="50" cy="146" r="18"/><circle cx="350" cy="146" r="18"/></g>
+</svg><figcaption class="figcap"><b>中司孫太郎稲荷神社</b>　傍晚六點十座石燈籠同時亮起，鳥居浮出青白色「奉納」二字。<em>Day 2 · 18:00</em></figcaption></figure>
           <div class="ev-cost"><span>免費</span><span>地鐵大濠公園站或赤坂站走 15 分</span></div>
         </div></div>
 
@@ -960,6 +1068,26 @@ footer a{ font-size:.8125rem; }
           <strong>週五、六 9:00–14:00，週日與假日 7:00–16:00</strong>（週日開得最早、收得最晚，所以 Day 3 排週日）。
           魚販與壽司攤把一貫一貫的握壽司、海鮮丼、河豚料理擺出來，自己拿盤子挑，挑完找位子坐下吃。
           <strong>想吃什麼就拿一貫，不用整份買。</strong></p>
+          <figure class="figure"><span class="figbadge">示意圖 · 待換實拍</span><svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="唐戶市場活きいき馬関街壽司"><rect width="400" height="220" fill="var(--surface-2)"/>
+<path d="M0 150h400v70H0z" fill="var(--sea)" opacity=".1"/>
+<ellipse cx="200" cy="188" rx="150" ry="14" fill="var(--ink)" opacity=".07"/>
+<rect x="58" y="118" width="284" height="62" rx="5" fill="var(--surface)" stroke="var(--line)" stroke-width="1.5"/>
+<g>
+<g transform="translate(84 128)"><rect y="18" width="42" height="16" rx="6" fill="var(--surface-2)" stroke="var(--line)" stroke-width=".8"/>
+<path d="M-2 14q21-11 46 0l-2 7q-21-9-42 0z" fill="var(--peak)" opacity=".6"/></g>
+<g transform="translate(148 128)"><rect y="18" width="42" height="16" rx="6" fill="var(--surface-2)" stroke="var(--line)" stroke-width=".8"/>
+<path d="M-2 14q21-11 46 0l-2 7q-21-9-42 0z" fill="var(--lantern)" opacity=".6"/></g>
+<g transform="translate(212 128)"><rect y="18" width="42" height="16" rx="6" fill="var(--surface-2)" stroke="var(--line)" stroke-width=".8"/>
+<path d="M-2 14q21-11 46 0l-2 7q-21-9-42 0z" fill="var(--sea)" opacity=".5"/></g>
+<g transform="translate(276 128)"><rect y="18" width="42" height="16" rx="6" fill="var(--surface-2)" stroke="var(--line)" stroke-width=".8"/>
+<path d="M-2 14q21-11 46 0l-2 7q-21-9-42 0z" fill="var(--peak)" opacity=".45"/></g></g>
+<g opacity=".3" fill="var(--ink)">
+<rect x="30" y="44" width="52" height="8" rx="2"/><rect x="30" y="58" width="34" height="6" rx="2"/>
+<rect x="318" y="44" width="52" height="8" rx="2"/><rect x="336" y="58" width="34" height="6" rx="2"/></g>
+<g opacity=".5" fill="none" stroke="var(--sea)" stroke-width="1.4">
+<path d="M120 66q30-18 60 0t60 0"/><path d="M140 84q30-16 60 0"/></g>
+<g fill="var(--lantern)" opacity=".5"><circle cx="200" cy="52" r="9"/></g>
+</svg><figcaption class="figcap"><b>唐戶市場 活きいき馬関街</b>　週日 7:00–16:00，一貫一貫自己挑，¥150 起。<em>Day 3 · 08:35</em></figcaption></figure>
           <div class="ev-cost"><span><b>すし遊館</b>（2F 迴轉壽司，鮮魚批發直營，河豚一貫 ¥250 起，開店前就排隊）
           <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=すし遊館唐戸市場" target="_blank" rel="noopener">地圖</a></span></div>
           <div class="ev-cost"><span><b>下関唐戸市場ふく問屋 海</b>（河豚專門，6:00–14:00，虎河豚白子、關門章魚壽司）</span></div>
@@ -1044,6 +1172,23 @@ footer a{ font-size:.8125rem; }
           <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=太宰府天満宮" target="_blank" rel="noopener">地圖</a></div>
           <p>學問之神菅原道真的總本社，九州參拜人數最多的神社。從車站到本殿的表參道約 400 公尺，兩側全是店。
           本殿整修期間有一座被草木覆蓋、像漂浮在空中的「臨時本殿」，是這幾年才看得到的樣子。</p>
+          <figure class="figure"><span class="figbadge">示意圖 · 待換實拍</span><svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="太宰府天滿宮"><rect width="400" height="220" fill="var(--surface-2)"/>
+<g opacity=".1" fill="var(--sea)"><circle cx="330" cy="46" r="34"/><circle cx="70" cy="60" r="26"/></g>
+<path d="M70 118h260l-24-30H94z" fill="var(--peak)" opacity=".45"/>
+<path d="M84 118h232v14H84z" fill="var(--ink)" opacity=".22"/>
+<rect x="96" y="132" width="208" height="52" fill="var(--surface)" stroke="var(--line)" stroke-width="1.2"/>
+<g fill="var(--peak)" opacity=".35"><rect x="112" y="140" width="10" height="44"/><rect x="278" y="140" width="10" height="44"/></g>
+<rect x="176" y="146" width="48" height="38" rx="2" fill="var(--ink)" opacity=".18"/>
+<path d="M0 184h400v36H0z" fill="var(--ink)" opacity=".08"/>
+<g opacity=".55">
+<g transform="translate(48 150)"><path d="M0 30V4" stroke="var(--ink)" stroke-width="2" opacity=".5"/>
+<g fill="var(--peak)"><circle cx="0" cy="0" r="4"/><circle cx="9" cy="5" r="4"/><circle cx="-9" cy="5" r="4"/><circle cx="6" cy="-7" r="4"/><circle cx="-6" cy="-7" r="4"/></g>
+<circle cx="0" cy="0" r="1.8" fill="var(--lantern)"/></g>
+<g transform="translate(354 138)"><path d="M0 34V4" stroke="var(--ink)" stroke-width="2" opacity=".5"/>
+<g fill="var(--peak)"><circle cx="0" cy="0" r="4"/><circle cx="9" cy="5" r="4"/><circle cx="-9" cy="5" r="4"/><circle cx="6" cy="-7" r="4"/><circle cx="-6" cy="-7" r="4"/></g>
+<circle cx="0" cy="0" r="1.8" fill="var(--lantern)"/></g></g>
+<g fill="var(--peak)" opacity=".3"><circle cx="150" cy="66" r="3"/><circle cx="250" cy="52" r="3"/><circle cx="196" cy="40" r="2.5"/></g>
+</svg><figcaption class="figcap"><b>太宰府天滿宮</b>　學問之神菅原道真的總本社，本殿整修期間有草木覆蓋的「臨時本殿」。<em>Day 4 · 09:40</em></figcaption></figure>
           <div class="ev-cost"><span>本殿 <b>免費</b></span><span>寶物殿（可略）<b>¥500</b></span></div>
         </div></div>
 
@@ -1354,6 +1499,41 @@ footer a{ font-size:.8125rem; }
       <div>地鐵單程 ¥260／一日券 ¥640（一天搭三趟以上才划算）。
       FUKUOKA TOURIST CITY PASS 市內 ¥2,500、含太宰府 ¥2,800（外國旅客限定）。
       太宰府建議買「太宰府散策きっぷ」，含來回車票與梅枝餅。本行程採<strong>單程票逐次買</strong>，最省。</div>
+    </div>
+  </div>
+</section>
+
+<section id="booking">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">線上預訂</p>
+      <h2>能先訂好的就先訂</h2>
+      <p>票券、接送、網卡先在平台買好，到現場直接掃 QR 進場，省下排隊與現金換匯的時間。以下連結會帶你到該項目的搜尋結果頁。</p>
+    </div>
+    <div class="scroller">
+      <table>
+        <thead><tr><th>項目</th><th>為什麼先訂</th><th>參考價</th><th>平台</th></tr></thead>
+        <tbody>
+          <tr><td><strong>日本 eSIM / 網卡</strong></td><td>落地就能用，不必在機場排隊辦卡</td><td class="num">NT$200–400</td>
+            <td><a href="https://www.klook.com/zh-TW/search/?query=日本eSIM" target="_blank" rel="noopener">Klook</a>　<a href="https://www.kkday.com/zh-tw/product/productlist?keyword=日本eSIM" target="_blank" rel="noopener">KKday</a></td></tr>
+          <tr><td><strong>福岡塔 展望門票</strong></td><td>線上票通常比現場便宜，免排隊</td><td class="num">約 ¥800</td>
+            <td><a href="https://www.klook.com/zh-TW/search/?query=福岡塔" target="_blank" rel="noopener">Klook</a></td></tr>
+          <tr><td><strong>太宰府・柳川一日遊</strong></td><td>不想自己轉車的話，含車資與導覽</td><td class="num">NT$1,500–2,500</td>
+            <td><a href="https://www.klook.com/zh-TW/search/?query=太宰府" target="_blank" rel="noopener">Klook</a>　<a href="https://www.kkday.com/zh-tw/product/productlist?keyword=太宰府" target="_blank" rel="noopener">KKday</a></td></tr>
+          <tr><td><strong>由布院・別府溫泉一日遊</strong></td><td>下一趟用得到，大眾運輸不好接</td><td class="num">NT$1,800–3,000</td>
+            <td><a href="https://www.klook.com/zh-TW/search/?query=由布院" target="_blank" rel="noopener">Klook</a></td></tr>
+          <tr><td><strong>糸島包車／一日遊</strong></td><td>沒有大眾運輸能好好玩，牡蠣小屋要開車</td><td class="num">NT$2,500–4,500</td>
+            <td><a href="https://www.klook.com/zh-TW/search/?query=糸島" target="_blank" rel="noopener">Klook</a></td></tr>
+          <tr><td><strong>福岡機場接送</strong></td><td>本行程用不到（地鐵 5 分鐘就到），列出供參考</td><td class="num">NT$600–900</td>
+            <td><a href="https://www.klook.com/zh-TW/search/?query=福岡機場接送" target="_blank" rel="noopener">Klook</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note" style="margin-top:1.15rem">
+      <span class="k">這趟其實不太需要平台</span>
+      <div>福岡的行程幾乎全是<strong>免費景點＋現場點餐</strong>：屋台、市場、神社、唐戶市場都不需要預訂。
+      真正值得先買的只有 <strong>eSIM</strong>。太宰府自己搭西鐵很簡單（¥420、25 分鐘），
+      買一日遊反而被綁行程。<strong>把錢留給海鮮就好。</strong></div>
     </div>
   </div>
 </section>
