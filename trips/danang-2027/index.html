@@ -1,0 +1,1904 @@
+<title>峴港會安．燈籠與海</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@500;600;700&display=swap">
+
+<style>
+/* ─────────────────────────────────────────────
+   峴港會安 — 南海 × 會安燈籠 × 黃金橋
+   ───────────────────────────────────────────── */
+
+:root{
+  /* 光：和紙般帶冷調的紙白 */
+  --ground:      #E7ECEF;
+  --surface:     #FBFCFD;
+  --surface-2:   #F1F5F7;
+  --ink:         #0F2130;
+  --ink-2:       #3D5566;
+  --ink-3:       #6B8395;
+  --line:        #C9D6DE;
+  --line-soft:   #DDE6EB;
+
+  --sea:         #0E7C7B;   /* 南海青綠 — 主色 */
+  --sea-soft:    #D7EDEC;
+  --lantern:     #C2600F;   /* 會安燈籠 — 夜間／副色 */
+  --lantern-soft:#FBE8D5;
+
+  --cheap:       #2E7D5B;
+  --cheap-soft:  #DEEDE5;
+  --mid:         #9A6B22;
+  --mid-soft:    #F6EBD7;
+  --peak:        #A8473C;
+  --peak-soft:   #F7E1DD;
+
+  --sleep:       #7C6BA8;
+  --sleep-soft:  #E8E4F2;
+
+  --shadow:      0 1px 2px rgba(15,33,48,.05), 0 8px 24px -12px rgba(15,33,48,.18);
+  --shadow-lift: 0 2px 4px rgba(15,33,48,.06), 0 16px 40px -16px rgba(15,33,48,.28);
+
+  --display: "Noto Serif TC", "Songti TC", serif;
+  --body: "Noto Sans TC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --measure: 66ch;
+  --rail: 4.75rem;
+}
+
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:      #091620;
+    --surface:     #10222E;
+    --surface-2:   #162C3A;
+    --ink:         #E3ECF1;
+    --ink-2:       #A9C0CE;
+    --ink-3:       #7B96A7;
+    --line:        #274154;
+    --line-soft:   #1D3446;
+
+    --sea:         #56C4C2;
+    --sea-soft:    #0D3736;
+    --lantern:     #F0A057;
+    --lantern-soft:#3E2712;
+
+    --cheap:       #6BC79A;
+    --cheap-soft:  #12352A;
+    --mid:         #D9AC5C;
+    --mid-soft:    #382B15;
+    --peak:        #E58C7E;
+    --peak-soft:   #3B211E;
+
+    --sleep:       #A99BD1;
+    --sleep-soft:  #241F35;
+
+    --shadow:      0 1px 2px rgba(0,0,0,.35), 0 8px 24px -12px rgba(0,0,0,.6);
+    --shadow-lift: 0 2px 4px rgba(0,0,0,.4), 0 16px 40px -16px rgba(0,0,0,.7);
+  }
+}
+
+:root[data-theme="dark"]{
+  --ground:#091620; --surface:#10222E; --surface-2:#162C3A;
+  --ink:#E3ECF1; --ink-2:#A9C0CE; --ink-3:#7B96A7;
+  --line:#274154; --line-soft:#1D3446;
+  --sea:#64C0C9; --sea-soft:#10353C; --lantern:#E5A164; --lantern-soft:#3E2712;
+  --cheap:#6BC79A; --cheap-soft:#12352A; --mid:#D9AC5C; --mid-soft:#382B15;
+  --peak:#E58C7E; --peak-soft:#3B211E; --sleep:#A99BD1; --sleep-soft:#241F35;
+  --shadow:0 1px 2px rgba(0,0,0,.35), 0 8px 24px -12px rgba(0,0,0,.6);
+  --shadow-lift:0 2px 4px rgba(0,0,0,.4), 0 16px 40px -16px rgba(0,0,0,.7);
+}
+
+*, *::before, *::after{ box-sizing:border-box; }
+
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:var(--body);
+  font-weight:400;
+  font-size:16px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+h1,h2,h3,h4{ font-family:var(--display); font-weight:600; line-height:1.3; text-wrap:balance; margin:0; letter-spacing:.01em; }
+p{ margin:0; }
+ul,ol{ margin:0; padding:0; list-style:none; }
+a{ color:var(--sea); text-decoration:none; border-bottom:1px solid color-mix(in srgb, var(--sea) 35%, transparent); }
+a:hover{ border-bottom-color:var(--sea); }
+:focus-visible{ outline:2px solid var(--sea); outline-offset:3px; border-radius:2px; }
+
+.wrap{ width:min(1120px, calc(100% - 2.5rem)); margin-inline:auto; }
+.stack{ display:flex; flex-direction:column; }
+
+/* ── 標籤／眉標 ───────────────────────────── */
+.eyebrow{
+  font-family:var(--mono); font-size:.6875rem; font-weight:500;
+  letter-spacing:.18em; text-transform:uppercase; color:var(--ink-3);
+  display:flex; align-items:center; gap:.6rem;
+}
+.eyebrow::after{ content:""; flex:1; height:1px; background:var(--line); }
+
+.mono{ font-family:var(--mono); font-variant-numeric:tabular-nums; }
+
+/* ── 頂部導覽 ─────────────────────────────── */
+.topbar{
+  position:sticky; top:0; z-index:50;
+  background:color-mix(in srgb, var(--ground) 88%, transparent);
+  backdrop-filter:blur(14px) saturate(1.4);
+  border-bottom:1px solid var(--line-soft);
+}
+.topbar-inner{ display:flex; align-items:center; gap:1.25rem; height:3.5rem; }
+.brand{
+  font-family:var(--display); font-weight:700; font-size:1rem;
+  letter-spacing:.06em; border:0; color:var(--ink); white-space:nowrap;
+}
+.brand span{ color:var(--sea); }
+.navlinks{ display:flex; gap:.15rem; overflow-x:auto; scrollbar-width:none; flex:1; }
+.navlinks::-webkit-scrollbar{ display:none; }
+.navlinks a{
+  font-size:.8125rem; color:var(--ink-2); border:0; padding:.4rem .6rem;
+  border-radius:6px; white-space:nowrap; transition:background .15s, color .15s;
+}
+.navlinks a:hover{ background:var(--surface-2); color:var(--ink); }
+.themebtn{
+  flex:none; border:1px solid var(--line); background:var(--surface);
+  color:var(--ink-2); width:2rem; height:2rem; border-radius:50%;
+  cursor:pointer; font-size:.8rem; display:grid; place-items:center; padding:0;
+}
+.themebtn:hover{ border-color:var(--sea); color:var(--sea); }
+
+/* ── HERO ─────────────────────────────────── */
+.hero{ position:relative; padding:5rem 0 3.5rem; overflow:hidden; }
+.hero canvas{ position:absolute; inset:0; width:100%; height:100%; opacity:.5; pointer-events:none; }
+.hero-inner{ position:relative; }
+.hero h1{
+  font-size:clamp(2.6rem, 7.5vw, 4.75rem);
+  font-weight:700; letter-spacing:.02em; margin:.75rem 0 0;
+}
+.hero h1 em{ font-style:normal; color:var(--sea); }
+.hero-sub{
+  margin-top:1.25rem; max-width:var(--measure);
+  font-size:1.0625rem; color:var(--ink-2); font-weight:300;
+}
+.hero-meta{
+  margin-top:2.5rem; display:grid; gap:1px;
+  grid-template-columns:repeat(auto-fit, minmax(158px,1fr));
+  background:var(--line-soft); border:1px solid var(--line-soft); border-radius:10px; overflow:hidden;
+}
+.hero-meta div{ background:var(--surface); padding:1rem 1.15rem; }
+.hero-meta dt{ font-family:var(--mono); font-size:.625rem; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-3); }
+.hero-meta dd{ margin:.35rem 0 0; font-family:var(--mono); font-size:1.375rem; font-weight:500; font-variant-numeric:tabular-nums; }
+.hero-meta dd small{ font-size:.75rem; color:var(--ink-3); font-weight:400; margin-left:.2rem; }
+
+/* ── 區塊 ─────────────────────────────────── */
+section{ padding:3.5rem 0; scroll-margin-top:4rem; }
+.sec-head{ display:flex; flex-direction:column; gap:.65rem; margin-bottom:2rem; }
+.sec-head h2{ font-size:clamp(1.6rem, 3.6vw, 2.15rem); }
+.sec-head p{ max-width:var(--measure); color:var(--ink-2); font-weight:300; }
+
+.card{
+  background:var(--surface); border:1px solid var(--line-soft);
+  border-radius:12px; box-shadow:var(--shadow);
+}
+.pad{ padding:1.5rem; }
+
+/* ── 24h 作息帶 ───────────────────────────── */
+.clockstrip{ display:flex; flex-direction:column; gap:.9rem; }
+.clockrow{ display:grid; grid-template-columns:5.5rem 1fr; gap:.85rem; align-items:center; }
+.clockrow > span:first-child{ font-family:var(--mono); font-size:.75rem; color:var(--ink-2); text-align:right; }
+.band{
+  display:grid; grid-template-columns:repeat(24,1fr);
+  height:2rem; border-radius:5px; overflow:hidden;
+  border:1px solid var(--line-soft); background:var(--surface-2);
+}
+.band i{ display:block; font-style:normal; }
+.band i[data-k="work"]{ background:repeating-linear-gradient(45deg, var(--peak-soft), var(--peak-soft) 4px, transparent 4px, transparent 8px); box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--peak) 30%, transparent); }
+.band i[data-k="sleep"]{ background:var(--sleep-soft); box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--sleep) 28%, transparent); }
+.band i[data-k="go"]{ background:var(--sea-soft); box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--sea) 32%, transparent); }
+.band i[data-k="play"]{ background:color-mix(in srgb, var(--sea) 24%, transparent); }
+.band i[data-k="night"]{ background:color-mix(in srgb, var(--lantern) 30%, transparent); }
+.axis{ display:grid; grid-template-columns:repeat(24,1fr); font-family:var(--mono); font-size:.5625rem; color:var(--ink-3); }
+.axis b{ font-weight:400; }
+.legend{ display:flex; flex-wrap:wrap; gap:.5rem .95rem; margin-top:.4rem; }
+.legend span{ display:inline-flex; align-items:center; gap:.4rem; font-size:.75rem; color:var(--ink-2); }
+.legend span::before{ content:""; width:.85rem; height:.85rem; border-radius:3px; border:1px solid var(--line); }
+.legend .l-work::before{ background:var(--peak-soft); }
+.legend .l-sleep::before{ background:var(--sleep-soft); }
+.legend .l-go::before{ background:var(--sea-soft); }
+.legend .l-play::before{ background:color-mix(in srgb, var(--sea) 24%, transparent); }
+.legend .l-night::before{ background:color-mix(in srgb, var(--lantern) 30%, transparent); }
+
+/* ── 方案卡 ───────────────────────────────── */
+.plans{ display:grid; gap:1.15rem; grid-template-columns:repeat(auto-fit, minmax(290px,1fr)); }
+.plan{ position:relative; display:flex; flex-direction:column; overflow:hidden; }
+.plan-top{ padding:1.35rem 1.5rem 1.15rem; border-bottom:1px solid var(--line-soft); }
+.plan-tag{
+  font-family:var(--mono); font-size:.625rem; letter-spacing:.14em; text-transform:uppercase;
+  padding:.2rem .5rem; border-radius:4px; display:inline-block;
+}
+.t-peak{ background:var(--peak-soft); color:var(--peak); }
+.t-good{ background:var(--mid-soft); color:var(--mid); }
+.t-best{ background:var(--cheap-soft); color:var(--cheap); }
+.plan h3{ font-size:1.25rem; margin:.65rem 0 .2rem; }
+.plan-dates{ font-family:var(--mono); font-size:.8125rem; color:var(--ink-2); }
+.plan-price{ padding:1rem 1.5rem; display:flex; align-items:baseline; gap:.4rem; border-bottom:1px solid var(--line-soft); background:var(--surface-2); }
+.plan-price b{ font-family:var(--mono); font-size:1.6rem; font-weight:600; font-variant-numeric:tabular-nums; }
+.plan-price small{ font-size:.75rem; color:var(--ink-3); }
+.plan-body{ padding:1.25rem 1.5rem 1.5rem; display:flex; flex-direction:column; gap:.9rem; flex:1; }
+.plan.best{ border-color:color-mix(in srgb, var(--cheap) 45%, var(--line-soft)); box-shadow:var(--shadow-lift); }
+
+.flight{ display:flex; flex-direction:column; gap:.3rem; padding:.7rem .85rem; border-radius:8px; background:var(--surface-2); }
+.flight-h{ font-family:var(--mono); font-size:.6875rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); }
+.flight-t{ display:flex; align-items:center; gap:.55rem; font-family:var(--mono); font-variant-numeric:tabular-nums; }
+.flight-t b{ font-size:1.0625rem; font-weight:500; }
+.flight-t i{ flex:1; height:1px; background:var(--line); position:relative; }
+.flight-t i::after{ content:"›"; position:absolute; right:-2px; top:-.85rem; color:var(--ink-3); font-style:normal; }
+.flight-n{ font-size:.75rem; color:var(--ink-2); }
+.plan ul.why{ display:flex; flex-direction:column; gap:.45rem; }
+.plan ul.why li{ font-size:.875rem; color:var(--ink-2); padding-left:1.1rem; position:relative; line-height:1.6; }
+.plan ul.why li::before{ content:""; position:absolute; left:0; top:.62em; width:5px; height:5px; border-radius:50%; background:var(--sea); }
+.plan ul.why li.warn::before{ background:var(--peak); }
+
+/* ── 表格 ─────────────────────────────────── */
+.scroller{ overflow-x:auto; border:1px solid var(--line-soft); border-radius:10px; background:var(--surface); }
+table{ border-collapse:collapse; width:100%; min-width:640px; font-size:.875rem; }
+th,td{ padding:.7rem .9rem; text-align:left; border-bottom:1px solid var(--line-soft); vertical-align:top; }
+thead th{
+  font-family:var(--mono); font-size:.625rem; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--ink-3); font-weight:500; background:var(--surface-2); position:sticky; top:0;
+}
+tbody tr:last-child td{ border-bottom:0; }
+tbody tr:hover{ background:var(--surface-2); }
+td.num{ font-family:var(--mono); font-variant-numeric:tabular-nums; white-space:nowrap; }
+.pill{ display:inline-block; font-family:var(--mono); font-size:.6875rem; padding:.12rem .45rem; border-radius:4px; white-space:nowrap; }
+.pill.ok{ background:var(--cheap-soft); color:var(--cheap); }
+.pill.no{ background:var(--peak-soft); color:var(--peak); }
+.pill.mid{ background:var(--mid-soft); color:var(--mid); }
+.pill.sea{ background:var(--sea-soft); color:var(--sea); }
+
+/* ── 十月日曆 ─────────────────────────────── */
+.calwrap{ display:grid; gap:1.5rem; grid-template-columns:minmax(0,1fr); }
+@media (min-width:900px){ .calwrap{ grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr); } }
+.cal{ display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+.cal .dow{ font-family:var(--mono); font-size:.625rem; letter-spacing:.1em; color:var(--ink-3); text-align:center; padding-bottom:.3rem; }
+.day{
+  aspect-ratio:1; border-radius:7px; border:1px solid var(--line-soft);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.1rem;
+  font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:.9375rem;
+  background:var(--surface); position:relative;
+}
+.day.blank{ border:0; background:none; }
+.day.low{ background:var(--cheap-soft); border-color:color-mix(in srgb,var(--cheap) 25%,transparent); color:var(--cheap); }
+.day.mid{ background:var(--mid-soft); border-color:color-mix(in srgb,var(--mid) 25%,transparent); color:var(--mid); }
+.day.high{ background:var(--peak-soft); border-color:color-mix(in srgb,var(--peak) 25%,transparent); color:var(--peak); }
+.day em{ font-style:normal; font-size:.5rem; letter-spacing:.02em; opacity:.85; font-family:var(--body); }
+.day.pick{ box-shadow:0 0 0 2px var(--sea); border-color:var(--sea); }
+.day.pick::after{
+  content:"★"; position:absolute; top:-.35rem; right:-.2rem; font-size:.6rem; color:var(--sea);
+}
+.callegend{ display:flex; flex-wrap:wrap; gap:.5rem .9rem; margin-top:.9rem; }
+.callegend span{ display:inline-flex; align-items:center; gap:.4rem; font-size:.75rem; color:var(--ink-2); }
+.callegend span::before{ content:""; width:.85rem; height:.85rem; border-radius:3px; }
+.callegend .c-low::before{ background:var(--cheap-soft); box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--cheap) 30%,transparent); }
+.callegend .c-mid::before{ background:var(--mid-soft); box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--mid) 30%,transparent); }
+.callegend .c-high::before{ background:var(--peak-soft); box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--peak) 30%,transparent); }
+
+.windows{ display:flex; flex-direction:column; gap:.7rem; }
+.window{ display:grid; grid-template-columns:auto 1fr; gap:.9rem; padding:.85rem 1rem; border-radius:9px; border:1px solid var(--line-soft); background:var(--surface); align-items:start; }
+.window .rank{ font-family:var(--mono); font-size:.75rem; font-weight:600; padding:.15rem .45rem; border-radius:4px; margin-top:.15rem; }
+.window h4{ font-size:.9375rem; font-family:var(--body); font-weight:500; }
+.window p{ font-size:.8125rem; color:var(--ink-2); margin-top:.15rem; }
+.window.top{ border-color:color-mix(in srgb,var(--cheap) 40%,var(--line-soft)); background:linear-gradient(to right, var(--cheap-soft), var(--surface) 55%); }
+
+/* ── 行程時間軸 ───────────────────────────── */
+.daytabs{ display:flex; gap:.4rem; flex-wrap:wrap; margin-bottom:1.5rem; }
+.daytab{
+  font-family:var(--body); font-size:.875rem; padding:.5rem .95rem; border-radius:8px;
+  border:1px solid var(--line); background:var(--surface); color:var(--ink-2); cursor:pointer;
+  display:flex; flex-direction:column; align-items:flex-start; gap:.05rem; line-height:1.35;
+  transition:border-color .15s, background .15s, color .15s;
+}
+.daytab b{ font-family:var(--mono); font-size:.6875rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); font-weight:500; }
+.daytab:hover{ border-color:var(--sea); }
+.daytab[aria-selected="true"]{ background:var(--sea); border-color:var(--sea); color:#fff; }
+.daytab[aria-selected="true"] b{ color:rgba(255,255,255,.72); }
+
+.dayhead{
+  display:flex; flex-wrap:wrap; align-items:baseline; gap:.5rem 1rem;
+  padding:1.1rem 1.3rem; border-radius:11px; background:var(--surface-2);
+  border:1px solid var(--line-soft); margin-bottom:1.5rem;
+}
+.dayhead h3{ font-size:1.2rem; }
+.dayhead p{ font-size:.875rem; color:var(--ink-2); flex-basis:100%; font-weight:300; }
+
+.tl{ display:flex; flex-direction:column; }
+.ev{
+  display:grid; grid-template-columns:var(--rail) 1fr; gap:0 1.15rem;
+  position:relative; padding-bottom:1.15rem;
+}
+.ev::before{
+  content:""; position:absolute; left:calc(var(--rail) + .5rem); top:.55rem; bottom:-.35rem;
+  width:1px; background:var(--line);
+}
+.ev:last-child::before{ display:none; }
+.ev-time{
+  font-family:var(--mono); font-size:.8125rem; font-variant-numeric:tabular-nums;
+  color:var(--ink-2); text-align:right; padding-top:.15rem; position:relative;
+}
+.ev-time::after{
+  content:""; position:absolute; right:-1.42rem; top:.62rem;
+  width:9px; height:9px; border-radius:50%; background:var(--surface);
+  border:2px solid var(--sea);
+}
+.ev[data-k="rest"] .ev-time::after{ border-color:var(--sleep); }
+.ev[data-k="night"] .ev-time::after{ border-color:var(--lantern); }
+.ev[data-k="move"] .ev-time::after{ border-color:var(--line); background:var(--line); }
+.ev[data-k="opt"] .ev-time::after{ border-color:var(--ink-3); border-style:dashed; }
+.ev-body{ display:flex; flex-direction:column; gap:.4rem; padding-bottom:.15rem; }
+.ev-title{ display:flex; flex-wrap:wrap; align-items:center; gap:.5rem; }
+.ev-title h4{ font-size:1rem; font-family:var(--body); font-weight:500; }
+.ev-body p{ font-size:.875rem; color:var(--ink-2); max-width:var(--measure); font-weight:300; }
+.ev-cost{
+  font-family:var(--mono); font-size:.75rem; color:var(--ink-3);
+  display:flex; flex-wrap:wrap; gap:.4rem .9rem; margin-top:.1rem;
+}
+.ev-cost span{ display:inline-flex; align-items:center; gap:.3rem; }
+.ev-cost b{ color:var(--ink-2); font-weight:500; }
+.ev[data-k="rest"] .ev-body{ opacity:.82; }
+.ev[data-k="move"] .ev-title h4{ font-weight:400; color:var(--ink-2); font-size:.9375rem; }
+.ev[data-k="opt"]{ }
+.ev[data-k="opt"] .ev-body{ border-left:2px dashed var(--line); padding-left:.85rem; margin-left:-.85rem; }
+
+.tag{
+  font-family:var(--mono); font-size:.625rem; letter-spacing:.08em; padding:.1rem .42rem;
+  border-radius:4px; background:var(--surface-2); color:var(--ink-3); border:1px solid var(--line-soft);
+}
+.tag.sea{ background:var(--sea-soft); color:var(--sea); border-color:transparent; }
+.tag.lan{ background:var(--lantern-soft); color:var(--lantern); border-color:transparent; }
+.tag.free{ background:var(--cheap-soft); color:var(--cheap); border-color:transparent; }
+
+.swap{ display:inline-flex; border:1px solid var(--line); border-radius:8px; overflow:hidden; margin-bottom:1.15rem; }
+.swap button{
+  font-family:var(--body); font-size:.8125rem; padding:.42rem .85rem; border:0;
+  background:var(--surface); color:var(--ink-2); cursor:pointer;
+}
+.swap button + button{ border-left:1px solid var(--line); }
+.swap button[aria-pressed="true"]{ background:var(--sea); color:#fff; }
+
+/* ── 提示塊 ───────────────────────────────── */
+.note{
+  display:grid; grid-template-columns:auto 1fr; gap:.85rem;
+  padding:1rem 1.15rem; border-radius:10px; font-size:.875rem; line-height:1.65;
+  background:var(--sea-soft); color:var(--ink); border:1px solid color-mix(in srgb,var(--sea) 22%,transparent);
+}
+.note .k{ font-family:var(--mono); font-size:.625rem; letter-spacing:.12em; text-transform:uppercase; color:var(--sea); padding-top:.28rem; white-space:nowrap; }
+.note.warn{ background:var(--peak-soft); border-color:color-mix(in srgb,var(--peak) 22%,transparent); }
+.note.warn .k{ color:var(--peak); }
+.note.night{ background:var(--lantern-soft); border-color:color-mix(in srgb,var(--lantern) 25%,transparent); }
+.note.night .k{ color:var(--lantern); }
+
+/* ── 美食卡 ───────────────────────────────── */
+.filters{ display:flex; flex-wrap:wrap; gap:.4rem; margin-bottom:1.35rem; }
+.chip{
+  font-family:var(--body); font-size:.8125rem; padding:.35rem .8rem; border-radius:999px;
+  border:1px solid var(--line); background:var(--surface); color:var(--ink-2); cursor:pointer;
+}
+.chip[aria-pressed="true"]{ background:var(--ink); border-color:var(--ink); color:var(--ground); }
+.eats{ display:grid; gap:.85rem; grid-template-columns:repeat(auto-fill, minmax(268px,1fr)); }
+.eat{ padding:1.05rem 1.15rem; display:flex; flex-direction:column; gap:.45rem; }
+.eat h4{ font-size:.9375rem; font-family:var(--body); font-weight:500; }
+.eat .jp{ font-family:var(--mono); font-size:.6875rem; color:var(--ink-3); letter-spacing:.02em; }
+.eat p{ font-size:.8125rem; color:var(--ink-2); font-weight:300; }
+.eat .row{ display:flex; flex-wrap:wrap; gap:.35rem; margin-top:auto; padding-top:.5rem; align-items:center; }
+.eat .yen{ font-family:var(--mono); font-size:.8125rem; color:var(--ink); font-weight:500; margin-left:auto; }
+.eat[hidden]{ display:none; }
+
+/* ── 試算器 ───────────────────────────────── */
+.calc{ display:grid; gap:1.5rem; }
+@media (min-width:860px){ .calc{ grid-template-columns:minmax(0,1fr) 21rem; align-items:start; } }
+.controls{ display:flex; flex-direction:column; gap:1.15rem; }
+.ctl label{ display:flex; justify-content:space-between; align-items:baseline; font-size:.875rem; margin-bottom:.4rem; gap:1rem; }
+.ctl label b{ font-family:var(--mono); font-weight:500; color:var(--sea); font-variant-numeric:tabular-nums; }
+input[type="range"]{ width:100%; accent-color:var(--sea); height:1.5rem; }
+.seg{ display:flex; border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+.seg button{ flex:1; font-family:var(--body); font-size:.8125rem; padding:.45rem .3rem; border:0; background:var(--surface); color:var(--ink-2); cursor:pointer; }
+.seg button + button{ border-left:1px solid var(--line); }
+.seg button[aria-pressed="true"]{ background:var(--sea); color:#fff; }
+.bill{ position:sticky; top:4.5rem; padding:1.35rem 1.5rem; display:flex; flex-direction:column; gap:.15rem; }
+.bill .line{ display:flex; justify-content:space-between; gap:1rem; padding:.42rem 0; font-size:.875rem; border-bottom:1px dashed var(--line-soft); }
+.bill .line span:first-child{ color:var(--ink-2); }
+.bill .line span:last-child{ font-family:var(--mono); font-variant-numeric:tabular-nums; }
+.bill .total{ display:flex; justify-content:space-between; align-items:baseline; margin-top:.9rem; padding-top:.9rem; border-top:2px solid var(--ink); gap:1rem; }
+.bill .total b{ font-family:var(--mono); font-size:1.75rem; font-weight:600; font-variant-numeric:tabular-nums; }
+.bill .per{ font-family:var(--mono); font-size:.75rem; color:var(--ink-3); text-align:right; margin-top:.4rem; }
+
+/* ── 清單 ─────────────────────────────────── */
+.checks{ display:grid; gap:1.15rem; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); }
+.checkgroup h4{ font-size:.875rem; font-family:var(--mono); font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); margin-bottom:.7rem; }
+.checkgroup li{ margin-bottom:.1rem; }
+.checkgroup label{ display:flex; gap:.6rem; align-items:flex-start; font-size:.875rem; cursor:pointer; padding:.28rem .35rem; border-radius:6px; }
+.checkgroup label:hover{ background:var(--surface-2); }
+.checkgroup input{ accent-color:var(--sea); margin-top:.34rem; flex:none; width:.95rem; height:.95rem; }
+.checkgroup input:checked + span{ text-decoration:line-through; color:var(--ink-3); }
+.resetbtn{ font-family:var(--body); font-size:.75rem; background:none; border:1px solid var(--line); color:var(--ink-3); padding:.3rem .7rem; border-radius:6px; cursor:pointer; }
+.resetbtn:hover{ color:var(--peak); border-color:var(--peak); }
+
+/* ── 下次再來 ─────────────────────────────── */
+.nexts{ display:grid; gap:1.15rem; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); }
+.next{ padding:1.35rem 1.5rem; display:flex; flex-direction:column; gap:.7rem; position:relative; overflow:hidden; }
+.next .n{ font-family:var(--mono); font-size:2.75rem; font-weight:600; line-height:1; color:var(--line); position:absolute; top:.6rem; right:1rem; }
+.next h4{ font-size:1.0625rem; }
+.next p{ font-size:.875rem; color:var(--ink-2); font-weight:300; }
+.next ul{ display:flex; flex-direction:column; gap:.3rem; }
+.next li{ font-size:.8125rem; color:var(--ink-2); padding-left:.95rem; position:relative; }
+.next li::before{ content:"—"; position:absolute; left:0; color:var(--ink-3); }
+.next .when{ font-family:var(--mono); font-size:.6875rem; letter-spacing:.1em; text-transform:uppercase; color:var(--sea); }
+
+/* ── 日文小抄 ─────────────────────────────── */
+.phrases{ display:grid; gap:.7rem; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); }
+.ph{ padding:.85rem 1rem; border-radius:9px; background:var(--surface); border:1px solid var(--line-soft); }
+.ph .zh{ font-size:.8125rem; color:var(--ink-3); }
+.ph .jp{ font-size:.9375rem; margin-top:.15rem; }
+.ph .rm{ font-family:var(--mono); font-size:.6875rem; color:var(--sea); margin-top:.2rem; letter-spacing:.02em; }
+
+/* ── 頁尾 ─────────────────────────────────── */
+footer{ border-top:1px solid var(--line-soft); padding:2.5rem 0 3.5rem; margin-top:1.5rem; }
+footer .cols{ display:grid; gap:1.5rem; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
+footer h4{ font-family:var(--mono); font-size:.625rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); margin-bottom:.6rem; }
+footer li, footer p{ font-size:.8125rem; color:var(--ink-2); line-height:1.7; }
+footer a{ font-size:.8125rem; }
+.disclaim{ margin-top:2rem; padding-top:1.25rem; border-top:1px solid var(--line-soft); font-size:.75rem; color:var(--ink-3); max-width:var(--measure); }
+
+@media (max-width:680px){
+  :root{ --rail:3.6rem; }
+  .hero{ padding:3.25rem 0 2.5rem; }
+  .ev{ gap:0 .9rem; }
+  .ev::before{ left:calc(var(--rail) + .42rem); }
+  .ev-time::after{ right:-1.18rem; }
+  .bill{ position:static; }
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
+}
+
+@media print{
+  .topbar, .themebtn, .filters, .swap, .daytabs, .resetbtn, .hero canvas{ display:none !important; }
+  body{ background:#fff; color:#000; }
+  section{ padding:1rem 0; break-inside:avoid; }
+  .tabpanel[hidden]{ display:block !important; }
+}
+
+/* ── Google 地圖連結 ──────────────────────── */
+.mapl{
+  display:inline-flex; align-items:center; gap:.22rem;
+  font-family:var(--mono); font-size:.625rem; letter-spacing:.06em;
+  padding:.12rem .42rem .12rem .3rem; border-radius:4px;
+  background:var(--sea-soft); color:var(--sea); border:0;
+  white-space:nowrap; transition:background .15s;
+}
+.mapl::before{ content:"◉"; font-size:.6rem; }
+.mapl:hover{ background:color-mix(in srgb, var(--sea) 22%, transparent); border:0; }
+
+/* ── 四日總覽 ─────────────────────────────── */
+.overview{ display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft);
+  border-radius:12px; overflow:hidden; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); }
+.ovday{ background:var(--surface); padding:1.35rem 1.4rem; display:flex; flex-direction:column; gap:.55rem; }
+.ovday .d{ font-family:var(--mono); font-size:.625rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); }
+.ovday h4{ font-size:1.0625rem; }
+.ovday .hl{ font-size:.8125rem; color:var(--sea); font-weight:500; }
+.ovday ul{ display:flex; flex-direction:column; gap:.25rem; margin-top:.15rem; }
+.ovday li{ font-size:.8125rem; color:var(--ink-2); padding-left:.9rem; position:relative; line-height:1.55; }
+.ovday li::before{ content:""; position:absolute; left:0; top:.6em; width:4px; height:4px; border-radius:50%; background:var(--line); }
+.ovday .cost{ font-family:var(--mono); font-size:.75rem; color:var(--ink-3); margin-top:auto; padding-top:.6rem; border-top:1px dashed var(--line-soft); }
+
+/* ── 大數字條 ─────────────────────────────── */
+.bigrow{ display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft);
+  border-radius:11px; overflow:hidden; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); }
+.bigrow div{ background:var(--surface); padding:1.15rem 1.25rem; }
+.bigrow dt{ font-family:var(--mono); font-size:.625rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); }
+.bigrow dd{ margin:.3rem 0 0; font-family:var(--mono); font-size:1.25rem; font-weight:500; font-variant-numeric:tabular-nums; }
+.bigrow dd small{ font-size:.7rem; color:var(--ink-3); font-weight:400; margin-left:.15rem; }
+
+/* ── 地圖連結 ─────────────────────────────── */
+.mapl{ display:inline-flex; align-items:center; gap:.22rem; font-family:var(--mono); font-size:.625rem;
+  letter-spacing:.06em; padding:.12rem .42rem .12rem .3rem; border-radius:4px;
+  background:var(--sea-soft); color:var(--sea); border:0; white-space:nowrap; transition:background .15s; }
+.mapl::before{ content:"◉"; font-size:.6rem; }
+.mapl:hover{ background:color-mix(in srgb, var(--sea) 22%, transparent); border:0; }
+
+/* ── 總覽 ─────────────────────────────────── */
+.overview{ display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft);
+  border-radius:12px; overflow:hidden; grid-template-columns:repeat(auto-fit,minmax(215px,1fr)); }
+.ovday{ background:var(--surface); padding:1.3rem 1.35rem; display:flex; flex-direction:column; gap:.5rem; }
+.ovday .d{ font-family:var(--mono); font-size:.625rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); }
+.ovday h4{ font-size:1.0625rem; }
+.ovday .hl{ font-size:.8125rem; color:var(--sea); font-weight:500; }
+.ovday ul{ display:flex; flex-direction:column; gap:.25rem; margin-top:.15rem; }
+.ovday li{ font-size:.8125rem; color:var(--ink-2); padding-left:.9rem; position:relative; line-height:1.55; }
+.ovday li::before{ content:""; position:absolute; left:0; top:.6em; width:4px; height:4px; border-radius:50%; background:var(--line); }
+.ovday .cost{ font-family:var(--mono); font-size:.75rem; color:var(--ink-3); margin-top:auto; padding-top:.6rem; border-top:1px dashed var(--line-soft); }
+
+/* ── 大數字條 ─────────────────────────────── */
+.bigrow{ display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft);
+  border-radius:11px; overflow:hidden; grid-template-columns:repeat(auto-fit,minmax(145px,1fr)); }
+.bigrow div{ background:var(--surface); padding:1.15rem 1.25rem; }
+.bigrow dt{ font-family:var(--mono); font-size:.625rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); }
+.bigrow dd{ margin:.3rem 0 0; font-family:var(--mono); font-size:1.25rem; font-weight:500; font-variant-numeric:tabular-nums; }
+.bigrow dd small{ font-size:.7rem; color:var(--ink-3); font-weight:400; margin-left:.15rem; }
+
+/* ── 卡片格 ───────────────────────────────── */
+.seats{ display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft);
+  border-radius:12px; overflow:hidden; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
+.seat{ background:var(--surface); padding:1.3rem 1.35rem; display:flex; flex-direction:column; gap:.4rem; }
+.seat.pickd{ background:var(--sea-soft); }
+.seat .venue{ font-family:var(--mono); font-size:.625rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); }
+.seat h4{ font-size:1.0625rem; }
+.seat .price{ font-family:var(--mono); font-size:1.4rem; font-weight:500; font-variant-numeric:tabular-nums; }
+.seat .per{ font-family:var(--mono); font-size:.8125rem; color:var(--sea); font-weight:500; }
+.seat p{ font-size:.8125rem; color:var(--ink-2); margin-top:.2rem; }
+
+/* ── 路線切換 ─────────────────────────────── */
+.routeswap{ display:flex; gap:.4rem; flex-wrap:wrap; margin-bottom:1.35rem; }
+.routeswap button{ font-family:var(--body); font-size:.8125rem; padding:.5rem .9rem; border-radius:8px;
+  border:1px solid var(--line); background:var(--surface); color:var(--ink-2); cursor:pointer;
+  display:flex; flex-direction:column; align-items:flex-start; gap:.05rem; line-height:1.35; }
+.routeswap button b{ font-family:var(--mono); font-size:.625rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); font-weight:500; }
+.routeswap button:hover{ border-color:var(--lantern); }
+.routeswap button[aria-pressed="true"]{ background:var(--lantern); border-color:var(--lantern); color:#fff; }
+.routeswap button[aria-pressed="true"] b{ color:rgba(255,255,255,.75); }
+[data-routepanel][hidden]{ display:none; }
+.optnote{ display:flex; gap:.6rem; align-items:baseline; padding:.7rem .95rem; border-radius:8px;
+  background:var(--surface-2); border:1px dashed var(--line); font-size:.8125rem; color:var(--ink-2); margin-bottom:1.15rem; }
+.optnote b{ font-family:var(--mono); font-size:.625rem; letter-spacing:.12em; text-transform:uppercase; color:var(--lantern); white-space:nowrap; }
+
+/* ── 月份熱度條 ───────────────────────────── */
+.months{ display:grid; gap:.5rem; }
+.mrow{ display:grid; grid-template-columns:4.5rem 1fr; gap:.85rem; align-items:center; }
+.mrow > span:first-child{ font-family:var(--mono); font-size:.8125rem; color:var(--ink-2); }
+.mbar{ display:flex; height:2.15rem; border-radius:6px; overflow:hidden; border:1px solid var(--line-soft); }
+.mbar i{ display:flex; align-items:center; justify-content:center; font-style:normal;
+  font-family:var(--mono); font-size:.625rem; letter-spacing:.04em; }
+.mbar i[data-t="best"]{ background:var(--cheap-soft); color:var(--cheap); }
+.mbar i[data-t="ok"]{ background:var(--mid-soft); color:var(--mid); }
+.mbar i[data-t="bad"]{ background:var(--peak-soft); color:var(--peak); }
+.mbar i[data-t="mid"]{ background:var(--surface-2); color:var(--ink-3); }
+</style>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a href="#top" class="brand">峴港<span>會安</span>行</a>
+    <nav class="navlinks">
+      <a href="#overview">總覽</a>
+      <a href="#when">挑月份</a>
+      <a href="#flights">航班</a>
+      <a href="#stay">住宿</a>
+      <a href="#plan">每日行程</a>
+      <a href="#eat">必吃</a>
+      <a href="#exp">體驗</a>
+      <a href="#money">費用</a>
+      <a href="#tips">實用須知</a>
+    </nav>
+    <button class="themebtn" id="theme" type="button" aria-label="切換深淺色">◐</button>
+  </div>
+</header>
+
+<main id="top">
+
+<div class="hero">
+  <canvas id="tide" aria-hidden="true"></canvas>
+  <div class="wrap hero-inner">
+    <p class="eyebrow">峴港 · 會安 · 五天四夜 · 2027 年 3 月</p>
+    <h1>白天在黃金橋上，<br>晚上在<em>燈籠與皮皮蝦</em>之間。</h1>
+    <p class="hero-sub">
+      機票便宜、住宿更便宜——這趟的邏輯跟日本完全相反：<strong>省下來的錢全部拿去買體驗</strong>。
+      海景房一晚不到台幣一千五，一小時全身按摩三百塊，一整桌現撈海鮮兩個人吃不到七百。
+      巴拿山、會安古鎮、美溪海灘的大排檔，五天四夜每人不到台幣一萬七。
+    </p>
+    <dl class="hero-meta">
+      <div><dt>建議日期</dt><dd>3/9<small>–13</small></dd></div>
+      <div><dt>天數</dt><dd>5<small>天</small>4<small>夜</small></dd></div>
+      <div><dt>飛行時間</dt><dd>2<small>h</small>48<small>m</small></dd></div>
+      <div><dt>每人總計</dt><dd>NT$<span id="heroPer">16,460</span></dd></div>
+      <div><dt>匯率</dt><dd>1<small>萬盾≈NT$12.5</small></dd></div>
+    </dl>
+  </div>
+</div>
+
+<section id="overview">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">行程總覽</p>
+      <h2>峴港兩晚，會安兩晚，行李只搬一次</h2>
+      <p>前兩天在峴港（海灘、大排檔、巴拿山），後兩天移到會安（古鎮、燈籠、田園），最後一天從會安直接殺去機場。這樣安排只需要換一次飯店。</p>
+    </div>
+
+    <div class="overview">
+      <div class="ovday">
+        <span class="d">Day 1 · 3/9 二</span>
+        <h4>抵達．皮皮蝦</h4>
+        <span class="hl">主場：Bé Mặn 大排檔</span>
+        <ul>
+          <li>下午抵達，入住美溪海灘</li>
+          <li>赤腳走美溪海灘看日落</li>
+          <li>水缸現挑皮皮蝦、螃蟹</li>
+          <li>龍橋、愛之橋夜散步</li>
+        </ul>
+        <span class="cost">當日約 NT$1,100／人</span>
+      </div>
+      <div class="ovday" style="background:var(--lantern-soft)">
+        <span class="d">Day 2 · 3/10 三</span>
+        <h4>巴拿山．黃金橋</h4>
+        <span class="hl">主場：Sun World Ba Na Hills</span>
+        <ul>
+          <li>世界紀錄纜車上山</li>
+          <li>黃金橋（佛手橋）</li>
+          <li>法國村、月亮城堡</li>
+          <li>回程按摩一小時</li>
+        </ul>
+        <span class="cost">當日約 NT$2,100／人</span>
+      </div>
+      <div class="ovday">
+        <span class="d">Day 3 · 3/11 四</span>
+        <h4>五行山．移動會安</h4>
+        <span class="hl">主場：會安古鎮夜晚</span>
+        <ul>
+          <li>五行山洞窟與觀景台</li>
+          <li>下午移動到會安入住</li>
+          <li>古鎮點燈、秋盆河放水燈</li>
+          <li>白玫瑰餃、高樓麵</li>
+        </ul>
+        <span class="cost">當日約 NT$1,400／人</span>
+      </div>
+      <div class="ovday">
+        <span class="d">Day 4 · 3/12 五</span>
+        <h4>會安．田園與河</h4>
+        <span class="hl">三條路線當天選</span>
+        <ul>
+          <li>A 迦南島椰林．竹籃船</li>
+          <li>B 美山聖地．占婆遺跡</li>
+          <li>C 安邦海灘．單車田園</li>
+          <li>晚上回古鎮吃喝</li>
+        </ul>
+        <span class="cost">當日約 NT$1,300／人</span>
+      </div>
+      <div class="ovday">
+        <span class="d">Day 5 · 3/13 六</span>
+        <h4>峴港．採買回家</h4>
+        <span class="hl">主場：韓市場</span>
+        <ul>
+          <li>會安早餐後直奔峴港</li>
+          <li>粉紅教堂、韓市場採買</li>
+          <li>最後一次按摩</li>
+          <li>傍晚班機回台</li>
+        </ul>
+        <span class="cost">當日約 NT$900／人</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="when">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">挑月份</p>
+      <h2>一到五月，三月是甜蜜點</h2>
+      <p>
+        峴港的季節很單純：<strong>九到十一月是雨季，三到八月是乾季</strong>。
+        一到五月這個範圍裡，越晚天氣越好、也越貴。三月剛進乾季、價格還沒漲、
+        又完全避開越南的兩個大假期——這是唯一三個條件同時成立的月份。
+      </p>
+    </div>
+
+    <div class="card pad" style="margin-bottom:1.5rem">
+      <div class="months">
+        <div class="mrow"><span>1 月</span><div class="mbar">
+          <i data-t="best" style="flex:3">機票全年最低</i><i data-t="bad" style="flex:4">18–23°C．涼、海水冷、雨季尾</i>
+        </div></div>
+        <div class="mrow"><span>2 月上</span><div class="mbar">
+          <i data-t="bad" style="flex:7">越南春節 Tết（2/6）．店家大量歇業</i>
+        </div></div>
+        <div class="mrow"><span>2 月下</span><div class="mbar">
+          <i data-t="best" style="flex:4">節後最便宜</i><i data-t="ok" style="flex:3">天氣轉好但仍偏涼</i>
+        </div></div>
+        <div class="mrow" style="font-weight:500"><span>3 月 ★</span><div class="mbar" style="border-color:var(--sea);box-shadow:0 0 0 1px var(--sea)">
+          <i data-t="best" style="flex:7">乾季開始．25–30°C．價格未漲．無假期</i>
+        </div></div>
+        <div class="mrow"><span>4 月</span><div class="mbar">
+          <i data-t="ok" style="flex:5">天氣最好但漸熱、旺季價</i><i data-t="bad" style="flex:2">4/30 越南連假</i>
+        </div></div>
+        <div class="mrow"><span>5 月</span><div class="mbar">
+          <i data-t="bad" style="flex:2">5/1–3 連假</i><i data-t="ok" style="flex:5">30–35°C．熱、旺季價</i>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="seats" style="margin-bottom:1.5rem">
+      <div class="seat pickd">
+        <span class="venue">第一名．本頁採用</span>
+        <h4>3/9 二 → 3/13 六</h4>
+        <div class="price" style="font-size:1.1rem;line-height:1.5">乾季剛開始<br>價格還沒漲</div>
+        <p><strong>週二出發、週六回程</strong>——這條航線的統計就是週二最便宜、週六回程最優惠。
+        三月中天氣穩定、海水回溫可以下水，而且完全避開越南春節與四五月連假。</p>
+      </div>
+      <div class="seat">
+        <span class="venue">第二名．最省</span>
+        <h4>2/23 二 → 2/27 六</h4>
+        <div class="price" style="font-size:1.1rem;line-height:1.5">春節剛過<br>全年低點之一</div>
+        <p>越南 Tết 結束後需求斷崖式下滑，機票住宿都便宜。天氣比三月涼一點、偶爾陰雨，
+        但海鮮跟古鎮完全不受影響。<strong>怕曬的人反而更適合。</strong></p>
+      </div>
+      <div class="seat">
+        <span class="venue">第三名．最便宜</span>
+        <h4>1 月的任何一個週二</h4>
+        <div class="price" style="font-size:1.1rem;line-height:1.5">機票全年最低</div>
+        <p>18–23°C，遊客最少、價格最低。代價是<strong>海水太冷不能玩水、雨季尾巴還會下</strong>，
+        美溪海灘的價值打折。純粹想吃跟逛古鎮的話還是划算。</p>
+      </div>
+    </div>
+
+    <div style="display:grid;gap:.85rem">
+      <div class="note warn">
+        <span class="k">一定要避開越南春節</span>
+        <div>2027 年除夕在 <strong>2 月 5 日</strong>、初一 2 月 6 日，越南全國約放假到 <strong>2 月 12 日</strong>。
+        這段期間<strong>大量餐廳、市場、大排檔直接關門</strong>，開的也常臨時加價。
+        你們指定要吃的海鮮大排檔正是最容易歇業的那一類——
+        <strong>春節去等於這趟最想吃的東西吃不到</strong>，而且機票還特別貴。</div>
+      </div>
+      <div class="note warn">
+        <span class="k">也要避開 4/30–5/3</span>
+        <div>越南統一日（4/30）接勞動節（5/1），是越南人自己的旅遊旺季。
+        峴港、會安會被國內遊客塞爆，飯店漲價、景點大排長龍。</div>
+      </div>
+      <div class="note">
+        <span class="k">訂票時機</span>
+        <div>這條航線最划算的訂票時間大約是<strong>出發前 40 天（約 6 週）</strong>。
+        以 3/9 出發推算，<strong>2027 年 1 月底到 2 月初</strong>是下手的甜蜜點。
+        現在（2026/8）先設 Google Flights 價格追蹤，看到低於預算就直接買。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="flights">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">航班</p>
+      <h2>四家直飛，越捷最便宜</h2>
+      <p>桃園直飛峴港 <strong>2 小時 48 分</strong>，比飛東京還近。四家航空在飛，越捷是唯一的廉航。</p>
+    </div>
+
+    <div class="scroller" style="margin-bottom:1.15rem">
+      <table>
+        <thead><tr><th>航空公司</th><th>班次</th><th>參考時刻</th><th>來回含稅（3 月平日估）</th><th>說明</th></tr></thead>
+        <tbody>
+          <tr style="background:var(--cheap-soft)">
+            <td><strong>越捷航空 VietJet</strong><span class="pill sea">最便宜</span></td>
+            <td>每週二、三、五、六、日</td>
+            <td class="num">依季節調整</td>
+            <td class="num"><strong>NT$5,500–9,000</strong></td>
+            <td>廉航，行李與餐點另計。<strong>週二有飛，正好對上最便宜的出發日</strong></td>
+          </tr>
+          <tr>
+            <td><strong>長榮航空</strong></td>
+            <td>每日一班</td>
+            <td class="num">BR383　10:52 出發</td>
+            <td class="num">NT$9,000–14,000</td>
+            <td>上午出發、下午抵達，第一天可用時間最多。含 23kg 託運</td>
+          </tr>
+          <tr>
+            <td><strong>星宇航空</strong></td>
+            <td>每日一班</td>
+            <td class="num">JX703　16:02 出發</td>
+            <td class="num">NT$9,000–14,000</td>
+            <td>下午出發、傍晚抵達。第一天只剩晚餐時間</td>
+          </tr>
+          <tr>
+            <td><strong>中華航空</strong></td>
+            <td>每週一、三、五、六</td>
+            <td class="num">依季節調整</td>
+            <td class="num">NT$9,000–14,000</td>
+            <td><strong>週二沒有飛</strong>，跟建議的出發日對不上</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="display:grid;gap:.85rem">
+      <div class="note">
+        <span class="k">怎麼配最划算</span>
+        <div><strong>去程越捷（週二）＋ 回程越捷（週六）</strong>是最省的組合，兩人約可比傳統航空省下 NT$7,000–10,000，
+        這筆錢剛好等於兩個人的巴拿山門票＋四次按摩＋兩頓海鮮大餐。
+        若行李多或想睡好一點，<strong>長榮 BR383 上午出發</strong>是體感最好的選擇——
+        10:52 起飛、下午抵達，第一天的海灘與晚餐都趕得上。</div>
+      </div>
+      <div class="note warn">
+        <span class="k">廉航的隱藏成本</span>
+        <div>越捷的基本票<strong>不含託運行李</strong>。訂票時同步加購 20kg 最便宜（單程約 NT$600–900），
+        機場櫃檯補買最貴。兩個人共用一件 20kg 通常就夠——
+        <strong>越南的東西很便宜但也很輕</strong>（咖啡、腰果、椰子糖），回程再看要不要加購。</div>
+      </div>
+      <div class="note warn">
+        <span class="k">價格說明</span>
+        <div>上表為<strong>3 月平日的估算區間，不是即時報價</strong>。實際請以 Google Flights、
+        Skyscanner 或航空公司官網當日價格為準。訂票甜蜜點約在出發前 6 週。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="stay">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">住宿</p>
+      <h2>海景房一晚不到台幣一千五</h2>
+      <p>
+        這是峴港最爽的地方：<strong>同樣的預算在日本只能睡商旅，在這裡可以睡四星海景房</strong>。
+        既然住宿這麼便宜，就不要為了省幾百塊住在沒有海的地方——
+        早上拉開窗簾就是南海，這件事本身就是體驗的一部分。
+      </p>
+    </div>
+
+    <h3 style="font-size:1.15rem;margin-bottom:.85rem">峴港 2 晚（Day 1–2）</h3>
+    <div class="seats" style="margin-bottom:1.5rem">
+      <div class="seat pickd">
+        <span class="venue">美溪海灘 Mỹ Khê</span>
+        <h4>四星海景雙人房</h4>
+        <div class="price">NT$1,000–1,800<small style="font-size:.7rem;color:var(--ink-3)">／晚</small></div>
+        <div class="per">兩人分攤 = NT$500–900／人／晚</div>
+        <p><strong>建議住這一區。</strong>走路就到海灘，晚上去 Bé Mặn 吃海鮮只要五分鐘。
+        多數飯店有泳池與早餐，這個價位在台灣連民宿都訂不到。</p>
+        <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.5rem">
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=My+Khe+Beach+Da+Nang" target="_blank" rel="noopener">美溪海灘</a>
+          <a class="mapl" href="https://www.airbnb.com.tw/s/Da-Nang--Vietnam/homes?adults=2&amp;room_types%5B%5D=Entire%20home%2Fapt" target="_blank" rel="noopener">Airbnb</a>
+        </div>
+      </div>
+      <div class="seat">
+        <span class="venue">韓江沿岸 Bạch Đằng</span>
+        <h4>市區河景公寓</h4>
+        <div class="price">NT$800–1,400<small style="font-size:.7rem;color:var(--ink-3)">／晚</small></div>
+        <div class="per">兩人分攤 = NT$400–700／人／晚</div>
+        <p>靠近龍橋、韓市場與市區小吃，生活感最強、吃東西最方便。缺點是沒有海，走到海灘要 10 分鐘車程。</p>
+        <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.5rem">
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Bach+Dang+Street+Da+Nang" target="_blank" rel="noopener">地圖</a>
+        </div>
+      </div>
+      <div class="seat">
+        <span class="venue">山茶半島側</span>
+        <h4>安靜度假型</h4>
+        <div class="price">NT$1,500–3,000<small style="font-size:.7rem;color:var(--ink-3)">／晚</small></div>
+        <div class="per">兩人分攤 = NT$750–1,500／人／晚</div>
+        <p>更安靜、海更乾淨，適合想整天泡泳池的人。但離市區與大排檔遠，每次出門都要叫車。</p>
+        <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.5rem">
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Son+Tra+Peninsula+Da+Nang" target="_blank" rel="noopener">地圖</a>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="font-size:1.15rem;margin-bottom:.85rem">會安 2 晚（Day 3–4）</h3>
+    <div class="seats" style="margin-bottom:1.15rem">
+      <div class="seat pickd">
+        <span class="venue">古鎮步行圈</span>
+        <h4>庭園 Homestay／精品小旅館</h4>
+        <div class="price">NT$700–1,500<small style="font-size:.7rem;color:var(--ink-3)">／晚</small></div>
+        <div class="per">兩人分攤 = NT$350–750／人／晚</div>
+        <p><strong>會安的住宿是全越南 CP 值最高的。</strong>很多小旅館有泳池、免費腳踏車、含早餐，
+        走路十分鐘進古鎮。<strong>一定要住古鎮走得到的地方</strong>——晚上的燈籠是這裡的靈魂，
+        住遠了就會懶得出門。</p>
+        <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.5rem">
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Hoi+An+Ancient+Town" target="_blank" rel="noopener">會安古鎮</a>
+          <a class="mapl" href="https://www.airbnb.com.tw/s/Hoi-An--Vietnam/homes?adults=2&amp;room_types%5B%5D=Entire%20home%2Fapt" target="_blank" rel="noopener">Airbnb</a>
+        </div>
+      </div>
+      <div class="seat">
+        <span class="venue">安邦海灘 An Bàng</span>
+        <h4>海邊 villa／bungalow</h4>
+        <div class="price">NT$1,200–2,500<small style="font-size:.7rem;color:var(--ink-3)">／晚</small></div>
+        <div class="per">兩人分攤 = NT$600–1,250／人／晚</div>
+        <p>會安北邊的海灘，比美溪安靜得多，有很多西方旅人開的小店。騎腳踏車進古鎮約 20 分鐘。</p>
+        <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.5rem">
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=An+Bang+Beach+Hoi+An" target="_blank" rel="noopener">地圖</a>
+        </div>
+      </div>
+      <div class="seat">
+        <span class="venue">田園區 Cẩm Thanh</span>
+        <h4>稻田景 homestay</h4>
+        <div class="price">NT$800–1,600<small style="font-size:.7rem;color:var(--ink-3)">／晚</small></div>
+        <div class="per">兩人分攤 = NT$400–800／人／晚</div>
+        <p>被稻田包圍的小屋，日出日落都很美，離迦南島椰林最近。適合想拍田園照的人。</p>
+        <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.5rem">
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Cam+Thanh+Hoi+An" target="_blank" rel="noopener">地圖</a>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;gap:.85rem">
+      <div class="note">
+        <span class="k">為什麼分兩地住</span>
+        <div>峴港到會安約 30 公里、車程 40 分鐘。<strong>如果四晚都住峴港，就會錯過會安最美的部分</strong>——
+        古鎮的燈籠要天黑後才亮，一日遊的旅客通常晚上九點前就被載走了。
+        住在古鎮裡，你們可以在人潮散去後的十點、十一點再出來走一圈，那才是會安。</div>
+      </div>
+      <div class="note warn">
+        <span class="k">訂房檢查</span>
+        <div>① 看清楚是不是<strong>真的海景</strong>（很多寫 sea view 其實是側面一角）
+        ② 確認<strong>含不含早餐</strong>——越南飯店早餐通常很豐盛，含早餐等於省一餐
+        ③ 會安的小旅館多半提供<strong>免費腳踏車</strong>，這在會安非常好用，訂前先問
+        ④ 查評價時特別看<strong>「隔音」與「蚊子」</strong>兩項</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="plan">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">每日行程</p>
+      <h2>逐時安排</h2>
+      <p>越南時間比台灣<strong>慢 1 小時</strong>，以下全部是當地時間。每個地點附 Google 地圖連結，點了直接導航。</p>
+    </div>
+
+    <div class="daytabs" role="tablist" aria-label="行程日期">
+      <button class="daytab" role="tab" id="tab-d1" aria-controls="d1" aria-selected="true"><b>Day 1 · 3/9 二</b>抵達．皮皮蝦</button>
+      <button class="daytab" role="tab" id="tab-d2" aria-controls="d2" aria-selected="false"><b>Day 2 · 3/10 三</b>巴拿山．黃金橋</button>
+      <button class="daytab" role="tab" id="tab-d3" aria-controls="d3" aria-selected="false"><b>Day 3 · 3/11 四</b>五行山．會安</button>
+      <button class="daytab" role="tab" id="tab-d4" aria-controls="d4" aria-selected="false"><b>Day 4 · 3/12 五</b>會安．田園與河</button>
+      <button class="daytab" role="tab" id="tab-d5" aria-controls="d5" aria-selected="false"><b>Day 5 · 3/13 六</b>峴港．回家</button>
+    </div>
+
+    <div class="tabpanel" id="d1" role="tabpanel" aria-labelledby="tab-d1">
+      <div class="dayhead"><h3>Day 1｜抵達．皮皮蝦</h3><span class="tag lan">主場：Quán Bé Mặn</span>
+        <p>今天只做三件事：踩海灘、看日落、吃一整桌現撈海鮮。</p></div>
+      <div class="tl">
+        <div class="ev" data-k="move"><div class="ev-time">12:40</div><div class="ev-body">
+          <div class="ev-title"><h4>抵達峴港國際機場</h4><span class="tag">當地時間</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Da+Nang+International+Airport" target="_blank" rel="noopener">地圖</a></div>
+          <p>長榮 BR383 台灣 10:52 起飛、飛行 2h48m，落地時越南時間約 12:40。
+          <strong>台灣人赴越南需要簽證</strong>——出發前先辦好電子簽證（E-visa）。</p>
+        </div></div>
+
+        <div class="ev" data-k="move"><div class="ev-time">13:30</div><div class="ev-body">
+          <div class="ev-title"><h4>Grab 到美溪海灘</h4><span class="tag sea">約 15 分</span></div>
+          <p>機場離市區非常近。<strong>一律用 Grab App 叫車</strong>，價格透明、不用議價、不會被繞路。
+          落地先連上網路（eSIM 或機場買 SIM），叫車在航廈外的指定上車點。</p>
+          <div class="ev-cost"><span>Grab Car <b>100,000–150,000 VND</b>（約 NT$125–190）</span></div>
+        </div></div>
+
+        <div class="ev" data-k="rest"><div class="ev-time">14:00</div><div class="ev-body">
+          <div class="ev-title"><h4>入住．放行李</h4></div>
+          <p>大部分飯店 14:00 可以 check-in。放好行李、換上拖鞋短褲。</p>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">15:30</div><div class="ev-body">
+          <div class="ev-title"><h4>美溪海灘 Mỹ Khê</h4><span class="tag free">免費</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=My+Khe+Beach+Da+Nang" target="_blank" rel="noopener">地圖</a></div>
+          <p>被《富比士》選為世界最美海灘之一的那條。<strong>細白沙、坡度平緩、浪不大</strong>，
+          三月的水溫剛好可以下去泡。沙灘上有躺椅出租，一組約 50,000 VND。
+          海邊一整排都是海鮮餐廳與咖啡店，走到哪坐到哪。</p>
+          <div class="ev-cost"><span>躺椅 <b>50,000 VND</b></span><span>椰子水 <b>30,000 VND</b></span></div>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">17:45</div><div class="ev-body">
+          <div class="ev-title"><h4>海灘日落</h4><span class="tag free">免費</span></div>
+          <p>三月的峴港日落大約 18:00 前後。美溪面東，嚴格說看的是天空的顏色而不是落日本身——
+          但整片沙灘染成粉橘色、漁船剪影浮在海上，還是很值得坐下來看完。</p>
+        </div></div>
+
+        <div class="ev" data-k="night"><div class="ev-time">19:00</div><div class="ev-body">
+          <div class="ev-title"><h4>Quán Bé Mặn．海鮮大排檔</h4><span class="tag lan">今日主場</span><span class="tag sea">皮皮蝦</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Quan+Be+Man+Da+Nang" target="_blank" rel="noopener">地圖</a></div>
+          <p><strong>地址：Lô 8 Võ Nguyên Giáp, Mân Thái, Sơn Trà．每日 09:00–00:00。</strong>
+          美溪海灘正對面，峴港最有名的平價海鮮大排檔之一，連米其林指南都收錄，
+          但價格還是在地人的價格。</p>
+          <p><strong>吃法：直接走到門口那排大水缸前面挑</strong>——螃蟹、龍蝦、象拔蚌、螺、魚，
+          全部活的，指哪隻煮哪隻，然後告訴店員要怎麼料理。秤重計價，挑之前先確認單價。</p>
+          <div class="ev-cost"><span><b>皮皮蝦</b>　越南文說 <b>「tôm tít」</b> 或 <b>「bề bề」</b></span></div>
+          <div class="ev-cost"><span>蒸 <b>hấp</b></span><span>椒鹽 <b>rang muối</b></span><span>炭烤 <b>nướng</b></span><span>蒜蓉 <b>nướng mỡ hành</b></span></div>
+          <p style="margin-top:.35rem"><strong>皮皮蝦建議點「rang muối」椒鹽</strong>——殼酥、肉甜，配冰啤酒最對。
+          蒸的最能吃出鮮甜但比較費工剝。兩個人的組合可以是：
+          皮皮蝦一份、螃蟹一隻、蒜蓉蒸扇貝、炒空心菜、一鍋海鮮粥收尾。</p>
+          <div class="ev-cost"><span>兩人一桌 <b>400,000–700,000 VND</b>（約 NT$500–875）</span></div>
+        </div></div>
+
+        <div class="ev" data-k="night"><div class="ev-time">21:00</div><div class="ev-body">
+          <div class="ev-title"><h4>龍橋 Cầu Rồng</h4><span class="tag free">免費</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Dragon+Bridge+Da+Nang" target="_blank" rel="noopener">地圖</a></div>
+          <p>橫跨韓江的巨龍造型橋，晚上整條龍會變換燈色。
+          <strong>噴火與噴水表演只有週六、週日與國定假日的 21:00</strong>——
+          3/9 是週二，今天看得到燈光但沒有噴火。想看表演的話留到 Day 5（週六）晚上，
+          但要看班機時間允不允許。</p>
+        </div></div>
+
+        <div class="ev" data-k="night"><div class="ev-time">21:40</div><div class="ev-body">
+          <div class="ev-title"><h4>愛之橋 Cầu Tàu Tình Yêu</h4><span class="tag free">免費</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Love+Bridge+Da+Nang" target="_blank" rel="noopener">地圖</a></div>
+          <p>龍橋旁邊的小碼頭步道，掛滿愛心鎖、立著一整排粉紅色的心形路燈，
+          旁邊還有一座會噴水的鯉魚化龍雕像。很觀光，但夜裡拍起來意外好看。</p>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="tabpanel" id="d2" role="tabpanel" aria-labelledby="tab-d2" hidden>
+      <div class="dayhead"><h3>Day 2｜巴拿山．黃金橋</h3><span class="tag lan">主場：Sun World Ba Na Hills</span>
+        <p>今天是整趟花最多錢的一天，但也是最值得的一天。早去早回，下午留給按摩。</p></div>
+      <div class="tl">
+        <div class="ev" data-k="move"><div class="ev-time">07:30</div><div class="ev-body">
+          <div class="ev-title"><h4>出發前往巴拿山</h4><span class="tag">40–50 分</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Sun+World+Ba+Na+Hills" target="_blank" rel="noopener">地圖</a></div>
+          <p><strong>越早出發越好。</strong>九點過後纜車開始排隊，中午山上人最多。
+          Grab 單程約 400,000–500,000 VND；<strong>包車來回（含等待）約 700,000–900,000 VND</strong>，
+          兩個人的話包車比較划算也彈性。</p>
+          <div class="ev-cost"><span>Grab 單程 <b>400,000–500,000 VND</b></span><span>包車來回 <b>700,000–900,000 VND</b></span></div>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">08:30</div><div class="ev-body">
+          <div class="ev-title"><h4>纜車上山</h4><span class="tag lan">世界紀錄</span></div>
+          <p>巴拿山的纜車曾拿下多項金氏世界紀錄（最長單線纜車、最大落差等）。
+          <strong>單趟就要坐快 20 分鐘</strong>，穿過整片熱帶雨林與瀑布，光是這段就值回票價。
+          <strong>山上比市區低 8–10°C，帶件薄外套。</strong></p>
+          <div class="ev-cost"><span>纜車＋入園 成人 <b>1,000,000 VND</b>（約 NT$1,250）</span></div>
+          <p style="margin-top:.3rem"><strong>2026 年 1 月起的新規定：一張纜車票連續三天有效</strong>，
+          包含黃金橋、Fantasy Park、月亮城堡與花園。如果第一天遇到起霧看不到景，
+          <strong>可以隔天再上去一次不用再買票</strong>——這對三月偶有雲霧的季節很有幫助。</p>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">09:20</div><div class="ev-body">
+          <div class="ev-title"><h4>黃金橋 Cầu Vàng（佛手橋）</h4><span class="tag lan">今日主場</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Golden+Bridge+Ba+Na+Hills" target="_blank" rel="noopener">地圖</a></div>
+          <p>兩隻巨大的石手托著一道金色步道，懸在海拔約 1,400 公尺的山邊。
+          <strong>越早到人越少</strong>——九點半前還拍得到相對乾淨的畫面，十點後就是人擠人。
+          天氣好的時候看得到整片山谷；起霧時橋身浮在雲海上，反而更夢幻。</p>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">10:30</div><div class="ev-body">
+          <div class="ev-title"><h4>法國村 Le Jardin D'Amour．月亮城堡</h4></div>
+          <p>山頂複製了一整座法國小鎮：教堂、廣場、石板路、花園。<strong>拍照非常好拍</strong>，
+          很多人在這裡拍婚紗。Fantasy Park 室內遊樂園也含在門票裡，下雨天的備案。</p>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">12:30</div><div class="ev-body">
+          <div class="ev-title"><h4>山上午餐</h4></div>
+          <p>山上餐廳偏觀光價（一餐約 200,000–350,000 VND），但選擇多、有 buffet。
+          想省錢的話<strong>前一晚在便利商店買好麵包與零食帶上山</strong>，把預算留給晚上的海鮮。</p>
+          <div class="ev-cost"><span>山上簡餐 <b>200,000–350,000 VND</b></span><span>自備 <b>50,000 VND</b></span></div>
+        </div></div>
+
+        <div class="ev" data-k="move"><div class="ev-time">15:00</div><div class="ev-body">
+          <div class="ev-title"><h4>下山回市區</h4></div>
+          <p>三點多下山可以避開閉園前的纜車人潮。</p>
+        </div></div>
+
+        <div class="ev" data-k="rest"><div class="ev-time">16:30</div><div class="ev-body">
+          <div class="ev-title"><h4>全身按摩一小時</h4><span class="tag sea">體驗重點</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=massage+spa+My+Khe+Da+Nang" target="_blank" rel="noopener">地圖</a></div>
+          <p>走了一整天山路，這個時候按最舒服。<strong>峴港的按摩是全世界最便宜的之一</strong>——
+          一小時全身油壓 250,000–400,000 VND（約 NT$310–500），品質還很好。
+          美溪一帶的 spa 密度很高，先在 Google 地圖看評價再訂，通常要預約。</p>
+          <div class="ev-cost"><span>一小時全身 <b>250,000–400,000 VND</b></span><span>小費 <b>50,000 VND</b>／人</span></div>
+        </div></div>
+
+        <div class="ev" data-k="night"><div class="ev-time">19:00</div><div class="ev-body">
+          <div class="ev-title"><h4>晚餐：米紙肉捲 Bánh tráng cuốn thịt heo</h4><span class="tag lan">峴港名物</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Banh+trang+cuon+thit+heo+Da+Nang" target="_blank" rel="noopener">地圖</a></div>
+          <p>峴港最具代表性的一道：兩層米紙包五花肉薄片、一大盤生菜香草、蘸魚露豆醬。
+          <strong>自己動手捲</strong>，清爽不油，跟昨天的海鮮完全不同路線。
+          峴港有好幾家連鎖名店，Google 地圖搜這道菜名就找得到評價高的分店。</p>
+          <div class="ev-cost"><span>兩人 <b>250,000–400,000 VND</b></span></div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="tabpanel" id="d3" role="tabpanel" aria-labelledby="tab-d3" hidden>
+      <div class="dayhead"><h3>Day 3｜五行山．移動會安</h3><span class="tag lan">主場：會安古鎮夜晚</span>
+        <p>上午爬五行山，下午搬去會安，晚上進古鎮看燈籠。行李今天搬一次，之後就不用動了。</p></div>
+      <div class="tl">
+        <div class="ev" data-k="play"><div class="ev-time">08:30</div><div class="ev-body">
+          <div class="ev-title"><h4>早餐：廣麵 Mì Quảng</h4><span class="tag lan">峴港名物</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Mi+Quang+Da+Nang" target="_blank" rel="noopener">地圖</a></div>
+          <p>峴港所在的廣南省的招牌麵。黃色粗米麵、湯很少、上面鋪蝦、豬肉、花生、米餅，
+          拌著吃。<strong>越南人的早餐就是這個</strong>，一碗 30,000–50,000 VND。</p>
+          <div class="ev-cost"><span>一碗 <b>30,000–50,000 VND</b>（約 NT$40–60）</span></div>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">09:30</div><div class="ev-body">
+          <div class="ev-title"><h4>五行山 Ngũ Hành Sơn</h4><span class="tag sea">洞窟</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Marble+Mountains+Da+Nang" target="_blank" rel="noopener">地圖</a></div>
+          <p>從峴港市區約 20 分鐘，正好在往會安的路上——<strong>可以順路，不用專程跑一趟</strong>。
+          五座大理石山，最大的水山裡有一整套洞窟、佛寺與觀景台。
+          <strong>玄空洞（Huyền Không）</strong>是重點：洞頂破了幾個洞，陽光成束打下來照在佛像上，
+          上午十點到中午之間光線最好。</p>
+          <div class="ev-cost"><span>門票 <b>40,000 VND</b></span><span>電梯 <b>15,000 VND</b>（單程）</span></div>
+          <p style="margin-top:.3rem">怕熱怕累就搭電梯上去、走樓梯下來。山上有幾段石階很陡，<strong>穿好走的鞋</strong>。
+          行程約 1.5–2 小時。</p>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">12:00</div><div class="ev-body">
+          <div class="ev-title"><h4>午餐：越南煎餅 Bánh xèo</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Banh+xeo+Ba+Duong+Da+Nang" target="_blank" rel="noopener">地圖</a></div>
+          <p>米漿加薑黃粉煎成的金黃薄餅，包蝦與豆芽，用米紙加生菜捲起來蘸醬。
+          <strong>Bánh Xèo Bà Dưỡng</strong> 是峴港最有名的一家，藏在巷子裡，一直都是本地人在排。</p>
+          <div class="ev-cost"><span>兩人 <b>150,000–250,000 VND</b></span></div>
+        </div></div>
+
+        <div class="ev" data-k="move"><div class="ev-time">14:00</div><div class="ev-body">
+          <div class="ev-title"><h4>移動到會安</h4><span class="tag">40 分鐘</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Hoi+An+Ancient+Town" target="_blank" rel="noopener">地圖</a></div>
+          <p>約 30 公里。<strong>Grab Car 300,000–400,000 VND</strong>（約 NT$375–500，兩人分攤很划算）。
+          共乘接駁車便宜些（130,000–180,000 VND／人）但要配合班次與停靠點，帶行李不方便。</p>
+          <div class="ev-cost"><span>Grab Car <b>300,000–400,000 VND</b>／車</span><span>接駁車 <b>130,000–180,000 VND</b>／人</span></div>
+        </div></div>
+
+        <div class="ev" data-k="rest"><div class="ev-time">15:00</div><div class="ev-body">
+          <div class="ev-title"><h4>入住會安．借腳踏車</h4></div>
+          <p>放行李、洗個澡。<strong>多數小旅館提供免費腳踏車</strong>，先借好——會安古鎮外圍騎車最方便。</p>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">16:30</div><div class="ev-body">
+          <div class="ev-title"><h4>會安古鎮．日光下的黃牆</h4><span class="tag sea">世界遺產</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Hoi+An+Ancient+Town" target="_blank" rel="noopener">地圖</a></div>
+          <p>十五到十九世紀的貿易港，中式、日式、法式建築混在一起，整座古鎮被列為世界遺產。
+          <strong>先在天黑前走一趟</strong>——芥末黃的老牆配九重葛，白天的顏色跟晚上完全是兩回事。</p>
+          <div class="ev-cost"><span>古鎮門票 <b>120,000 VND</b>（約 NT$150，含 5 個景點）</span></div>
+          <p style="margin-top:.3rem">門票可進<a href="https://www.google.com/maps/search/?api=1&amp;query=Japanese+Covered+Bridge+Hoi+An" target="_blank" rel="noopener">日本廊橋 Chùa Cầu</a>、
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=Phuc+Kien+Assembly+Hall+Hoi+An" target="_blank" rel="noopener">福建會館</a>、
+          古宅與會館，自選五個。日本廊橋是會安的象徵，也印在越南兩萬盾紙鈔上。</p>
+        </div></div>
+
+        <div class="ev" data-k="night"><div class="ev-time">18:30</div><div class="ev-body">
+          <div class="ev-title"><h4>整座古鎮點燈</h4><span class="tag lan">今日主場</span><span class="tag free">免費</span></div>
+          <p><strong>這是會安的靈魂，也是為什麼要住在這裡而不是當天來回。</strong>
+          天一黑，整條街的絲綢燈籠同時亮起，河面倒映著一整排暖黃色的光。
+          古鎮部分路段夜間禁行機車，可以整條路慢慢走。</p>
+        </div></div>
+
+        <div class="ev" data-k="night"><div class="ev-time">19:30</div><div class="ev-body">
+          <div class="ev-title"><h4>晚餐：會安三寶</h4><span class="tag sea">在地限定</span></div>
+          <p><strong>高樓麵 Cao lầu</strong>——只有會安做得出來的麵，傳統上要用當地古井的水，
+          麵條偏粗有嚼勁，配叉燒、生菜與炸麵皮，湯汁很少。<br>
+          <strong>白玫瑰餃 Bánh vạc</strong>——半透明的米皮包蝦泥，捏成玫瑰的形狀，
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=White+Rose+Restaurant+Hoi+An" target="_blank" rel="noopener">White Rose 餐廳</a>
+          是本店，全城的白玫瑰餃幾乎都是他們供應的。<br>
+          <strong>會安雞飯 Cơm gà</strong>——薑黃飯配手撕雞，
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=Com+Ga+Ba+Buoi+Hoi+An" target="_blank" rel="noopener">Cơm Gà Bà Buội</a> 是老字號。</p>
+          <div class="ev-cost"><span>高樓麵 <b>40,000–60,000 VND</b></span><span>白玫瑰餃 <b>70,000–100,000 VND</b></span><span>雞飯 <b>50,000–70,000 VND</b></span></div>
+        </div></div>
+
+        <div class="ev" data-k="night"><div class="ev-time">21:00</div><div class="ev-body">
+          <div class="ev-title"><h4>秋盆河．放水燈</h4><span class="tag lan">情侶必做</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Thu+Bon+River+Hoi+An" target="_blank" rel="noopener">地圖</a></div>
+          <p>河邊有人賣紙做的蓮花燈，點上蠟燭放進河裡許願，一盞約 10,000–20,000 VND。
+          也可以坐小船遊河（<strong>約 150,000–200,000 VND／船</strong>，可議價），
+          從水面上看整片燈籠倒影是完全不同的角度。</p>
+          <div class="ev-cost"><span>水燈 <b>10,000–20,000 VND</b></span><span>遊船 <b>150,000–200,000 VND</b>／船</span></div>
+        </div></div>
+
+        <div class="ev" data-k="night"><div class="ev-time">22:30</div><div class="ev-body">
+          <div class="ev-title"><h4>人散之後再走一圈</h4><span class="tag free">免費</span></div>
+          <p><strong>一日遊的旅客九點前就被載走了。</strong>十點半以後的古鎮安靜下來，
+          燈籠還亮著，但街上只剩住在這裡的人。這是住在古鎮才有的十五分鐘。</p>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="tabpanel" id="d4" role="tabpanel" aria-labelledby="tab-d4" hidden>
+      <div class="dayhead"><h3>Day 4｜會安．田園與河</h3><span class="tag lan">三選一</span>
+        <p>會安周邊有三種完全不同的玩法。當天看天氣跟體力決定，晚上都回古鎮吃喝。</p></div>
+
+      <div class="optnote"><b>自由決定</b><span>A 最好玩、B 最有文化、C 最放鬆。都不去也沒關係——在古鎮喝咖啡、做衣服、按摩，一整天也很滿足。</span></div>
+
+      <div class="routeswap" role="group" aria-label="Day 4 路線">
+        <button type="button" data-route="r4a" aria-pressed="true"><b>路線 A．最好玩</b>迦南島椰林．竹籃船</button>
+        <button type="button" data-route="r4b" aria-pressed="false"><b>路線 B．最有文化</b>美山聖地．占婆遺跡</button>
+        <button type="button" data-route="r4c" aria-pressed="false"><b>路線 C．最放鬆</b>安邦海灘．單車田園</button>
+      </div>
+
+      <div data-routepanel="r4a">
+        <div class="tl">
+          <div class="ev" data-k="play"><div class="ev-time">08:30</div><div class="ev-body">
+            <div class="ev-title"><h4>早餐：Bánh Mì Phượng</h4><span class="tag lan">會安名店</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Banh+Mi+Phuong+Hoi+An" target="_blank" rel="noopener">地圖</a></div>
+            <p>會安最有名的越式法國麵包，被 Anthony Bourdain 帶紅之後就沒退燒過。
+            酥脆的麵包夾肉醬、火腿、香菜、辣椒與特製醬汁。<strong>常常排隊但流動很快</strong>。
+            另一家 <a href="https://www.google.com/maps/search/?api=1&amp;query=Madam+Khanh+Banh+Mi+Hoi+An" target="_blank" rel="noopener">Madam Khánh</a>
+            人少一點，很多人覺得更好吃。</p>
+            <div class="ev-cost"><span>一個 <b>25,000–40,000 VND</b>（約 NT$30–50）</span></div>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">09:30</div><div class="ev-body">
+            <div class="ev-title"><h4>迦南島椰林．竹籃船 Rừng dừa Bảy Mẫu</h4><span class="tag lan">今日主場</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Bay+Mau+Coconut+Forest+Hoi+An" target="_blank" rel="noopener">地圖</a></div>
+            <p>距古鎮約 15 分鐘車程的水椰林。<strong>坐進圓形的竹編小船</strong>，船夫用單槳在水道間穿梭，
+            會用椰葉編蚱蜢、戒指送你，還有船夫會表演「<strong>單船旋轉</strong>」——
+            把整艘圓船原地打轉甩水花，全場一起鼓掌那種。很觀光，但真的好玩。</p>
+            <div class="ev-cost"><span>竹籃船 <b>約 150,000 VND</b>／人</span><span>船夫小費 <b>50,000 VND</b></span></div>
+            <p style="margin-top:.3rem"><strong>會濕，穿快乾的衣服。</strong>手機建議放防水袋。
+            上午去人比較少、太陽也不那麼曬。</p>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">12:00</div><div class="ev-body">
+            <div class="ev-title"><h4>Cẩm Thanh 田園午餐</h4>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Cam+Thanh+Hoi+An+restaurant" target="_blank" rel="noopener">地圖</a></div>
+            <p>椰林周邊有很多開在稻田旁的餐廳，坐在竹亭裡吃現烤海鮮與越式家常菜。</p>
+            <div class="ev-cost"><span>兩人 <b>250,000–400,000 VND</b></span></div>
+          </div></div>
+
+          <div class="ev" data-k="rest"><div class="ev-time">14:00</div><div class="ev-body">
+            <div class="ev-title"><h4>回旅館泡泳池．午睡</h4></div>
+            <p>越南的下午最熱，這時候待在室內或泳池邊最舒服。</p>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">16:00</div><div class="ev-body">
+            <div class="ev-title"><h4>訂做一套衣服</h4><span class="tag sea">會安限定體驗</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=tailor+Hoi+An" target="_blank" rel="noopener">地圖</a></div>
+            <p><strong>會安是全世界最有名的訂製服城市。</strong>古鎮裡有上百家裁縫店，
+            量身、選布、討論版型，<strong>隔天就能拿到</strong>——正好趕上你們後天離開。
+            襯衫約 400,000–800,000 VND、洋裝約 600,000–1,500,000 VND、西裝約 2,000,000 VND 起。
+            這是「把錢花在體驗上」最具體的一項：一件為你量身做的衣服，比任何紀念品都值得。</p>
+            <div class="ev-cost"><span>襯衫 <b>400,000–800,000 VND</b></span><span>洋裝 <b>600,000–1,500,000 VND</b></span></div>
+            <p style="margin-top:.3rem"><strong>務必確認交件時間</strong>，並留旅館地址請他們送到。挑店看 Google 評價，別在路上被拉客的帶走。</p>
+          </div></div>
+
+          <div class="ev" data-k="night"><div class="ev-time">19:00</div><div class="ev-body">
+            <div class="ev-title"><h4>古鎮晚餐．夜市</h4>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Hoi+An+Night+Market" target="_blank" rel="noopener">會安夜市</a></div>
+            <p>阮皇街（Nguyễn Hoàng）的夜市整條都是燈籠攤與小吃。
+            <strong>燈籠是最好的伴手禮</strong>——可以折疊收起來，一個 50,000–150,000 VND。</p>
+            <div class="ev-cost"><span>晚餐兩人 <b>300,000–500,000 VND</b></span><span>燈籠 <b>50,000–150,000 VND</b></span></div>
+          </div></div>
+        </div>
+      </div>
+
+      <div data-routepanel="r4b" hidden>
+        <div class="tl">
+          <div class="ev" data-k="move"><div class="ev-time">07:00</div><div class="ev-body">
+            <div class="ev-title"><h4>出發前往美山聖地</h4><span class="tag">約 1 小時</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=My+Son+Sanctuary" target="_blank" rel="noopener">地圖</a></div>
+            <p><strong>一定要早去。</strong>美山在山谷裡，中午之後又熱又曬，完全沒有遮蔽。
+            七點出發、八點抵達是最舒服的時段，也避開遊覽車。</p>
+            <div class="ev-cost"><span>包車來回含等待 <b>600,000–800,000 VND</b></span></div>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">08:00</div><div class="ev-body">
+            <div class="ev-title"><h4>美山聖地 Mỹ Sơn</h4><span class="tag sea">世界遺產</span></div>
+            <p>四到十四世紀占婆王朝的印度教神殿群，藏在群山環抱的谷地裡，被稱為「越南的吳哥窟」。
+            紅磚砌成的塔廟不用灰泥就能疊千年不倒，這個工法至今沒有完全破解。
+            越戰時被美軍轟炸過，現在看到的是斷垣殘壁——<strong>但那份殘破本身就很有力量</strong>。</p>
+            <div class="ev-cost"><span>門票 <b>150,000 VND</b>（含接駁車與傳統舞蹈表演）</span></div>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">11:00</div><div class="ev-body">
+            <div class="ev-title"><h4>回會安．午餐</h4></div>
+            <p>中午前回到古鎮，找間有冷氣的餐廳吃飯躲太陽。</p>
+          </div></div>
+
+          <div class="ev" data-k="rest"><div class="ev-time">14:00</div><div class="ev-body">
+            <div class="ev-title"><h4>按摩．泳池</h4><span class="tag sea">體驗重點</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=spa+massage+Hoi+An" target="_blank" rel="noopener">地圖</a></div>
+            <p>會安的 spa 比峴港更精緻、環境更好，價格差不多。一小時 250,000–450,000 VND。</p>
+            <div class="ev-cost"><span>一小時 <b>250,000–450,000 VND</b></span></div>
+          </div></div>
+
+          <div class="ev" data-k="night"><div class="ev-time">18:00</div><div class="ev-body">
+            <div class="ev-title"><h4>古鎮燈籠．夜市．晚餐</h4><span class="tag lan">夜</span></div>
+            <p>跟路線 A 的晚上一樣：燈籠、夜市、河邊。會安的夜晚每天走都不膩。</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div data-routepanel="r4c" hidden>
+        <div class="tl">
+          <div class="ev" data-k="play"><div class="ev-time">09:00</div><div class="ev-body">
+            <div class="ev-title"><h4>騎腳踏車穿過稻田</h4><span class="tag free">旅館免費借</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=An+Bang+Beach+Hoi+An" target="_blank" rel="noopener">地圖</a></div>
+            <p>從古鎮騎到安邦海灘約 20–25 分鐘，一路都是<strong>綠色的稻田、水牛與小廟</strong>，
+            路平、車少、很好騎。這段路本身就是會安最好的風景之一，隨便停下來拍都好看。</p>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">09:45</div><div class="ev-body">
+            <div class="ev-title"><h4>安邦海灘 An Bàng</h4><span class="tag free">免費</span></div>
+            <p>比峴港的美溪安靜非常多，沙灘上一整排是外國人開的小酒吧與餐廳，
+            躺椅通常<strong>消費就免費使用</strong>。點杯果汁躺一整個上午，這就是這條路線的重點。</p>
+            <div class="ev-cost"><span>果汁／啤酒 <b>40,000–80,000 VND</b></span></div>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">12:00</div><div class="ev-body">
+            <div class="ev-title"><h4>海邊午餐</h4></div>
+            <p>安邦的海鮮餐廳直接面海，現烤魚、蒜蓉蝦、炒蛤蜊。比古鎮貴一點但坐得很舒服。</p>
+            <div class="ev-cost"><span>兩人 <b>300,000–500,000 VND</b></span></div>
+          </div></div>
+
+          <div class="ev" data-k="rest"><div class="ev-time">14:30</div><div class="ev-body">
+            <div class="ev-title"><h4>騎回古鎮．午睡</h4></div>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">16:30</div><div class="ev-body">
+            <div class="ev-title"><h4>越南咖啡．古鎮河景咖啡館</h4><span class="tag sea">一定要試</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=coffee+Hoi+An+riverside" target="_blank" rel="noopener">地圖</a></div>
+            <p>越南是全球第二大咖啡產國。<strong>椰子咖啡（cà phê cốt dừa）</strong>——
+            濃縮咖啡加椰漿冰沙，甜、香、冰，是最容易入口的一杯。
+            愛喝黑的就點<strong>滴漏咖啡（cà phê phin）</strong>，看著它一滴一滴滴完再喝。</p>
+            <div class="ev-cost"><span>一杯 <b>35,000–70,000 VND</b>（約 NT$45–90）</span></div>
+          </div></div>
+
+          <div class="ev" data-k="night"><div class="ev-time">18:30</div><div class="ev-body">
+            <div class="ev-title"><h4>古鎮燈籠．晚餐．河邊</h4><span class="tag lan">夜</span></div>
+          </div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabpanel" id="d5" role="tabpanel" aria-labelledby="tab-d5" hidden>
+      <div class="dayhead"><h3>Day 5｜峴港．採買回家</h3><span class="tag sea">主場：韓市場</span>
+        <p>會安吃完早餐直接回峴港，把最後半天留給市場、按摩跟咖啡。</p></div>
+      <div class="tl">
+        <div class="ev" data-k="play"><div class="ev-time">08:00</div><div class="ev-body">
+          <div class="ev-title"><h4>會安最後一份 Bánh Mì</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Banh+Mi+Phuong+Hoi+An" target="_blank" rel="noopener">地圖</a></div>
+          <p>順便把訂做的衣服拿回來（前天下訂的話今天正好）。</p>
+        </div></div>
+
+        <div class="ev" data-k="move"><div class="ev-time">09:30</div><div class="ev-body">
+          <div class="ev-title"><h4>退房．Grab 回峴港</h4><span class="tag">40 分</span></div>
+          <p>行李可以先寄在峴港的按摩店或咖啡廳，很多店願意幫忙。</p>
+          <div class="ev-cost"><span>Grab Car <b>300,000–400,000 VND</b></span></div>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">10:30</div><div class="ev-body">
+          <div class="ev-title"><h4>粉紅教堂 Nhà thờ Con Gà</h4><span class="tag free">外觀免費</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Da+Nang+Cathedral+Pink+Church" target="_blank" rel="noopener">地圖</a></div>
+          <p>1923 年的法國殖民時期教堂，整棟粉紅色，尖塔上有隻風向雞，所以當地人叫它「雞教堂」。
+          <strong>就在韓市場旁邊</strong>，走過去兩分鐘。外面拍照免費，內部開放時間不固定。</p>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">11:15</div><div class="ev-body">
+          <div class="ev-title"><h4>韓市場 Chợ Hàn．最後採買</h4><span class="tag sea">伴手禮</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Han+Market+Da+Nang" target="_blank" rel="noopener">地圖</a></div>
+          <p>峴港最大的傳統市場。<strong>咖啡豆、腰果、椰子糖、胡椒、魚露、乾貨</strong>都在這裡買。
+          一樓生鮮乾貨、二樓服飾布料。<strong>一定要殺價</strong>——開價通常是實際的兩到三倍，
+          從對半砍起，笑著談，談不攏就走（通常走兩步就被叫回來）。</p>
+          <div class="ev-cost"><span>咖啡豆 <b>150,000–300,000 VND</b>／包</span><span>腰果 <b>150,000–250,000 VND</b>／公斤</span></div>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">12:30</div><div class="ev-body">
+          <div class="ev-title"><h4>午餐：最後一碗越南麵</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Bun+cha+ca+Da+Nang" target="_blank" rel="noopener">地圖</a></div>
+          <p><strong>魚餅米線 Bún chả cá</strong> 是峴港的另一道在地早午餐——清湯、炸魚餅、米線，
+          比廣麵清爽。市場周邊很多小店在賣。</p>
+          <div class="ev-cost"><span>一碗 <b>30,000–50,000 VND</b></span></div>
+        </div></div>
+
+        <div class="ev" data-k="rest"><div class="ev-time">14:00</div><div class="ev-body">
+          <div class="ev-title"><h4>最後一次按摩</h4><span class="tag sea">上飛機前的儀式</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=massage+spa+Da+Nang+city+center" target="_blank" rel="noopener">地圖</a></div>
+          <p>台幣三百多按一小時，回台灣就沒有了。很多 spa 提供<strong>免費寄放行李與淋浴</strong>，
+          按完直接去機場，這是峴港最好用的一招。</p>
+          <div class="ev-cost"><span>一小時 <b>250,000–400,000 VND</b></span></div>
+        </div></div>
+
+        <div class="ev" data-k="move"><div class="ev-time">16:00</div><div class="ev-body">
+          <div class="ev-title"><h4>前往峴港機場</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Da+Nang+International+Airport" target="_blank" rel="noopener">地圖</a></div>
+          <p>市區到機場只要 10–15 分鐘，是全世界離市中心最近的國際機場之一。
+          <strong>國際線抓起飛前 2.5 小時</strong>到就很充裕。</p>
+          <div class="ev-cost"><span>Grab <b>80,000–120,000 VND</b></span></div>
+        </div></div>
+
+        <div class="ev" data-k="night"><div class="ev-time">18:30</div><div class="ev-body">
+          <div class="ev-title"><h4>起飛．當晚回到台灣</h4><span class="tag">回家</span></div>
+          <p>飛行 2 小時 48 分，加上時差 +1 小時，落地大約是台灣時間 22:20。</p>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="eat">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">必吃</p>
+      <h2>一碗麵四十塊，一桌海鮮六百塊</h2>
+      <p>越南中部的食物清爽、香草多、不油膩。這裡的物價讓你可以每一餐都吃想吃的，不用計較。</p>
+    </div>
+
+    <div class="filters" role="group" aria-label="美食篩選">
+      <button class="chip" data-filter="all" aria-pressed="true">全部</button>
+      <button class="chip" data-filter="sea" aria-pressed="false">海鮮</button>
+      <button class="chip" data-filter="dn" aria-pressed="false">峴港</button>
+      <button class="chip" data-filter="ha" aria-pressed="false">會安</button>
+      <button class="chip" data-filter="drink" aria-pressed="false">咖啡飲料</button>
+      <button class="chip" data-filter="cheap" aria-pressed="false">100,000 盾以下</button>
+    </div>
+
+    <div class="eats" id="eatGrid">
+      <article class="card eat" data-tags="sea dn">
+        <h4>皮皮蝦．椒鹽</h4><span class="jp">tôm tít rang muối・Quán Bé Mặn</span>
+        <p><strong>這趟指定要吃的。</strong>水缸現挑、秤重計價。椒鹽做法殼酥肉甜，配冰啤酒。
+        說「tôm tít」或「bề bề」都通。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Quan+Be+Man+Da+Nang" target="_blank" rel="noopener">地圖</a><span class="tag sea">海鮮</span><span class="yen">時價</span></div>
+      </article>
+      <article class="card eat" data-tags="sea dn">
+        <h4>整桌現撈海鮮</h4><span class="jp">Quán Bé Mặn・Lô 8 Võ Nguyên Giáp・09:00–00:00</span>
+        <p>米其林指南收錄但仍是在地價。螃蟹、龍蝦、象拔蚌、扇貝、螺，指哪隻煮哪隻。兩人一桌 400,000–700,000 盾。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Quan+Be+Man+Da+Nang" target="_blank" rel="noopener">地圖</a><span class="tag sea">海鮮</span><span class="yen">NT$500–875／兩人</span></div>
+      </article>
+      <article class="card eat" data-tags="dn cheap">
+        <h4>廣麵 Mì Quảng</h4><span class="jp">峴港所在廣南省的招牌</span>
+        <p>黃色粗米麵、湯很少、鋪蝦與豬肉花生，上面壓一塊烤米餅，拌著吃。越南人的日常早餐。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Mi+Quang+Da+Nang" target="_blank" rel="noopener">地圖</a><span class="tag lan">峴港</span><span class="yen">30,000–50,000 盾</span></div>
+      </article>
+      <article class="card eat" data-tags="dn">
+        <h4>米紙肉捲</h4><span class="jp">Bánh tráng cuốn thịt heo</span>
+        <p>兩層米紙包五花肉薄片，配一大盤生菜香草，蘸魚露豆醬。自己動手捲，清爽解膩。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Banh+trang+cuon+thit+heo+Da+Nang" target="_blank" rel="noopener">地圖</a><span class="tag lan">峴港</span><span class="yen">250,000–400,000／兩人</span></div>
+      </article>
+      <article class="card eat" data-tags="dn cheap">
+        <h4>越南煎餅 Bánh xèo</h4><span class="jp">Bánh Xèo Bà Dưỡng</span>
+        <p>米漿加薑黃煎成金黃薄餅，包蝦與豆芽，用米紙加生菜捲起來蘸醬。藏在巷子裡的老店，一直有本地人在排。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Banh+xeo+Ba+Duong+Da+Nang" target="_blank" rel="noopener">地圖</a><span class="tag lan">峴港</span><span class="yen">150,000–250,000／兩人</span></div>
+      </article>
+      <article class="card eat" data-tags="dn cheap">
+        <h4>魚餅米線 Bún chả cá</h4><span class="jp">峴港的另一道日常</span>
+        <p>清湯、炸魚餅、米線，比廣麵清爽。韓市場周邊很多小店在賣，適合最後一天當午餐。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Bun+cha+ca+Da+Nang" target="_blank" rel="noopener">地圖</a><span class="tag lan">峴港</span><span class="yen">30,000–50,000 盾</span></div>
+      </article>
+      <article class="card eat" data-tags="ha cheap">
+        <h4>高樓麵 Cao lầu</h4><span class="jp">只有會安做得出來</span>
+        <p>傳統上要用會安古井的水才做得出這種口感。麵粗有嚼勁，配叉燒、生菜與炸麵皮，湯汁很少。<strong>離開會安就吃不到正宗的。</strong></p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Cao+Lau+Hoi+An" target="_blank" rel="noopener">地圖</a><span class="tag sea">會安</span><span class="yen">40,000–60,000 盾</span></div>
+      </article>
+      <article class="card eat" data-tags="ha cheap">
+        <h4>白玫瑰餃 Bánh vạc</h4><span class="jp">White Rose Restaurant</span>
+        <p>半透明米皮包蝦泥，捏成玫瑰形狀，撒炸紅蔥。全城的白玫瑰餃幾乎都是這家供應的，直接來本店吃。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=White+Rose+Restaurant+Hoi+An" target="_blank" rel="noopener">地圖</a><span class="tag sea">會安</span><span class="yen">70,000–100,000 盾</span></div>
+      </article>
+      <article class="card eat" data-tags="ha cheap">
+        <h4>會安雞飯 Cơm gà</h4><span class="jp">Cơm Gà Bà Buội</span>
+        <p>薑黃染色的飯配手撕雞肉、越南薄荷與洋蔥絲，附一小碗雞湯。Bà Buội 是會安的老字號。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Com+Ga+Ba+Buoi+Hoi+An" target="_blank" rel="noopener">地圖</a><span class="tag sea">會安</span><span class="yen">50,000–70,000 盾</span></div>
+      </article>
+      <article class="card eat" data-tags="ha cheap">
+        <h4>越式法國麵包</h4><span class="jp">Bánh Mì Phượng・會安</span>
+        <p>被 Anthony Bourdain 帶紅之後就沒退燒過。酥脆麵包夾肉醬、火腿、香菜、辣椒與特製醬汁。
+        隔壁的 Madam Khánh 人少一點，很多人覺得更好吃。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Banh+Mi+Phuong+Hoi+An" target="_blank" rel="noopener">Phượng</a><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=Madam+Khanh+Banh+Mi+Hoi+An" target="_blank" rel="noopener">Madam Khánh</a><span class="yen">25,000–40,000 盾</span></div>
+      </article>
+      <article class="card eat" data-tags="drink cheap">
+        <h4>椰子咖啡</h4><span class="jp">cà phê cốt dừa</span>
+        <p>濃縮咖啡加椰漿冰沙，甜、香、冰。越南是全球第二大咖啡產國，這是最容易入口的一杯。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=coconut+coffee+Da+Nang" target="_blank" rel="noopener">地圖</a><span class="tag">咖啡</span><span class="yen">35,000–70,000 盾</span></div>
+      </article>
+      <article class="card eat" data-tags="drink cheap">
+        <h4>滴漏咖啡．煉乳咖啡</h4><span class="jp">cà phê phin / cà phê sữa đá</span>
+        <p>金屬濾杯架在杯口，一滴一滴滴完再喝。加煉乳的版本又甜又濃，是越南的國民飲料。</p>
+        <div class="row"><span class="tag">咖啡</span><span class="tag free">便宜</span><span class="yen">25,000–50,000 盾</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="exp">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">體驗</p>
+      <h2>省下來的錢，花在這些地方</h2>
+      <p>機票住宿省下的每一塊，都可以換成下面這些。這才是這趟的重點。</p>
+    </div>
+    <div class="seats">
+      <div class="seat pickd">
+        <span class="venue">每天都可以做</span>
+        <h4>全身按摩</h4>
+        <div class="price">NT$310–500<small style="font-size:.7rem;color:var(--ink-3)">／小時</small></div>
+        <div class="per">建議做 2–3 次</div>
+        <p>台灣同等品質要三倍價。<strong>很多 spa 提供免費寄放行李與淋浴</strong>，
+        最後一天按完直接去機場，是峴港最好用的一招。記得給小費 50,000 盾。</p>
+      </div>
+      <div class="seat pickd">
+        <span class="venue">會安限定</span>
+        <h4>訂做一套衣服</h4>
+        <div class="price">NT$500–1,900</div>
+        <div class="per">隔天就能拿到</div>
+        <p>會安是全世界最有名的訂製服城市。量身、選布、討論版型，<strong>24 小時交件</strong>。
+        襯衫約 400,000–800,000 盾、洋裝 600,000–1,500,000 盾。一件為你量身做的衣服，比任何紀念品都值得。</p>
+      </div>
+      <div class="seat">
+        <span class="venue">迦南島</span>
+        <h4>竹籃船．單船旋轉</h4>
+        <div class="price">NT$190<small style="font-size:.7rem;color:var(--ink-3)">／人</small></div>
+        <div class="per">約 1 小時</div>
+        <p>坐進圓形竹編小船穿梭水椰林，船夫用椰葉編蚱蜢送你，還會把整艘船原地打轉甩水花。
+        很觀光，但笑得很開心。</p>
+      </div>
+      <div class="seat">
+        <span class="venue">秋盆河</span>
+        <h4>放水燈．遊船</h4>
+        <div class="price">NT$15–250</div>
+        <div class="per">水燈／包船</div>
+        <p>紙蓮花點上蠟燭放進河裡，一盞十幾塊台幣。包一艘小船從水面看整片燈籠倒影，
+        兩百塊有找——這是會安最經典的一張照片。</p>
+      </div>
+      <div class="seat">
+        <span class="venue">巴拿山</span>
+        <h4>纜車．黃金橋</h4>
+        <div class="price">NT$1,250<small style="font-size:.7rem;color:var(--ink-3)">／人</small></div>
+        <div class="per">票連續 3 天有效</div>
+        <p>這趟最貴的單項，但也最值得。世界紀錄纜車、佛手托著的金色步道、山頂的法國村。
+        <strong>2026 年起一票可用三天</strong>，遇到起霧可以隔天再上去。</p>
+      </div>
+      <div class="seat">
+        <span class="venue">美溪／安邦海灘</span>
+        <h4>躺一整個下午</h4>
+        <div class="price">NT$60<small style="font-size:.7rem;color:var(--ink-3)">／躺椅</small></div>
+        <div class="per">或消費即免費</div>
+        <p>安邦海灘的躺椅多半消費就免費使用。點杯果汁躺一下午，什麼都不做——
+        這在物價高的地方是奢侈，在這裡只要幾十塊。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="money">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">費用</p>
+      <h2>兩個人，五天四夜，逐項算給你看</h2>
+      <p>以 2027/3/9–3/13、越捷來回、峴港 2 晚＋會安 2 晚、兩人一房為基準。越南盾以 <strong>1 萬盾 ≈ NT$12.5</strong> 換算。</p>
+    </div>
+
+    <div class="scroller" style="margin-bottom:1.5rem">
+      <table>
+        <thead><tr><th>項目</th><th>明細</th><th>越南盾（每人）</th><th>台幣（每人）</th></tr></thead>
+        <tbody>
+          <tr><td><strong>機票</strong></td><td>越捷 TPE↔DAD 來回含稅．3 月平日估<br><small style="color:var(--ink-3)">改搭長榮／星宇約 NT$9,000–14,000</small></td><td class="num">—</td><td class="num">7,000</td></tr>
+          <tr><td><strong>簽證</strong></td><td>越南電子簽證 E-visa　約 US$25</td><td class="num">—</td><td class="num">800</td></tr>
+          <tr><td><strong>住宿．峴港</strong></td><td>四星海景雙人房 NT$1,400／晚 × 2 晚 ÷ 2 人</td><td class="num">—</td><td class="num">1,400</td></tr>
+          <tr><td><strong>住宿．會安</strong></td><td>古鎮 homestay NT$1,100／晚 × 2 晚 ÷ 2 人</td><td class="num">—</td><td class="num">1,100</td></tr>
+          <tr style="background:var(--lantern-soft)"><td><strong>巴拿山</strong></td><td>纜車＋入園（票連續 3 天有效）</td><td class="num">1,000,000</td><td class="num">1,250</td></tr>
+          <tr><td>會安古鎮門票</td><td>含 5 個景點自選</td><td class="num">120,000</td><td class="num">150</td></tr>
+          <tr><td>五行山</td><td>門票 40,000＋電梯 15,000</td><td class="num">55,000</td><td class="num">69</td></tr>
+          <tr><td>迦南島竹籃船</td><td>含船夫小費</td><td class="num">200,000</td><td class="num">250</td></tr>
+          <tr style="background:var(--sea-soft)"><td><strong>按摩 × 2 次</strong></td><td>一小時全身油壓 350,000 × 2</td><td class="num">700,000</td><td class="num">875</td></tr>
+          <tr><td><strong>交通</strong></td><td>機場來回 125,000＋巴拿山包車 400,000＋峴港↔會安 350,000＋市內 300,000</td><td class="num">1,175,000</td><td class="num">1,469</td></tr>
+          <tr><td>餐食 Day 1</td><td>大排檔海鮮 275,000＋早午餐</td><td class="num">350,000</td><td class="num">438</td></tr>
+          <tr><td>餐食 Day 2</td><td>山上午餐＋米紙肉捲晚餐</td><td class="num">400,000</td><td class="num">500</td></tr>
+          <tr><td>餐食 Day 3</td><td>廣麵＋煎餅＋會安三寶</td><td class="num">300,000</td><td class="num">375</td></tr>
+          <tr><td>餐食 Day 4</td><td>Bánh Mì＋田園午餐＋古鎮晚餐</td><td class="num">350,000</td><td class="num">438</td></tr>
+          <tr><td>餐食 Day 5</td><td>早餐＋米線午餐</td><td class="num">200,000</td><td class="num">250</td></tr>
+          <tr><td>咖啡、飲料、零食</td><td>五天</td><td class="num">320,000</td><td class="num">400</td></tr>
+          <tr><td>eSIM</td><td>五天上網</td><td class="num">—</td><td class="num">300</td></tr>
+          <tr><td>台灣端交通</td><td>住家 ↔ 桃園機場 來回</td><td class="num">—</td><td class="num">180</td></tr>
+          <tr><td>雜支</td><td>水燈、小費、寄物</td><td class="num">320,000</td><td class="num">400</td></tr>
+          <tr style="background:var(--sea-soft)"><td colspan="3"><strong>每人合計</strong>（不含購物與訂製服）</td><td class="num"><strong>NT$ 17,644</strong></td></tr>
+          <tr style="background:var(--sea-soft)"><td colspan="3"><strong>兩人合計</strong></td><td class="num"><strong>NT$ 35,288</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="calc">
+      <div class="controls">
+        <div class="ctl">
+          <label for="airR">機票 來回含稅／人 <b id="airV">NT$7,000</b></label>
+          <input type="range" id="airR" min="5000" max="16000" step="250" value="7000">
+        </div>
+        <div class="ctl">
+          <label for="stay">住宿 每晚（兩人一房，平均） <b id="stayV">NT$1,250</b></label>
+          <input type="range" id="stay" min="600" max="3500" step="50" value="1250">
+        </div>
+        <div class="ctl">
+          <label for="rate">匯率 1 萬盾 = <b id="rateV">NT$12.5</b></label>
+          <input type="range" id="rate" min="11" max="14" step="0.1" value="12.5">
+        </div>
+        <div class="ctl">
+          <label>按摩次數</label>
+          <div class="seg" id="mass">
+            <button type="button" data-v="1" aria-pressed="false">1 次</button>
+            <button type="button" data-v="2" aria-pressed="true">2 次</button>
+            <button type="button" data-v="3" aria-pressed="false">3 次</button>
+            <button type="button" data-v="5" aria-pressed="false">天天按</button>
+          </div>
+        </div>
+        <div class="ctl">
+          <label>吃飯的鬆緊度（五天合計／人）</label>
+          <div class="seg" id="food">
+            <button type="button" data-v="1600000" aria-pressed="true">照本頁 160 萬盾</button>
+            <button type="button" data-v="2200000" aria-pressed="false">寬鬆 220 萬盾</button>
+            <button type="button" data-v="3000000" aria-pressed="false">放開吃 300 萬盾</button>
+          </div>
+        </div>
+        <div class="ctl">
+          <label>巴拿山</label>
+          <div class="seg" id="bana">
+            <button type="button" data-v="1000000" aria-pressed="true">去 100 萬盾</button>
+            <button type="button" data-v="0" aria-pressed="false">不去</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card bill">
+        <div class="line"><span>機票＋簽證</span><span id="bAir"></span></div>
+        <div class="line"><span>住宿 4 晚</span><span id="bStay"></span></div>
+        <div class="line"><span>巴拿山</span><span id="bBana"></span></div>
+        <div class="line"><span>其他門票體驗</span><span id="bTic"></span></div>
+        <div class="line"><span>按摩</span><span id="bMass"></span></div>
+        <div class="line"><span>交通</span><span id="bTrans"></span></div>
+        <div class="line"><span>吃 5 天</span><span id="bFood"></span></div>
+        <div class="line"><span>雜支、eSIM、台灣端</span><span id="bMisc"></span></div>
+        <div class="total"><span>每人合計</span><b id="bTotal"></b></div>
+        <div class="per" id="bPair"></div>
+        <p style="font-size:.75rem;color:var(--ink-3);margin-top:.9rem;line-height:1.6">
+          不含購物、伴手禮與會安訂製服。機票為 3 月平日估算，實際以當日報價為準。
+        </p>
+      </div>
+    </div>
+
+    <div class="sec-head" style="margin-top:2.5rem;margin-bottom:1.15rem">
+      <p class="eyebrow">對照</p>
+      <h2 style="font-size:1.25rem;font-family:var(--body);font-weight:500">同樣的錢，在日本能買到什麼</h2>
+    </div>
+    <div class="scroller">
+      <table>
+        <thead><tr><th>項目</th><th>峴港／會安</th><th>日本</th><th>差距</th></tr></thead>
+        <tbody>
+          <tr><td>一小時全身按摩</td><td class="num">NT$310–500</td><td class="num">NT$1,500–2,500</td><td class="num" style="color:var(--cheap)">1／5</td></tr>
+          <tr><td>四星海景雙人房</td><td class="num">NT$1,000–1,800</td><td class="num">NT$6,000–12,000</td><td class="num" style="color:var(--cheap)">1／6</td></tr>
+          <tr><td>一碗在地麵食</td><td class="num">NT$40–60</td><td class="num">NT$200–300</td><td class="num" style="color:var(--cheap)">1／5</td></tr>
+          <tr><td>兩人一桌現撈海鮮</td><td class="num">NT$500–875</td><td class="num">NT$3,000–6,000</td><td class="num" style="color:var(--cheap)">1／6</td></tr>
+          <tr><td>市區到機場計程車</td><td class="num">NT$100–150</td><td class="num">NT$1,500–2,500</td><td class="num" style="color:var(--cheap)">1／15</td></tr>
+          <tr><td>一杯咖啡</td><td class="num">NT$45–90</td><td class="num">NT$150–250</td><td class="num" style="color:var(--cheap)">1／3</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note" style="margin-top:1.15rem">
+      <span class="k">所以策略很清楚</span>
+      <div>在日本要精打細算的東西，在這裡完全不必省。<strong>把預算從「住宿與交通」移到「體驗與吃」</strong>——
+      多按兩次摩、多吃一頓海鮮、訂做一件衣服，加起來也才一兩千台幣，
+      但這些才是回來之後會一直記得的部分。</div>
+    </div>
+  </div>
+</section>
+
+<section id="tips">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">實用須知</p>
+      <h2>出發前該知道的事</h2>
+    </div>
+    <div class="seats" style="margin-bottom:1.5rem">
+      <div class="seat pickd">
+        <span class="venue">最重要</span>
+        <h4>簽證：一定要先辦</h4>
+        <p>台灣護照去越南<strong>需要簽證</strong>。線上申請電子簽證（E-visa），費用約 US$25，
+        <strong>建議出發前至少三週辦</strong>。核發後列印出來隨身帶，入境要查驗。
+        只認官方網站，別透過來路不明的代辦。</p>
+      </div>
+      <div class="seat pickd">
+        <span class="venue">交通</span>
+        <h4>一律用 Grab</h4>
+        <p>越南的 Uber。<strong>價格 App 上先顯示、不用議價、不會繞路</strong>，也可以叫外送。
+        兩人以上叫 Grab Car，一個人叫 Grab Bike 更便宜。落地先連網才叫得到車。</p>
+      </div>
+      <div class="seat">
+        <span class="venue">錢</span>
+        <h4>匯率換算法</h4>
+        <p><strong>越南盾去掉三個零再乘以 1.25，就是台幣。</strong>
+        例如 100,000 盾 → 100 × 1.25 = 約 NT$125。
+        大鈔面額很像（10 萬跟 50 萬顏色接近），付錢時看清楚。市區 ATM 多，
+        帶少量現金＋提款卡即可。</p>
+      </div>
+      <div class="seat">
+        <span class="venue">市場</span>
+        <h4>殺價是必要的</h4>
+        <p>韓市場、夜市的開價通常是實際的<strong>兩到三倍</strong>。從對半砍起，笑著談，
+        談不攏就轉身走（通常走兩步就被叫回來）。餐廳、超市、Grab 是定價，不用殺。</p>
+      </div>
+      <div class="seat">
+        <span class="venue">安全</span>
+        <h4>包包背前面</h4>
+        <p>峴港與會安治安不錯，但<strong>機車搶包仍有發生</strong>。
+        走在路邊時包包背在靠內側或背前面，手機不要邊走邊拿在手上晃。
+        過馬路時<strong>穩定慢慢走、不要突然停或跑</strong>，機車會自己閃你。</p>
+      </div>
+      <div class="seat">
+        <span class="venue">生活</span>
+        <h4>水、電、小費</h4>
+        <p><strong>不要喝生水</strong>，只喝瓶裝水（一瓶 10,000 盾），刷牙可用自來水。
+        電壓 220V、插座台灣兩腳扁插可直接用。<strong>小費非強制</strong>，
+        但按摩、船夫、導遊給 50,000 盾是禮貌。</p>
+      </div>
+    </div>
+
+    <div class="sec-head" style="margin-bottom:1.15rem">
+      <p class="eyebrow">現場用得到</p>
+      <h2 style="font-size:1.25rem;font-family:var(--body);font-weight:500">越南語小抄</h2>
+    </div>
+    <div class="phrases">
+      <div class="ph"><div class="zh">你好</div><div class="jp">Xin chào</div><div class="rm">新交</div></div>
+      <div class="ph"><div class="zh">謝謝</div><div class="jp">Cảm ơn</div><div class="rm">感恩</div></div>
+      <div class="ph"><div class="zh">多少錢？</div><div class="jp">Bao nhiêu tiền?</div><div class="rm">包妞田</div></div>
+      <div class="ph"><div class="zh">太貴了</div><div class="jp">Đắt quá!</div><div class="rm">達瓜</div></div>
+      <div class="ph"><div class="zh">可以便宜一點嗎</div><div class="jp">Giảm giá được không?</div><div class="rm">讓匝的空</div></div>
+      <div class="ph"><div class="zh">皮皮蝦</div><div class="jp">Tôm tít ／ Bề bề</div><div class="rm">東滴／北北</div></div>
+      <div class="ph"><div class="zh">椒鹽（做法）</div><div class="jp">Rang muối</div><div class="rm">讓妹</div></div>
+      <div class="ph"><div class="zh">蒸（做法）</div><div class="jp">Hấp</div><div class="rm">哈普</div></div>
+      <div class="ph"><div class="zh">烤（做法）</div><div class="jp">Nướng</div><div class="rm">能</div></div>
+      <div class="ph"><div class="zh">結帳</div><div class="jp">Tính tiền</div><div class="rm">定田</div></div>
+      <div class="ph"><div class="zh">不要辣</div><div class="jp">Không cay</div><div class="rm">空該</div></div>
+      <div class="ph"><div class="zh">好吃！</div><div class="jp">Ngon quá!</div><div class="rm">囧瓜</div></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="cols">
+      <div>
+        <h4>行程設定</h4>
+        <p>兩人同行．2027/3/9–3/13 五天四夜．峴港 2 晚＋會安 2 晚．
+        指定行程：美溪海灘大排檔吃皮皮蝦、巴拿山黃金橋、會安古鎮夜晚。
+        預算策略：機票住宿從簡，把錢集中在體驗與飲食。</p>
+      </div>
+      <div>
+        <h4>價格說明</h4>
+        <p>金額為估算，用來抓預算而非報價。越南盾以 1 萬盾 ≈ NT$12.5 換算。
+        機票為 3 月平日估算區間；門票以 2026 年公告價格為準，2027 年可能調整。
+        海鮮為時價，實際以現場秤重計價。</p>
+      </div>
+      <div>
+        <h4>出發前務必確認</h4>
+        <p>越南電子簽證（至少提前三週）、護照效期六個月以上、
+        巴拿山當日開放狀況與天氣、Quán Bé Mặn 營業時間、
+        會安古鎮門票政策、旅遊平安險與不便險。</p>
+      </div>
+    </div>
+    <p class="disclaim">
+      本頁為個人旅遊規劃，非商業旅行社行程，不涉及代訂與收費。
+      餐廳、景點資訊與價格整理自 2026 年 8 月的公開資料，實際請以現場或官方公告為準。
+      地圖連結導向 Google 地圖搜尋結果。海鮮價格為時價，點餐前請先確認單價與秤重方式。
+    </p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var root = document.documentElement, saved = null;
+  try { saved = localStorage.getItem("dad-theme"); } catch(e){}
+  if (saved) root.setAttribute("data-theme", saved);
+  document.getElementById("theme").addEventListener("click", function(){
+    var cur = root.getAttribute("data-theme");
+    var isDark = cur ? cur === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+    var next = isDark ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem("dad-theme", next); } catch(e){}
+  });
+
+  var tabs = Array.prototype.slice.call(document.querySelectorAll(".daytab"));
+  tabs.forEach(function(tab){
+    tab.addEventListener("click", function(){
+      tabs.forEach(function(t){
+        var on = t === tab;
+        t.setAttribute("aria-selected", on ? "true" : "false");
+        document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
+      });
+    });
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll(".routeswap"), function(box){
+    var btns = Array.prototype.slice.call(box.querySelectorAll("button"));
+    var panels = Array.prototype.slice.call(box.parentElement.querySelectorAll("[data-routepanel]"));
+    btns.forEach(function(b){
+      b.addEventListener("click", function(){
+        btns.forEach(function(x){ x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+        var target = b.getAttribute("data-route");
+        panels.forEach(function(pn){ pn.hidden = pn.getAttribute("data-routepanel") !== target; });
+      });
+    });
+  });
+
+  var chips = Array.prototype.slice.call(document.querySelectorAll(".chip"));
+  var eats  = Array.prototype.slice.call(document.querySelectorAll("#eatGrid .eat[data-tags]"));
+  chips.forEach(function(chip){
+    chip.addEventListener("click", function(){
+      var f = chip.getAttribute("data-filter");
+      chips.forEach(function(c){ c.setAttribute("aria-pressed", c === chip ? "true" : "false"); });
+      eats.forEach(function(card){
+        var tags = card.getAttribute("data-tags") || "";
+        card.hidden = !(f === "all" || tags.split(" ").indexOf(f) !== -1);
+      });
+    });
+  });
+
+  var state = { air:7000, stay:1250, rate:12.5, mass:2, food:1600000, bana:1000000 };
+  var nt = function(n){ return "NT$" + Math.round(n).toLocaleString("en-US"); };
+
+  function segInit(id, key){
+    var box = document.getElementById(id);
+    Array.prototype.forEach.call(box.querySelectorAll("button"), function(b){
+      b.addEventListener("click", function(){
+        Array.prototype.forEach.call(box.querySelectorAll("button"), function(x){
+          x.setAttribute("aria-pressed", x === b ? "true" : "false");
+        });
+        state[key] = parseFloat(b.getAttribute("data-v"));
+        render();
+      });
+    });
+  }
+  segInit("mass","mass"); segInit("food","food"); segInit("bana","bana");
+  [["airR","air"],["stay","stay"],["rate","rate"]].forEach(function(pair){
+    var el = document.getElementById(pair[0]);
+    el.addEventListener("input", function(){ state[pair[1]] = parseFloat(el.value); render(); });
+  });
+
+  function render(){
+    var r = state.rate / 10000;
+    var air   = state.air + 800;
+    var stay  = state.stay * 4 / 2;
+    var bana  = state.bana * r;
+    var tic   = (120000 + 55000 + 200000) * r;
+    var mass  = state.mass * 350000 * r;
+    var trans = 1175000 * r;
+    var food  = state.food * r;
+    var misc  = 640000 * r + 300 + 180;
+    var total = air + stay + bana + tic + mass + trans + food + misc;
+
+    document.getElementById("airV").textContent  = nt(state.air);
+    document.getElementById("stayV").textContent = nt(state.stay);
+    document.getElementById("rateV").textContent = "NT$" + state.rate.toFixed(1);
+    document.getElementById("bAir").textContent   = nt(air);
+    document.getElementById("bStay").textContent  = nt(stay);
+    document.getElementById("bBana").textContent  = bana ? nt(bana) : "不去";
+    document.getElementById("bTic").textContent   = nt(tic);
+    document.getElementById("bMass").textContent  = nt(mass) + "（" + state.mass + " 次）";
+    document.getElementById("bTrans").textContent = nt(trans);
+    document.getElementById("bFood").textContent  = nt(food);
+    document.getElementById("bMisc").textContent  = nt(misc);
+    document.getElementById("bTotal").textContent = nt(total);
+    document.getElementById("bPair").textContent  = "兩人合計 " + nt(total * 2);
+    document.getElementById("heroPer").textContent = Math.round(total).toLocaleString("en-US");
+  }
+  render();
+
+  var cv = document.getElementById("tide"), ctx = cv.getContext("2d");
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var t = 0, raf;
+  function size(){
+    var d = window.devicePixelRatio || 1;
+    cv.width = cv.offsetWidth * d; cv.height = cv.offsetHeight * d;
+    ctx.setTransform(d,0,0,d,0,0);
+  }
+  function draw(){
+    var w = cv.offsetWidth, h = cv.offsetHeight;
+    ctx.clearRect(0,0,w,h);
+    var sea = getComputedStyle(root).getPropertyValue("--sea").trim();
+    var lan = getComputedStyle(root).getPropertyValue("--lantern").trim();
+    ctx.lineWidth = 1;
+    for (var k = 0; k < 6; k++){
+      ctx.strokeStyle = sea;
+      ctx.globalAlpha = 0.06 + k * 0.02;
+      ctx.beginPath();
+      var base = h * (0.52 + k * 0.08);
+      for (var x = 0; x <= w; x += 6){
+        var y = base + Math.sin((x/210) + t + k*0.5) * (8 + k*2) + Math.sin((x/74) - t*0.6) * 2.2;
+        if (x === 0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+      }
+      ctx.stroke();
+    }
+    for (var i = 0; i < 9; i++){
+      var lx = w * (0.08 + i * 0.105);
+      var ly = h * 0.2 + Math.sin(t * 0.8 + i) * 6;
+      var rr = 7 + (i % 3) * 3;
+      ctx.globalAlpha = 0.3;
+      ctx.strokeStyle = lan;
+      ctx.beginPath(); ctx.ellipse(lx, ly, rr, rr * 1.35, 0, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(lx, 0); ctx.lineTo(lx, ly - rr * 1.35); ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+  function loop(){ t += 0.007; draw(); raf = requestAnimationFrame(loop); }
+  function boot(){ size(); draw(); if (!reduce){ cancelAnimationFrame(raf); loop(); } }
+  window.addEventListener("resize", boot);
+  boot();
+})();
+</script>
