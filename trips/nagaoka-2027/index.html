@@ -529,6 +529,25 @@ footer a{ font-size:.8125rem; }
 .vs .lbl{ font-family:var(--mono); font-size:.625rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); }
 .vs .big{ font-family:var(--mono); font-size:1.5rem; font-weight:500; margin:.3rem 0 .15rem; font-variant-numeric:tabular-nums; }
 .vs .sub{ font-size:.8125rem; color:var(--ink-2); }
+
+/* ── 路線切換 ─────────────────────────────── */
+.routeswap{ display:flex; gap:.4rem; flex-wrap:wrap; margin-bottom:1.35rem; }
+.routeswap button{
+  font-family:var(--body); font-size:.8125rem; padding:.5rem .9rem; border-radius:8px;
+  border:1px solid var(--line); background:var(--surface); color:var(--ink-2); cursor:pointer;
+  display:flex; flex-direction:column; align-items:flex-start; gap:.05rem; line-height:1.35;
+}
+.routeswap button b{ font-family:var(--mono); font-size:.625rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); font-weight:500; }
+.routeswap button:hover{ border-color:var(--lantern); }
+.routeswap button[aria-pressed="true"]{ background:var(--lantern); border-color:var(--lantern); color:#fff; }
+.routeswap button[aria-pressed="true"] b{ color:rgba(255,255,255,.75); }
+[data-routepanel][hidden]{ display:none; }
+.optnote{
+  display:flex; gap:.6rem; align-items:baseline; padding:.7rem .95rem; border-radius:8px;
+  background:var(--surface-2); border:1px dashed var(--line); font-size:.8125rem; color:var(--ink-2);
+  margin-bottom:1.15rem;
+}
+.optnote b{ font-family:var(--mono); font-size:.625rem; letter-spacing:.12em; text-transform:uppercase; color:var(--lantern); white-space:nowrap; }
 </style>
 
 <header class="topbar">
@@ -608,24 +627,24 @@ footer a{ font-size:.8125rem; }
       </div>
       <div class="ovday">
         <span class="d">Day 3 · 8/3 二</span>
-        <h4>補眠．東京慢行</h4>
-        <span class="hl">主場：睡到自然醒</span>
+        <h4>拍照．夜景</h4>
+        <span class="hl">三條路線當天選</span>
         <ul>
-          <li>中午前不排任何行程</li>
-          <li>下午淺草或谷根千散步</li>
-          <li>不忍池的蓮花（清晨或傍晚）</li>
-          <li>晚上居酒屋慶功</li>
+          <li>上午睡到自然醒</li>
+          <li>A 谷根千．根津鳥居．晴空塔</li>
+          <li>B 明治神宮．表參道．澀谷天空</li>
+          <li>C teamLab．台場．彩虹大橋</li>
         </ul>
         <span class="cost">當日約 ¥7,000／人</span>
       </div>
       <div class="ovday">
         <span class="d">Day 4 · 8/4 三</span>
-        <h4>採買．回家</h4>
-        <span class="hl">主場：上野 → 機場</span>
+        <h4>最後半天</h4>
+        <span class="hl">兩條路線當天選</span>
         <ul>
-          <li>阿美橫丁、藥妝最後採買</li>
-          <li>行李寄放後輕裝逛街</li>
-          <li>下午或傍晚班機</li>
+          <li>A 築地海鮮．濱離宮．東京車站</li>
+          <li>B 不忍池蓮花．舊岩崎邸．阿美橫丁</li>
+          <li>13:40 取行李前往機場</li>
           <li>當晚回到台灣</li>
         </ul>
         <span class="cost">當日約 ¥5,000／人</span>
@@ -1278,8 +1297,8 @@ footer a{ font-size:.8125rem; }
     <div class="daytabs" role="tablist" aria-label="行程日期">
       <button class="daytab" role="tab" id="tab-d1" aria-controls="d1" aria-selected="true"><b>Day 1 · 8/1 日</b>抵達．上野</button>
       <button class="daytab" role="tab" id="tab-d2" aria-controls="d2" aria-selected="false"><b>Day 2 · 8/2 一</b>長岡花火</button>
-      <button class="daytab" role="tab" id="tab-d3" aria-controls="d3" aria-selected="false"><b>Day 3 · 8/3 二</b>補眠．東京慢行</button>
-      <button class="daytab" role="tab" id="tab-d4" aria-controls="d4" aria-selected="false"><b>Day 4 · 8/4 三</b>採買．回家</button>
+      <button class="daytab" role="tab" id="tab-d3" aria-controls="d3" aria-selected="false"><b>Day 3 · 8/3 二</b>拍照．夜景</button>
+      <button class="daytab" role="tab" id="tab-d4" aria-controls="d4" aria-selected="false"><b>Day 4 · 8/4 三</b>最後半天</button>
     </div>
 
     <div class="tabpanel" id="d1" role="tabpanel" aria-labelledby="tab-d1">
@@ -1432,79 +1451,284 @@ footer a{ font-size:.8125rem; }
     </div>
 
     <div class="tabpanel" id="d3" role="tabpanel" aria-labelledby="tab-d3" hidden>
-      <div class="dayhead"><h3>Day 3｜補眠．東京慢行</h3><span class="tag sea">主場：睡到自然醒</span>
-        <p>這天的行程刻意留白。想睡到幾點就睡到幾點，下午再出門。</p></div>
-      <div class="tl">
-        <div class="ev" data-k="rest"><div class="ev-time">－</div><div class="ev-body">
-          <div class="ev-title"><h4>上午：不排任何行程</h4><span class="tag">刻意留白</span></div>
-          <p>昨天從早上八點到半夜，六個人都需要這個上午。有廚房的話煮個東西當早午餐。</p>
-        </div></div>
+      <div class="dayhead"><h3>Day 3｜東京．拍照與夜景</h3><span class="tag lan">三選一</span>
+        <p>上午睡飽，下午出門。三條路線都排到晚上、都有一個「值得拍」的高潮。當天看體力跟天氣再決定走哪條。</p></div>
 
-        <div class="ev" data-k="play"><div class="ev-time">14:00</div><div class="ev-body">
-          <div class="ev-title"><h4>谷根千散步</h4><span class="tag free">免費</span>
-          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=谷中銀座商店街" target="_blank" rel="noopener">谷中銀座</a></div>
-          <p>谷中、根津、千駄木一帶，東京少數躲過戰火與泡沫改建的老街區。
-          從上野走過去或搭一站。<strong>谷中銀座商店街</strong>的「夕焼けだんだん」階梯是招牌畫面，
-          兩側都是小吃與雜貨，適合六個人邊走邊分著吃。</p>
-        </div></div>
+      <div class="optnote"><b>自由決定</b><span>以下都不是非去不可。三對六個人，早上起來看誰想走哪條，投票就好——路線 A 最省力、B 最好拍、C 最好玩。</span></div>
 
-        <div class="ev" data-k="play"><div class="ev-time">16:00</div><div class="ev-body">
-          <div class="ev-title"><h4>替代選項：淺草</h4>
-          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=浅草寺" target="_blank" rel="noopener">淺草寺</a>
-          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=仲見世通り" target="_blank" rel="noopener">仲見世通</a></div>
-          <p>從上野搭銀座線兩站。淺草寺、仲見世通、隅田川岸。想買伴手禮的話這裡比阿美橫丁好逛。</p>
-        </div></div>
+      <div class="routeswap" role="group" aria-label="Day 3 路線">
+        <button type="button" data-route="r3a" aria-pressed="true"><b>路線 A．推薦</b>下町散步 → 晴空塔夜景</button>
+        <button type="button" data-route="r3b" aria-pressed="false"><b>路線 B．最網美</b>表參道 → 澀谷天空</button>
+        <button type="button" data-route="r3c" aria-pressed="false"><b>路線 C．最好玩</b>teamLab → 台場夜景</button>
+      </div>
 
-        <div class="ev" data-k="play"><div class="ev-time">17:30</div><div class="ev-body">
-          <div class="ev-title"><h4>不忍池的蓮花</h4><span class="tag free">免費</span><span class="tag lan">八月限定</span>
-          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=不忍池" target="_blank" rel="noopener">地圖</a></div>
-          <p>上野公園裡的池子，<strong>七月中到八月中整片開滿蓮花</strong>，剛好是你們來的時候。
-          花在清晨開得最好、下午會闔起來，但傍晚的光線拍起來很漂亮。就在住處旁邊，隨時可以去。</p>
-        </div></div>
+      <div data-routepanel="r3a">
+        <div class="tl">
+          <div class="ev" data-k="rest"><div class="ev-time">－11:30</div><div class="ev-body">
+            <div class="ev-title"><h4>睡到自然醒</h4><span class="tag">刻意留白</span></div>
+            <p>昨天從早上八點到凌晨兩點，這個上午不排任何事。有廚房的話煮個東西當早午餐。</p>
+          </div></div>
 
-        <div class="ev" data-k="night"><div class="ev-time">19:00</div><div class="ev-body">
-          <div class="ev-title"><h4>慶功晚餐</h4>
-          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=上野アメ横高架下居酒屋" target="_blank" rel="noopener">地圖</a></div>
-          <p>阿美橫丁高架下有一整排熱炒與居酒屋，價格便宜、氣氛熱鬧，適合六個人。六人記得先訂位。</p>
-          <div class="ev-cost"><span><b>¥3,000–4,000</b>／人</span></div>
-        </div></div>
+          <div class="ev" data-k="play"><div class="ev-time">13:00</div><div class="ev-body">
+            <div class="ev-title"><h4>谷中銀座商店街．夕焼けだんだん</h4><span class="tag free">免費</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=谷中銀座商店街" target="_blank" rel="noopener">商店街</a>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=夕焼けだんだん" target="_blank" rel="noopener">階梯</a></div>
+            <p>東京少數躲過戰火與泡沫改建的老街。<strong>「夕焼けだんだん」那道階梯是招牌構圖</strong>——
+            站在階梯頂往下拍，整條商店街收進畫面裡，六個人排一排也拍得下。
+            從日暮里站走 5 分鐘。兩側都是小吃：可樂餅、燒鳥、豆菓子、貓咪造型的燒菓子。</p>
+            <div class="ev-cost"><span>邊走邊吃 <b>¥500–1,200</b>／人</span></div>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">14:30</div><div class="ev-body">
+            <div class="ev-title"><h4>根津神社．千本鳥居</h4><span class="tag free">免費</span><span class="tag lan">拍照點</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=根津神社" target="_blank" rel="noopener">地圖</a></div>
+            <p>從谷中走過去約 15 分。<strong>境內有一整排朱紅色的乙女稲荷鳥居隧道</strong>，
+            氣氛跟京都伏見稻荷很像，但人少非常多——這是東京拍鳥居最不用排隊的地方。
+            穿過鳥居的逆光照最好看。本殿是江戶時代留下來的，已列重要文化財。</p>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">16:00</div><div class="ev-body">
+            <div class="ev-title"><h4>淺草寺．仲見世通</h4><span class="tag free">免費</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=浅草寺" target="_blank" rel="noopener">淺草寺</a>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=仲見世通り" target="_blank" rel="noopener">仲見世</a></div>
+            <p>從根津搭千代田線轉銀座線，約 20 分。雷門大燈籠前是東京最經典的合照點。
+            仲見世通兩側的人形燒、雷おこし、抹茶霜淇淋，一路吃到本堂。
+            <strong>想穿和服拍照的話，淺草有很多和服租借店</strong>（約 ¥3,000–5,000／人，含穿衣與髮型）。</p>
+            <div class="ev-cost"><span>小吃 <b>¥800–1,500</b>／人</span><span>和服租借（選配）<b>¥3,000–5,000</b></span></div>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">17:30</div><div class="ev-body">
+            <div class="ev-title"><h4>隅田公園．走向晴空塔</h4><span class="tag free">免費</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=隅田公園" target="_blank" rel="noopener">地圖</a></div>
+            <p>從淺草沿隅田川往晴空塔走，過吾妻橋約 20 分鐘。<strong>橋上可以同時拍到晴空塔與朝日啤酒大樓</strong>，
+            傍晚的光線最漂亮。走不動的話搭一站電車就到。</p>
+          </div></div>
+
+          <div class="ev" data-k="night"><div class="ev-time">18:30</div><div class="ev-body">
+            <div class="ev-title"><h4>東京晴空塔．天望デッキ</h4><span class="tag lan">今日高潮</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=東京スカイツリー" target="_blank" rel="noopener">地圖</a></div>
+            <p>350 公尺的天望デッキ。<strong>八月初日落大約 18:40</strong>——這個時間上去，
+            剛好從夕陽看到整片夜景亮起來，是一趟票看兩種景色。天氣好的話看得到富士山剪影。
+            想再上去的話，450 公尺的「天望回廊」要另外加購。</p>
+            <div class="ev-cost"><span>天望デッキ <b>¥1,800–3,600</b>／人</span></div>
+            <p style="margin-top:.3rem"><strong>2026 年 4 月起改成浮動票價</strong>，每天價格不同，
+            而且<strong>當天在 4 樓窗口買每張要多收 ¥500 發券手續費</strong>——
+            六個人就是 ¥3,000，一定要事先上官網買日時指定券。</p>
+          </div></div>
+
+          <div class="ev" data-k="night"><div class="ev-time">20:00</div><div class="ev-body">
+            <div class="ev-title"><h4>東京晴空街道 晚餐</h4>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=東京ソラマチ" target="_blank" rel="noopener">地圖</a></div>
+            <p>塔下的商場，30、31 樓有一整層景觀餐廳，六人可訂位。想省錢的話 B1 美食街與超市也很好用。</p>
+            <div class="ev-cost"><span>景觀餐廳 <b>¥3,500–6,000</b></span><span>美食街 <b>¥1,200–2,000</b></span></div>
+          </div></div>
+
+          <div class="ev" data-k="night"><div class="ev-time">21:30</div><div class="ev-body">
+            <div class="ev-title"><h4>回上野．不忍池的蓮花</h4><span class="tag free">免費</span><span class="tag lan">八月限定</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=不忍池" target="_blank" rel="noopener">地圖</a></div>
+            <p>就在住處旁邊。<strong>七月中到八月中整片池子開滿蓮花</strong>，剛好是你們來的時候。
+            花在清晨開得最好，但夜裡打燈的池畔散步也很舒服，當作一天的收尾。</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div data-routepanel="r3b" hidden>
+        <div class="tl">
+          <div class="ev" data-k="rest"><div class="ev-time">－12:00</div><div class="ev-body">
+            <div class="ev-title"><h4>睡到自然醒</h4></div>
+            <p>這條路線跑得比較遠，出門前吃飽。</p>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">13:30</div><div class="ev-body">
+            <div class="ev-title"><h4>明治神宮</h4><span class="tag free">免費</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=明治神宮" target="_blank" rel="noopener">地圖</a></div>
+            <p>上野搭山手線到原宿約 30 分。市中心裡的一整片森林，參道兩旁高木成蔭，
+            夏天走進去體感低好幾度。<strong>大鳥居是拍照重點</strong>，境內的清正井也是知名景點。</p>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">15:00</div><div class="ev-body">
+            <div class="ev-title"><h4>表參道 → 原宿竹下通</h4>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=表参道" target="_blank" rel="noopener">表參道</a>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=竹下通り" target="_blank" rel="noopener">竹下通</a></div>
+            <p>表參道的櫸木大道兩側是建築名家的旗艦店，本身就很好拍；
+            竹下通則是完全相反的擁擠與繽紛，可麗餅、彩虹棉花糖都在這裡。兩條一起走剛好對比。</p>
+            <div class="ev-cost"><span>可麗餅 <b>¥600–900</b></span><span>咖啡 <b>¥600–800</b></span></div>
+          </div></div>
+
+          <div class="ev" data-k="night"><div class="ev-time">17:30</div><div class="ev-body">
+            <div class="ev-title"><h4>SHIBUYA SKY．澀谷天空</h4><span class="tag lan">今日高潮</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=渋谷スクランブルスクエア" target="_blank" rel="noopener">地圖</a></div>
+            <p>澀谷 Scramble Square 頂樓，<strong>地上 229 公尺的「屋外」展望空間</strong>——
+            沒有玻璃隔著，360 度看整個東京，天氣好時看得到晴空塔與富士山。
+            分成室內的 SKY GALLERY 與屋外的 SKY STAGE，下雨也有得看。
+            <strong>選日落前後的時段最值得</strong>，八月初日落約 18:40。</p>
+            <div class="ev-cost"><span>網路購票 <b>¥2,200</b>／人</span><span>現場窗口 <b>¥2,500</b>／人</span></div>
+            <p style="margin-top:.3rem"><strong>是日時指定券，一定要先在官網買</strong>，
+            日落時段最熱門常常完售。六個人記得買同一時段。</p>
+          </div></div>
+
+          <div class="ev" data-k="night"><div class="ev-time">19:15</div><div class="ev-body">
+            <div class="ev-title"><h4>澀谷十字路口．忠犬八公</h4><span class="tag free">免費</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=渋谷スクランブル交差点" target="_blank" rel="noopener">地圖</a></div>
+            <p>全世界最有名的路口。想拍空景的話，站在 <strong>MAGNET by SHIBUYA109 頂樓</strong>
+            或站前天橋往下拍最清楚。八公像永遠在排隊，但還是要拍一張。</p>
+          </div></div>
+
+          <div class="ev" data-k="night"><div class="ev-time">20:00</div><div class="ev-body">
+            <div class="ev-title"><h4>澀谷晚餐</h4>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=渋谷横丁" target="_blank" rel="noopener">澀谷橫丁</a></div>
+            <p>MIYASHITA PARK 一樓的「澀谷橫丁」把日本各地的鄉土料理排成一條街，
+            氣氛熱鬧、適合六個人。或走去道玄坂找燒肉、居酒屋。</p>
+            <div class="ev-cost"><span><b>¥3,000–4,500</b>／人</span></div>
+          </div></div>
+        </div>
+      </div>
+
+      <div data-routepanel="r3c" hidden>
+        <div class="tl">
+          <div class="ev" data-k="rest"><div class="ev-time">－11:30</div><div class="ev-body">
+            <div class="ev-title"><h4>睡到自然醒</h4></div>
+            <p>teamLab 是預約制，出發前先確認時段。</p>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">13:00</div><div class="ev-body">
+            <div class="ev-title"><h4>teamLab Planets TOKYO．豐洲</h4><span class="tag lan">拍照聖地</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=teamLab Planets TOKYO 豊洲" target="_blank" rel="noopener">地圖</a></div>
+            <p>上野搭車約 40 分。<strong>要脫鞋、會涉水走進作品裡</strong>的沉浸式數位藝術館，
+            鏡面地板加上無限延伸的光影，是東京最好拍的室內景點之一——<strong>情侶照怎麼拍都好看</strong>。
+            會弄濕膝蓋以下，<strong>女生建議穿短褲或方便捲起的褲子</strong>（現場有提供短褲租借）。</p>
+            <div class="ev-cost"><span>成人票 <b>約 ¥3,800</b>／人（以官網為準）</span></div>
+            <p style="margin-top:.3rem"><strong>完全預約制、日時指定</strong>，要先上官網買票。六人買同一時段。</p>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">15:30</div><div class="ev-body">
+            <div class="ev-title"><h4>台場海濱公園</h4><span class="tag free">免費</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=お台場海浜公園" target="_blank" rel="noopener">地圖</a></div>
+            <p>從豐洲搭百合海鷗號過去。人工沙灘、海風、可以坐下來發呆的階梯。
+            <strong>自由女神像複製品</strong>就在旁邊，背後正好是彩虹大橋——這是台場的招牌合照構圖。</p>
+          </div></div>
+
+          <div class="ev" data-k="night"><div class="ev-time">18:30</div><div class="ev-body">
+            <div class="ev-title"><h4>彩虹大橋．日落轉夜景</h4><span class="tag free">免費</span><span class="tag lan">今日高潮</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=レインボーブリッジ" target="_blank" rel="noopener">地圖</a></div>
+            <p>八月初日落約 18:40。<strong>從台場這一側看，夕陽會落在東京鐵塔與大橋之間</strong>，
+            天色轉藍的那二十分鐘（攝影師說的 blue hour）是全東京最好拍的時刻之一。
+            橋上有免費的人行步道，走一段更有感覺。</p>
+          </div></div>
+
+          <div class="ev" data-k="night"><div class="ev-time">20:00</div><div class="ev-body">
+            <div class="ev-title"><h4>台場晚餐．或回上野</h4>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=アクアシティお台場" target="_blank" rel="noopener">AQUA CiTY</a></div>
+            <p>AQUA CiTY 的海景餐廳可以邊吃邊看彩虹大橋。想省錢就回上野吃，車程約 40 分。</p>
+            <div class="ev-cost"><span>海景餐廳 <b>¥3,000–5,000</b></span></div>
+          </div></div>
+        </div>
       </div>
     </div>
 
     <div class="tabpanel" id="d4" role="tabpanel" aria-labelledby="tab-d4" hidden>
-      <div class="dayhead"><h3>Day 4｜採買．回家</h3><span class="tag sea">主場：上野 → 機場</span></div>
-      <div class="tl">
-        <div class="ev" data-k="move"><div class="ev-time">09:00</div><div class="ev-body">
-          <div class="ev-title"><h4>退房．寄放行李</h4></div>
-          <p>Airbnb 多半可寄放到下午，訂房時先問。不行的話上野站有大型投幣式置物櫃。</p>
-          <div class="ev-cost"><span>大型置物櫃 <b>¥700</b>／個</span></div>
-        </div></div>
+      <div class="dayhead"><h3>Day 4｜最後半天</h3><span class="tag lan">兩選一</span>
+        <p>下午兩點要出發去機場，實際能玩的是 <strong>09:00–13:30 大約四個半小時</strong>。兩條路線都算好了時間。</p></div>
 
-        <div class="ev" data-k="play"><div class="ev-time">10:00</div><div class="ev-body">
-          <div class="ev-title"><h4>阿美橫丁．最後採買</h4>
-          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=アメヤ横丁" target="_blank" rel="noopener">地圖</a></div>
-          <p>零食、藥妝、乾貨。<strong>免稅要同一家店累計滿 ¥5,000，記得帶護照</strong>。
-          六個人可以合併在同一家結帳衝免稅門檻。藥妝比價可去
-          <a href="https://www.google.com/maps/search/?api=1&amp;query=マツモトキヨシ上野" target="_blank" rel="noopener">松本清</a> 或
-          <a href="https://www.google.com/maps/search/?api=1&amp;query=ドンキホーテ上野" target="_blank" rel="noopener">唐吉訶德</a>。</p>
-        </div></div>
+      <div class="optnote"><b>注意</b><span>2027/8/4 是<strong>週三</strong>——築地場外市場週三是自由營業日，<strong>只有大約一半的店會開</strong>。想吃海鮮早餐的話要有心理準備，或直接走路線 B。</span></div>
 
-        <div class="ev" data-k="play"><div class="ev-time">12:00</div><div class="ev-body">
-          <div class="ev-title"><h4>午餐：上野最後一餐</h4>
-          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=上野駅周辺ランチ" target="_blank" rel="noopener">地圖</a></div>
-          <p>上野站內的 ecute、atré 都有餐廳，帶著行李也方便。</p>
-          <div class="ev-cost"><span><b>¥1,200–2,000</b>／人</span></div>
-        </div></div>
+      <div class="routeswap" role="group" aria-label="Day 4 路線">
+        <button type="button" data-route="r4a" aria-pressed="true"><b>路線 A．吃吃喝喝</b>築地 → 銀座 → 東京車站</button>
+        <button type="button" data-route="r4b" aria-pressed="false"><b>路線 B．最省力</b>上野公園 → 阿美橫丁</button>
+      </div>
 
-        <div class="ev" data-k="move"><div class="ev-time">14:00</div><div class="ev-body">
-          <div class="ev-title"><h4>取行李 → 前往機場</h4></div>
-          <p>成田請抓 <strong>起飛前 3 小時</strong>出發（車程 60 分＋六人報到）。羽田抓 2.5 小時。</p>
-          <div class="ev-cost"><span>Access 特急 <b>¥1,290</b>／人</span></div>
-        </div></div>
+      <div data-routepanel="r4a">
+        <div class="tl">
+          <div class="ev" data-k="move"><div class="ev-time">08:30</div><div class="ev-body">
+            <div class="ev-title"><h4>退房．行李寄放</h4></div>
+            <p>Airbnb 多半可寄放到下午，訂房時先問。三戶分開住的話各自處理，或統一寄上野站的大型置物櫃。</p>
+            <div class="ev-cost"><span>大型置物櫃 <b>¥700</b>／個</span></div>
+          </div></div>
 
-        <div class="ev" data-k="move"><div class="ev-time">傍晚</div><div class="ev-body">
-          <div class="ev-title"><h4>起飛．當晚回到台灣</h4><span class="tag">回家</span></div>
-        </div></div>
+          <div class="ev" data-k="play"><div class="ev-time">09:30</div><div class="ev-body">
+            <div class="ev-title"><h4>築地場外市場．海鮮早餐</h4><span class="tag sea">吃吃喝喝</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=築地場外市場" target="_blank" rel="noopener">地圖</a></div>
+            <p>上野搭日比谷線到築地約 25 分。市場 5:00 開到 15:00，<strong>觀光最舒服的時段就是 9:00–13:00</strong>——
+            批發的尖峰過了、店家也都開了。玉子燒、海膽、和牛串、生蠔、鮪魚丼，一攤一攤買著吃。</p>
+            <div class="ev-cost"><span><b>訣竅：一開始就用「分著吃」的量買</b>，最後再上海鮮丼，不然很快就飽了</span></div>
+            <div class="ev-cost"><span>食べ歩き <b>¥1,500–2,500</b>／人</span><span>海鮮丼 <b>¥2,000–3,500</b></span></div>
+            <p style="margin-top:.3rem"><strong>週三只有一半店家營業</strong>，開的通常是名氣大的那幾家，
+            所以反而人更集中。想穩一點就改走路線 B。</p>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">11:15</div><div class="ev-body">
+            <div class="ev-title"><h4>濱離宮恩賜庭園</h4>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=浜離宮恩賜庭園" target="_blank" rel="noopener">地圖</a></div>
+            <p>從築地走過去 15 分。江戶時代的將軍庭園，<strong>池畔的茶屋前方就是汐留的玻璃帷幕大樓</strong>——
+            傳統與現代同框，是東京很獨特的一個構圖。中島の御茶屋可以坐下來喝抹茶配和菓子。</p>
+            <div class="ev-cost"><span>入園 <b>¥300</b>／人</span><span>抹茶＋和菓子 <b>¥850</b></span></div>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">12:15</div><div class="ev-body">
+            <div class="ev-title"><h4>銀座．最後採買</h4>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=銀座四丁目交差点" target="_blank" rel="noopener">銀座四丁目</a>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=GINZA SIX" target="_blank" rel="noopener">GINZA SIX</a></div>
+            <p>從濱離宮走 15 分。和光的鐘樓、GINZA SIX 的中庭裝置都很好拍。
+            百貨 B1 的伴手禮最齊，<strong>免稅同店滿 ¥5,000，六個人可以合併結帳衝門檻</strong>。</p>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">13:00</div><div class="ev-body">
+            <div class="ev-title"><h4>東京車站丸之內站體</h4><span class="tag free">免費</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=東京駅丸の内駅舎" target="_blank" rel="noopener">地圖</a></div>
+            <p>銀座走過去 10 分。<strong>1914 年的紅磚站體</strong>，戰後復原成三層樓的原貌。
+            站前廣場、或 KITTE 六樓的免費展望露臺往下拍，都是很漂亮的收尾照。</p>
+          </div></div>
+
+          <div class="ev" data-k="move"><div class="ev-time">13:40</div><div class="ev-body">
+            <div class="ev-title"><h4>回上野取行李 → 前往機場</h4></div>
+            <p>東京站到上野只要 6 分鐘。<strong>成田抓起飛前 3 小時出發、羽田 2.5 小時</strong>（六人報到與退稅要時間）。</p>
+            <div class="ev-cost"><span>Access 特急 <b>¥1,290</b>／人</span></div>
+          </div></div>
+        </div>
+      </div>
+
+      <div data-routepanel="r4b" hidden>
+        <div class="tl">
+          <div class="ev" data-k="rest"><div class="ev-time">09:00</div><div class="ev-body">
+            <div class="ev-title"><h4>睡飽一點．慢慢退房</h4></div>
+            <p>這條路線全部在住處走路範圍內，不用趕車，可以睡到八點多再起來。</p>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">09:30</div><div class="ev-body">
+            <div class="ev-title"><h4>不忍池．清晨的蓮花</h4><span class="tag free">免費</span><span class="tag lan">八月限定</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=不忍池" target="_blank" rel="noopener">地圖</a></div>
+            <p><strong>蓮花在清晨開得最好，中午前就會慢慢闔起來</strong>——所以這條路線把它排在早上。
+            整片池子開滿粉白色的花，人站在木棧道上拍，背後是一整面荷葉，是很少見的畫面。
+            七月中到八月中限定，剛好卡在你們來的時候。</p>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">10:30</div><div class="ev-body">
+            <div class="ev-title"><h4>上野恩賜公園．舊岩崎邸庭園</h4>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=上野恩賜公園" target="_blank" rel="noopener">上野公園</a>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=旧岩崎邸庭園" target="_blank" rel="noopener">舊岩崎邸</a></div>
+            <p>公園裡的<strong>清水觀音堂「月之松」</strong>——把松枝彎成一個圓圈，
+            從圓圈中間框出不忍池的弁天堂，是浮世繪畫過的構圖，現在還原地保留著，非常好拍。<br>
+            走 10 分鐘到舊岩崎邸庭園：三菱財閥的洋館，英國建築師設計，<strong>木造迴廊與彩繪玻璃</strong>保存完整。</p>
+            <div class="ev-cost"><span>舊岩崎邸 <b>¥400</b>／人</span><span>上野公園 <b>免費</b></span></div>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">12:00</div><div class="ev-body">
+            <div class="ev-title"><h4>阿美橫丁．午餐與最後採買</h4><span class="tag sea">吃吃喝喝</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=アメヤ横丁" target="_blank" rel="noopener">地圖</a>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=二木の菓子アメ横" target="_blank" rel="noopener">二木の菓子</a></div>
+            <p>高架下的海鮮丼、串燒、中華料理，六個人隨便找一家坐下來吃。
+            <strong>二木の菓子</strong>（1947 年創業）零食最便宜、種類最多，伴手禮一次買齊。
+            藥妝去 <a href="https://www.google.com/maps/search/?api=1&amp;query=マツモトキヨシ上野" target="_blank" rel="noopener">松本清</a> 或
+            <a href="https://www.google.com/maps/search/?api=1&amp;query=ドンキホーテ上野" target="_blank" rel="noopener">唐吉訶德</a> 比價。</p>
+            <div class="ev-cost"><span>午餐 <b>¥1,200–2,000</b>／人</span></div>
+          </div></div>
+
+          <div class="ev" data-k="move"><div class="ev-time">13:30</div><div class="ev-body">
+            <div class="ev-title"><h4>取行李 → 前往機場</h4></div>
+            <p>全程都在上野站附近，最後一段完全不用趕。<strong>成田抓起飛前 3 小時、羽田 2.5 小時。</strong></p>
+            <div class="ev-cost"><span>Access 特急 <b>¥1,290</b>／人</span></div>
+          </div></div>
+        </div>
       </div>
     </div>
   </div>
@@ -1795,6 +2019,18 @@ footer a{ font-size:.8125rem; }
         var on = t === tab;
         t.setAttribute("aria-selected", on ? "true" : "false");
         document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
+      });
+    });
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll(".routeswap"), function(box){
+    var btns = Array.prototype.slice.call(box.querySelectorAll("button"));
+    var panels = Array.prototype.slice.call(box.parentElement.querySelectorAll("[data-routepanel]"));
+    btns.forEach(function(b){
+      b.addEventListener("click", function(){
+        btns.forEach(function(x){ x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+        var target = b.getAttribute("data-route");
+        panels.forEach(function(pn){ pn.hidden = pn.getAttribute("data-routepanel") !== target; });
       });
     });
   });
