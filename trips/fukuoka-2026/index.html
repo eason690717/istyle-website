@@ -1,0 +1,1804 @@
+<title>博多晨昏行</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@500;600;700&display=swap">
+
+<style>
+/* ─────────────────────────────────────────────
+   博多晨昏行 — 藍染 × 浅葱 × 屋台燈籠
+   ───────────────────────────────────────────── */
+
+:root{
+  /* 光：和紙般帶冷調的紙白 */
+  --ground:      #E7ECEF;
+  --surface:     #FBFCFD;
+  --surface-2:   #F1F5F7;
+  --ink:         #0F2130;
+  --ink-2:       #3D5566;
+  --ink-3:       #6B8395;
+  --line:        #C9D6DE;
+  --line-soft:   #DDE6EB;
+
+  --sea:         #1F6F7A;   /* 浅葱 — 主色 */
+  --sea-soft:    #DCEDEF;
+  --lantern:     #B4642A;   /* 屋台燈籠 — 夜間／副色 */
+  --lantern-soft:#F7E7D6;
+
+  --cheap:       #2E7D5B;
+  --cheap-soft:  #DEEDE5;
+  --mid:         #9A6B22;
+  --mid-soft:    #F6EBD7;
+  --peak:        #A8473C;
+  --peak-soft:   #F7E1DD;
+
+  --sleep:       #7C6BA8;
+  --sleep-soft:  #E8E4F2;
+
+  --shadow:      0 1px 2px rgba(15,33,48,.05), 0 8px 24px -12px rgba(15,33,48,.18);
+  --shadow-lift: 0 2px 4px rgba(15,33,48,.06), 0 16px 40px -16px rgba(15,33,48,.28);
+
+  --display: "Noto Serif TC", "Songti TC", serif;
+  --body: "Noto Sans TC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --measure: 66ch;
+  --rail: 4.75rem;
+}
+
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:      #091620;
+    --surface:     #10222E;
+    --surface-2:   #162C3A;
+    --ink:         #E3ECF1;
+    --ink-2:       #A9C0CE;
+    --ink-3:       #7B96A7;
+    --line:        #274154;
+    --line-soft:   #1D3446;
+
+    --sea:         #64C0C9;
+    --sea-soft:    #10353C;
+    --lantern:     #E5A164;
+    --lantern-soft:#3A2716;
+
+    --cheap:       #6BC79A;
+    --cheap-soft:  #12352A;
+    --mid:         #D9AC5C;
+    --mid-soft:    #382B15;
+    --peak:        #E58C7E;
+    --peak-soft:   #3B211E;
+
+    --sleep:       #A99BD1;
+    --sleep-soft:  #241F35;
+
+    --shadow:      0 1px 2px rgba(0,0,0,.35), 0 8px 24px -12px rgba(0,0,0,.6);
+    --shadow-lift: 0 2px 4px rgba(0,0,0,.4), 0 16px 40px -16px rgba(0,0,0,.7);
+  }
+}
+
+:root[data-theme="dark"]{
+  --ground:#091620; --surface:#10222E; --surface-2:#162C3A;
+  --ink:#E3ECF1; --ink-2:#A9C0CE; --ink-3:#7B96A7;
+  --line:#274154; --line-soft:#1D3446;
+  --sea:#64C0C9; --sea-soft:#10353C; --lantern:#E5A164; --lantern-soft:#3A2716;
+  --cheap:#6BC79A; --cheap-soft:#12352A; --mid:#D9AC5C; --mid-soft:#382B15;
+  --peak:#E58C7E; --peak-soft:#3B211E; --sleep:#A99BD1; --sleep-soft:#241F35;
+  --shadow:0 1px 2px rgba(0,0,0,.35), 0 8px 24px -12px rgba(0,0,0,.6);
+  --shadow-lift:0 2px 4px rgba(0,0,0,.4), 0 16px 40px -16px rgba(0,0,0,.7);
+}
+
+*, *::before, *::after{ box-sizing:border-box; }
+
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:var(--body);
+  font-weight:400;
+  font-size:16px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+h1,h2,h3,h4{ font-family:var(--display); font-weight:600; line-height:1.3; text-wrap:balance; margin:0; letter-spacing:.01em; }
+p{ margin:0; }
+ul,ol{ margin:0; padding:0; list-style:none; }
+a{ color:var(--sea); text-decoration:none; border-bottom:1px solid color-mix(in srgb, var(--sea) 35%, transparent); }
+a:hover{ border-bottom-color:var(--sea); }
+:focus-visible{ outline:2px solid var(--sea); outline-offset:3px; border-radius:2px; }
+
+.wrap{ width:min(1120px, calc(100% - 2.5rem)); margin-inline:auto; }
+.stack{ display:flex; flex-direction:column; }
+
+/* ── 標籤／眉標 ───────────────────────────── */
+.eyebrow{
+  font-family:var(--mono); font-size:.6875rem; font-weight:500;
+  letter-spacing:.18em; text-transform:uppercase; color:var(--ink-3);
+  display:flex; align-items:center; gap:.6rem;
+}
+.eyebrow::after{ content:""; flex:1; height:1px; background:var(--line); }
+
+.mono{ font-family:var(--mono); font-variant-numeric:tabular-nums; }
+
+/* ── 頂部導覽 ─────────────────────────────── */
+.topbar{
+  position:sticky; top:0; z-index:50;
+  background:color-mix(in srgb, var(--ground) 88%, transparent);
+  backdrop-filter:blur(14px) saturate(1.4);
+  border-bottom:1px solid var(--line-soft);
+}
+.topbar-inner{ display:flex; align-items:center; gap:1.25rem; height:3.5rem; }
+.brand{
+  font-family:var(--display); font-weight:700; font-size:1rem;
+  letter-spacing:.06em; border:0; color:var(--ink); white-space:nowrap;
+}
+.brand span{ color:var(--sea); }
+.navlinks{ display:flex; gap:.15rem; overflow-x:auto; scrollbar-width:none; flex:1; }
+.navlinks::-webkit-scrollbar{ display:none; }
+.navlinks a{
+  font-size:.8125rem; color:var(--ink-2); border:0; padding:.4rem .6rem;
+  border-radius:6px; white-space:nowrap; transition:background .15s, color .15s;
+}
+.navlinks a:hover{ background:var(--surface-2); color:var(--ink); }
+.themebtn{
+  flex:none; border:1px solid var(--line); background:var(--surface);
+  color:var(--ink-2); width:2rem; height:2rem; border-radius:50%;
+  cursor:pointer; font-size:.8rem; display:grid; place-items:center; padding:0;
+}
+.themebtn:hover{ border-color:var(--sea); color:var(--sea); }
+
+/* ── HERO ─────────────────────────────────── */
+.hero{ position:relative; padding:5rem 0 3.5rem; overflow:hidden; }
+.hero canvas{ position:absolute; inset:0; width:100%; height:100%; opacity:.5; pointer-events:none; }
+.hero-inner{ position:relative; }
+.hero h1{
+  font-size:clamp(2.6rem, 7.5vw, 4.75rem);
+  font-weight:700; letter-spacing:.02em; margin:.75rem 0 0;
+}
+.hero h1 em{ font-style:normal; color:var(--sea); }
+.hero-sub{
+  margin-top:1.25rem; max-width:var(--measure);
+  font-size:1.0625rem; color:var(--ink-2); font-weight:300;
+}
+.hero-meta{
+  margin-top:2.5rem; display:grid; gap:1px;
+  grid-template-columns:repeat(auto-fit, minmax(158px,1fr));
+  background:var(--line-soft); border:1px solid var(--line-soft); border-radius:10px; overflow:hidden;
+}
+.hero-meta div{ background:var(--surface); padding:1rem 1.15rem; }
+.hero-meta dt{ font-family:var(--mono); font-size:.625rem; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-3); }
+.hero-meta dd{ margin:.35rem 0 0; font-family:var(--mono); font-size:1.375rem; font-weight:500; font-variant-numeric:tabular-nums; }
+.hero-meta dd small{ font-size:.75rem; color:var(--ink-3); font-weight:400; margin-left:.2rem; }
+
+/* ── 區塊 ─────────────────────────────────── */
+section{ padding:3.5rem 0; scroll-margin-top:4rem; }
+.sec-head{ display:flex; flex-direction:column; gap:.65rem; margin-bottom:2rem; }
+.sec-head h2{ font-size:clamp(1.6rem, 3.6vw, 2.15rem); }
+.sec-head p{ max-width:var(--measure); color:var(--ink-2); font-weight:300; }
+
+.card{
+  background:var(--surface); border:1px solid var(--line-soft);
+  border-radius:12px; box-shadow:var(--shadow);
+}
+.pad{ padding:1.5rem; }
+
+/* ── 24h 作息帶 ───────────────────────────── */
+.clockstrip{ display:flex; flex-direction:column; gap:.9rem; }
+.clockrow{ display:grid; grid-template-columns:5.5rem 1fr; gap:.85rem; align-items:center; }
+.clockrow > span:first-child{ font-family:var(--mono); font-size:.75rem; color:var(--ink-2); text-align:right; }
+.band{
+  display:grid; grid-template-columns:repeat(24,1fr);
+  height:2rem; border-radius:5px; overflow:hidden;
+  border:1px solid var(--line-soft); background:var(--surface-2);
+}
+.band i{ display:block; font-style:normal; }
+.band i[data-k="work"]{ background:repeating-linear-gradient(45deg, var(--peak-soft), var(--peak-soft) 4px, transparent 4px, transparent 8px); box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--peak) 30%, transparent); }
+.band i[data-k="sleep"]{ background:var(--sleep-soft); box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--sleep) 28%, transparent); }
+.band i[data-k="go"]{ background:var(--sea-soft); box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--sea) 32%, transparent); }
+.band i[data-k="play"]{ background:color-mix(in srgb, var(--sea) 24%, transparent); }
+.band i[data-k="night"]{ background:color-mix(in srgb, var(--lantern) 30%, transparent); }
+.axis{ display:grid; grid-template-columns:repeat(24,1fr); font-family:var(--mono); font-size:.5625rem; color:var(--ink-3); }
+.axis b{ font-weight:400; }
+.legend{ display:flex; flex-wrap:wrap; gap:.5rem .95rem; margin-top:.4rem; }
+.legend span{ display:inline-flex; align-items:center; gap:.4rem; font-size:.75rem; color:var(--ink-2); }
+.legend span::before{ content:""; width:.85rem; height:.85rem; border-radius:3px; border:1px solid var(--line); }
+.legend .l-work::before{ background:var(--peak-soft); }
+.legend .l-sleep::before{ background:var(--sleep-soft); }
+.legend .l-go::before{ background:var(--sea-soft); }
+.legend .l-play::before{ background:color-mix(in srgb, var(--sea) 24%, transparent); }
+.legend .l-night::before{ background:color-mix(in srgb, var(--lantern) 30%, transparent); }
+
+/* ── 方案卡 ───────────────────────────────── */
+.plans{ display:grid; gap:1.15rem; grid-template-columns:repeat(auto-fit, minmax(290px,1fr)); }
+.plan{ position:relative; display:flex; flex-direction:column; overflow:hidden; }
+.plan-top{ padding:1.35rem 1.5rem 1.15rem; border-bottom:1px solid var(--line-soft); }
+.plan-tag{
+  font-family:var(--mono); font-size:.625rem; letter-spacing:.14em; text-transform:uppercase;
+  padding:.2rem .5rem; border-radius:4px; display:inline-block;
+}
+.t-peak{ background:var(--peak-soft); color:var(--peak); }
+.t-good{ background:var(--mid-soft); color:var(--mid); }
+.t-best{ background:var(--cheap-soft); color:var(--cheap); }
+.plan h3{ font-size:1.25rem; margin:.65rem 0 .2rem; }
+.plan-dates{ font-family:var(--mono); font-size:.8125rem; color:var(--ink-2); }
+.plan-price{ padding:1rem 1.5rem; display:flex; align-items:baseline; gap:.4rem; border-bottom:1px solid var(--line-soft); background:var(--surface-2); }
+.plan-price b{ font-family:var(--mono); font-size:1.6rem; font-weight:600; font-variant-numeric:tabular-nums; }
+.plan-price small{ font-size:.75rem; color:var(--ink-3); }
+.plan-body{ padding:1.25rem 1.5rem 1.5rem; display:flex; flex-direction:column; gap:.9rem; flex:1; }
+.plan.best{ border-color:color-mix(in srgb, var(--cheap) 45%, var(--line-soft)); box-shadow:var(--shadow-lift); }
+
+.flight{ display:flex; flex-direction:column; gap:.3rem; padding:.7rem .85rem; border-radius:8px; background:var(--surface-2); }
+.flight-h{ font-family:var(--mono); font-size:.6875rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); }
+.flight-t{ display:flex; align-items:center; gap:.55rem; font-family:var(--mono); font-variant-numeric:tabular-nums; }
+.flight-t b{ font-size:1.0625rem; font-weight:500; }
+.flight-t i{ flex:1; height:1px; background:var(--line); position:relative; }
+.flight-t i::after{ content:"›"; position:absolute; right:-2px; top:-.85rem; color:var(--ink-3); font-style:normal; }
+.flight-n{ font-size:.75rem; color:var(--ink-2); }
+.plan ul.why{ display:flex; flex-direction:column; gap:.45rem; }
+.plan ul.why li{ font-size:.875rem; color:var(--ink-2); padding-left:1.1rem; position:relative; line-height:1.6; }
+.plan ul.why li::before{ content:""; position:absolute; left:0; top:.62em; width:5px; height:5px; border-radius:50%; background:var(--sea); }
+.plan ul.why li.warn::before{ background:var(--peak); }
+
+/* ── 表格 ─────────────────────────────────── */
+.scroller{ overflow-x:auto; border:1px solid var(--line-soft); border-radius:10px; background:var(--surface); }
+table{ border-collapse:collapse; width:100%; min-width:640px; font-size:.875rem; }
+th,td{ padding:.7rem .9rem; text-align:left; border-bottom:1px solid var(--line-soft); vertical-align:top; }
+thead th{
+  font-family:var(--mono); font-size:.625rem; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--ink-3); font-weight:500; background:var(--surface-2); position:sticky; top:0;
+}
+tbody tr:last-child td{ border-bottom:0; }
+tbody tr:hover{ background:var(--surface-2); }
+td.num{ font-family:var(--mono); font-variant-numeric:tabular-nums; white-space:nowrap; }
+.pill{ display:inline-block; font-family:var(--mono); font-size:.6875rem; padding:.12rem .45rem; border-radius:4px; white-space:nowrap; }
+.pill.ok{ background:var(--cheap-soft); color:var(--cheap); }
+.pill.no{ background:var(--peak-soft); color:var(--peak); }
+.pill.mid{ background:var(--mid-soft); color:var(--mid); }
+.pill.sea{ background:var(--sea-soft); color:var(--sea); }
+
+/* ── 十月日曆 ─────────────────────────────── */
+.calwrap{ display:grid; gap:1.5rem; grid-template-columns:minmax(0,1fr); }
+@media (min-width:900px){ .calwrap{ grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr); } }
+.cal{ display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+.cal .dow{ font-family:var(--mono); font-size:.625rem; letter-spacing:.1em; color:var(--ink-3); text-align:center; padding-bottom:.3rem; }
+.day{
+  aspect-ratio:1; border-radius:7px; border:1px solid var(--line-soft);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.1rem;
+  font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:.9375rem;
+  background:var(--surface); position:relative;
+}
+.day.blank{ border:0; background:none; }
+.day.low{ background:var(--cheap-soft); border-color:color-mix(in srgb,var(--cheap) 25%,transparent); color:var(--cheap); }
+.day.mid{ background:var(--mid-soft); border-color:color-mix(in srgb,var(--mid) 25%,transparent); color:var(--mid); }
+.day.high{ background:var(--peak-soft); border-color:color-mix(in srgb,var(--peak) 25%,transparent); color:var(--peak); }
+.day em{ font-style:normal; font-size:.5rem; letter-spacing:.02em; opacity:.85; font-family:var(--body); }
+.day.pick{ box-shadow:0 0 0 2px var(--sea); border-color:var(--sea); }
+.day.pick::after{
+  content:"★"; position:absolute; top:-.35rem; right:-.2rem; font-size:.6rem; color:var(--sea);
+}
+.callegend{ display:flex; flex-wrap:wrap; gap:.5rem .9rem; margin-top:.9rem; }
+.callegend span{ display:inline-flex; align-items:center; gap:.4rem; font-size:.75rem; color:var(--ink-2); }
+.callegend span::before{ content:""; width:.85rem; height:.85rem; border-radius:3px; }
+.callegend .c-low::before{ background:var(--cheap-soft); box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--cheap) 30%,transparent); }
+.callegend .c-mid::before{ background:var(--mid-soft); box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--mid) 30%,transparent); }
+.callegend .c-high::before{ background:var(--peak-soft); box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--peak) 30%,transparent); }
+
+.windows{ display:flex; flex-direction:column; gap:.7rem; }
+.window{ display:grid; grid-template-columns:auto 1fr; gap:.9rem; padding:.85rem 1rem; border-radius:9px; border:1px solid var(--line-soft); background:var(--surface); align-items:start; }
+.window .rank{ font-family:var(--mono); font-size:.75rem; font-weight:600; padding:.15rem .45rem; border-radius:4px; margin-top:.15rem; }
+.window h4{ font-size:.9375rem; font-family:var(--body); font-weight:500; }
+.window p{ font-size:.8125rem; color:var(--ink-2); margin-top:.15rem; }
+.window.top{ border-color:color-mix(in srgb,var(--cheap) 40%,var(--line-soft)); background:linear-gradient(to right, var(--cheap-soft), var(--surface) 55%); }
+
+/* ── 行程時間軸 ───────────────────────────── */
+.daytabs{ display:flex; gap:.4rem; flex-wrap:wrap; margin-bottom:1.5rem; }
+.daytab{
+  font-family:var(--body); font-size:.875rem; padding:.5rem .95rem; border-radius:8px;
+  border:1px solid var(--line); background:var(--surface); color:var(--ink-2); cursor:pointer;
+  display:flex; flex-direction:column; align-items:flex-start; gap:.05rem; line-height:1.35;
+  transition:border-color .15s, background .15s, color .15s;
+}
+.daytab b{ font-family:var(--mono); font-size:.6875rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); font-weight:500; }
+.daytab:hover{ border-color:var(--sea); }
+.daytab[aria-selected="true"]{ background:var(--sea); border-color:var(--sea); color:#fff; }
+.daytab[aria-selected="true"] b{ color:rgba(255,255,255,.72); }
+
+.dayhead{
+  display:flex; flex-wrap:wrap; align-items:baseline; gap:.5rem 1rem;
+  padding:1.1rem 1.3rem; border-radius:11px; background:var(--surface-2);
+  border:1px solid var(--line-soft); margin-bottom:1.5rem;
+}
+.dayhead h3{ font-size:1.2rem; }
+.dayhead p{ font-size:.875rem; color:var(--ink-2); flex-basis:100%; font-weight:300; }
+
+.tl{ display:flex; flex-direction:column; }
+.ev{
+  display:grid; grid-template-columns:var(--rail) 1fr; gap:0 1.15rem;
+  position:relative; padding-bottom:1.15rem;
+}
+.ev::before{
+  content:""; position:absolute; left:calc(var(--rail) + .5rem); top:.55rem; bottom:-.35rem;
+  width:1px; background:var(--line);
+}
+.ev:last-child::before{ display:none; }
+.ev-time{
+  font-family:var(--mono); font-size:.8125rem; font-variant-numeric:tabular-nums;
+  color:var(--ink-2); text-align:right; padding-top:.15rem; position:relative;
+}
+.ev-time::after{
+  content:""; position:absolute; right:-1.42rem; top:.62rem;
+  width:9px; height:9px; border-radius:50%; background:var(--surface);
+  border:2px solid var(--sea);
+}
+.ev[data-k="rest"] .ev-time::after{ border-color:var(--sleep); }
+.ev[data-k="night"] .ev-time::after{ border-color:var(--lantern); }
+.ev[data-k="move"] .ev-time::after{ border-color:var(--line); background:var(--line); }
+.ev[data-k="opt"] .ev-time::after{ border-color:var(--ink-3); border-style:dashed; }
+.ev-body{ display:flex; flex-direction:column; gap:.4rem; padding-bottom:.15rem; }
+.ev-title{ display:flex; flex-wrap:wrap; align-items:center; gap:.5rem; }
+.ev-title h4{ font-size:1rem; font-family:var(--body); font-weight:500; }
+.ev-body p{ font-size:.875rem; color:var(--ink-2); max-width:var(--measure); font-weight:300; }
+.ev-cost{
+  font-family:var(--mono); font-size:.75rem; color:var(--ink-3);
+  display:flex; flex-wrap:wrap; gap:.4rem .9rem; margin-top:.1rem;
+}
+.ev-cost span{ display:inline-flex; align-items:center; gap:.3rem; }
+.ev-cost b{ color:var(--ink-2); font-weight:500; }
+.ev[data-k="rest"] .ev-body{ opacity:.82; }
+.ev[data-k="move"] .ev-title h4{ font-weight:400; color:var(--ink-2); font-size:.9375rem; }
+.ev[data-k="opt"]{ }
+.ev[data-k="opt"] .ev-body{ border-left:2px dashed var(--line); padding-left:.85rem; margin-left:-.85rem; }
+
+.tag{
+  font-family:var(--mono); font-size:.625rem; letter-spacing:.08em; padding:.1rem .42rem;
+  border-radius:4px; background:var(--surface-2); color:var(--ink-3); border:1px solid var(--line-soft);
+}
+.tag.sea{ background:var(--sea-soft); color:var(--sea); border-color:transparent; }
+.tag.lan{ background:var(--lantern-soft); color:var(--lantern); border-color:transparent; }
+.tag.free{ background:var(--cheap-soft); color:var(--cheap); border-color:transparent; }
+
+.swap{ display:inline-flex; border:1px solid var(--line); border-radius:8px; overflow:hidden; margin-bottom:1.15rem; }
+.swap button{
+  font-family:var(--body); font-size:.8125rem; padding:.42rem .85rem; border:0;
+  background:var(--surface); color:var(--ink-2); cursor:pointer;
+}
+.swap button + button{ border-left:1px solid var(--line); }
+.swap button[aria-pressed="true"]{ background:var(--sea); color:#fff; }
+
+/* ── 提示塊 ───────────────────────────────── */
+.note{
+  display:grid; grid-template-columns:auto 1fr; gap:.85rem;
+  padding:1rem 1.15rem; border-radius:10px; font-size:.875rem; line-height:1.65;
+  background:var(--sea-soft); color:var(--ink); border:1px solid color-mix(in srgb,var(--sea) 22%,transparent);
+}
+.note .k{ font-family:var(--mono); font-size:.625rem; letter-spacing:.12em; text-transform:uppercase; color:var(--sea); padding-top:.28rem; white-space:nowrap; }
+.note.warn{ background:var(--peak-soft); border-color:color-mix(in srgb,var(--peak) 22%,transparent); }
+.note.warn .k{ color:var(--peak); }
+.note.night{ background:var(--lantern-soft); border-color:color-mix(in srgb,var(--lantern) 25%,transparent); }
+.note.night .k{ color:var(--lantern); }
+
+/* ── 美食卡 ───────────────────────────────── */
+.filters{ display:flex; flex-wrap:wrap; gap:.4rem; margin-bottom:1.35rem; }
+.chip{
+  font-family:var(--body); font-size:.8125rem; padding:.35rem .8rem; border-radius:999px;
+  border:1px solid var(--line); background:var(--surface); color:var(--ink-2); cursor:pointer;
+}
+.chip[aria-pressed="true"]{ background:var(--ink); border-color:var(--ink); color:var(--ground); }
+.eats{ display:grid; gap:.85rem; grid-template-columns:repeat(auto-fill, minmax(268px,1fr)); }
+.eat{ padding:1.05rem 1.15rem; display:flex; flex-direction:column; gap:.45rem; }
+.eat h4{ font-size:.9375rem; font-family:var(--body); font-weight:500; }
+.eat .jp{ font-family:var(--mono); font-size:.6875rem; color:var(--ink-3); letter-spacing:.02em; }
+.eat p{ font-size:.8125rem; color:var(--ink-2); font-weight:300; }
+.eat .row{ display:flex; flex-wrap:wrap; gap:.35rem; margin-top:auto; padding-top:.5rem; align-items:center; }
+.eat .yen{ font-family:var(--mono); font-size:.8125rem; color:var(--ink); font-weight:500; margin-left:auto; }
+.eat[hidden]{ display:none; }
+
+/* ── 試算器 ───────────────────────────────── */
+.calc{ display:grid; gap:1.5rem; }
+@media (min-width:860px){ .calc{ grid-template-columns:minmax(0,1fr) 21rem; align-items:start; } }
+.controls{ display:flex; flex-direction:column; gap:1.15rem; }
+.ctl label{ display:flex; justify-content:space-between; align-items:baseline; font-size:.875rem; margin-bottom:.4rem; gap:1rem; }
+.ctl label b{ font-family:var(--mono); font-weight:500; color:var(--sea); font-variant-numeric:tabular-nums; }
+input[type="range"]{ width:100%; accent-color:var(--sea); height:1.5rem; }
+.seg{ display:flex; border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+.seg button{ flex:1; font-family:var(--body); font-size:.8125rem; padding:.45rem .3rem; border:0; background:var(--surface); color:var(--ink-2); cursor:pointer; }
+.seg button + button{ border-left:1px solid var(--line); }
+.seg button[aria-pressed="true"]{ background:var(--sea); color:#fff; }
+.bill{ position:sticky; top:4.5rem; padding:1.35rem 1.5rem; display:flex; flex-direction:column; gap:.15rem; }
+.bill .line{ display:flex; justify-content:space-between; gap:1rem; padding:.42rem 0; font-size:.875rem; border-bottom:1px dashed var(--line-soft); }
+.bill .line span:first-child{ color:var(--ink-2); }
+.bill .line span:last-child{ font-family:var(--mono); font-variant-numeric:tabular-nums; }
+.bill .total{ display:flex; justify-content:space-between; align-items:baseline; margin-top:.9rem; padding-top:.9rem; border-top:2px solid var(--ink); gap:1rem; }
+.bill .total b{ font-family:var(--mono); font-size:1.75rem; font-weight:600; font-variant-numeric:tabular-nums; }
+.bill .per{ font-family:var(--mono); font-size:.75rem; color:var(--ink-3); text-align:right; margin-top:.4rem; }
+
+/* ── 清單 ─────────────────────────────────── */
+.checks{ display:grid; gap:1.15rem; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); }
+.checkgroup h4{ font-size:.875rem; font-family:var(--mono); font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); margin-bottom:.7rem; }
+.checkgroup li{ margin-bottom:.1rem; }
+.checkgroup label{ display:flex; gap:.6rem; align-items:flex-start; font-size:.875rem; cursor:pointer; padding:.28rem .35rem; border-radius:6px; }
+.checkgroup label:hover{ background:var(--surface-2); }
+.checkgroup input{ accent-color:var(--sea); margin-top:.34rem; flex:none; width:.95rem; height:.95rem; }
+.checkgroup input:checked + span{ text-decoration:line-through; color:var(--ink-3); }
+.resetbtn{ font-family:var(--body); font-size:.75rem; background:none; border:1px solid var(--line); color:var(--ink-3); padding:.3rem .7rem; border-radius:6px; cursor:pointer; }
+.resetbtn:hover{ color:var(--peak); border-color:var(--peak); }
+
+/* ── 下次再來 ─────────────────────────────── */
+.nexts{ display:grid; gap:1.15rem; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); }
+.next{ padding:1.35rem 1.5rem; display:flex; flex-direction:column; gap:.7rem; position:relative; overflow:hidden; }
+.next .n{ font-family:var(--mono); font-size:2.75rem; font-weight:600; line-height:1; color:var(--line); position:absolute; top:.6rem; right:1rem; }
+.next h4{ font-size:1.0625rem; }
+.next p{ font-size:.875rem; color:var(--ink-2); font-weight:300; }
+.next ul{ display:flex; flex-direction:column; gap:.3rem; }
+.next li{ font-size:.8125rem; color:var(--ink-2); padding-left:.95rem; position:relative; }
+.next li::before{ content:"—"; position:absolute; left:0; color:var(--ink-3); }
+.next .when{ font-family:var(--mono); font-size:.6875rem; letter-spacing:.1em; text-transform:uppercase; color:var(--sea); }
+
+/* ── 日文小抄 ─────────────────────────────── */
+.phrases{ display:grid; gap:.7rem; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); }
+.ph{ padding:.85rem 1rem; border-radius:9px; background:var(--surface); border:1px solid var(--line-soft); }
+.ph .zh{ font-size:.8125rem; color:var(--ink-3); }
+.ph .jp{ font-size:.9375rem; margin-top:.15rem; }
+.ph .rm{ font-family:var(--mono); font-size:.6875rem; color:var(--sea); margin-top:.2rem; letter-spacing:.02em; }
+
+/* ── 頁尾 ─────────────────────────────────── */
+footer{ border-top:1px solid var(--line-soft); padding:2.5rem 0 3.5rem; margin-top:1.5rem; }
+footer .cols{ display:grid; gap:1.5rem; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
+footer h4{ font-family:var(--mono); font-size:.625rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); margin-bottom:.6rem; }
+footer li, footer p{ font-size:.8125rem; color:var(--ink-2); line-height:1.7; }
+footer a{ font-size:.8125rem; }
+.disclaim{ margin-top:2rem; padding-top:1.25rem; border-top:1px solid var(--line-soft); font-size:.75rem; color:var(--ink-3); max-width:var(--measure); }
+
+@media (max-width:680px){
+  :root{ --rail:3.6rem; }
+  .hero{ padding:3.25rem 0 2.5rem; }
+  .ev{ gap:0 .9rem; }
+  .ev::before{ left:calc(var(--rail) + .42rem); }
+  .ev-time::after{ right:-1.18rem; }
+  .bill{ position:static; }
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
+}
+
+@media print{
+  .topbar, .themebtn, .filters, .swap, .daytabs, .resetbtn, .hero canvas{ display:none !important; }
+  body{ background:#fff; color:#000; }
+  section{ padding:1rem 0; break-inside:avoid; }
+  .tabpanel[hidden]{ display:block !important; }
+}
+
+/* ── Google 地圖連結 ──────────────────────── */
+.mapl{
+  display:inline-flex; align-items:center; gap:.22rem;
+  font-family:var(--mono); font-size:.625rem; letter-spacing:.06em;
+  padding:.12rem .42rem .12rem .3rem; border-radius:4px;
+  background:var(--sea-soft); color:var(--sea); border:0;
+  white-space:nowrap; transition:background .15s;
+}
+.mapl::before{ content:"◉"; font-size:.6rem; }
+.mapl:hover{ background:color-mix(in srgb, var(--sea) 22%, transparent); border:0; }
+
+/* ── 四日總覽 ─────────────────────────────── */
+.overview{ display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft);
+  border-radius:12px; overflow:hidden; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); }
+.ovday{ background:var(--surface); padding:1.35rem 1.4rem; display:flex; flex-direction:column; gap:.55rem; }
+.ovday .d{ font-family:var(--mono); font-size:.625rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); }
+.ovday h4{ font-size:1.0625rem; }
+.ovday .hl{ font-size:.8125rem; color:var(--sea); font-weight:500; }
+.ovday ul{ display:flex; flex-direction:column; gap:.25rem; margin-top:.15rem; }
+.ovday li{ font-size:.8125rem; color:var(--ink-2); padding-left:.9rem; position:relative; line-height:1.55; }
+.ovday li::before{ content:""; position:absolute; left:0; top:.6em; width:4px; height:4px; border-radius:50%; background:var(--line); }
+.ovday .cost{ font-family:var(--mono); font-size:.75rem; color:var(--ink-3); margin-top:auto; padding-top:.6rem; border-top:1px dashed var(--line-soft); }
+
+/* ── 大數字條 ─────────────────────────────── */
+.bigrow{ display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft);
+  border-radius:11px; overflow:hidden; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); }
+.bigrow div{ background:var(--surface); padding:1.15rem 1.25rem; }
+.bigrow dt{ font-family:var(--mono); font-size:.625rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); }
+.bigrow dd{ margin:.3rem 0 0; font-family:var(--mono); font-size:1.25rem; font-weight:500; font-variant-numeric:tabular-nums; }
+.bigrow dd small{ font-size:.7rem; color:var(--ink-3); font-weight:400; margin-left:.15rem; }
+
+/* ── 圖片版位 ─────────────────────────────── */
+.figure{
+  margin:0; border-radius:12px; overflow:hidden; position:relative;
+  border:1px solid var(--line-soft); background:var(--surface-2); box-shadow:var(--shadow);
+}
+.figure > svg, .figure > img{ display:block; width:100%; height:auto; }
+.figure > img{ object-fit:cover; aspect-ratio:20/11; }
+.figbadge{
+  position:absolute; top:.55rem; right:.55rem; z-index:2;
+  font-family:var(--mono); font-size:.5625rem; letter-spacing:.1em; text-transform:uppercase;
+  padding:.15rem .45rem; border-radius:4px;
+  background:color-mix(in srgb, var(--surface) 82%, transparent);
+  color:var(--ink-3); border:1px solid var(--line-soft); backdrop-filter:blur(6px);
+}
+.figcap{
+  padding:.7rem .9rem; font-size:.75rem; line-height:1.6; color:var(--ink-2);
+  background:var(--surface); border-top:1px solid var(--line-soft);
+}
+.figcap b{ color:var(--ink); font-weight:500; }
+.figcap em{ font-style:normal; font-family:var(--mono); font-size:.6875rem; color:var(--sea); }
+.photogrid{ display:grid; gap:.9rem; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); margin:1.25rem 0; }
+.ev-body .figure{ margin-top:.6rem; max-width:min(100%, 34rem); }
+.hero-fig{ margin-top:2rem; }
+</style>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a href="#top" class="brand">博多<span>晨昏</span>行</a>
+    <nav class="navlinks">
+      <a href="#overview">總覽</a>
+      <a href="#flights">航班</a>
+      <a href="#october">挑日子</a>
+      <a href="#stay">住宿</a>
+      <a href="#plan">每日行程</a>
+      <a href="#eat">必吃</a>
+      <a href="#night">夜的福岡</a>
+      <a href="#money">費用</a>
+      <a href="#booking">線上預訂</a>
+      <a href="#pack">出發前</a>
+      <a href="#next">下一趟</a>
+    </nav>
+    <button class="themebtn" id="theme" type="button" aria-label="切換深淺色">◐</button>
+  </div>
+</header>
+
+<main id="top">
+
+<div class="hero">
+  <canvas id="tide" aria-hidden="true"></canvas>
+  <div class="wrap hero-inner">
+    <p class="eyebrow">福岡 · 四天三夜 · 10/16 – 10/19</p>
+    <h1>清晨的魚市場，<br>入夜的<em>屋台與光</em>。</h1>
+    <p class="hero-sub">
+      十月平日出發，避開所有連假。中午十二點四十五起飛、下午四點多落地，
+      回程傍晚六點四十就回到桃園。三天完整的福岡：市場的海鮮、關門海峽的壽司、會發光的神社、那珂川畔的屋台。
+    </p>
+    <dl class="hero-meta">
+      <div><dt>日期</dt><dd>10/16<small>–19</small></dd></div>
+      <div><dt>天數</dt><dd>4<small>天</small>3<small>夜</small></dd></div>
+      <div><dt>航班</dt><dd>虎航<small> 12:45／17:10</small></dd></div>
+      <div><dt>兩人總計</dt><dd>NT$<span id="heroTotal">35,173</span></dd></div>
+      <div><dt>每人</dt><dd>NT$<span id="heroPer">17,587</span></dd></div>
+    </dl>
+    <div class="hero-fig"><figure class="figure" data-slot="fuk-hero"><span class="figbadge">示意圖 · 待換實拍</span><svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="中洲屋台街夜景"><rect width="400" height="220" fill="var(--surface-2)"/>
+<g opacity=".22" fill="var(--ink)">
+<rect x="8" y="42" width="34" height="96"/><rect x="48" y="58" width="26" height="80"/>
+<rect x="80" y="30" width="40" height="108"/><rect x="128" y="66" width="22" height="72"/>
+<rect x="300" y="48" width="36" height="90"/><rect x="342" y="62" width="30" height="76"/></g>
+<g opacity=".5" fill="var(--lantern)"><rect x="86" y="38" width="5" height="12"/><rect x="98" y="46" width="5" height="10"/>
+<rect x="308" y="56" width="5" height="10"/><rect x="352" y="70" width="5" height="9"/></g>
+<path d="M0 138h400v82H0z" fill="var(--sea)" opacity=".16"/>
+<g stroke="var(--sea)" stroke-width="1" fill="none" opacity=".3">
+<path d="M0 150q40 5 80 0t80 0 80 0 80 0 80 0"/><path d="M0 166q40-5 80 0t80 0 80 0 80 0 80 0"/>
+<path d="M0 184q40 6 80 0t80 0 80 0 80 0 80 0"/><path d="M0 202q40-6 80 0t80 0 80 0 80 0 80 0"/></g>
+<g transform="translate(150 84)">
+<path d="M0 26h100l-8-16H8z" fill="var(--lantern)" opacity=".85"/>
+<rect x="10" y="26" width="80" height="28" fill="var(--ink)" opacity=".35"/>
+<rect x="14" y="54" width="4" height="14" fill="var(--ink)" opacity=".3"/><rect x="82" y="54" width="4" height="14" fill="var(--ink)" opacity=".3"/>
+<g fill="var(--lantern)"><ellipse cx="16" cy="16" rx="7" ry="9"/><ellipse cx="50" cy="13" rx="7" ry="9"/><ellipse cx="84" cy="16" rx="7" ry="9"/></g>
+<g fill="none" stroke="var(--surface)" stroke-width=".8" opacity=".55">
+<path d="M9 16h14M43 13h14M77 16h14"/></g></g>
+<g fill="var(--lantern)" opacity=".28">
+<ellipse cx="166" cy="160" rx="6" ry="14"/><ellipse cx="200" cy="168" rx="6" ry="16"/><ellipse cx="234" cy="160" rx="6" ry="14"/></g>
+</svg><figcaption class="figcap"><b>中洲屋台街</b>　那珂川畔一整排燈籠，18:00 擺到半夜，約 20 攤。<em>Day 1 · 20:00</em></figcaption></figure></div>
+  </div>
+</div>
+
+<section id="overview">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">行程總覽</p>
+      <h2>四天，四個主場</h2>
+    </div>
+
+    <div class="overview">
+      <div class="ovday">
+        <span class="d">Day 1 · 10/16 五</span>
+        <h4>抵達．屋台夜</h4>
+        <span class="hl">主場：中洲屋台街</span>
+        <ul>
+          <li>12:45 起飛 → 16:10 落地（虎航）</li>
+          <li>櫛田神社．川端商店街</li>
+          <li>那珂川畔屋台，兩人合點四樣</li>
+          <li>24 小時超市買半額生魚片當宵夜</li>
+        </ul>
+        <span class="cost">當日餐食 ¥6,850／兩人</span>
+      </div>
+      <div class="ovday">
+        <span class="d">Day 2 · 10/17 六</span>
+        <h4>魚市場．發光的神社</h4>
+        <span class="hl">主場：長浜鮮魚市場</span>
+        <ul>
+          <li>06:30 特上海鮮丼 ¥1,050</li>
+          <li>大濠公園．福岡城跡</li>
+          <li>柳橋連合市場邊走邊吃</li>
+          <li>18:00 賽博神社點燈</li>
+        </ul>
+        <span class="cost">當日餐食 ¥11,950／兩人</span>
+      </div>
+      <div class="ovday">
+        <span class="d">Day 3 · 10/18 日</span>
+        <h4>唐戶市場．關門海峽</h4>
+        <span class="hl">主場：活きいき馬関街</span>
+        <ul>
+          <li>週日 07:00 開的壽司市集</li>
+          <li>一貫一貫挑，¥150 起</li>
+          <li>走路穿越海底回九州</li>
+          <li>門司港燒咖哩</li>
+        </ul>
+        <span class="cost">當日餐食＋交通 ¥19,600／兩人</span>
+      </div>
+      <div class="ovday">
+        <span class="d">Day 4 · 10/19 一</span>
+        <h4>太宰府．回家</h4>
+        <span class="hl">主場：太宰府天滿宮</span>
+        <ul>
+          <li>梅枝餅、隈研吾的星巴克</li>
+          <li>博多阪急 B1 採買明太子</li>
+          <li>17:10 起飛 → 18:40 落地（虎航）</li>
+          <li>約 20:10 到家</li>
+        </ul>
+        <span class="cost">當日餐食＋交通 ¥5,280／兩人</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="flights">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">航班</p>
+      <h2>一班中午起飛、一班傍晚落地</h2>
+      <p>桃園直飛福岡每天 8–9 班。中午與午後那幾班才符合「下班直接出發」，其中虎航這組時間好、價格也最低。</p>
+    </div>
+
+    <div class="card" style="overflow:hidden;margin-bottom:1.5rem">
+      <div style="padding:1.35rem 1.5rem;border-bottom:1px solid var(--line-soft);display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:baseline">
+        <span class="plan-tag t-best">推薦組合</span>
+        <h3 style="font-size:1.25rem">台灣虎航　12:45 去 ／ 17:10 回</h3>
+        <span class="plan-dates">A320 · 每日執飛 · 來回票約 NT$8,949／人</span>
+      </div>
+      <div style="display:grid;gap:1px;background:var(--line-soft);grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
+        <div style="background:var(--surface);padding:1.5rem">
+          <span class="flight-h">去程　台灣虎航</span>
+          <div class="flight-t" style="margin:.55rem 0"><b style="font-size:1.65rem">12:45</b><i></i><b style="font-size:1.65rem">16:10</b></div>
+          <span class="flight-n">桃園 TPE → 福岡 FUK　2h25m</span>
+          <p style="font-size:.875rem;color:var(--ink-2);margin-top:.6rem">下班後從容到機場，機上補眠兩小時，下午四點落地。傍晚入住、晚上八點就在屋台。</p>
+        </div>
+        <div style="background:var(--surface);padding:1.5rem">
+          <span class="flight-h">回程　台灣虎航</span>
+          <div class="flight-t" style="margin:.55rem 0"><b style="font-size:1.65rem">17:10</b><i></i><b style="font-size:1.65rem">18:40</b></div>
+          <span class="flight-n">福岡 FUK → 桃園 TPE　2h30m</span>
+          <p style="font-size:.875rem;color:var(--ink-2);margin-top:.6rem">最後一天早上還能跑太宰府，下午三點進機場，晚上八點多就到家。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroller">
+      <table>
+        <thead><tr><th>方向</th><th>班號</th><th>航空</th><th>起飛</th><th>抵達</th><th>機型</th><th></th></tr></thead>
+        <tbody>
+          <tr><td rowspan="8" style="vertical-align:middle;font-weight:500">桃園<br>→<br>福岡</td>
+              <td class="num">CI110</td><td>中華航空</td><td class="num">06:50</td><td class="num">09:55</td><td>A330-300</td><td><span class="pill no">太早</span></td></tr>
+          <tr><td class="num">IT240</td><td>台灣虎航</td><td class="num">07:00</td><td class="num">10:20</td><td>A320</td><td><span class="pill no">太早</span></td></tr>
+          <tr><td class="num">BR106</td><td>長榮航空</td><td class="num">08:00</td><td class="num">11:20</td><td>B787</td><td><span class="pill no">太早</span></td></tr>
+          <tr><td class="num">AK1510</td><td>AirAsia</td><td class="num">12:00</td><td class="num">15:20</td><td>A320</td><td><span class="pill mid">✓ 時間最好，但貴、且只能官網訂</span></td></tr>
+          <tr style="background:var(--sea-soft)"><td class="num"><strong>虎航</strong></td><td><strong>台灣虎航</strong></td><td class="num"><strong>12:45</strong></td><td class="num"><strong>16:10</strong></td><td>A320</td><td><span class="pill ok">✓ 本行程採用</span></td></tr>
+          <tr><td class="num">虎航</td><td>台灣虎航</td><td class="num">14:30</td><td class="num">17:55</td><td>A320</td><td><span class="pill ok">✓ 備案，晚 1.5 小時</span></td></tr>
+          <tr><td class="num">BR102</td><td>長榮航空</td><td class="num">15:35</td><td class="num">18:50</td><td>A321</td><td><span class="pill mid">少半天</span></td></tr>
+          <tr><td class="num">CI116 / JX840</td><td>華航 / 星宇</td><td class="num">16:2x</td><td class="num">19:1x</td><td>A330 / A321neo</td><td><span class="pill mid">少半天</span></td></tr>
+
+          <tr><td rowspan="7" style="vertical-align:middle;font-weight:500">福岡<br>→<br>桃園</td>
+              <td class="num">IT241</td><td>台灣虎航</td><td class="num">10:55</td><td class="num">12:25</td><td>A320</td><td><span class="pill no">少一天</span></td></tr>
+          <tr><td class="num">CI111</td><td>中華航空</td><td class="num">11:00</td><td class="num">12:30</td><td>A330-300</td><td><span class="pill no">少一天</span></td></tr>
+          <tr><td class="num">BR107</td><td>長榮航空</td><td class="num">約 12:20</td><td class="num">約 14:00</td><td>B787</td><td><span class="pill mid">時刻待確認</span></td></tr>
+          <tr><td class="num">AK1511</td><td>AirAsia</td><td class="num">17:00</td><td class="num">18:30</td><td>A320</td><td><span class="pill mid">✓ 但只能官網訂</span></td></tr>
+          <tr style="background:var(--sea-soft)"><td class="num"><strong>虎航</strong></td><td><strong>台灣虎航</strong></td><td class="num"><strong>17:10</strong></td><td class="num"><strong>18:40</strong></td><td>A320</td><td><span class="pill ok">✓ 本行程採用</span></td></tr>
+          <tr><td class="num">虎航</td><td>台灣虎航</td><td class="num">17:55</td><td class="num">19:40</td><td>A320</td><td><span class="pill ok">✓ 備案，到家約 21:10</span></td></tr>
+          <tr><td class="num">JX841 / CI117</td><td>星宇 / 華航</td><td class="num">19:00 / 21:00</td><td class="num">20:40 / 22:30</td><td>A321neo / A330</td><td><span class="pill mid">太晚</span></td></tr>
+          </tbody>
+      </table>
+    </div>
+
+    <div style="display:grid;gap:.85rem;margin-top:1.15rem">
+      <div class="note warn">
+        <span class="k">別買兩張單程</span>
+        <div>實查 10/16 去程單程 <strong>NT$3,962</strong>、10/19 回程單程 <strong>NT$8,738</strong>，分開買要
+        <strong>NT$12,700</strong>；同航線的<strong>來回票只要 NT$8,949</strong>。
+        廉航的單程票在比價網上常被加價到接近來回價——<strong>一定要用「來回」搜，去程 10/16、回程 10/19 一次買完</strong>，
+        兩人可以省下約 <strong>NT$7,500</strong>。</div>
+      </div>
+      <div class="note">
+        <span class="k">找不到 AirAsia 是正常的</span>
+        <div>AK1510／AK1511 是<strong>第五航權航段</strong>（吉隆坡–台北–福岡的延遠段），
+        Mytrip、Traveloka、Agoda 這類比價網<strong>不販售</strong>，Google Flights 上也會標「分段購票」。
+        要訂只能到 <strong>airasia.com 官網或 AirAsia MOVE App</strong>。時間比虎航好一點，但實查貴約 NT$3,700。</div>
+      </div>
+      <div class="note warn">
+        <span class="k">班表以官網為準</span>
+        <div>虎航這幾班下午班次為實際查詢結果，班號請於訂票時確認。長榮 BR107 時刻未取得可靠來源，標為「約」。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="october">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">挑日子</p>
+      <h2>避開兩段連假，機票差一倍</h2>
+      <p>國慶 10/9–11、光復 10/24–26。避開這兩段，十月的平日就是全年最好買的時候。</p>
+    </div>
+
+    <div class="calwrap">
+      <div>
+        <div class="cal">
+          <div class="dow">日</div><div class="dow">一</div><div class="dow">二</div><div class="dow">三</div>
+          <div class="dow">四</div><div class="dow">五</div><div class="dow">六</div>
+          <div class="day blank"></div><div class="day blank"></div><div class="day blank"></div><div class="day blank"></div>
+          <div class="day low">1</div><div class="day low">2</div><div class="day low">3</div>
+          <div class="day low">4</div><div class="day low">5</div><div class="day low">6</div><div class="day low">7</div>
+          <div class="day mid">8</div><div class="day high">9<em>國慶補假</em></div><div class="day high">10<em>國慶日</em></div>
+          <div class="day high">11<em>連假</em></div><div class="day mid">12</div><div class="day low">13</div><div class="day low">14</div>
+          <div class="day low">15</div><div class="day low pick">16</div><div class="day low pick">17</div>
+          <div class="day low pick">18</div><div class="day low pick">19</div><div class="day low">20</div><div class="day low">21</div>
+          <div class="day low">22</div><div class="day mid">23</div><div class="day high">24<em>光復連假</em></div>
+          <div class="day high">25<em>光復節</em></div><div class="day high">26<em>補假</em></div><div class="day low">27</div><div class="day low">28</div>
+          <div class="day low">29</div><div class="day mid">30</div><div class="day mid">31</div>
+        </div>
+        <div class="callegend">
+          <span class="c-low">平日谷底</span><span class="c-mid">中間價</span>
+          <span class="c-high">連假高點</span><span style="color:var(--sea)">★ 本行程</span>
+        </div>
+      </div>
+
+      <div class="windows">
+        <div class="window top">
+          <span class="rank" style="background:var(--cheap-soft);color:var(--cheap)">1</span>
+          <div>
+            <h4>10/16 五 → 10/19 一　<span class="tag sea">本頁採用</span></h4>
+            <p>票價谷底週。關鍵在 <strong>Day 3 落在週日</strong>——唐戶市場的壽司市集只有週五、六、日與假日才擺，
+            週日 08:00 就開始。要吃到這個，日期必須這樣排。</p>
+          </div>
+        </div>
+        <div class="window top">
+          <span class="rank" style="background:var(--cheap-soft);color:var(--cheap)">2</span>
+          <div>
+            <h4>10/13 二 → 10/16 五　純平日最省</h4>
+            <p>四天全平日，十月最便宜的組合。代價是遇不到唐戶市場的壽司市集，Day 3 要改市區行程。</p>
+          </div>
+        </div>
+        <div class="window">
+          <span class="rank" style="background:var(--mid-soft);color:var(--mid)">3</span>
+          <div>
+            <h4>10/20 二 → 10/23 五　十月下旬限定</h4>
+            <p>平日票價，加上兩個一年只有這時候的東西：<strong>宮地嶽神社「光の道」</strong>與
+            <strong>糸島牡蠣小屋開季</strong>。有租車的話這檔最值得。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="stay">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">住宿</p>
+      <h2>三晚，要有廚房</h2>
+      <p>日本超市 19:00 後生魚片、壽司貼 20%–50% 折扣標籤。買回住處煮鍋味噌湯配半額刺身丼，兩人不到 ¥1,000——這是這趟最好吃也最便宜的一餐。</p>
+    </div>
+    <div class="scroller">
+      <table>
+        <thead><tr><th>選項</th><th>位置</th><th>每晚（兩人）</th><th>三晚合計</th><th>廚房</th></tr></thead>
+        <tbody>
+          <tr><td><strong>民泊 / Airbnb 1LDK</strong> <span class="pill sea">建議</span></td>
+            <td>祇園、中洲川端、吳服町 <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=祇園駅福岡" target="_blank" rel="noopener">地圖</a></td>
+            <td class="num">¥6,000–8,500</td><td class="num">¥18,000–25,500<br><small style="color:var(--ink-3)">≈ NT$3,800–5,400</small></td>
+            <td><span class="pill ok">完整廚房＋洗衣機</span></td></tr>
+          <tr><td><strong>民泊 / Airbnb</strong></td>
+            <td>藥院、渡邊通 <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=薬院駅" target="_blank" rel="noopener">地圖</a></td>
+            <td class="num">¥5,500–8,000</td><td class="num">¥16,500–24,000</td>
+            <td><span class="pill ok">完整廚房</span></td></tr>
+          <tr><td><strong>lyf 天神福岡</strong></td>
+            <td>天神南 <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=lyf天神福岡" target="_blank" rel="noopener">地圖</a></td>
+            <td class="num">¥8,000–13,000</td><td class="num">¥24,000–39,000</td>
+            <td><span class="pill mid">公共廚房、洗衣房</span></td></tr>
+          <tr><td><strong>東急 STAY 福岡天神</strong></td>
+            <td>天神南站走 5 分 <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=東急ステイ福岡天神" target="_blank" rel="noopener">地圖</a></td>
+            <td class="num">¥13,000–18,000</td><td class="num">¥39,000–54,000</td>
+            <td><span class="pill sea">房內廚具、洗脫烘</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note" style="margin-top:1.15rem">
+      <span class="k">訂房重點</span>
+      <div>設備要有 <strong>IHコンロ／電子レンジ／冷蔵庫／洗濯機</strong>，並確認寫了「自炊可」與合法民泊的「住宅宿泊事業」登錄編號。
+      避開中洲正中心（春吉一帶是酒店街，夜間吵雜）。</div>
+    </div>
+  </div>
+</section>
+
+<section id="plan">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">每日行程</p>
+      <h2>逐時安排</h2>
+      <p>每個地點都附 Google 地圖連結，點了直接跳轉導航。</p>
+    </div>
+
+    <div class="daytabs" role="tablist" aria-label="行程日期">
+      <button class="daytab" role="tab" id="tab-d1" aria-controls="d1" aria-selected="true"><b>Day 1 · 10/16 五</b>抵達．屋台夜</button>
+      <button class="daytab" role="tab" id="tab-d2" aria-controls="d2" aria-selected="false"><b>Day 2 · 10/17 六</b>魚市場．發光的神社</button>
+      <button class="daytab" role="tab" id="tab-d3" aria-controls="d3" aria-selected="false"><b>Day 3 · 10/18 日</b>唐戶市場．關門海峽</button>
+      <button class="daytab" role="tab" id="tab-d4" aria-controls="d4" aria-selected="false"><b>Day 4 · 10/19 一</b>太宰府．回家</button>
+    </div>
+
+    <div class="tabpanel" id="d1" role="tabpanel" aria-labelledby="tab-d1">
+      <div class="dayhead"><h3>Day 1｜抵達．屋台夜</h3><span class="tag lan">主場：中洲屋台街</span></div>
+      <div class="tl">
+        <div class="ev" data-k="move"><div class="ev-time">08:00</div><div class="ev-body">
+          <div class="ev-title"><h4>下班 → 直奔桃園機場</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=桃園國際機場第一航廈" target="_blank" rel="noopener">地圖</a></div>
+          <p>板橋轉運站直達客運約 50–60 分；或捷運到台北車站轉機捷直達車 36 分。</p>
+          <div class="ev-cost"><span>客運 <b>NT$90</b></span><span>機捷 <b>NT$150</b></span></div>
+        </div></div>
+
+        <div class="ev" data-k="move"><div class="ev-time">12:45</div><div class="ev-body">
+          <div class="ev-title"><h4>虎航起飛 → 16:10 抵達福岡</h4><span class="tag sea">2h25m</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=福岡空港国際線ターミナル" target="_blank" rel="noopener">地圖</a></div>
+          <p>機上補眠兩小時。</p>
+        </div></div>
+
+        <div class="ev" data-k="move"><div class="ev-time">16:45</div><div class="ev-body">
+          <div class="ev-title"><h4>國際線 → 國內線 → 地鐵進市區</h4></div>
+          <p>地鐵站在<strong>國內線</strong>航廈，先搭免費接駁巴士（國際線 5 號站牌，10–15 分）。地鐵到博多 5 分、天神 11 分。</p>
+          <div class="ev-cost"><span>接駁車 <b>免費</b></span><span>地鐵 <b>¥260</b>／人</span></div>
+        </div></div>
+
+        <div class="ev" data-k="rest"><div class="ev-time">17:30</div><div class="ev-body">
+          <div class="ev-title"><h4>入住 → 小睡 60 分鐘</h4></div>
+          <p>設鬧鐘睡到 18:40，晚上才有體力待到半夜。</p>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">19:00</div><div class="ev-body">
+          <div class="ev-title"><h4>櫛田神社</h4><span class="tag free">免費</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=櫛田神社福岡" target="_blank" rel="noopener">地圖</a></div>
+          <p>博多的總鎮守、山笠祭起點，境內常年立著一台巨大飾山笠。傍晚幾乎沒有觀光客。</p>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">19:30</div><div class="ev-body">
+          <div class="ev-title"><h4>川端商店街</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=川端商店街" target="_blank" rel="noopener">地圖</a></div>
+          <p>有頂棚的老商店街，走到底就是中洲。</p>
+        </div></div>
+
+        <div class="ev" data-k="night"><div class="ev-time">20:00</div><div class="ev-body">
+          <div class="ev-title"><h4>中洲屋台街</h4><span class="tag lan">主場</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=中洲屋台" target="_blank" rel="noopener">地圖</a></div>
+          <p>那珂川畔一整排燈籠，18:00 擺到半夜，約 20 攤。屋台是<strong>流動攤位、沒有固定店址</strong>，
+          當晚哪幾攤開要現場看——挑<strong>本地客多、價目表清楚寫在外面</strong>的那攤坐。
+          <strong>兩人合點 3–4 樣</strong>：明太子玉子燒、餃子、串燒、一碗拉麵分著吃。
+          規矩：每人至少一飲一菜，坐下前先看價目表。</p>
+          <figure class="figure" data-slot="fuk-yatai"><span class="figbadge">示意圖 · 待換實拍</span><svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="中洲屋台街夜景"><rect width="400" height="220" fill="var(--surface-2)"/>
+<g opacity=".22" fill="var(--ink)">
+<rect x="8" y="42" width="34" height="96"/><rect x="48" y="58" width="26" height="80"/>
+<rect x="80" y="30" width="40" height="108"/><rect x="128" y="66" width="22" height="72"/>
+<rect x="300" y="48" width="36" height="90"/><rect x="342" y="62" width="30" height="76"/></g>
+<g opacity=".5" fill="var(--lantern)"><rect x="86" y="38" width="5" height="12"/><rect x="98" y="46" width="5" height="10"/>
+<rect x="308" y="56" width="5" height="10"/><rect x="352" y="70" width="5" height="9"/></g>
+<path d="M0 138h400v82H0z" fill="var(--sea)" opacity=".16"/>
+<g stroke="var(--sea)" stroke-width="1" fill="none" opacity=".3">
+<path d="M0 150q40 5 80 0t80 0 80 0 80 0 80 0"/><path d="M0 166q40-5 80 0t80 0 80 0 80 0 80 0"/>
+<path d="M0 184q40 6 80 0t80 0 80 0 80 0 80 0"/><path d="M0 202q40-6 80 0t80 0 80 0 80 0 80 0"/></g>
+<g transform="translate(150 84)">
+<path d="M0 26h100l-8-16H8z" fill="var(--lantern)" opacity=".85"/>
+<rect x="10" y="26" width="80" height="28" fill="var(--ink)" opacity=".35"/>
+<rect x="14" y="54" width="4" height="14" fill="var(--ink)" opacity=".3"/><rect x="82" y="54" width="4" height="14" fill="var(--ink)" opacity=".3"/>
+<g fill="var(--lantern)"><ellipse cx="16" cy="16" rx="7" ry="9"/><ellipse cx="50" cy="13" rx="7" ry="9"/><ellipse cx="84" cy="16" rx="7" ry="9"/></g>
+<g fill="none" stroke="var(--surface)" stroke-width=".8" opacity=".55">
+<path d="M9 16h14M43 13h14M77 16h14"/></g></g>
+<g fill="var(--lantern)" opacity=".28">
+<ellipse cx="166" cy="160" rx="6" ry="14"/><ellipse cx="200" cy="168" rx="6" ry="16"/><ellipse cx="234" cy="160" rx="6" ry="14"/></g>
+</svg><figcaption class="figcap"><b>中洲屋台街</b>　流動攤位、無固定店址，挑本地客多、價目表寫在外面的那攤。<em>Day 1 · 20:00</em></figcaption></figure>
+          <div class="ev-cost"><span>玉子燒 <b>¥600–800</b></span><span>餃子 <b>¥500–700</b></span><span>拉麵 <b>¥800–1,000</b></span><span>串燒 <b>¥150–250</b></span><span>兩人 <b>¥5,000–6,000</b></span></div>
+        </div></div>
+
+        <div class="ev" data-k="night"><div class="ev-time">22:00</div><div class="ev-body">
+          <div class="ev-title"><h4>福博邂逅之橋．那珂川夜景</h4><span class="tag free">免費</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=福博であい橋" target="_blank" rel="noopener">地圖</a></div>
+          <p>河對岸是運河城的燈。十分鐘的路。</p>
+        </div></div>
+
+        <div class="ev" data-k="night"><div class="ev-time">23:00</div><div class="ev-body">
+          <div class="ev-title"><h4>MEGA 唐吉訶德 天神本店（24H）</h4><span class="tag sea">半額時段</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=MEGAドンキホーテ福岡天神本店" target="_blank" rel="noopener">地圖</a></div>
+          <p>這個時間生鮮區<strong>半額シール</strong>已貼滿：刺身、握壽司、天婦羅打 3–5 折。順手買味噌湯包、白飯、雞蛋。</p>
+          <div class="ev-cost"><span>半額刺身 <b>¥400–700</b></span><span>味噌湯包 <b>¥200</b></span><span>白飯 <b>¥150</b></span><span>早餐材料 <b>¥600</b></span></div>
+        </div></div>
+
+        <div class="ev" data-k="night"><div class="ev-time">00:00</div><div class="ev-body">
+          <div class="ev-title"><h4>住處宵夜：熱味噌湯配半額刺身丼</h4></div>
+          <div class="ev-cost"><span>兩人 <b>約 ¥800</b></span></div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="tabpanel" id="d2" role="tabpanel" aria-labelledby="tab-d2" hidden>
+      <div class="dayhead"><h3>Day 2｜魚市場．發光的神社</h3><span class="tag sea">主場：長浜鮮魚市場</span></div>
+      <div class="tl">
+        <div class="ev" data-k="play"><div class="ev-time">06:30</div><div class="ev-body">
+          <div class="ev-title"><h4>長浜鮮魚市場「市場會館」</h4><span class="tag sea">主場</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=福岡市鮮魚市場市場会館" target="_blank" rel="noopener">地圖</a></div>
+          <p>七十年歷史的批發魚市，會館一樓一整排小店<strong>清晨六點開門</strong>。漁市自己人吃飯的地方，又便宜又新鮮。</p>
+          <figure class="figure" data-slot="fuk-market"><span class="figbadge">示意圖 · 待換實拍</span><svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="長浜鮮魚市場海鮮丼"><rect width="400" height="220" fill="var(--surface-2)"/>
+<g opacity=".13" stroke="var(--ink)" stroke-width="1" fill="none">
+<path d="M0 40h400M0 68h400M0 96h400"/></g>
+<ellipse cx="200" cy="196" rx="120" ry="12" fill="var(--ink)" opacity=".08"/>
+<path d="M104 108h192l-18 74a14 14 0 0 1-14 12H136a14 14 0 0 1-14-12z" fill="var(--surface)" stroke="var(--line)" stroke-width="1.5"/>
+<path d="M96 104h208v10H96z" fill="var(--sea)" opacity=".25"/>
+<g opacity=".9">
+<path d="M126 116l32-8 10 14-30 10z" fill="var(--lantern)" opacity=".75"/>
+<path d="M164 112l34-6 8 15-32 9z" fill="var(--peak)" opacity=".55"/>
+<path d="M204 114l32-7 9 14-31 10z" fill="var(--lantern)" opacity=".6"/>
+<path d="M242 118l30-6 6 13-28 9z" fill="var(--peak)" opacity=".45"/>
+<path d="M140 134l30-7 9 13-29 9z" fill="var(--sea)" opacity=".45"/>
+<path d="M182 132l32-6 8 14-30 8z" fill="var(--lantern)" opacity=".5"/>
+<path d="M222 136l28-6 7 12-27 9z" fill="var(--peak)" opacity=".4"/></g>
+<g fill="none" stroke="var(--ink)" stroke-width=".9" opacity=".3">
+<path d="M126 116l32-8 10 14-30 10zM164 112l34-6 8 15-32 9zM204 114l32-7 9 14-31 10z"/></g>
+<circle cx="200" cy="152" r="12" fill="var(--lantern)" opacity=".6"/>
+<path d="M310 96l26 10-26 10z" fill="var(--sea)" opacity=".35"/>
+</svg><figcaption class="figcap"><b>長浜鮮魚市場 市場會館</b>　まさ味的特上海鮮丼，九種海鮮含黑鮪魚與海膽。<em>Day 2 · 06:30</em></figcaption></figure>
+          <div class="ev-cost"><span>まさ味・特上海鮮丼（9 種含鮪魚、海膽）<b>¥1,050</b></span></div>
+          <div class="ev-cost"><span>一魚一栄・生魚片七種盛 <b>¥1,600</b></span><span>おきよ・最老的定食店，06:00 開</span></div>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">08:00</div><div class="ev-body">
+          <div class="ev-title"><h4>會館頂樓展望廣場</h4><span class="tag free">免費</span></div>
+          <p>幾乎沒人知道的展望台，看得到博多灣與整片漁港。</p>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">08:40</div><div class="ev-body">
+          <div class="ev-title"><h4>大濠公園</h4><span class="tag free">免費</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=大濠公園" target="_blank" rel="noopener">地圖</a></div>
+          <p>市中心的大湖，繞一圈 2 公里。旁邊接著<a href="https://www.google.com/maps/search/?api=1&amp;query=福岡城跡" target="_blank" rel="noopener">福岡城跡</a>，可走上天守台看市景。</p>
+        </div></div>
+
+        <div class="ev" data-k="rest"><div class="ev-time">10:30</div><div class="ev-body">
+          <div class="ev-title"><h4>回住處補眠</h4></div>
+          <p>睡到 13:00。有廚房可以隨便煮碗湯，不必為吃飯特地出門。</p>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">13:15</div><div class="ev-body">
+          <div class="ev-title"><h4>柳橋連合市場</h4><span class="tag sea">海鮮</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=柳橋連合市場" target="_blank" rel="noopener">地圖</a></div>
+          <p>「博多的廚房」，昭和初年開到現在，主要客人是廚師。明太子、現炸天婦羅、玉子燒，也有鮮魚店直營食堂賣海鮮丼。
+          每樣買一點邊走邊吃。</p>
+          <div class="ev-cost"><span>小份採買 <b>¥800–1,500</b>／人</span></div>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">15:00</div><div class="ev-body">
+          <div class="ev-title"><h4>ViTO 天神西通り店．義式冰淇淋</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=ViTO天神西通り店" target="_blank" rel="noopener">地圖</a>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=天神地下街" target="_blank" rel="noopener">天神地下街</a></div>
+          <p>福岡市中央区大名 2-6-60．西鐵 Grand Hotel 1F．12:00–24:00（週五六到隔天 01:00）。
+          招牌是<strong>開心果</strong>與<strong>あまおう</strong>（福岡草莓），甜度比日式甜點低很多。
+          吃完往大名的巷子亂逛，走回天神地下街。</p>
+          <div class="ev-cost"><span>gelato 雙球 <b>¥550–700</b></span><span>蛋塔 <b>¥200–300</b></span></div>
+        </div></div>
+
+        <div class="ev" data-k="night"><div class="ev-time">18:00</div><div class="ev-body">
+          <div class="ev-title"><h4>中司孫太郎稲荷神社「賽博神社」</h4><span class="tag lan">會發光</span><span class="tag free">免費</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=中司孫太郎稲荷神社" target="_blank" rel="noopener">地圖</a></div>
+          <p>傍晚六點，參道兩側十座石燈籠<strong>同時點亮</strong>，燈籠上浮出狐狸圖案，鳥居亮起青白色的「奉納」二字，
+          往上走全是朱紅色的光。白天是很普通的稻荷神社，晚上完全變一個世界。</p>
+          <figure class="figure" data-slot="fuk-torii"><span class="figbadge">示意圖 · 待換實拍</span><svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="中司孫太郎稲荷神社夜間點燈"><rect width="400" height="220" fill="var(--surface-2)"/>
+<rect width="400" height="220" fill="var(--ink)" opacity=".12"/>
+<g fill="var(--peak)" opacity=".55">
+<rect x="96" y="52" width="208" height="11" rx="3"/><rect x="108" y="70" width="184" height="8"/>
+<rect x="122" y="63" width="13" height="130"/><rect x="265" y="63" width="13" height="130"/></g>
+<g fill="var(--peak)" opacity=".3">
+<rect x="146" y="66" width="108" height="6"/><rect x="160" y="72" width="9" height="118"/><rect x="231" y="72" width="9" height="118"/></g>
+<text x="200" y="104" text-anchor="middle" font-size="19" font-family="var(--display)" fill="var(--sea)" opacity=".85">奉納</text>
+<g>
+<rect x="40" y="126" width="20" height="52" rx="2" fill="var(--ink)" opacity=".3"/>
+<rect x="36" y="118" width="28" height="10" rx="2" fill="var(--lantern)" opacity=".75"/>
+<circle cx="50" cy="146" r="7" fill="var(--lantern)" opacity=".8"/>
+<rect x="340" y="126" width="20" height="52" rx="2" fill="var(--ink)" opacity=".3"/>
+<rect x="336" y="118" width="28" height="10" rx="2" fill="var(--lantern)" opacity=".75"/>
+<circle cx="350" cy="146" r="7" fill="var(--lantern)" opacity=".8"/>
+<rect x="82" y="140" width="16" height="42" rx="2" fill="var(--ink)" opacity=".26"/>
+<circle cx="90" cy="154" r="5.5" fill="var(--lantern)" opacity=".65"/>
+<rect x="302" y="140" width="16" height="42" rx="2" fill="var(--ink)" opacity=".26"/>
+<circle cx="310" cy="154" r="5.5" fill="var(--lantern)" opacity=".65"/></g>
+<path d="M0 193h400v27H0z" fill="var(--ink)" opacity=".18"/>
+<g fill="var(--lantern)" opacity=".16"><circle cx="50" cy="146" r="18"/><circle cx="350" cy="146" r="18"/></g>
+</svg><figcaption class="figcap"><b>中司孫太郎稲荷神社</b>　傍晚六點十座石燈籠同時亮起，鳥居浮出青白色「奉納」二字。<em>Day 2 · 18:00</em></figcaption></figure>
+          <div class="ev-cost"><span>免費</span><span>地鐵大濠公園站或赤坂站走 15 分</span></div>
+        </div></div>
+
+        <div class="ev" data-k="night"><div class="ev-time">19:30</div><div class="ev-body">
+          <div class="ev-title"><h4>博多 磯ぎよし 天神店</h4><span class="tag sea">海鮮</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=博多磯ぎよし天神店" target="_blank" rel="noopener">地圖</a></div>
+          <p>福岡市中央区舞鶴 1-9-23．17:00–23:00．地鐵天神站徒步 7 分。<strong>胡麻鯖的名店</strong>，
+          店內設有生簀，「やりいかの活造り」是活烏賊現撈現切。單點制、不吃到飽，
+          兩人合點刺身盛＋胡麻鯖＋一道燒物。<strong>建議先訂位。</strong></p>
+          <div class="ev-cost"><span>刺身三種盛 <b>¥1,500–2,000</b></span><span>胡麻鯖魚 <b>¥900–1,200</b></span><span>兩人 <b>¥4,000–5,000</b></span></div>
+        </div></div>
+
+        <div class="ev" data-k="night"><div class="ev-time">21:30</div><div class="ev-body">
+          <div class="ev-title"><h4>超市半額 → 宵夜烏龍麵</h4></div>
+          <div class="ev-cost"><span>兩人 <b>約 ¥900</b></span></div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="tabpanel" id="d3" role="tabpanel" aria-labelledby="tab-d3" hidden>
+      <div class="dayhead"><h3>Day 3｜唐戶市場．關門海峽</h3><span class="tag sea">主場：活きいき馬関街</span></div>
+      <div class="tl">
+        <div class="ev" data-k="move"><div class="ev-time">06:10</div><div class="ev-body">
+          <div class="ev-title"><h4>博多站 → 門司港</h4><span class="tag">JR 鹿兒島本線</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=博多駅" target="_blank" rel="noopener">地圖</a></div>
+          <p>普通／快速直達，約 1 小時 40 分。</p>
+          <div class="ev-cost"><span>單程 <b>¥1,500</b>／人</span></div>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">07:50</div><div class="ev-body">
+          <div class="ev-title"><h4>門司港懷舊區</h4><span class="tag free">免費</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=門司港レトロ" target="_blank" rel="noopener">地圖</a></div>
+          <p>大正時代的洋樓群，清晨沒有人，海風很涼。走 20 分鐘就到渡船口。</p>
+        </div></div>
+
+        <div class="ev" data-k="move"><div class="ev-time">08:20</div><div class="ev-body">
+          <div class="ev-title"><h4>關門汽船 門司港 → 唐戶</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=関門汽船門司港のりば" target="_blank" rel="noopener">地圖</a></div>
+          <p>從九州坐船到本州，5–6 分鐘。從 JR 門司港站走到搭船處 3 分鐘。</p>
+          <div class="ev-cost"><span>單程 <b>¥400</b>／人</span></div>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">08:35</div><div class="ev-body">
+          <div class="ev-title"><h4>唐戶市場「活きいき馬関街」</h4><span class="tag sea">主場</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=唐戸市場" target="_blank" rel="noopener">地圖</a></div>
+          <p>關門地區的廚房。<strong>只有週五、六、日與國定假日</strong>變成壽司市集——
+          <strong>週五、六 9:00–14:00，週日與假日 7:00–16:00</strong>（週日開得最早、收得最晚，所以 Day 3 排週日）。
+          魚販與壽司攤把一貫一貫的握壽司、海鮮丼、河豚料理擺出來，自己拿盤子挑，挑完找位子坐下吃。
+          <strong>想吃什麼就拿一貫，不用整份買。</strong></p>
+          <figure class="figure" data-slot="fuk-sushi"><span class="figbadge">示意圖 · 待換實拍</span><svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="唐戶市場活きいき馬関街壽司"><rect width="400" height="220" fill="var(--surface-2)"/>
+<path d="M0 150h400v70H0z" fill="var(--sea)" opacity=".1"/>
+<ellipse cx="200" cy="188" rx="150" ry="14" fill="var(--ink)" opacity=".07"/>
+<rect x="58" y="118" width="284" height="62" rx="5" fill="var(--surface)" stroke="var(--line)" stroke-width="1.5"/>
+<g>
+<g transform="translate(84 128)"><rect y="18" width="42" height="16" rx="6" fill="var(--surface-2)" stroke="var(--line)" stroke-width=".8"/>
+<path d="M-2 14q21-11 46 0l-2 7q-21-9-42 0z" fill="var(--peak)" opacity=".6"/></g>
+<g transform="translate(148 128)"><rect y="18" width="42" height="16" rx="6" fill="var(--surface-2)" stroke="var(--line)" stroke-width=".8"/>
+<path d="M-2 14q21-11 46 0l-2 7q-21-9-42 0z" fill="var(--lantern)" opacity=".6"/></g>
+<g transform="translate(212 128)"><rect y="18" width="42" height="16" rx="6" fill="var(--surface-2)" stroke="var(--line)" stroke-width=".8"/>
+<path d="M-2 14q21-11 46 0l-2 7q-21-9-42 0z" fill="var(--sea)" opacity=".5"/></g>
+<g transform="translate(276 128)"><rect y="18" width="42" height="16" rx="6" fill="var(--surface-2)" stroke="var(--line)" stroke-width=".8"/>
+<path d="M-2 14q21-11 46 0l-2 7q-21-9-42 0z" fill="var(--peak)" opacity=".45"/></g></g>
+<g opacity=".3" fill="var(--ink)">
+<rect x="30" y="44" width="52" height="8" rx="2"/><rect x="30" y="58" width="34" height="6" rx="2"/>
+<rect x="318" y="44" width="52" height="8" rx="2"/><rect x="336" y="58" width="34" height="6" rx="2"/></g>
+<g opacity=".5" fill="none" stroke="var(--sea)" stroke-width="1.4">
+<path d="M120 66q30-18 60 0t60 0"/><path d="M140 84q30-16 60 0"/></g>
+<g fill="var(--lantern)" opacity=".5"><circle cx="200" cy="52" r="9"/></g>
+</svg><figcaption class="figcap"><b>唐戶市場 活きいき馬関街</b>　週日 7:00–16:00，一貫一貫自己挑，¥150 起。<em>Day 3 · 08:35</em></figcaption></figure>
+          <div class="ev-cost"><span><b>すし遊館</b>（2F 迴轉壽司，鮮魚批發直營，河豚一貫 ¥250 起，開店前就排隊）
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=すし遊館唐戸市場" target="_blank" rel="noopener">地圖</a></span></div>
+          <div class="ev-cost"><span><b>下関唐戸市場ふく問屋 海</b>（河豚專門，6:00–14:00，虎河豚白子、關門章魚壽司）</span></div>
+          <div class="ev-cost"><span>握壽司 <b>¥150–500</b>／貫</span><span>河豚湯 <b>¥300</b></span><span>兩人 <b>¥5,000–6,000</b></span></div>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">10:30</div><div class="ev-body">
+          <div class="ev-title"><h4>カモンワーフ 海濱商場</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=カモンワーフ" target="_blank" rel="noopener">地圖</a></div>
+          <p>市場旁的海邊，坐著看關門海峽與大橋。河豚天婦羅、現烤海鮮串在這裡吃。</p>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">11:30</div><div class="ev-body">
+          <div class="ev-title"><h4>關門人道海底隧道</h4><span class="tag free">免費</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=関門トンネル人道" target="_blank" rel="noopener">地圖</a></div>
+          <p>走路穿過海底，從本州走回九州，單程 15 分鐘、780 公尺，中間有縣界標線可以一腳踩兩縣。</p>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">13:00</div><div class="ev-body">
+          <div class="ev-title"><h4>BEAR FRUITS 門司港本店．燒咖哩</h4><span class="tag lan">排隊名店</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=ベアフルーツ門司港本店" target="_blank" rel="noopener">地圖</a></div>
+          <p>門司港燒咖哩專門店，就在 JR 門司港站旁邊。招牌「<strong>スーパー焼きカレー</strong>」拿過
+          燒咖哩大賽冠軍。份量偏大，兩人合吃一份再加沙拉剛好。
+          隔壁的<a href="https://www.google.com/maps/search/?api=1&amp;query=伽哩本舗門司港レトロ店" target="_blank" rel="noopener">伽哩本舗</a>也是名店，排太長就換這家。</p>
+          <div class="ev-cost"><span><b>¥1,000–1,400</b></span></div>
+        </div></div>
+
+        <div class="ev" data-k="move"><div class="ev-time">14:30</div><div class="ev-body">
+          <div class="ev-title"><h4>JR 回博多</h4></div>
+          <div class="ev-cost"><span>單程 <b>¥1,500</b>／人</span></div>
+        </div></div>
+
+        <div class="ev" data-k="rest"><div class="ev-time">16:30</div><div class="ev-body">
+          <div class="ev-title"><h4>回住處補眠兩小時</h4></div>
+          <p>今天移動量大，躺平再出門。</p>
+        </div></div>
+
+        <div class="ev" data-k="night"><div class="ev-time">19:00</div><div class="ev-body">
+          <div class="ev-title"><h4>屋台 小金ちゃん．燒拉麵發源店</h4><span class="tag lan">今夜主場</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=屋台小金ちゃん天神" target="_blank" rel="noopener">地圖</a></div>
+          <p>1968 年創業，博多名物「<strong>焼きラーメン</strong>」就是這家發明的——當年為了讓夏天喝不下湯的客人
+          也能吃拉麵而想出來的。地鐵天神站 1 號出口往昭和通方向徒步 2 分。
+          <strong>營業：週二～週日 17:30–24:00（週一公休）</strong>，攤位只有 12 個位子，要排隊。
+          另一道招牌是「どて焼き」。</p>
+          <div class="ev-cost"><span>焼きラーメン <b>¥750 前後</b></span><span>どて焼き <b>¥500 前後</b></span><span>兩人 <b>¥3,500–4,500</b></span></div>
+          <p style="margin-top:.35rem">想吃純粹的長浜拉麵，改去
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=元祖長浜屋本店" target="_blank" rel="noopener">元祖長浜屋 本店</a>——昭和 27 年創業的長浜拉麵元祖，
+          菜單只有拉麵一種，只需說油量、麵硬度、蔥量，上菜快到嚇人。</p>
+          <div class="ev-cost"><span>兩人 <b>¥4,000–5,000</b></span></div>
+        </div></div>
+
+        <div class="ev" data-k="night"><div class="ev-time">22:00</div><div class="ev-body">
+          <div class="ev-title"><h4>超市半額 → 宵夜</h4></div>
+          <div class="ev-cost"><span>兩人 <b>約 ¥800</b></span></div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="tabpanel" id="d4" role="tabpanel" aria-labelledby="tab-d4" hidden>
+      <div class="dayhead"><h3>Day 4｜太宰府．回家</h3><span class="tag sea">主場：太宰府天滿宮</span></div>
+      <div class="tl">
+        <div class="ev" data-k="play"><div class="ev-time">07:00</div><div class="ev-body">
+          <div class="ev-title"><h4>住處自炊早餐</h4></div>
+          <div class="ev-cost"><span>兩人 <b>約 ¥500</b></span></div>
+        </div></div>
+
+        <div class="ev" data-k="move"><div class="ev-time">08:30</div><div class="ev-body">
+          <div class="ev-title"><h4>退房、寄行李</h4></div>
+          <p>民泊多半可寄放到傍晚，訂房時先問。不行的話博多站與天神站都有投幣式置物櫃。</p>
+          <div class="ev-cost"><span>置物櫃 <b>¥400–700</b></span></div>
+        </div></div>
+
+        <div class="ev" data-k="move"><div class="ev-time">09:00</div><div class="ev-body">
+          <div class="ev-title"><h4>西鐵福岡（天神）→ 太宰府</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=西鉄福岡天神駅" target="_blank" rel="noopener">地圖</a></div>
+          <p>約 25–30 分，途中在西鐵二日市轉車。買「<strong>太宰府散策きっぷ</strong>」含來回車票與梅枝餅兌換券，比分開買划算。</p>
+          <div class="ev-cost"><span>單程 <b>¥420</b>／人</span></div>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">09:40</div><div class="ev-body">
+          <div class="ev-title"><h4>太宰府天滿宮</h4><span class="tag free">本殿免費</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=太宰府天満宮" target="_blank" rel="noopener">地圖</a></div>
+          <p>學問之神菅原道真的總本社，九州參拜人數最多的神社。從車站到本殿的表參道約 400 公尺，兩側全是店。
+          本殿整修期間有一座被草木覆蓋、像漂浮在空中的「臨時本殿」，是這幾年才看得到的樣子。</p>
+          <figure class="figure" data-slot="fuk-dazaifu"><span class="figbadge">示意圖 · 待換實拍</span><svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="太宰府天滿宮"><rect width="400" height="220" fill="var(--surface-2)"/>
+<g opacity=".1" fill="var(--sea)"><circle cx="330" cy="46" r="34"/><circle cx="70" cy="60" r="26"/></g>
+<path d="M70 118h260l-24-30H94z" fill="var(--peak)" opacity=".45"/>
+<path d="M84 118h232v14H84z" fill="var(--ink)" opacity=".22"/>
+<rect x="96" y="132" width="208" height="52" fill="var(--surface)" stroke="var(--line)" stroke-width="1.2"/>
+<g fill="var(--peak)" opacity=".35"><rect x="112" y="140" width="10" height="44"/><rect x="278" y="140" width="10" height="44"/></g>
+<rect x="176" y="146" width="48" height="38" rx="2" fill="var(--ink)" opacity=".18"/>
+<path d="M0 184h400v36H0z" fill="var(--ink)" opacity=".08"/>
+<g opacity=".55">
+<g transform="translate(48 150)"><path d="M0 30V4" stroke="var(--ink)" stroke-width="2" opacity=".5"/>
+<g fill="var(--peak)"><circle cx="0" cy="0" r="4"/><circle cx="9" cy="5" r="4"/><circle cx="-9" cy="5" r="4"/><circle cx="6" cy="-7" r="4"/><circle cx="-6" cy="-7" r="4"/></g>
+<circle cx="0" cy="0" r="1.8" fill="var(--lantern)"/></g>
+<g transform="translate(354 138)"><path d="M0 34V4" stroke="var(--ink)" stroke-width="2" opacity=".5"/>
+<g fill="var(--peak)"><circle cx="0" cy="0" r="4"/><circle cx="9" cy="5" r="4"/><circle cx="-9" cy="5" r="4"/><circle cx="6" cy="-7" r="4"/><circle cx="-6" cy="-7" r="4"/></g>
+<circle cx="0" cy="0" r="1.8" fill="var(--lantern)"/></g></g>
+<g fill="var(--peak)" opacity=".3"><circle cx="150" cy="66" r="3"/><circle cx="250" cy="52" r="3"/><circle cx="196" cy="40" r="2.5"/></g>
+</svg><figcaption class="figcap"><b>太宰府天滿宮</b>　學問之神菅原道真的總本社，本殿整修期間有草木覆蓋的「臨時本殿」。<em>Day 4 · 09:40</em></figcaption></figure>
+          <div class="ev-cost"><span>本殿 <b>免費</b></span><span>寶物殿（可略）<b>¥500</b></span></div>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">10:40</div><div class="ev-body">
+          <div class="ev-title"><h4>梅枝餅 ＋ 隈研吾的星巴克</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=スターバックス太宰府天満宮表参道店" target="_blank" rel="noopener">星巴克</a></div>
+          <p>梅枝餅是現烤的紅豆餡糯米餅，外皮煎得脆、<strong>甜度很低</strong>。參道中段那家星巴克的門面是隈研吾用
+          兩千根木條交錯搭出來的。</p>
+          <div class="ev-cost"><span>梅枝餅 <b>¥150</b>／個</span></div>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">12:00</div><div class="ev-body">
+          <div class="ev-title"><h4>旭軒 駅前本店．博多一口餃子</h4><span class="tag lan">名店</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=旭軒駅前本店" target="_blank" rel="noopener">地圖</a></div>
+          <p>JR 博多站博多口徒步 3 分，掛著紅燈籠的老店，博多一口餃子的代表。皮薄、外層煎得酥脆，
+          一份 10 顆一口一個。就在等一下要採買的博多站旁邊，動線剛好。</p>
+          <div class="ev-cost"><span>餃子 <b>¥450</b>／份</span><span>手羽先 <b>¥100</b>／支</span><span>兩人 <b>¥1,500–2,000</b></span></div>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">13:10</div><div class="ev-body">
+          <div class="ev-title"><h4>博多阪急 B1 採買</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=博多阪急" target="_blank" rel="noopener">地圖</a></div>
+          <p>伴手禮一次買齊：明太子、通りもん、和菓子。免稅要同一家店累計滿 ¥5,000，帶護照。
+          藥妝零食去 <a href="https://www.google.com/maps/search/?api=1&amp;query=ドンキホーテ博多" target="_blank" rel="noopener">Don Quijote</a> 較便宜。</p>
+        </div></div>
+
+        <div class="ev" data-k="move"><div class="ev-time">14:30</div><div class="ev-body">
+          <div class="ev-title"><h4>取行李 → 地鐵到福岡機場</h4></div>
+          <p>博多站到機場國內線 5 分鐘，再搭免費接駁到國際線 10–15 分。15:00 前抵達，從容報到。</p>
+          <div class="ev-cost"><span>地鐵 <b>¥260</b>／人</span></div>
+        </div></div>
+
+        <div class="ev" data-k="move"><div class="ev-time">17:10</div><div class="ev-body">
+          <div class="ev-title"><h4>虎航起飛 → 18:40 抵桃園 → 約 20:10 到家</h4><span class="tag">回家</span></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="eat">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">必吃</p>
+      <h2>海鮮為主，份量拆小，甜點挑不甜的</h2>
+      <p>不吃到飽、一份兩人分、甜點選冰品與低甜度的。每一項都可點地圖直接導航。</p>
+    </div>
+
+    <div class="filters" role="group" aria-label="美食篩選">
+      <button class="chip" data-filter="all" aria-pressed="true">全部</button>
+      <button class="chip" data-filter="sea" aria-pressed="false">海鮮</button>
+      <button class="chip" data-filter="sweet" aria-pressed="false">甜點</button>
+      <button class="chip" data-filter="yatai" aria-pressed="false">屋台</button>
+      <button class="chip" data-filter="night" aria-pressed="false">宵夜／自炊</button>
+      <button class="chip" data-filter="cheap" aria-pressed="false">¥1,000 以下</button>
+    </div>
+
+    <div class="eats" id="eatGrid">
+      <article class="card eat" data-tags="sea cheap">
+        <h4>特上海鮮丼</h4><span class="jp">大衆割烹 まさ味・長浜市場會館</span>
+        <p>九種海鮮，含黑鮪魚與海膽。漁市自己人吃的價格。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=福岡市鮮魚市場市場会館" target="_blank" rel="noopener">地圖</a><span class="tag sea">海鮮</span><span class="yen">¥1,050</span></div>
+      </article>
+      <article class="card eat" data-tags="sea">
+        <h4>時令生魚片七種盛</h4><span class="jp">味処 一魚一栄・長浜市場會館</span>
+        <p>當日進的七種魚，含鮪魚與鯛魚。兩人分一份剛好。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=福岡市鮮魚市場市場会館" target="_blank" rel="noopener">地圖</a><span class="tag sea">海鮮</span><span class="yen">¥1,600</span></div>
+      </article>
+      <article class="card eat" data-tags="sea cheap">
+        <h4>すし遊館．一貫一貫挑的握壽司</h4><span class="jp">唐戶市場 2F・鮮魚批發直營迴轉壽司</span>
+        <p>週五六 9:00–14:00、週日與假日 7:00–16:00。河豚一貫 ¥250 起，開店前就排隊。想吃什麼拿什麼，不用整份買。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=すし遊館唐戸市場" target="_blank" rel="noopener">地圖</a><span class="tag sea">海鮮</span><span class="yen">¥150–500／貫</span></div>
+      </article>
+      <article class="card eat" data-tags="sea cheap">
+        <h4>下関唐戸市場ふく問屋 海</h4><span class="jp">河豚專門・唐戶市場內・6:00–14:00</span>
+        <p>下關是日本河豚集散地。這攤是河豚批發商直營，虎河豚白子、當地海膽、關門章魚壽司都是限定品。市場的河豚湯一碗 ¥300。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=唐戸市場" target="_blank" rel="noopener">地圖</a><span class="tag sea">海鮮</span><span class="yen">¥300 起</span></div>
+      </article>
+      <article class="card eat" data-tags="sea cheap">
+        <h4>胡麻鯖魚</h4><span class="jp">ごまさば・博多 磯ぎよし 天神店</span>
+        <p>福岡限定吃法：生鯖魚拌芝麻醬油。磯ぎよし 是公認的胡麻鯖名店，肉厚。中央区舞鶴 1-9-23．17:00–23:00。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=博多磯ぎよし天神店" target="_blank" rel="noopener">地圖</a><span class="tag sea">海鮮</span><span class="yen">¥900–1,200</span></div>
+      </article>
+      <article class="card eat" data-tags="sea">
+        <h4>活烏賊生魚片</h4><span class="jp">イカ活き造り・河太郎 中洲本店</span>
+        <p>透明的、還會動的那種。河太郎是活烏賊活造的老店，店內設生簀。磯ぎよし 的「やりいかの活造り」也吃得到。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=河太郎中洲本店" target="_blank" rel="noopener">地圖</a><span class="tag sea">海鮮</span><span class="yen">¥2,500–3,500</span></div>
+      </article>
+      <article class="card eat" data-tags="yatai">
+        <h4>明太子玉子燒</h4><span class="jp">明太子入り卵焼き・中洲／天神屋台通用</span>
+        <p>屋台招牌，熱騰騰切開會流出明太子。中洲屋台幾乎每攤都有，兩人分一份剛好。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=中洲屋台" target="_blank" rel="noopener">地圖</a><span class="tag lan">屋台</span><span class="yen">¥600–800</span></div>
+      </article>
+      <article class="card eat" data-tags="yatai cheap">
+        <h4>元祖長浜屋 本店</h4><span class="jp">長浜ラーメン・昭和 27 年創業</span>
+        <p>長浜拉麵的元祖，菜單<strong>只有拉麵一種</strong>。點餐只需說油量、麵硬度、蔥量，上菜快到嚇人。可「替玉」加麵。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=元祖長浜屋本店" target="_blank" rel="noopener">地圖</a><span class="tag lan">拉麵</span><span class="yen">¥600–800</span></div>
+      </article>
+      <article class="card eat" data-tags="yatai cheap">
+        <h4>旭軒 駅前本店</h4><span class="jp">博多一口餃子・紅燈籠老店</span>
+        <p>JR 博多站博多口徒步 3 分。皮薄外脆，一份 10 顆一口一個。配「手羽先」¥100 一支。Day 4 採買前的午餐首選。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=旭軒駅前本店" target="_blank" rel="noopener">地圖</a><span class="tag lan">名店</span><span class="yen">¥450／份</span></div>
+      </article>
+      <article class="card eat" data-tags="yatai cheap">
+        <h4>屋台 小金ちゃん</h4><span class="jp">焼きラーメン發源店・天神・1968 創業</span>
+        <p>博多名物「焼きラーメン」就是這家發明的。週二～週日 17:30–24:00（週一休），只有 12 個位子。另一招牌是「どて焼き」。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=屋台小金ちゃん天神" target="_blank" rel="noopener">地圖</a><span class="tag lan">屋台</span><span class="yen">¥750 前後</span></div>
+      </article>
+      <article class="card eat" data-tags="sweet">
+        <h4>ViTO 天神西通り店</h4><span class="jp">義式 gelato・大名 2-6-60・12:00–24:00</span>
+        <p>西鐵 Grand Hotel 1F。招牌是<strong>開心果</strong>與<strong>あまおう</strong>（福岡草莓）。甜度比日式甜點低很多。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=ViTO天神西通り店" target="_blank" rel="noopener">地圖</a><span class="tag">甜點</span><span class="yen">¥550–700</span></div>
+      </article>
+      <article class="card eat" data-tags="sweet cheap">
+        <h4>百貨 B1 的現烤甜點櫃</h4><span class="jp">博多阪急 B1・天神地下街</span>
+        <p>蛋塔、銅鑼燒、現烤甜點的<strong>快閃攤位會輪替</strong>，沒有固定店家——到現場看當週進駐哪家。博多阪急 B1 的選擇最多。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=博多阪急" target="_blank" rel="noopener">地圖</a><span class="tag">甜點</span><span class="yen">¥200–300／個</span></div>
+      </article>
+      <article class="card eat" data-tags="sweet cheap">
+        <h4>梅枝餅</h4><span class="jp">梅ヶ枝餅・太宰府表參道</span>
+        <p>現煎的紅豆餡糯米餅，外皮脆、甜度很低。參道上一整排都在賣。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=太宰府天満宮表参道" target="_blank" rel="noopener">地圖</a><span class="tag">甜點</span><span class="yen">¥150／個</span></div>
+      </article>
+      <article class="card eat" data-tags="night cheap sea">
+        <h4>超市半額生魚片</h4><span class="jp">半額シールの刺身</span>
+        <p>19:00 後開始貼折扣標籤，越晚折越多。配熱味噌湯，這趟最划算的一餐。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=MEGAドンキホーテ福岡天神本店" target="_blank" rel="noopener">地圖</a><span class="tag sea">海鮮</span><span class="tag">宵夜</span><span class="yen">¥400–700</span></div>
+      </article>
+      <article class="card eat" data-tags="night cheap">
+        <h4>自炊烏龍麵鍋</h4><span class="jp">うどん鍋</span>
+        <p>冷凍烏龍麵 ¥100 出頭，加高湯包、蔥、蛋。凌晨三點吃這個最舒服。</p>
+        <div class="row"><span class="tag">宵夜</span><span class="tag free">便宜</span><span class="yen">兩人約 ¥400</span></div>
+      </article>
+      <article class="card eat" data-tags="cheap">
+        <h4>市場現炸天婦羅</h4><span class="jp">柳橋連合市場內・魚漿店</span>
+        <p>一片一片買，邊走邊吃。魚漿類的「丸天」是福岡特色。市場裡有數家魚漿與天婦羅店，現炸現賣。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=柳橋連合市場" target="_blank" rel="noopener">地圖</a><span class="tag free">便宜</span><span class="yen">¥300–600</span></div>
+      </article>
+      <article class="card eat" data-tags="">
+        <h4>BEAR FRUITS 門司港本店</h4><span class="jp">焼きカレー・JR 門司港站旁</span>
+        <p>招牌「スーパー焼きカレー」拿過燒咖哩大賽冠軍，常態排隊。份量大，兩人合吃一份再加沙拉。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=ベアフルーツ門司港本店" target="_blank" rel="noopener">地圖</a><span class="tag">Day 3</span><span class="yen">¥1,000–1,400</span></div>
+      </article>
+      <article class="card eat" data-tags="sea">
+        <h4>現烤牡蠣</h4><span class="jp">糸島の牡蠣小屋・10 月下旬起</span>
+        <p>漁港旁的鐵皮小屋自己烤。1 公斤約 ¥1,300 加炭火費 ¥220–550。要開車去。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=岐志漁港牡蠣小屋" target="_blank" rel="noopener">地圖</a><span class="tag sea">海鮮</span><span class="yen">¥1,300／kg</span></div>
+      </article>
+    </div>
+
+    <div class="note" style="margin-top:1.5rem">
+      <span class="k">點餐句</span>
+      <div>食量小最好用的一句：「<strong>一つを二人で分けてもいいですか？</strong>」（一份兩人分可以嗎）。
+      居酒屋則說「<strong>少なめでお願いします</strong>」（請給少一點）。</div>
+    </div>
+  </div>
+</section>
+
+<section id="night">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">夜的福岡</p>
+      <h2>會發光的地方，多數免費</h2>
+    </div>
+    <div class="eats">
+      <article class="card eat">
+        <h4>中司孫太郎稲荷神社「賽博神社」</h4><span class="jp">西公園・福岡市中央區</span>
+        <p>傍晚六點，參道十座石燈籠同時亮起，燈籠面浮出狐狸圖案，鳥居打上青白色的「奉納」二字，
+        整條參道被朱紅色的光照亮。白天完全看不出來。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=中司孫太郎稲荷神社" target="_blank" rel="noopener">地圖</a><span class="tag free">免費</span><span class="tag lan">18:00 點燈</span><span class="yen">Day 2</span></div>
+      </article>
+      <article class="card eat">
+        <h4>愛宕神社</h4><span class="jp">福岡市西區・日本三大愛宕之一</span>
+        <p>標高 68 公尺的山頂神社，全日本神社裡最有名的夜景點。看得到福岡塔、巨蛋，
+        還有博多灣上能古島與志賀島的燈。本殿本身也有打燈。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=愛宕神社福岡市西区" target="_blank" rel="noopener">地圖</a><span class="tag free">免費</span><span class="tag lan">夜景</span><span class="yen">Day 2 替代</span></div>
+      </article>
+      <article class="card eat">
+        <h4>中洲屋台街</h4><span class="jp">那珂川沿い</span>
+        <p>18:00 擺攤到半夜。河面倒映燈籠的光，福岡最經典的一張畫面。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=中洲屋台" target="_blank" rel="noopener">地圖</a><span class="tag lan">屋台</span><span class="yen">Day 1</span></div>
+      </article>
+      <article class="card eat">
+        <h4>福岡塔</h4><span class="jp">高 234m・海濱塔</span>
+        <p>八千面單向玻璃包起來的塔，123 公尺高的展望室，被登錄為「戀人聖地」。塔身燈光隨季節變換。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=福岡タワー" target="_blank" rel="noopener">地圖</a><span class="tag mid">需門票</span><span class="yen">約 ¥800</span></div>
+      </article>
+      <article class="card eat">
+        <h4>宮地嶽神社「光の道」</h4><span class="jp">福津市・一年只有兩次</span>
+        <p>800 公尺長的筆直參道，與落入玄界灘的夕陽連成一直線，整條路變成金色。
+        <strong>只有二月下旬與十月下旬</strong>。一般觀覽席當天發整理券免費，特別祈願席要預約付費。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=宮地嶽神社" target="_blank" rel="noopener">地圖</a><span class="tag free">免費（需整理券）</span><span class="yen">10/20 檔期</span></div>
+      </article>
+      <article class="card eat">
+        <h4>櫻井二見浦・夫婦岩</h4><span class="jp">糸島市</span>
+        <p>面向玄界灘的兩塊大岩以注連繩相連，前方立著白色的海中鳥居。夕陽落在兩石之間。需開車。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=桜井二見ヶ浦" target="_blank" rel="noopener">地圖</a><span class="tag free">免費</span><span class="tag">需自駕</span><span class="yen">下一趟</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="money">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">費用</p>
+      <h2>兩個人，四天三夜，逐項算給你看</h2>
+      <p>以 10/16–10/19、台灣虎航來回、民泊三晚、每日一餐外食一餐自炊為基準。日圓以 ¥100 ≈ NT$21 換算。</p>
+    </div>
+
+    <div class="scroller" style="margin-bottom:1.5rem">
+      <table>
+        <thead><tr><th>項目</th><th>明細</th><th>日圓</th><th>台幣（兩人）</th></tr></thead>
+        <tbody>
+          <tr><td><strong>機票</strong></td><td>台灣虎航 <strong>來回票</strong>含稅　NT$8,949 × 2 人<br><small style="color:var(--peak)">分開買兩張單程要 NT$12,700／人，多花 NT$7,502</small></td><td class="num">—</td><td class="num">17,898</td></tr>
+          <tr><td><strong>託運行李</strong></td><td>虎航 15kg 一件兩人共用，來回，訂票時加購</td><td class="num">—</td><td class="num">1,800</td></tr>
+          <tr><td><strong>住宿</strong></td><td>民泊 1LDK　¥7,000 × 3 晚</td><td class="num">21,000</td><td class="num">4,410</td></tr>
+          <tr><td><strong>機場往返</strong></td><td>地鐵 ¥260 × 2 趟 × 2 人（接駁巴士免費）</td><td class="num">1,040</td><td class="num">218</td></tr>
+          <tr><td><strong>市內交通</strong></td><td>四天地鐵、西鐵零星車資　¥1,200 × 2 人</td><td class="num">2,400</td><td class="num">504</td></tr>
+          <tr><td><strong>Day 3 唐戶市場</strong></td><td>JR 博多↔門司港 ¥3,000＋關門汽船 ¥800，× 2 人</td><td class="num">7,600</td><td class="num">1,596</td></tr>
+          <tr><td><strong>Day 4 太宰府</strong></td><td>西鐵天神↔太宰府 ¥840 × 2 人</td><td class="num">1,680</td><td class="num">353</td></tr>
+          <tr><td>餐食 Day 1</td><td>屋台 ¥5,500＋超市採買 ¥1,350</td><td class="num">6,850</td><td class="num">1,439</td></tr>
+          <tr><td>餐食 Day 2</td><td>市場早餐 ¥2,650＋柳橋 ¥2,300＋甜點 ¥1,600＋居酒屋 ¥4,500＋宵夜 ¥900</td><td class="num">11,950</td><td class="num">2,510</td></tr>
+          <tr><td>餐食 Day 3</td><td>唐戶壽司 ¥5,500＋燒咖哩 ¥1,200＋屋台 ¥4,500＋宵夜 ¥800</td><td class="num">12,000</td><td class="num">2,520</td></tr>
+          <tr><td>餐食 Day 4</td><td>自炊早餐 ¥500＋梅枝餅 ¥600＋午餐 ¥2,500</td><td class="num">3,600</td><td class="num">756</td></tr>
+          <tr><td><strong>雜支</strong></td><td>置物櫃、賽錢、小額門票</td><td class="num">1,000</td><td class="num">210</td></tr>
+          <tr><td><strong>eSIM</strong></td><td>NT$300 × 2 人</td><td class="num">—</td><td class="num">600</td></tr>
+          <tr><td><strong>台灣端交通</strong></td><td>板橋↔桃園機場客運　NT$90 × 2 趟 × 2 人</td><td class="num">—</td><td class="num">360</td></tr>
+          <tr style="background:var(--sea-soft)"><td colspan="3"><strong>兩人合計</strong>（不含購物與伴手禮）</td><td class="num"><strong>NT$ 35,173</strong></td></tr>
+          <tr style="background:var(--sea-soft)"><td colspan="3"><strong>每人</strong></td><td class="num"><strong>NT$ 17,587</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="calc">
+      <div class="controls">
+        <div class="ctl">
+          <label for="air">機票 來回含稅／人 <b id="airV">NT$8,949</b></label>
+          <input type="range" id="air" min="5000" max="16000" step="1" value="8949">
+        </div>
+        <div class="ctl">
+          <label for="stay">住宿 每晚（兩人一間） <b id="stayV">¥7,000</b></label>
+          <input type="range" id="stay" min="4000" max="18000" step="500" value="7000">
+        </div>
+        <div class="ctl">
+          <label for="rate">匯率 ¥100 = <b id="rateV">NT$21.0</b></label>
+          <input type="range" id="rate" min="19" max="24" step="0.1" value="21">
+        </div>
+        <div class="ctl">
+          <label>吃飯的鬆緊度（每人每天）</label>
+          <div class="seg" id="food">
+            <button type="button" data-v="4300" aria-pressed="true">照本頁 ¥4,300</button>
+            <button type="button" data-v="6000" aria-pressed="false">寬鬆 ¥6,000</button>
+            <button type="button" data-v="8500" aria-pressed="false">放開吃 ¥8,500</button>
+          </div>
+        </div>
+        <div class="ctl">
+          <label>Day 3 版本</label>
+          <div class="seg" id="d3cost">
+            <button type="button" data-v="3800" aria-pressed="true">唐戶市場（+¥3,800／人）</button>
+            <button type="button" data-v="0" aria-pressed="false">留在市區</button>
+          </div>
+        </div>
+        <div class="ctl">
+          <label>託運行李（15kg 一件兩人共用，來回）</label>
+          <div class="seg" id="bag">
+            <button type="button" data-v="1800" aria-pressed="true">要 +NT$1,800</button>
+            <button type="button" data-v="0" aria-pressed="false">只帶手提</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card bill">
+        <div class="line"><span>機票 ×2</span><span id="bAir"></span></div>
+        <div class="line"><span>住宿 3 晚</span><span id="bStay"></span></div>
+        <div class="line"><span>吃 4 天 ×2</span><span id="bFood"></span></div>
+        <div class="line"><span>日本境內交通 ×2</span><span id="bTrans"></span></div>
+        <div class="line"><span>台灣往返機場 ×2</span><span id="bTw"></span></div>
+        <div class="line"><span>雜支、eSIM ×2</span><span id="bMisc"></span></div>
+        <div class="line"><span>託運行李</span><span id="bBag"></span></div>
+        <div class="total"><span>兩人合計</span><b id="bTotal"></b></div>
+        <div class="per" id="bPer"></div>
+        <p style="font-size:.75rem;color:var(--ink-3);margin-top:.9rem;line-height:1.6">
+          不含購物與伴手禮。機票為 2026/8 實際查詢的虎航來回票價，會隨日期與艙等浮動。
+        </p>
+      </div>
+    </div>
+
+    <div class="sec-head" style="margin-top:2.5rem;margin-bottom:1.15rem">
+      <p class="eyebrow">省錢</p>
+      <h2 style="font-size:1.25rem;font-family:var(--body);font-weight:500">五件最有效的事</h2>
+    </div>
+    <div class="scroller">
+      <table>
+        <thead><tr><th>做法</th><th>細節</th><th>兩人可省</th></tr></thead>
+        <tbody>
+          <tr><td><strong>避開連假</strong></td><td>10/16 那週 vs 國慶或光復連假</td><td class="num" style="color:var(--cheap)">NT$10,000+</td></tr>
+          <tr><td><strong>住有廚房的民泊</strong></td><td>比同區飯店便宜，還省下宵夜與早餐外食</td><td class="num" style="color:var(--cheap)">NT$4,500</td></tr>
+          <tr><td><strong>超市半額時段採買</strong></td><td>19:00 後刺身、壽司打 3–5 折，每天省一餐</td><td class="num" style="color:var(--cheap)">NT$2,400</td></tr>
+          <tr><td><strong>買來回票，不要買兩張單程</strong></td><td>實查價差：來回 NT$8,949 vs 兩張單程 NT$12,700</td><td class="num" style="color:var(--cheap)">NT$7,502</td></tr>
+          <tr><td><strong>兩人共用一件託運行李</strong></td><td>訂票時加購最便宜，機場櫃檯最貴</td><td class="num" style="color:var(--cheap)">NT$1,800</td></tr>
+          <tr><td><strong>不買 JR PASS</strong></td><td>四天以市區為主，單程票逐次買比較划算</td><td class="num" style="color:var(--cheap)">NT$2,000+</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note" style="margin-top:1.15rem">
+      <span class="k">交通票券</span>
+      <div>地鐵單程 ¥260／一日券 ¥640（一天搭三趟以上才划算）。
+      FUKUOKA TOURIST CITY PASS 市內 ¥2,500、含太宰府 ¥2,800（外國旅客限定）。
+      太宰府建議買「太宰府散策きっぷ」，含來回車票與梅枝餅。本行程採<strong>單程票逐次買</strong>，最省。</div>
+    </div>
+  </div>
+</section>
+
+<section id="booking">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">線上預訂</p>
+      <h2>能先訂好的就先訂</h2>
+      <p>票券、接送、網卡先在平台買好，到現場直接掃 QR 進場，省下排隊與現金換匯的時間。以下連結會帶你到該項目的搜尋結果頁。</p>
+    </div>
+    <div class="scroller">
+      <table>
+        <thead><tr><th>項目</th><th>為什麼先訂</th><th>參考價</th><th>平台</th></tr></thead>
+        <tbody>
+          <tr><td><strong>日本 eSIM / 網卡</strong></td><td>落地就能用，不必在機場排隊辦卡</td><td class="num">NT$200–400</td>
+            <td><a href="https://www.klook.com/zh-TW/search/?query=日本eSIM" target="_blank" rel="noopener">Klook</a>　<a href="https://www.kkday.com/zh-tw/product/productlist?keyword=日本eSIM" target="_blank" rel="noopener">KKday</a></td></tr>
+          <tr><td><strong>福岡塔 展望門票</strong></td><td>線上票通常比現場便宜，免排隊</td><td class="num">約 ¥800</td>
+            <td><a href="https://www.klook.com/zh-TW/search/?query=福岡塔" target="_blank" rel="noopener">Klook</a></td></tr>
+          <tr><td><strong>太宰府・柳川一日遊</strong></td><td>不想自己轉車的話，含車資與導覽</td><td class="num">NT$1,500–2,500</td>
+            <td><a href="https://www.klook.com/zh-TW/search/?query=太宰府" target="_blank" rel="noopener">Klook</a>　<a href="https://www.kkday.com/zh-tw/product/productlist?keyword=太宰府" target="_blank" rel="noopener">KKday</a></td></tr>
+          <tr><td><strong>由布院・別府溫泉一日遊</strong></td><td>下一趟用得到，大眾運輸不好接</td><td class="num">NT$1,800–3,000</td>
+            <td><a href="https://www.klook.com/zh-TW/search/?query=由布院" target="_blank" rel="noopener">Klook</a></td></tr>
+          <tr><td><strong>糸島包車／一日遊</strong></td><td>沒有大眾運輸能好好玩，牡蠣小屋要開車</td><td class="num">NT$2,500–4,500</td>
+            <td><a href="https://www.klook.com/zh-TW/search/?query=糸島" target="_blank" rel="noopener">Klook</a></td></tr>
+          <tr><td><strong>福岡機場接送</strong></td><td>本行程用不到（地鐵 5 分鐘就到），列出供參考</td><td class="num">NT$600–900</td>
+            <td><a href="https://www.klook.com/zh-TW/search/?query=福岡機場接送" target="_blank" rel="noopener">Klook</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note" style="margin-top:1.15rem">
+      <span class="k">這趟其實不太需要平台</span>
+      <div>福岡的行程幾乎全是<strong>免費景點＋現場點餐</strong>：屋台、市場、神社、唐戶市場都不需要預訂。
+      真正值得先買的只有 <strong>eSIM</strong>。太宰府自己搭西鐵很簡單（¥420、25 分鐘），
+      買一日遊反而被綁行程。<strong>把錢留給海鮮就好。</strong></div>
+    </div>
+  </div>
+</section>
+
+<section id="pack">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">出發前</p>
+      <h2>打包清單</h2>
+      <p>十月福岡白天約 25°C、早晚 18°C，日夜溫差大。洋蔥式穿搭，薄外套一定要帶。勾選會自動記住。</p>
+    </div>
+    <div class="card pad">
+      <div class="checks" id="packlist">
+        <div class="checkgroup"><h4>證件與錢</h4><ul>
+          <li><label><input type="checkbox"><span>護照（效期 6 個月以上）</span></label></li>
+          <li><label><input type="checkbox"><span>電子機票、住宿訂單截圖（存離線）</span></label></li>
+          <li><label><input type="checkbox"><span>Visit Japan Web 入境與海關 QR</span></label></li>
+          <li><label><input type="checkbox"><span>日圓現金（屋台與市場多為現金）</span></label></li>
+          <li><label><input type="checkbox"><span>有海外回饋的信用卡</span></label></li>
+          <li><label><input type="checkbox"><span>台灣駕照＋日文譯本（租車才需要）</span></label></li>
+        </ul></div>
+        <div class="checkgroup"><h4>機上與補眠</h4><ul>
+          <li><label><input type="checkbox"><span>眼罩</span></label></li>
+          <li><label><input type="checkbox"><span>耳塞</span></label></li>
+          <li><label><input type="checkbox"><span>頸枕</span></label></li>
+          <li><label><input type="checkbox"><span>常備藥、腸胃藥</span></label></li>
+          <li><label><input type="checkbox"><span>行動電源（10,000mAh 以下可上機）</span></label></li>
+        </ul></div>
+        <div class="checkgroup"><h4>因為有廚房</h4><ul>
+          <li><label><input type="checkbox"><span>環保購物袋 2 個（日本袋子要錢）</span></label></li>
+          <li><label><input type="checkbox"><span>夾鏈袋（裝生鮮、剩菜）</span></label></li>
+          <li><label><input type="checkbox"><span>台灣帶的調味包、泡麵</span></label></li>
+          <li><label><input type="checkbox"><span>折疊餐具或環保筷</span></label></li>
+        </ul></div>
+        <div class="checkgroup"><h4>其他</h4><ul>
+          <li><label><input type="checkbox"><span>薄外套或防風外套</span></label></li>
+          <li><label><input type="checkbox"><span>好走的鞋（一天走 8–12 公里）</span></label></li>
+          <li><label><input type="checkbox"><span>折疊傘</span></label></li>
+          <li><label><input type="checkbox"><span>eSIM 或分享器</span></label></li>
+          <li><label><input type="checkbox"><span>離線地圖、Google 翻譯日文包</span></label></li>
+        </ul></div>
+      </div>
+      <button class="resetbtn" id="resetPack" type="button" style="margin-top:1.15rem">清除所有勾選</button>
+    </div>
+
+    <div class="sec-head" style="margin-top:2.5rem;margin-bottom:1.15rem">
+      <p class="eyebrow">現場用得到</p>
+      <h2 style="font-size:1.25rem;font-family:var(--body);font-weight:500">日文小抄</h2>
+    </div>
+    <div class="phrases">
+      <div class="ph"><div class="zh">一份兩個人分可以嗎</div><div class="jp">一つを二人で分けてもいいですか？</div><div class="rm">hitotsu wo futari de wakete mo ii desu ka</div></div>
+      <div class="ph"><div class="zh">請給少一點</div><div class="jp">少なめでお願いします</div><div class="rm">sukuname de onegai shimasu</div></div>
+      <div class="ph"><div class="zh">請給我這個</div><div class="jp">これください</div><div class="rm">kore kudasai</div></div>
+      <div class="ph"><div class="zh">多少錢？</div><div class="jp">おいくらですか？</div><div class="rm">o-ikura desu ka</div></div>
+      <div class="ph"><div class="zh">可以幫我加熱嗎</div><div class="jp">温めてください</div><div class="rm">atatamete kudasai</div></div>
+      <div class="ph"><div class="zh">外帶</div><div class="jp">テイクアウトで</div><div class="rm">teiku-auto de</div></div>
+      <div class="ph"><div class="zh">可以免稅嗎</div><div class="jp">免税できますか？</div><div class="rm">menzei dekimasu ka</div></div>
+      <div class="ph"><div class="zh">今天有什麼推薦的魚</div><div class="jp">今日のおすすめの魚は？</div><div class="rm">kyou no osusume no sakana wa</div></div>
+      <div class="ph"><div class="zh">半價標籤（超市找這個）</div><div class="jp">半額シール</div><div class="rm">hangaku shiiru</div></div>
+      <div class="ph"><div class="zh">結帳</div><div class="jp">お会計お願いします</div><div class="rm">o-kaikei onegai shimasu</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="next">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">下一趟</p>
+      <h2>這次沒排進去的，留著就好</h2>
+      <p>機票不貴的話，福岡可以來三四次。這次先走熟博多市區，下面三條是完全不同主題的路線。</p>
+    </div>
+    <div class="nexts">
+      <article class="card next">
+        <span class="n">02</span><span class="when">10 月下旬 – 3 月</span>
+        <h4>糸島自駕．海岸線一日</h4>
+        <p>從福岡市開車 40–50 分鐘。沒有大眾運輸能好好玩，這是駕照日文譯本最值得用的一次。</p>
+        <ul>
+          <li><a href="https://www.google.com/maps/search/?api=1&amp;query=桜井二見ヶ浦" target="_blank" rel="noopener">櫻井二見浦・夫婦岩</a>（夕陽）</li>
+          <li><a href="https://www.google.com/maps/search/?api=1&amp;query=PALM+BEACH糸島" target="_blank" rel="noopener">PALM BEACH</a> 等海景咖啡廳</li>
+          <li><a href="https://www.google.com/maps/search/?api=1&amp;query=志摩の四季" target="_blank" rel="noopener">志摩の四季</a> 直銷市場買現撈海鮮</li>
+          <li><a href="https://www.google.com/maps/search/?api=1&amp;query=岐志漁港牡蠣小屋" target="_blank" rel="noopener">牡蠣小屋</a>現烤（1kg 約 ¥1,300）</li>
+          <li><a href="https://www.google.com/maps/search/?api=1&amp;query=白糸の滝糸島" target="_blank" rel="noopener">白糸瀑布</a></li>
+        </ul>
+        <p style="font-size:.8125rem;color:var(--ink-3)">租車輕自動車一日約 ¥5,000–8,000，加油與過路費另計。需台灣駕照＋日文譯本＋護照。</p>
+      </article>
+      <article class="card next">
+        <span class="n">03</span><span class="when">11 月 – 2 月</span>
+        <h4>由布院・別府．溫泉兩天</h4>
+        <p>從博多搭特急「由布院之森」約 2 小時。天冷的時候來最值得。</p>
+        <ul>
+          <li><a href="https://www.google.com/maps/search/?api=1&amp;query=金鱗湖" target="_blank" rel="noopener">金鱗湖</a>與湯之坪街道</li>
+          <li><a href="https://www.google.com/maps/search/?api=1&amp;query=別府地獄めぐり" target="_blank" rel="noopener">別府地獄巡禮</a>、砂湯</li>
+          <li>一泊二食的溫泉旅館</li>
+          <li>回程順路小倉、門司港</li>
+        </ul>
+      </article>
+      <article class="card next">
+        <span class="n">04</span><span class="when">只有 2 月下旬與 10 月下旬</span>
+        <h4>光の道．一年兩次的夕陽</h4>
+        <p>宮地嶽神社 800 公尺的參道與落日連成一線。</p>
+        <ul>
+          <li><a href="https://www.google.com/maps/search/?api=1&amp;query=宮地嶽神社" target="_blank" rel="noopener">宮地嶽神社</a>「光の道」</li>
+          <li>順遊 <a href="https://www.google.com/maps/search/?api=1&amp;query=宗像大社" target="_blank" rel="noopener">宗像大社</a>（世界遺產）</li>
+          <li>福津海岸線</li>
+          <li>停車場下午三點就滿，要早到</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="cols">
+      <div>
+        <h4>行程設定</h4>
+        <p>兩人同行．兩人皆排班、不受連假限制．十月平日出發．預算優先．偏好海鮮、食量小、不吃到飽、不愛太甜、喜歡冰品與蛋塔．住宿需簡易廚房．以大眾運輸為主，備有駕照日文譯本可租車。</p>
+      </div>
+      <div>
+        <h4>價格說明</h4>
+        <p>金額為估算，用來抓預算而非報價。日圓以 ¥100 ≈ NT$21 換算。機票為 2026 年 8 月實際查詢之虎航來回票價，實際以航空公司與比價網站當日報價為準。</p>
+      </div>
+      <div>
+        <h4>訂票前再確認</h4>
+        <p>航班時刻與班號（航空公司官網）、唐戶市場「活きいき馬関街」營業日、宮地嶽神社「光の道」公告日期、糸島牡蠣小屋各店開季日、民泊入住時間與廚房設備。</p>
+      </div>
+    </div>
+    <p class="disclaim">
+      本頁為個人旅遊規劃，非商業旅行社行程，不涉及代訂與收費。地圖連結導向 Google 地圖搜尋結果，
+      實際店家位置與營業時間請以現場或官方公告為準。資料整理於 2026 年 8 月。
+    </p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var root = document.documentElement, saved = null;
+  try { saved = localStorage.getItem("fuk-theme"); } catch(e){}
+  if (saved) root.setAttribute("data-theme", saved);
+  document.getElementById("theme").addEventListener("click", function(){
+    var cur = root.getAttribute("data-theme");
+    var isDark = cur ? cur === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+    var next = isDark ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem("fuk-theme", next); } catch(e){}
+  });
+
+  var tabs = Array.prototype.slice.call(document.querySelectorAll(".daytab"));
+  tabs.forEach(function(tab){
+    tab.addEventListener("click", function(){
+      tabs.forEach(function(t){
+        var on = t === tab;
+        t.setAttribute("aria-selected", on ? "true" : "false");
+        document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
+      });
+    });
+  });
+
+  var chips = Array.prototype.slice.call(document.querySelectorAll(".chip"));
+  var eats  = Array.prototype.slice.call(document.querySelectorAll("#eatGrid .eat[data-tags]"));
+  chips.forEach(function(chip){
+    chip.addEventListener("click", function(){
+      var f = chip.getAttribute("data-filter");
+      chips.forEach(function(c){ c.setAttribute("aria-pressed", c === chip ? "true" : "false"); });
+      eats.forEach(function(card){
+        var tags = card.getAttribute("data-tags") || "";
+        card.hidden = !(f === "all" || tags.split(" ").indexOf(f) !== -1);
+      });
+    });
+  });
+
+  var state = { air:8949, stay:7000, rate:21, food:4300, d3:3800, bag:1800 };
+  var nt = function(n){ return "NT$" + Math.round(n).toLocaleString("en-US"); };
+
+  function segInit(id, key){
+    var box = document.getElementById(id);
+    Array.prototype.forEach.call(box.querySelectorAll("button"), function(b){
+      b.addEventListener("click", function(){
+        Array.prototype.forEach.call(box.querySelectorAll("button"), function(x){
+          x.setAttribute("aria-pressed", x === b ? "true" : "false");
+        });
+        state[key] = parseFloat(b.getAttribute("data-v"));
+        render();
+      });
+    });
+  }
+  segInit("food","food"); segInit("d3cost","d3"); segInit("bag","bag");
+  [["air","air"],["stay","stay"],["rate","rate"]].forEach(function(pair){
+    var el = document.getElementById(pair[0]);
+    el.addEventListener("input", function(){ state[pair[1]] = parseFloat(el.value); render(); });
+  });
+
+  function render(){
+    var r = state.rate / 100;
+    var air   = state.air * 2;
+    var stay  = state.stay * 3 * r;
+    var food  = state.food * 4 * 2 * r;
+    var trans = (520 + 1200 + 840 + state.d3) * 2 * r;
+    var tw    = 90 * 2 * 2;
+    var misc  = 500 * 2 * r + 300 * 2;
+    var bag   = state.bag;
+    var total = air + stay + food + trans + tw + misc + bag;
+
+    document.getElementById("airV").textContent  = nt(state.air);
+    document.getElementById("stayV").textContent = "¥" + state.stay.toLocaleString("en-US");
+    document.getElementById("rateV").textContent = "NT$" + state.rate.toFixed(1);
+    document.getElementById("bAir").textContent   = nt(air);
+    document.getElementById("bStay").textContent  = nt(stay);
+    document.getElementById("bFood").textContent  = nt(food);
+    document.getElementById("bTrans").textContent = nt(trans);
+    document.getElementById("bTw").textContent    = nt(tw);
+    document.getElementById("bMisc").textContent  = nt(misc);
+    document.getElementById("bBag").textContent   = bag ? nt(bag) : "—";
+    document.getElementById("bTotal").textContent = nt(total);
+    document.getElementById("bPer").textContent   = "每人約 " + nt(total / 2);
+    document.getElementById("heroTotal").textContent = Math.round(total).toLocaleString("en-US");
+    document.getElementById("heroPer").textContent   = Math.round(total/2).toLocaleString("en-US");
+  }
+  render();
+
+  var boxes = Array.prototype.slice.call(document.querySelectorAll("#packlist input"));
+  var KEY = "fuk-pack", stored = [];
+  try { stored = JSON.parse(localStorage.getItem(KEY) || "[]"); } catch(e){}
+  boxes.forEach(function(b,i){
+    b.checked = !!stored[i];
+    b.addEventListener("change", function(){
+      try { localStorage.setItem(KEY, JSON.stringify(boxes.map(function(x){ return x.checked; }))); } catch(e){}
+    });
+  });
+  document.getElementById("resetPack").addEventListener("click", function(){
+    boxes.forEach(function(b){ b.checked = false; });
+    try { localStorage.removeItem(KEY); } catch(e){}
+  });
+
+  var cv = document.getElementById("tide"), ctx = cv.getContext("2d");
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var t = 0, raf;
+  function size(){
+    var d = window.devicePixelRatio || 1;
+    cv.width = cv.offsetWidth * d; cv.height = cv.offsetHeight * d;
+    ctx.setTransform(d,0,0,d,0,0);
+  }
+  function stroke(){
+    var w = cv.offsetWidth, h = cv.offsetHeight;
+    ctx.clearRect(0,0,w,h);
+    ctx.strokeStyle = getComputedStyle(root).getPropertyValue("--sea").trim();
+    ctx.lineWidth = 1;
+    for (var k = 0; k < 7; k++){
+      ctx.globalAlpha = 0.05 + k * 0.022;
+      ctx.beginPath();
+      var base = h * (0.42 + k * 0.085);
+      for (var x = 0; x <= w; x += 6){
+        var y = base + Math.sin((x/190) + t + k*0.55) * (7 + k*2.2) + Math.sin((x/67) - t*0.7) * 2.4;
+        if (x === 0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+      }
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+  function loop(){ t += 0.006; stroke(); raf = requestAnimationFrame(loop); }
+  function boot(){ size(); stroke(); if (!reduce){ cancelAnimationFrame(raf); loop(); } }
+  window.addEventListener("resize", boot);
+  boot();
+})();
+</script>

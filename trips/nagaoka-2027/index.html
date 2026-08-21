@@ -1,0 +1,2288 @@
+<title>長岡花火遠征</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@500;600;700&display=swap">
+
+<style>
+/* ─────────────────────────────────────────────
+   長岡花火遠征 — 夜空 × 信濃川 × 三尺玉
+   ───────────────────────────────────────────── */
+
+:root{
+  /* 光：和紙般帶冷調的紙白 */
+  --ground:      #E7ECEF;
+  --surface:     #FBFCFD;
+  --surface-2:   #F1F5F7;
+  --ink:         #0F2130;
+  --ink-2:       #3D5566;
+  --ink-3:       #6B8395;
+  --line:        #C9D6DE;
+  --line-soft:   #DDE6EB;
+
+  --sea:         #2E5A8C;   /* 藍 — 信濃川夜色 */
+  --sea-soft:    #DEE8F4;
+  --lantern:     #C2761F;   /* 花火金 — 夜間／副色 */
+  --lantern-soft:#FBEBD4;
+
+  --cheap:       #2E7D5B;
+  --cheap-soft:  #DEEDE5;
+  --mid:         #9A6B22;
+  --mid-soft:    #F6EBD7;
+  --peak:        #A8473C;
+  --peak-soft:   #F7E1DD;
+
+  --sleep:       #7C6BA8;
+  --sleep-soft:  #E8E4F2;
+
+  --shadow:      0 1px 2px rgba(15,33,48,.05), 0 8px 24px -12px rgba(15,33,48,.18);
+  --shadow-lift: 0 2px 4px rgba(15,33,48,.06), 0 16px 40px -16px rgba(15,33,48,.28);
+
+  --display: "Noto Serif TC", "Songti TC", serif;
+  --body: "Noto Sans TC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --measure: 66ch;
+  --rail: 4.75rem;
+}
+
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:      #091620;
+    --surface:     #10222E;
+    --surface-2:   #162C3A;
+    --ink:         #E3ECF1;
+    --ink-2:       #A9C0CE;
+    --ink-3:       #7B96A7;
+    --line:        #274154;
+    --line-soft:   #1D3446;
+
+    --sea:         #7FB0E8;
+    --sea-soft:    #16304F;
+    --lantern:     #F0AE5E;
+    --lantern-soft:#402C13;
+
+    --cheap:       #6BC79A;
+    --cheap-soft:  #12352A;
+    --mid:         #D9AC5C;
+    --mid-soft:    #382B15;
+    --peak:        #E58C7E;
+    --peak-soft:   #3B211E;
+
+    --sleep:       #A99BD1;
+    --sleep-soft:  #241F35;
+
+    --shadow:      0 1px 2px rgba(0,0,0,.35), 0 8px 24px -12px rgba(0,0,0,.6);
+    --shadow-lift: 0 2px 4px rgba(0,0,0,.4), 0 16px 40px -16px rgba(0,0,0,.7);
+  }
+}
+
+:root[data-theme="dark"]{
+  --ground:#091620; --surface:#10222E; --surface-2:#162C3A;
+  --ink:#E3ECF1; --ink-2:#A9C0CE; --ink-3:#7B96A7;
+  --line:#274154; --line-soft:#1D3446;
+  --sea:#64C0C9; --sea-soft:#10353C; --lantern:#E5A164; --lantern-soft:#402C13;
+  --cheap:#6BC79A; --cheap-soft:#12352A; --mid:#D9AC5C; --mid-soft:#382B15;
+  --peak:#E58C7E; --peak-soft:#3B211E; --sleep:#A99BD1; --sleep-soft:#241F35;
+  --shadow:0 1px 2px rgba(0,0,0,.35), 0 8px 24px -12px rgba(0,0,0,.6);
+  --shadow-lift:0 2px 4px rgba(0,0,0,.4), 0 16px 40px -16px rgba(0,0,0,.7);
+}
+
+*, *::before, *::after{ box-sizing:border-box; }
+
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:var(--body);
+  font-weight:400;
+  font-size:16px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+h1,h2,h3,h4{ font-family:var(--display); font-weight:600; line-height:1.3; text-wrap:balance; margin:0; letter-spacing:.01em; }
+p{ margin:0; }
+ul,ol{ margin:0; padding:0; list-style:none; }
+a{ color:var(--sea); text-decoration:none; border-bottom:1px solid color-mix(in srgb, var(--sea) 35%, transparent); }
+a:hover{ border-bottom-color:var(--sea); }
+:focus-visible{ outline:2px solid var(--sea); outline-offset:3px; border-radius:2px; }
+
+.wrap{ width:min(1120px, calc(100% - 2.5rem)); margin-inline:auto; }
+.stack{ display:flex; flex-direction:column; }
+
+/* ── 標籤／眉標 ───────────────────────────── */
+.eyebrow{
+  font-family:var(--mono); font-size:.6875rem; font-weight:500;
+  letter-spacing:.18em; text-transform:uppercase; color:var(--ink-3);
+  display:flex; align-items:center; gap:.6rem;
+}
+.eyebrow::after{ content:""; flex:1; height:1px; background:var(--line); }
+
+.mono{ font-family:var(--mono); font-variant-numeric:tabular-nums; }
+
+/* ── 頂部導覽 ─────────────────────────────── */
+.topbar{
+  position:sticky; top:0; z-index:50;
+  background:color-mix(in srgb, var(--ground) 88%, transparent);
+  backdrop-filter:blur(14px) saturate(1.4);
+  border-bottom:1px solid var(--line-soft);
+}
+.topbar-inner{ display:flex; align-items:center; gap:1.25rem; height:3.5rem; }
+.brand{
+  font-family:var(--display); font-weight:700; font-size:1rem;
+  letter-spacing:.06em; border:0; color:var(--ink); white-space:nowrap;
+}
+.brand span{ color:var(--sea); }
+.navlinks{ display:flex; gap:.15rem; overflow-x:auto; scrollbar-width:none; flex:1; }
+.navlinks::-webkit-scrollbar{ display:none; }
+.navlinks a{
+  font-size:.8125rem; color:var(--ink-2); border:0; padding:.4rem .6rem;
+  border-radius:6px; white-space:nowrap; transition:background .15s, color .15s;
+}
+.navlinks a:hover{ background:var(--surface-2); color:var(--ink); }
+.themebtn{
+  flex:none; border:1px solid var(--line); background:var(--surface);
+  color:var(--ink-2); width:2rem; height:2rem; border-radius:50%;
+  cursor:pointer; font-size:.8rem; display:grid; place-items:center; padding:0;
+}
+.themebtn:hover{ border-color:var(--sea); color:var(--sea); }
+
+/* ── HERO ─────────────────────────────────── */
+.hero{ position:relative; padding:5rem 0 3.5rem; overflow:hidden; }
+.hero canvas{ position:absolute; inset:0; width:100%; height:100%; opacity:.5; pointer-events:none; }
+.hero-inner{ position:relative; }
+.hero h1{
+  font-size:clamp(2.6rem, 7.5vw, 4.75rem);
+  font-weight:700; letter-spacing:.02em; margin:.75rem 0 0;
+}
+.hero h1 em{ font-style:normal; color:var(--sea); }
+.hero-sub{
+  margin-top:1.25rem; max-width:var(--measure);
+  font-size:1.0625rem; color:var(--ink-2); font-weight:300;
+}
+.hero-meta{
+  margin-top:2.5rem; display:grid; gap:1px;
+  grid-template-columns:repeat(auto-fit, minmax(158px,1fr));
+  background:var(--line-soft); border:1px solid var(--line-soft); border-radius:10px; overflow:hidden;
+}
+.hero-meta div{ background:var(--surface); padding:1rem 1.15rem; }
+.hero-meta dt{ font-family:var(--mono); font-size:.625rem; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-3); }
+.hero-meta dd{ margin:.35rem 0 0; font-family:var(--mono); font-size:1.375rem; font-weight:500; font-variant-numeric:tabular-nums; }
+.hero-meta dd small{ font-size:.75rem; color:var(--ink-3); font-weight:400; margin-left:.2rem; }
+
+/* ── 區塊 ─────────────────────────────────── */
+section{ padding:3.5rem 0; scroll-margin-top:4rem; }
+.sec-head{ display:flex; flex-direction:column; gap:.65rem; margin-bottom:2rem; }
+.sec-head h2{ font-size:clamp(1.6rem, 3.6vw, 2.15rem); }
+.sec-head p{ max-width:var(--measure); color:var(--ink-2); font-weight:300; }
+
+.card{
+  background:var(--surface); border:1px solid var(--line-soft);
+  border-radius:12px; box-shadow:var(--shadow);
+}
+.pad{ padding:1.5rem; }
+
+/* ── 24h 作息帶 ───────────────────────────── */
+.clockstrip{ display:flex; flex-direction:column; gap:.9rem; }
+.clockrow{ display:grid; grid-template-columns:5.5rem 1fr; gap:.85rem; align-items:center; }
+.clockrow > span:first-child{ font-family:var(--mono); font-size:.75rem; color:var(--ink-2); text-align:right; }
+.band{
+  display:grid; grid-template-columns:repeat(24,1fr);
+  height:2rem; border-radius:5px; overflow:hidden;
+  border:1px solid var(--line-soft); background:var(--surface-2);
+}
+.band i{ display:block; font-style:normal; }
+.band i[data-k="work"]{ background:repeating-linear-gradient(45deg, var(--peak-soft), var(--peak-soft) 4px, transparent 4px, transparent 8px); box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--peak) 30%, transparent); }
+.band i[data-k="sleep"]{ background:var(--sleep-soft); box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--sleep) 28%, transparent); }
+.band i[data-k="go"]{ background:var(--sea-soft); box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--sea) 32%, transparent); }
+.band i[data-k="play"]{ background:color-mix(in srgb, var(--sea) 24%, transparent); }
+.band i[data-k="night"]{ background:color-mix(in srgb, var(--lantern) 30%, transparent); }
+.axis{ display:grid; grid-template-columns:repeat(24,1fr); font-family:var(--mono); font-size:.5625rem; color:var(--ink-3); }
+.axis b{ font-weight:400; }
+.legend{ display:flex; flex-wrap:wrap; gap:.5rem .95rem; margin-top:.4rem; }
+.legend span{ display:inline-flex; align-items:center; gap:.4rem; font-size:.75rem; color:var(--ink-2); }
+.legend span::before{ content:""; width:.85rem; height:.85rem; border-radius:3px; border:1px solid var(--line); }
+.legend .l-work::before{ background:var(--peak-soft); }
+.legend .l-sleep::before{ background:var(--sleep-soft); }
+.legend .l-go::before{ background:var(--sea-soft); }
+.legend .l-play::before{ background:color-mix(in srgb, var(--sea) 24%, transparent); }
+.legend .l-night::before{ background:color-mix(in srgb, var(--lantern) 30%, transparent); }
+
+/* ── 方案卡 ───────────────────────────────── */
+.plans{ display:grid; gap:1.15rem; grid-template-columns:repeat(auto-fit, minmax(290px,1fr)); }
+.plan{ position:relative; display:flex; flex-direction:column; overflow:hidden; }
+.plan-top{ padding:1.35rem 1.5rem 1.15rem; border-bottom:1px solid var(--line-soft); }
+.plan-tag{
+  font-family:var(--mono); font-size:.625rem; letter-spacing:.14em; text-transform:uppercase;
+  padding:.2rem .5rem; border-radius:4px; display:inline-block;
+}
+.t-peak{ background:var(--peak-soft); color:var(--peak); }
+.t-good{ background:var(--mid-soft); color:var(--mid); }
+.t-best{ background:var(--cheap-soft); color:var(--cheap); }
+.plan h3{ font-size:1.25rem; margin:.65rem 0 .2rem; }
+.plan-dates{ font-family:var(--mono); font-size:.8125rem; color:var(--ink-2); }
+.plan-price{ padding:1rem 1.5rem; display:flex; align-items:baseline; gap:.4rem; border-bottom:1px solid var(--line-soft); background:var(--surface-2); }
+.plan-price b{ font-family:var(--mono); font-size:1.6rem; font-weight:600; font-variant-numeric:tabular-nums; }
+.plan-price small{ font-size:.75rem; color:var(--ink-3); }
+.plan-body{ padding:1.25rem 1.5rem 1.5rem; display:flex; flex-direction:column; gap:.9rem; flex:1; }
+.plan.best{ border-color:color-mix(in srgb, var(--cheap) 45%, var(--line-soft)); box-shadow:var(--shadow-lift); }
+
+.flight{ display:flex; flex-direction:column; gap:.3rem; padding:.7rem .85rem; border-radius:8px; background:var(--surface-2); }
+.flight-h{ font-family:var(--mono); font-size:.6875rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); }
+.flight-t{ display:flex; align-items:center; gap:.55rem; font-family:var(--mono); font-variant-numeric:tabular-nums; }
+.flight-t b{ font-size:1.0625rem; font-weight:500; }
+.flight-t i{ flex:1; height:1px; background:var(--line); position:relative; }
+.flight-t i::after{ content:"›"; position:absolute; right:-2px; top:-.85rem; color:var(--ink-3); font-style:normal; }
+.flight-n{ font-size:.75rem; color:var(--ink-2); }
+.plan ul.why{ display:flex; flex-direction:column; gap:.45rem; }
+.plan ul.why li{ font-size:.875rem; color:var(--ink-2); padding-left:1.1rem; position:relative; line-height:1.6; }
+.plan ul.why li::before{ content:""; position:absolute; left:0; top:.62em; width:5px; height:5px; border-radius:50%; background:var(--sea); }
+.plan ul.why li.warn::before{ background:var(--peak); }
+
+/* ── 表格 ─────────────────────────────────── */
+.scroller{ overflow-x:auto; border:1px solid var(--line-soft); border-radius:10px; background:var(--surface); }
+table{ border-collapse:collapse; width:100%; min-width:640px; font-size:.875rem; }
+th,td{ padding:.7rem .9rem; text-align:left; border-bottom:1px solid var(--line-soft); vertical-align:top; }
+thead th{
+  font-family:var(--mono); font-size:.625rem; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--ink-3); font-weight:500; background:var(--surface-2); position:sticky; top:0;
+}
+tbody tr:last-child td{ border-bottom:0; }
+tbody tr:hover{ background:var(--surface-2); }
+td.num{ font-family:var(--mono); font-variant-numeric:tabular-nums; white-space:nowrap; }
+.pill{ display:inline-block; font-family:var(--mono); font-size:.6875rem; padding:.12rem .45rem; border-radius:4px; white-space:nowrap; }
+.pill.ok{ background:var(--cheap-soft); color:var(--cheap); }
+.pill.no{ background:var(--peak-soft); color:var(--peak); }
+.pill.mid{ background:var(--mid-soft); color:var(--mid); }
+.pill.sea{ background:var(--sea-soft); color:var(--sea); }
+
+/* ── 十月日曆 ─────────────────────────────── */
+.calwrap{ display:grid; gap:1.5rem; grid-template-columns:minmax(0,1fr); }
+@media (min-width:900px){ .calwrap{ grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr); } }
+.cal{ display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+.cal .dow{ font-family:var(--mono); font-size:.625rem; letter-spacing:.1em; color:var(--ink-3); text-align:center; padding-bottom:.3rem; }
+.day{
+  aspect-ratio:1; border-radius:7px; border:1px solid var(--line-soft);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.1rem;
+  font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:.9375rem;
+  background:var(--surface); position:relative;
+}
+.day.blank{ border:0; background:none; }
+.day.low{ background:var(--cheap-soft); border-color:color-mix(in srgb,var(--cheap) 25%,transparent); color:var(--cheap); }
+.day.mid{ background:var(--mid-soft); border-color:color-mix(in srgb,var(--mid) 25%,transparent); color:var(--mid); }
+.day.high{ background:var(--peak-soft); border-color:color-mix(in srgb,var(--peak) 25%,transparent); color:var(--peak); }
+.day em{ font-style:normal; font-size:.5rem; letter-spacing:.02em; opacity:.85; font-family:var(--body); }
+.day.pick{ box-shadow:0 0 0 2px var(--sea); border-color:var(--sea); }
+.day.pick::after{
+  content:"★"; position:absolute; top:-.35rem; right:-.2rem; font-size:.6rem; color:var(--sea);
+}
+.callegend{ display:flex; flex-wrap:wrap; gap:.5rem .9rem; margin-top:.9rem; }
+.callegend span{ display:inline-flex; align-items:center; gap:.4rem; font-size:.75rem; color:var(--ink-2); }
+.callegend span::before{ content:""; width:.85rem; height:.85rem; border-radius:3px; }
+.callegend .c-low::before{ background:var(--cheap-soft); box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--cheap) 30%,transparent); }
+.callegend .c-mid::before{ background:var(--mid-soft); box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--mid) 30%,transparent); }
+.callegend .c-high::before{ background:var(--peak-soft); box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--peak) 30%,transparent); }
+
+.windows{ display:flex; flex-direction:column; gap:.7rem; }
+.window{ display:grid; grid-template-columns:auto 1fr; gap:.9rem; padding:.85rem 1rem; border-radius:9px; border:1px solid var(--line-soft); background:var(--surface); align-items:start; }
+.window .rank{ font-family:var(--mono); font-size:.75rem; font-weight:600; padding:.15rem .45rem; border-radius:4px; margin-top:.15rem; }
+.window h4{ font-size:.9375rem; font-family:var(--body); font-weight:500; }
+.window p{ font-size:.8125rem; color:var(--ink-2); margin-top:.15rem; }
+.window.top{ border-color:color-mix(in srgb,var(--cheap) 40%,var(--line-soft)); background:linear-gradient(to right, var(--cheap-soft), var(--surface) 55%); }
+
+/* ── 行程時間軸 ───────────────────────────── */
+.daytabs{ display:flex; gap:.4rem; flex-wrap:wrap; margin-bottom:1.5rem; }
+.daytab{
+  font-family:var(--body); font-size:.875rem; padding:.5rem .95rem; border-radius:8px;
+  border:1px solid var(--line); background:var(--surface); color:var(--ink-2); cursor:pointer;
+  display:flex; flex-direction:column; align-items:flex-start; gap:.05rem; line-height:1.35;
+  transition:border-color .15s, background .15s, color .15s;
+}
+.daytab b{ font-family:var(--mono); font-size:.6875rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); font-weight:500; }
+.daytab:hover{ border-color:var(--sea); }
+.daytab[aria-selected="true"]{ background:var(--sea); border-color:var(--sea); color:#fff; }
+.daytab[aria-selected="true"] b{ color:rgba(255,255,255,.72); }
+
+.dayhead{
+  display:flex; flex-wrap:wrap; align-items:baseline; gap:.5rem 1rem;
+  padding:1.1rem 1.3rem; border-radius:11px; background:var(--surface-2);
+  border:1px solid var(--line-soft); margin-bottom:1.5rem;
+}
+.dayhead h3{ font-size:1.2rem; }
+.dayhead p{ font-size:.875rem; color:var(--ink-2); flex-basis:100%; font-weight:300; }
+
+.tl{ display:flex; flex-direction:column; }
+.ev{
+  display:grid; grid-template-columns:var(--rail) 1fr; gap:0 1.15rem;
+  position:relative; padding-bottom:1.15rem;
+}
+.ev::before{
+  content:""; position:absolute; left:calc(var(--rail) + .5rem); top:.55rem; bottom:-.35rem;
+  width:1px; background:var(--line);
+}
+.ev:last-child::before{ display:none; }
+.ev-time{
+  font-family:var(--mono); font-size:.8125rem; font-variant-numeric:tabular-nums;
+  color:var(--ink-2); text-align:right; padding-top:.15rem; position:relative;
+}
+.ev-time::after{
+  content:""; position:absolute; right:-1.42rem; top:.62rem;
+  width:9px; height:9px; border-radius:50%; background:var(--surface);
+  border:2px solid var(--sea);
+}
+.ev[data-k="rest"] .ev-time::after{ border-color:var(--sleep); }
+.ev[data-k="night"] .ev-time::after{ border-color:var(--lantern); }
+.ev[data-k="move"] .ev-time::after{ border-color:var(--line); background:var(--line); }
+.ev[data-k="opt"] .ev-time::after{ border-color:var(--ink-3); border-style:dashed; }
+.ev-body{ display:flex; flex-direction:column; gap:.4rem; padding-bottom:.15rem; }
+.ev-title{ display:flex; flex-wrap:wrap; align-items:center; gap:.5rem; }
+.ev-title h4{ font-size:1rem; font-family:var(--body); font-weight:500; }
+.ev-body p{ font-size:.875rem; color:var(--ink-2); max-width:var(--measure); font-weight:300; }
+.ev-cost{
+  font-family:var(--mono); font-size:.75rem; color:var(--ink-3);
+  display:flex; flex-wrap:wrap; gap:.4rem .9rem; margin-top:.1rem;
+}
+.ev-cost span{ display:inline-flex; align-items:center; gap:.3rem; }
+.ev-cost b{ color:var(--ink-2); font-weight:500; }
+.ev[data-k="rest"] .ev-body{ opacity:.82; }
+.ev[data-k="move"] .ev-title h4{ font-weight:400; color:var(--ink-2); font-size:.9375rem; }
+.ev[data-k="opt"]{ }
+.ev[data-k="opt"] .ev-body{ border-left:2px dashed var(--line); padding-left:.85rem; margin-left:-.85rem; }
+
+.tag{
+  font-family:var(--mono); font-size:.625rem; letter-spacing:.08em; padding:.1rem .42rem;
+  border-radius:4px; background:var(--surface-2); color:var(--ink-3); border:1px solid var(--line-soft);
+}
+.tag.sea{ background:var(--sea-soft); color:var(--sea); border-color:transparent; }
+.tag.lan{ background:var(--lantern-soft); color:var(--lantern); border-color:transparent; }
+.tag.free{ background:var(--cheap-soft); color:var(--cheap); border-color:transparent; }
+
+.swap{ display:inline-flex; border:1px solid var(--line); border-radius:8px; overflow:hidden; margin-bottom:1.15rem; }
+.swap button{
+  font-family:var(--body); font-size:.8125rem; padding:.42rem .85rem; border:0;
+  background:var(--surface); color:var(--ink-2); cursor:pointer;
+}
+.swap button + button{ border-left:1px solid var(--line); }
+.swap button[aria-pressed="true"]{ background:var(--sea); color:#fff; }
+
+/* ── 提示塊 ───────────────────────────────── */
+.note{
+  display:grid; grid-template-columns:auto 1fr; gap:.85rem;
+  padding:1rem 1.15rem; border-radius:10px; font-size:.875rem; line-height:1.65;
+  background:var(--sea-soft); color:var(--ink); border:1px solid color-mix(in srgb,var(--sea) 22%,transparent);
+}
+.note .k{ font-family:var(--mono); font-size:.625rem; letter-spacing:.12em; text-transform:uppercase; color:var(--sea); padding-top:.28rem; white-space:nowrap; }
+.note.warn{ background:var(--peak-soft); border-color:color-mix(in srgb,var(--peak) 22%,transparent); }
+.note.warn .k{ color:var(--peak); }
+.note.night{ background:var(--lantern-soft); border-color:color-mix(in srgb,var(--lantern) 25%,transparent); }
+.note.night .k{ color:var(--lantern); }
+
+/* ── 美食卡 ───────────────────────────────── */
+.filters{ display:flex; flex-wrap:wrap; gap:.4rem; margin-bottom:1.35rem; }
+.chip{
+  font-family:var(--body); font-size:.8125rem; padding:.35rem .8rem; border-radius:999px;
+  border:1px solid var(--line); background:var(--surface); color:var(--ink-2); cursor:pointer;
+}
+.chip[aria-pressed="true"]{ background:var(--ink); border-color:var(--ink); color:var(--ground); }
+.eats{ display:grid; gap:.85rem; grid-template-columns:repeat(auto-fill, minmax(268px,1fr)); }
+.eat{ padding:1.05rem 1.15rem; display:flex; flex-direction:column; gap:.45rem; }
+.eat h4{ font-size:.9375rem; font-family:var(--body); font-weight:500; }
+.eat .jp{ font-family:var(--mono); font-size:.6875rem; color:var(--ink-3); letter-spacing:.02em; }
+.eat p{ font-size:.8125rem; color:var(--ink-2); font-weight:300; }
+.eat .row{ display:flex; flex-wrap:wrap; gap:.35rem; margin-top:auto; padding-top:.5rem; align-items:center; }
+.eat .yen{ font-family:var(--mono); font-size:.8125rem; color:var(--ink); font-weight:500; margin-left:auto; }
+.eat[hidden]{ display:none; }
+
+/* ── 試算器 ───────────────────────────────── */
+.calc{ display:grid; gap:1.5rem; }
+@media (min-width:860px){ .calc{ grid-template-columns:minmax(0,1fr) 21rem; align-items:start; } }
+.controls{ display:flex; flex-direction:column; gap:1.15rem; }
+.ctl label{ display:flex; justify-content:space-between; align-items:baseline; font-size:.875rem; margin-bottom:.4rem; gap:1rem; }
+.ctl label b{ font-family:var(--mono); font-weight:500; color:var(--sea); font-variant-numeric:tabular-nums; }
+input[type="range"]{ width:100%; accent-color:var(--sea); height:1.5rem; }
+.seg{ display:flex; border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+.seg button{ flex:1; font-family:var(--body); font-size:.8125rem; padding:.45rem .3rem; border:0; background:var(--surface); color:var(--ink-2); cursor:pointer; }
+.seg button + button{ border-left:1px solid var(--line); }
+.seg button[aria-pressed="true"]{ background:var(--sea); color:#fff; }
+.bill{ position:sticky; top:4.5rem; padding:1.35rem 1.5rem; display:flex; flex-direction:column; gap:.15rem; }
+.bill .line{ display:flex; justify-content:space-between; gap:1rem; padding:.42rem 0; font-size:.875rem; border-bottom:1px dashed var(--line-soft); }
+.bill .line span:first-child{ color:var(--ink-2); }
+.bill .line span:last-child{ font-family:var(--mono); font-variant-numeric:tabular-nums; }
+.bill .total{ display:flex; justify-content:space-between; align-items:baseline; margin-top:.9rem; padding-top:.9rem; border-top:2px solid var(--ink); gap:1rem; }
+.bill .total b{ font-family:var(--mono); font-size:1.75rem; font-weight:600; font-variant-numeric:tabular-nums; }
+.bill .per{ font-family:var(--mono); font-size:.75rem; color:var(--ink-3); text-align:right; margin-top:.4rem; }
+
+/* ── 清單 ─────────────────────────────────── */
+.checks{ display:grid; gap:1.15rem; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); }
+.checkgroup h4{ font-size:.875rem; font-family:var(--mono); font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); margin-bottom:.7rem; }
+.checkgroup li{ margin-bottom:.1rem; }
+.checkgroup label{ display:flex; gap:.6rem; align-items:flex-start; font-size:.875rem; cursor:pointer; padding:.28rem .35rem; border-radius:6px; }
+.checkgroup label:hover{ background:var(--surface-2); }
+.checkgroup input{ accent-color:var(--sea); margin-top:.34rem; flex:none; width:.95rem; height:.95rem; }
+.checkgroup input:checked + span{ text-decoration:line-through; color:var(--ink-3); }
+.resetbtn{ font-family:var(--body); font-size:.75rem; background:none; border:1px solid var(--line); color:var(--ink-3); padding:.3rem .7rem; border-radius:6px; cursor:pointer; }
+.resetbtn:hover{ color:var(--peak); border-color:var(--peak); }
+
+/* ── 下次再來 ─────────────────────────────── */
+.nexts{ display:grid; gap:1.15rem; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); }
+.next{ padding:1.35rem 1.5rem; display:flex; flex-direction:column; gap:.7rem; position:relative; overflow:hidden; }
+.next .n{ font-family:var(--mono); font-size:2.75rem; font-weight:600; line-height:1; color:var(--line); position:absolute; top:.6rem; right:1rem; }
+.next h4{ font-size:1.0625rem; }
+.next p{ font-size:.875rem; color:var(--ink-2); font-weight:300; }
+.next ul{ display:flex; flex-direction:column; gap:.3rem; }
+.next li{ font-size:.8125rem; color:var(--ink-2); padding-left:.95rem; position:relative; }
+.next li::before{ content:"—"; position:absolute; left:0; color:var(--ink-3); }
+.next .when{ font-family:var(--mono); font-size:.6875rem; letter-spacing:.1em; text-transform:uppercase; color:var(--sea); }
+
+/* ── 日文小抄 ─────────────────────────────── */
+.phrases{ display:grid; gap:.7rem; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); }
+.ph{ padding:.85rem 1rem; border-radius:9px; background:var(--surface); border:1px solid var(--line-soft); }
+.ph .zh{ font-size:.8125rem; color:var(--ink-3); }
+.ph .jp{ font-size:.9375rem; margin-top:.15rem; }
+.ph .rm{ font-family:var(--mono); font-size:.6875rem; color:var(--sea); margin-top:.2rem; letter-spacing:.02em; }
+
+/* ── 頁尾 ─────────────────────────────────── */
+footer{ border-top:1px solid var(--line-soft); padding:2.5rem 0 3.5rem; margin-top:1.5rem; }
+footer .cols{ display:grid; gap:1.5rem; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
+footer h4{ font-family:var(--mono); font-size:.625rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); margin-bottom:.6rem; }
+footer li, footer p{ font-size:.8125rem; color:var(--ink-2); line-height:1.7; }
+footer a{ font-size:.8125rem; }
+.disclaim{ margin-top:2rem; padding-top:1.25rem; border-top:1px solid var(--line-soft); font-size:.75rem; color:var(--ink-3); max-width:var(--measure); }
+
+@media (max-width:680px){
+  :root{ --rail:3.6rem; }
+  .hero{ padding:3.25rem 0 2.5rem; }
+  .ev{ gap:0 .9rem; }
+  .ev::before{ left:calc(var(--rail) + .42rem); }
+  .ev-time::after{ right:-1.18rem; }
+  .bill{ position:static; }
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
+}
+
+@media print{
+  .topbar, .themebtn, .filters, .swap, .daytabs, .resetbtn, .hero canvas{ display:none !important; }
+  body{ background:#fff; color:#000; }
+  section{ padding:1rem 0; break-inside:avoid; }
+  .tabpanel[hidden]{ display:block !important; }
+}
+
+/* ── Google 地圖連結 ──────────────────────── */
+.mapl{
+  display:inline-flex; align-items:center; gap:.22rem;
+  font-family:var(--mono); font-size:.625rem; letter-spacing:.06em;
+  padding:.12rem .42rem .12rem .3rem; border-radius:4px;
+  background:var(--sea-soft); color:var(--sea); border:0;
+  white-space:nowrap; transition:background .15s;
+}
+.mapl::before{ content:"◉"; font-size:.6rem; }
+.mapl:hover{ background:color-mix(in srgb, var(--sea) 22%, transparent); border:0; }
+
+/* ── 四日總覽 ─────────────────────────────── */
+.overview{ display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft);
+  border-radius:12px; overflow:hidden; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); }
+.ovday{ background:var(--surface); padding:1.35rem 1.4rem; display:flex; flex-direction:column; gap:.55rem; }
+.ovday .d{ font-family:var(--mono); font-size:.625rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); }
+.ovday h4{ font-size:1.0625rem; }
+.ovday .hl{ font-size:.8125rem; color:var(--sea); font-weight:500; }
+.ovday ul{ display:flex; flex-direction:column; gap:.25rem; margin-top:.15rem; }
+.ovday li{ font-size:.8125rem; color:var(--ink-2); padding-left:.9rem; position:relative; line-height:1.55; }
+.ovday li::before{ content:""; position:absolute; left:0; top:.6em; width:4px; height:4px; border-radius:50%; background:var(--line); }
+.ovday .cost{ font-family:var(--mono); font-size:.75rem; color:var(--ink-3); margin-top:auto; padding-top:.6rem; border-top:1px dashed var(--line-soft); }
+
+/* ── 大數字條 ─────────────────────────────── */
+.bigrow{ display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft);
+  border-radius:11px; overflow:hidden; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); }
+.bigrow div{ background:var(--surface); padding:1.15rem 1.25rem; }
+.bigrow dt{ font-family:var(--mono); font-size:.625rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); }
+.bigrow dd{ margin:.3rem 0 0; font-family:var(--mono); font-size:1.25rem; font-weight:500; font-variant-numeric:tabular-nums; }
+.bigrow dd small{ font-size:.7rem; color:var(--ink-3); font-weight:400; margin-left:.15rem; }
+
+/* ── 倒數時間軸 ─────────────────────────────── */
+.roadmap{ display:flex; flex-direction:column; gap:0; }
+.rm{ display:grid; grid-template-columns:8.5rem 1fr; gap:1.25rem; padding:1.15rem 0; border-top:1px solid var(--line-soft); }
+.rm:first-child{ border-top:0; }
+.rm-when{ font-family:var(--mono); font-size:.8125rem; color:var(--sea); font-weight:500; line-height:1.5; }
+.rm-when em{ display:block; font-style:normal; font-size:.625rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); margin-top:.15rem; }
+.rm-body h4{ font-size:1rem; margin-bottom:.3rem; }
+.rm-body p{ font-size:.875rem; color:var(--ink-2); }
+.rm.now{ background:var(--sea-soft); margin-inline:-1rem; padding-inline:1rem; border-radius:8px; border-top-color:transparent; }
+.rm.crit .rm-when{ color:var(--peak); }
+
+/* ── 席種卡 ─────────────────────────────────── */
+.seats{ display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft); border-radius:12px; overflow:hidden; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
+.seat{ background:var(--surface); padding:1.35rem 1.4rem; display:flex; flex-direction:column; gap:.4rem; }
+.seat.pickd{ background:var(--sea-soft); }
+.seat .venue{ font-family:var(--mono); font-size:.625rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); }
+.seat h4{ font-size:1.0625rem; }
+.seat .price{ font-family:var(--mono); font-size:1.5rem; font-weight:500; font-variant-numeric:tabular-nums; }
+.seat .per{ font-family:var(--mono); font-size:.8125rem; color:var(--sea); font-weight:500; }
+.seat p{ font-size:.8125rem; color:var(--ink-2); margin-top:.2rem; }
+
+/* ── 對照條 ─────────────────────────────────── */
+.versus{ display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft); border-radius:12px; overflow:hidden; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); }
+.vs{ background:var(--surface); padding:1.25rem 1.35rem; }
+.vs.win{ background:var(--cheap-soft); }
+.vs .lbl{ font-family:var(--mono); font-size:.625rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); }
+.vs .big{ font-family:var(--mono); font-size:1.5rem; font-weight:500; margin:.3rem 0 .15rem; font-variant-numeric:tabular-nums; }
+.vs .sub{ font-size:.8125rem; color:var(--ink-2); }
+
+/* ── 路線切換 ─────────────────────────────── */
+.routeswap{ display:flex; gap:.4rem; flex-wrap:wrap; margin-bottom:1.35rem; }
+.routeswap button{
+  font-family:var(--body); font-size:.8125rem; padding:.5rem .9rem; border-radius:8px;
+  border:1px solid var(--line); background:var(--surface); color:var(--ink-2); cursor:pointer;
+  display:flex; flex-direction:column; align-items:flex-start; gap:.05rem; line-height:1.35;
+}
+.routeswap button b{ font-family:var(--mono); font-size:.625rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); font-weight:500; }
+.routeswap button:hover{ border-color:var(--lantern); }
+.routeswap button[aria-pressed="true"]{ background:var(--lantern); border-color:var(--lantern); color:#fff; }
+.routeswap button[aria-pressed="true"] b{ color:rgba(255,255,255,.75); }
+[data-routepanel][hidden]{ display:none; }
+.optnote{
+  display:flex; gap:.6rem; align-items:baseline; padding:.7rem .95rem; border-radius:8px;
+  background:var(--surface-2); border:1px dashed var(--line); font-size:.8125rem; color:var(--ink-2);
+  margin-bottom:1.15rem;
+}
+.optnote b{ font-family:var(--mono); font-size:.625rem; letter-spacing:.12em; text-transform:uppercase; color:var(--lantern); white-space:nowrap; }
+
+/* ── 圖片版位 ─────────────────────────────── */
+.figure{
+  margin:0; border-radius:12px; overflow:hidden; position:relative;
+  border:1px solid var(--line-soft); background:var(--surface-2); box-shadow:var(--shadow);
+}
+.figure > svg, .figure > img{ display:block; width:100%; height:auto; }
+.figure > img{ object-fit:cover; aspect-ratio:20/11; }
+.figbadge{
+  position:absolute; top:.55rem; right:.55rem; z-index:2;
+  font-family:var(--mono); font-size:.5625rem; letter-spacing:.1em; text-transform:uppercase;
+  padding:.15rem .45rem; border-radius:4px;
+  background:color-mix(in srgb, var(--surface) 82%, transparent);
+  color:var(--ink-3); border:1px solid var(--line-soft); backdrop-filter:blur(6px);
+}
+.figcap{
+  padding:.7rem .9rem; font-size:.75rem; line-height:1.6; color:var(--ink-2);
+  background:var(--surface); border-top:1px solid var(--line-soft);
+}
+.figcap b{ color:var(--ink); font-weight:500; }
+.figcap em{ font-style:normal; font-family:var(--mono); font-size:.6875rem; color:var(--sea); }
+.photogrid{ display:grid; gap:.9rem; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); margin:1.25rem 0; }
+.ev-body .figure{ margin-top:.6rem; max-width:min(100%, 34rem); }
+.hero-fig{ margin-top:2rem; }
+</style>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a href="#top" class="brand">長岡<span>花火</span>遠征</a>
+    <nav class="navlinks">
+      <a href="#overview">總覽</a>
+      <a href="#ticket">搶票與備案</a>
+      <a href="#timeline">倒數時程</a>
+      <a href="#car">包車</a>
+      <a href="#stay">住宿</a>
+      <a href="#air">機票</a>
+      <a href="#plan">每日行程</a>
+      <a href="#hanabi">花火作戰</a>
+      <a href="#eat">必吃</a>
+      <a href="#money">費用</a>
+      <a href="#booking">線上預訂</a>
+      <a href="#pack">出發前</a>
+    </nav>
+    <button class="themebtn" id="theme" type="button" aria-label="切換深淺色">◐</button>
+  </div>
+</header>
+
+<main id="top">
+
+<div class="hero">
+  <canvas id="tide" aria-hidden="true"></canvas>
+  <div class="wrap hero-inner">
+    <p class="eyebrow">長岡花火 · 六人 · 四天三夜 · 2027/8/1 – 8/4</p>
+    <h1>正三尺玉升空六百公尺，<br>然後<em>鳳凰橫過兩公里</em>。</h1>
+    <p class="hero-sub">
+      日本三大花火之一，一晚兩萬發、兩天百萬人。六個人剛好坐滿一台 Alphard，
+      也剛好是一席「マス席」的單位。<strong>抽到票就進會場，抽不到就上高台</strong>——
+      有包車，兩種都成立，而且散場時不用跟人擠車站。
+    </p>
+    <dl class="hero-meta">
+      <div><dt>花火日</dt><dd>8/2<small> 一</small></dd></div>
+      <div><dt>人數</dt><dd>6<small>人．3 對</small></dd></div>
+      <div><dt>天數</dt><dd>4<small>天</small>3<small>夜</small></dd></div>
+      <div><dt>每人總計</dt><dd>NT$<span id="heroPer">26,497</span></dd></div>
+      <div><dt>包車分攤</dt><dd>¥15,000<small>／人</small></dd></div>
+    </dl>
+    <div class="hero-fig"><figure class="figure" data-slot="ngk-hero"><span class="figbadge">示意圖 · 待換實拍</span><svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="長岡花火正三尺玉"><rect width="400" height="220" fill="var(--surface-2)"/>
+<rect width="400" height="220" fill="var(--ink)" opacity=".14"/>
+<g stroke="var(--lantern)" stroke-width="1.2" opacity=".75" fill="none"><path d="M220.7 88.0 L274.0 88.0 M220.5 91.2 L273.1 99.6 M219.7 94.4 L270.4 110.9 M218.5 97.4 L265.9 121.6 M216.8 100.2 L259.9 131.5 M214.7 102.7 L252.3 140.3 M212.2 104.8 L243.5 147.9 M209.4 106.5 L233.6 153.9 M206.4 107.7 L222.9 158.4 M203.2 108.5 L211.6 161.1 M200.0 108.7 L200.0 162.0 M196.8 108.5 L188.4 161.1 M193.6 107.7 L177.1 158.4 M190.6 106.5 L166.4 153.9 M187.8 104.8 L156.5 147.9 M185.3 102.7 L147.7 140.3 M183.2 100.2 L140.1 131.5 M181.5 97.4 L134.1 121.6 M180.3 94.4 L129.6 110.9 M179.5 91.2 L126.9 99.6 M179.3 88.0 L126.0 88.0 M179.5 84.8 L126.9 76.4 M180.3 81.6 L129.6 65.1 M181.5 78.6 L134.1 54.4 M183.2 75.8 L140.1 44.5 M185.3 73.3 L147.7 35.7 M187.8 71.2 L156.5 28.1 M190.6 69.5 L166.4 22.1 M193.6 68.3 L177.1 17.6 M196.8 67.5 L188.4 14.9 M200.0 67.3 L200.0 14.0 M203.2 67.5 L211.6 14.9 M206.4 68.3 L222.9 17.6 M209.4 69.5 L233.6 22.1 M212.2 71.2 L243.5 28.1 M214.7 73.3 L252.3 35.7 M216.8 75.8 L259.9 44.5 M218.5 78.6 L265.9 54.4 M219.7 81.6 L270.4 65.1 M220.5 84.8 L273.1 76.4"/></g>
+<g stroke="var(--peak)" stroke-width="1.2" opacity=".5" fill="none"><path d="M214.0 89.1 L249.8 92.0 M213.6 91.3 L248.6 99.7 M212.9 93.4 L246.2 107.2 M211.9 95.3 L242.6 114.2 M210.6 97.1 L238.0 120.5 M209.1 98.7 L232.4 126.1 M207.3 99.9 L226.1 130.7 M205.3 100.9 L219.1 134.2 M203.2 101.6 L211.6 136.6 M201.1 102.0 L203.9 137.9 M198.9 102.0 L196.0 137.8 M196.7 101.6 L188.3 136.6 M194.6 100.9 L180.8 134.2 M192.7 99.9 L173.8 130.6 M190.9 98.6 L167.5 126.0 M189.3 97.1 L161.9 120.4 M188.1 95.3 L157.3 114.1 M187.1 93.3 L153.8 107.1 M186.4 91.2 L151.4 99.6 M186.0 89.1 L150.1 91.9 M186.0 86.9 L150.2 84.0 M186.4 84.7 L151.4 76.3 M187.1 82.6 L153.8 68.8 M188.1 80.7 L157.4 61.8 M189.4 78.9 L162.0 55.5 M190.9 77.3 L167.6 49.9 M192.7 76.1 L173.9 45.3 M194.7 75.1 L180.9 41.8 M196.8 74.4 L188.4 39.4 M198.9 74.0 L196.1 38.1 M201.1 74.0 L204.0 38.2 M203.3 74.4 L211.7 39.4 M205.4 75.1 L219.2 41.8 M207.3 76.1 L226.2 45.4 M209.1 77.4 L232.5 50.0 M210.7 78.9 L238.1 55.6 M211.9 80.7 L242.7 61.9 M212.9 82.7 L246.2 68.9 M213.6 84.8 L248.6 76.4 M214.0 86.9 L249.9 84.1"/></g>
+<circle cx="200" cy="88" r="5" fill="var(--lantern)" opacity=".9"/>
+<g stroke="var(--sea)" stroke-width="1.2" opacity=".45" fill="none"><path d="M101.1 62.8 L124.5 70.0 M100.2 64.9 L121.1 77.5 M98.7 66.7 L116.1 84.0 M96.9 68.1 L109.6 89.1 M94.9 69.1 L102.2 92.4 M92.6 69.5 L94.1 93.9 M90.3 69.4 L85.9 93.5 M88.1 68.7 L78.1 91.0 M86.1 67.5 L71.1 86.8 M84.5 65.9 L65.3 81.0 M83.3 63.9 L61.0 74.0 M82.6 61.7 L58.6 66.2 M82.5 59.4 L58.1 58.0 M82.9 57.2 L59.5 50.0 M83.8 55.1 L62.9 42.5 M85.3 53.3 L67.9 36.0 M87.1 51.9 L74.4 30.9 M89.1 50.9 L81.8 27.6 M91.4 50.5 L89.9 26.1 M93.7 50.6 L98.1 26.5 M95.9 51.3 L105.9 29.0 M97.9 52.5 L112.9 33.2 M99.5 54.1 L118.7 39.0 M100.7 56.1 L123.0 46.0 M101.4 58.3 L125.4 53.8 M101.5 60.6 L125.9 62.0"/></g>
+<g stroke="var(--peak)" stroke-width="1.2" opacity=".4" fill="none"><path d="M319.4 70.0 L338.3 80.4 M318.1 71.8 L333.7 86.7 M316.4 73.2 L327.6 91.6 M314.4 74.1 L320.4 94.8 M312.2 74.4 L312.7 96.0 M310.0 74.2 L304.9 95.2 M308.0 73.4 L297.6 92.3 M306.2 72.1 L291.3 87.7 M304.8 70.4 L286.4 81.6 M303.9 68.4 L283.2 74.4 M303.6 66.2 L282.0 66.7 M303.8 64.0 L282.8 58.9 M304.6 62.0 L285.7 51.6 M305.9 60.2 L290.3 45.3 M307.6 58.8 L296.4 40.4 M309.6 57.9 L303.6 37.2 M311.8 57.6 L311.3 36.0 M314.0 57.8 L319.1 36.8 M316.0 58.6 L326.4 39.7 M317.8 59.9 L332.7 44.3 M319.2 61.6 L337.6 50.4 M320.1 63.6 L340.8 57.6 M320.4 65.8 L342.0 65.3 M320.2 68.0 L341.2 73.1"/></g>
+<path d="M0 158h400v62H0z" fill="var(--sea)" opacity=".18"/>
+<g stroke="var(--lantern)" stroke-width="1" fill="none" opacity=".2">
+<path d="M0 172q50 6 100 0t100 0 100 0 100 0"/><path d="M0 192q50-6 100 0t100 0 100 0 100 0"/></g>
+<g opacity=".3" fill="var(--ink)"><rect x="0" y="146" width="400" height="14"/></g>
+<g opacity=".45" fill="var(--lantern)"><ellipse cx="200" cy="180" rx="9" ry="24"/></g>
+</svg><figcaption class="figcap"><b>正三尺玉</b>　直徑 90cm、重約 300kg，升空約 600 公尺、開花直徑約 650 公尺。<em>Day 2 · 19:20–21:10</em></figcaption></figure></div>
+  </div>
+</div>
+
+<section id="overview">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">行程總覽</p>
+      <h2>一天給花火，一天給補眠</h2>
+      <p>花火那天會從早上八點耗到隔天凌晨三點——這是無法壓縮的。所以隔天整個上午排空，不安排任何要早起的事。</p>
+    </div>
+
+    <div class="overview">
+      <div class="ovday">
+        <span class="d">Day 1 · 8/1 日</span>
+        <h4>抵達．上野</h4>
+        <span class="hl">主場：阿美橫丁</span>
+        <ul>
+          <li>早班機抵成田／羽田</li>
+          <li>京成 Access 特急進上野</li>
+          <li>六人整戶 Airbnb 入住</li>
+          <li>阿美橫丁採買隔天的糧食與飲料</li>
+        </ul>
+        <span class="cost">當日約 ¥6,000／人</span>
+      </div>
+      <div class="ovday" style="background:var(--lantern-soft)">
+        <span class="d">Day 2 · 8/2 一</span>
+        <h4>長岡花火</h4>
+        <span class="hl">主場：信濃川河川敷</span>
+        <ul>
+          <li>08:00 上野出發，包車直達</li>
+          <li>午餐 青島食堂．生薑醬油拉麵</li>
+          <li>19:20–21:10 正三尺玉、鳳凰</li>
+          <li>深夜回東京，約 01:00–02:00 到</li>
+        </ul>
+        <span class="cost">當日約 ¥22,000／人</span>
+      </div>
+      <div class="ovday">
+        <span class="d">Day 3 · 8/3 二</span>
+        <h4>拍照．夜景</h4>
+        <span class="hl">三條路線當天選</span>
+        <ul>
+          <li>上午睡到自然醒</li>
+          <li>A 谷根千．根津鳥居．晴空塔</li>
+          <li>B 明治神宮．表參道．澀谷天空</li>
+          <li>C teamLab．台場．彩虹大橋</li>
+        </ul>
+        <span class="cost">當日約 ¥7,000／人</span>
+      </div>
+      <div class="ovday">
+        <span class="d">Day 4 · 8/4 三</span>
+        <h4>最後半天</h4>
+        <span class="hl">兩條路線當天選</span>
+        <ul>
+          <li>A 築地海鮮．濱離宮．東京車站</li>
+          <li>B 不忍池蓮花．舊岩崎邸．阿美橫丁</li>
+          <li>13:40 取行李前往機場</li>
+          <li>當晚回到台灣</li>
+        </ul>
+        <span class="cost">當日約 ¥5,000／人</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="ticket">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">搶票與備案</p>
+      <h2>抽到票是加分，抽不到照樣看得到</h2>
+      <p>
+        河川敷的<strong>有料観覧席區域全部要票</strong>，沒票不能進，也不賣現場票。
+        但長岡花火的正三尺玉升空約 600 公尺、開花直徑約 650 公尺，
+        <strong>周邊高台與河岸看得很清楚</strong>——差別只在距離、角度，還有那份「地面震動」的臨場感。
+      </p>
+    </div>
+
+    <figure class="figure" data-slot="ngk-phoenix"><span class="figbadge">示意圖 · 待換實拍</span><svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="復興祈願花火フェニックス"><rect width="400" height="220" fill="var(--surface-2)"/>
+<rect width="400" height="220" fill="var(--ink)" opacity=".14"/>
+<g stroke="var(--lantern)" stroke-width="1.1" fill="none" opacity=".55">
+<path d="M6 96q28-52 56 0M62 100q28-56 56 0M118 96q28-52 56 0M174 98q28-56 56 0M230 96q28-52 56 0M286 100q28-56 56 0M342 96q28-50 52 0"/></g>
+<g stroke="var(--peak)" stroke-width="1" fill="none" opacity=".35">
+<path d="M6 112q28-44 56 0M62 116q28-48 56 0M118 112q28-44 56 0M174 114q28-48 56 0M230 112q28-44 56 0M286 116q28-48 56 0M342 112q28-42 52 0"/></g>
+<g fill="var(--lantern)" opacity=".5">
+<circle cx="34" cy="70" r="2.5"/><circle cx="90" cy="66" r="2.5"/><circle cx="146" cy="70" r="2.5"/>
+<circle cx="202" cy="68" r="2.5"/><circle cx="258" cy="70" r="2.5"/><circle cx="314" cy="66" r="2.5"/><circle cx="368" cy="70" r="2.5"/></g>
+<path d="M0 150h400v70H0z" fill="var(--sea)" opacity=".16"/>
+<g stroke="var(--lantern)" stroke-width="1" fill="none" opacity=".16">
+<path d="M0 168q50 6 100 0t100 0 100 0 100 0"/><path d="M0 190q50-6 100 0t100 0 100 0 100 0"/></g>
+<text x="200" y="212" text-anchor="middle" font-size="9" font-family="var(--mono)" fill="var(--ink-3)" opacity=".7">約 2km 幅</text>
+</svg><figcaption class="figcap"><b>復興祈願花火フェニックス</b>　紀念 2004 年中越地震復興，橫向展開約兩公里寬，配樂平原綾香〈Jupiter〉。<em>長岡花火的靈魂</em></figcaption></figure>
+    <div class="versus" style="margin-bottom:1.75rem">
+      <div class="vs win">
+        <span class="lbl">方案 A．抽到票</span>
+        <div class="big">¥5,333<small style="font-size:.7rem;color:var(--ink-3)">／人</small></div>
+        <p class="sub">A 会場マス席 ¥32,000 ÷ 6。正對鳳凰、聽得到炸裂聲、感覺得到地面震動。
+        代價是散場時要從河川敷走出來。</p>
+      </div>
+      <div class="vs">
+        <span class="lbl">方案 B．高台穴場</span>
+        <div class="big">¥0</div>
+        <p class="sub">免費。視野遠但完整，看得到整條鳳凰橫過天空。
+        有包車直接開上去，散場時直接上車走人，反而比會場快。</p>
+      </div>
+      <div class="vs">
+        <span class="lbl">兩者差距</span>
+        <div class="big">距離</div>
+        <p class="sub">節目一模一樣，正三尺玉與鳳凰兩邊都看得到。
+        會場內多的是震撼度與煙火在頭頂展開的壓迫感。</p>
+      </div>
+    </div>
+
+    <h3 style="font-size:1.15rem;margin-bottom:.85rem">席種與價格（以 2026 年一般販售為準，2027 應相近）</h3>
+    <div class="seats" style="margin-bottom:1.15rem">
+      <div class="seat pickd">
+        <span class="venue">A 会場・右岸（長岡站側）</span>
+        <h4>マス席（6 人）</h4>
+        <div class="price">¥32,000</div>
+        <div class="per">÷ 6 人 = ¥5,333／人</div>
+        <p><strong>六人團的首選。</strong>正好一整席不用拆、不用跟陌生人湊，中籤後六個人坐在一起。
+        位置正對鳳凰施放方向。</p>
+      </div>
+      <div class="seat pickd">
+        <span class="venue">B 会場・左岸（長岡 IC 側）</span>
+        <h4>マス席／堤防上マス席（6 人）</h4>
+        <div class="price">¥30,000</div>
+        <div class="per">÷ 6 人 = ¥5,000／人</div>
+        <p>比 A 会場便宜、也是六人一席。以「大迫力」著稱，離施放點更近。
+        <strong>兩個会場都投，中籤機率加倍。</strong></p>
+      </div>
+      <div class="seat">
+        <span class="venue">A／B 会場</span>
+        <h4>イス席・ベンチ席（1 人）</h4>
+        <div class="price">¥5,000</div>
+        <div class="per">× 6 人 = ¥30,000</div>
+        <p>單人席。六人要抽到連號不容易，可能被拆開。マス席沒中時的第二順位。</p>
+      </div>
+      <div class="seat">
+        <span class="venue">A 会場</span>
+        <h4>フェニックスエリア席／三尺玉シート指定席</h4>
+        <div class="price">¥4,000</div>
+        <div class="per">× 6 人 = ¥24,000</div>
+        <p>單人自由席性質，價格較低。名稱直接告訴你面對哪個節目。</p>
+      </div>
+      <div class="seat">
+        <span class="venue">B 会場</span>
+        <h4>北エリア席・てくてくエリア席</h4>
+        <div class="price">¥2,000</div>
+        <div class="per">× 6 人 = ¥12,000</div>
+        <p><strong>最便宜的入場方式。</strong>位置較邊緣，但仍在會場內。預算優先或想至少進場的話投這個。</p>
+      </div>
+      <div class="seat">
+        <span class="venue">A／B 会場</span>
+        <h4>テーブル席（1 人）</h4>
+        <div class="price">¥10,000</div>
+        <div class="per">× 6 人 = ¥60,000</div>
+        <p>有桌子、最舒服，價格也最高。六人合計六萬日圓，CP 值不高，略過。</p>
+      </div>
+    </div>
+
+    <div style="display:grid;gap:.85rem;margin-bottom:2rem">
+      <div class="note warn">
+        <span class="k">海外居住者要注意</span>
+        <div>2026 年起票券為<strong>記名式</strong>（防高價轉賣），官方的轉售服務<strong>僅限日本國內居住者</strong>使用。
+        台灣人能否直接在楽天チケット／Ticket Pass 完成一般抽選申請，官方沒有明確說明，
+        <strong>建議 2027 年 4 月開賣資訊公告後直接寫信問主辦單位</strong>。
+        確定可行的替代管道是<strong>旅行社的觀覽席套裝行程</strong>（例如 Club Tourism 的長岡花火團，
+        不需填日本地址）——但那通常綁住宿與交通，跟你們的包車方案衝突，只適合單買席次的方案。</div>
+      </div>
+      <div class="note">
+        <span class="k">六人的投注策略</span>
+        <div>マス席是 <strong>6 人一席</strong>，你們的人數正好是一個完整單位——這是很大的優勢：
+        不用拆團、不用跟陌生人共席、也不必抽連號。<strong>A 会場與 B 会場的マス席同時投</strong>，
+        再加投一組 B 会場北エリア席（¥2,000）當保底。全沒中就走方案 B，反正一定會出發。</div>
+      </div>
+    </div>
+
+    <h3 style="font-size:1.15rem;margin-bottom:.85rem">方案 B：免費視野點（會場外）</h3>
+    <div class="eats">
+      <article class="card eat">
+        <h4>国営越後丘陵公園 周邊市道</h4><span class="jp">長岡市西部・高台</span>
+        <p>公園周邊的市道沿線是知名的免費觀賞帶，位置高、視野開闊，看得到整條鳳凰橫過。有停車空間，包車可直接開上去。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=国営越後丘陵公園" target="_blank" rel="noopener">地圖</a><span class="tag free">免費</span><span class="yen">首選</span></div>
+      </article>
+      <article class="card eat">
+        <h4>長岡ニュータウン 中央公園</h4><span class="jp">長岡市新産・廣場與周邊高台</span>
+        <p>廣場腹地大、人相對少，是當地人推薦的穴場。周邊高台視野更好。適合鋪野餐墊坐下來慢慢看。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=長岡ニュータウン中央公園" target="_blank" rel="noopener">地圖</a><span class="tag free">免費</span><span class="yen">腹地大</span></div>
+      </article>
+      <article class="card eat">
+        <h4>長岡新都市運動公園（長岡インパルス）</h4><span class="jp">長岡市新産</span>
+        <p>運動公園一帶，停車與腹地都足夠，是穴場清單上的常客。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=長岡インパルス" target="_blank" rel="noopener">地圖</a><span class="tag free">免費</span><span class="yen">好停車</span></div>
+      </article>
+      <article class="card eat">
+        <h4>青葉台南公園 周邊</h4><span class="jp">長岡市青葉台・住宅區高台</span>
+        <p>住宅區裡的高台公園，當地人的觀賞點。安靜，但要留意不要影響住戶與停車規定。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=青葉台南公園長岡" target="_blank" rel="noopener">地圖</a><span class="tag free">免費</span><span class="yen">安靜</span></div>
+      </article>
+      <article class="card eat">
+        <h4>長岡赤十字病院 前一帶</h4><span class="jp">長岡市千秋・靠近會場</span>
+        <p>往年有料観覧席與緊急直升機坪之間的部分空地，會被當成免費觀賞範圍。<strong>離會場最近的免費點</strong>，
+        但每年開放範圍不同，要現場看指示。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=長岡赤十字病院" target="_blank" rel="noopener">地圖</a><span class="tag free">免費</span><span class="yen">距離最近</span></div>
+      </article>
+      <article class="card eat">
+        <h4>信濃川兩岸高台</h4><span class="jp">右岸＝長岡站側／左岸＝長岡 IC 側</span>
+        <p>兩側高台都有視野點。左岸離高速公路交流道近，包車進出最順，散場時能最快上高速。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=長生橋長岡" target="_blank" rel="noopener">地圖</a><span class="tag free">免費</span><span class="yen">機動性高</span></div>
+      </article>
+    </div>
+
+    <div class="note warn" style="margin-top:1.15rem">
+      <span class="k">穴場的免責</span>
+      <div>以上都<strong>不是官方觀覽席</strong>，主辦單位不保證視野，也可能因當年交通管制而無法進入或停車。
+      現場請依警方與工作人員指示，不要停在私人土地、農路或消防通道。
+      <strong>請司機當天先確認交通管制圖</strong>，並準備第二、第三順位地點。</div>
+    </div>
+  </div>
+</section>
+
+<section id="timeline">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">倒數時程</p>
+      <h2>什麼時候該做什麼</h2>
+      <p>
+        這趟的難度不在錢，在<strong>時間點</strong>。機票、包車、花火票、住宿四件事的開賣時間全部不一樣，
+        而且都有「錯過就沒了」的性質。照這張表走就不會漏。
+      </p>
+    </div>
+
+    <div class="card pad">
+      <div class="roadmap">
+        <div class="rm now">
+          <div class="rm-when">2026 年 8–9 月<em>現在</em></div>
+          <div class="rm-body">
+            <h4>把包車對話截圖存檔．確認業者資訊</h4>
+            <p>業者說「LINE 官方帳號的聊天記錄只能保存半年」——<strong>現在就把整段對話截圖存下來</strong>，
+            特別是「¥90,000、上野來回、點對點、超時費包含在內、不用訂金」這幾句。
+            同時跟他要<strong>公司名稱、車行登記編號、保險範圍、司機聯絡方式</strong>。
+            不收訂金對你們有利，但也代表沒有書面憑證，一年後真出狀況會很難處理。
+            順便確認六人份行李（花火用的野餐墊、折疊椅）放不放得下。</p>
+          </div>
+        </div>
+
+        <div class="rm">
+          <div class="rm-when">2026 年 9 月上旬<em>機票開賣</em></div>
+          <div class="rm-body">
+            <h4>2027/8 的機票開始陸續開放</h4>
+            <p>航空公司通常在起飛前約 330 天開賣，2027/8/1 往回推大約落在 <strong>2026 年 9 月初</strong>。
+            現在查不到價格是正常的。開賣後先設 Google Flights 價格追蹤，六個人一起搜（同艙等票量要夠）。
+            八月初是暑假旺季，不會便宜，但早訂通常比晚訂好。</p>
+          </div>
+        </div>
+
+        <div class="rm">
+          <div class="rm-when">2026 年 10–12 月<em>卡住房</em></div>
+          <div class="rm-body">
+            <h4>訂上野的六人整戶 Airbnb</h4>
+            <p>先訂<strong>可免費取消</strong>的房源卡位，之後再慢慢換更好的。
+            東京在花火期間不會漲價（漲的是長岡），所以壓力比住長岡小非常多——
+            這正是包車方案最大的隱藏價值。</p>
+          </div>
+        </div>
+
+        <div class="rm crit">
+          <div class="rm-when">2027 年 1–2 月<em>最後期限</em></div>
+          <div class="rm-body">
+            <h4>正式向包車業者下訂</h4>
+            <p>他說「提前半年就好」，而 LINE 記錄只留半年——<strong>2 月是不能再拖的界線</strong>，
+            再晚原始對話就消失了。這時要把日期（8/2）、出發時間、上車地點、回程等待地點、
+            六人姓名全部確認一次，並請他<strong>用文字重述一次報價與包含項目</strong>當作新的憑證。</p>
+          </div>
+        </div>
+
+        <div class="rm">
+          <div class="rm-when">2027 年 3–4 月<em>票務情報</em></div>
+          <div class="rm-body">
+            <h4>盯官網公告，並寫信問海外購票方式</h4>
+            <p>長岡花火財團官網（nagaokamatsuri.com）會公告當年售票時程。
+            2026 年是 4 月 10 日先開長岡市民先行販售，一般販售的辦法會同時公布。
+            <strong>這時就寫信問主辦單位：海外居住者要怎麼申請一般抽選、記名式票券的姓名怎麼填、
+            付款方式接不接受海外信用卡。</strong>問清楚才知道要不要走旅行社管道。</p>
+          </div>
+        </div>
+
+        <div class="rm crit">
+          <div class="rm-when">2027 年 5 月下旬<em>一次抽選</em></div>
+          <div class="rm-body">
+            <h4>一般販售 第一次抽選</h4>
+            <p>2026 年的時間是 <strong>5/25 中午 12:00 起 – 6/8 17:00 止</strong>，2027 應該相近。
+            這是抽選不是先搶先贏，<strong>期間內任何時候申請中籤率都一樣</strong>，不必熬夜。
+            照前面的策略投：A 会場マス席 ＋ B 会場マス席 ＋ B 会場北エリア席保底。</p>
+          </div>
+        </div>
+
+        <div class="rm">
+          <div class="rm-when">2027 年 6 月中旬<em>二次抽選</em></div>
+          <div class="rm-body">
+            <h4>第二次抽選（一次沒中的補救）</h4>
+            <p>2026 年是 <strong>6/18 – 6/22</strong>。一次抽選落空的席次會再放出來，
+            剩餘席種通常比較邊緣，但仍然進得了會場。這是最後一次官方管道。</p>
+          </div>
+        </div>
+
+        <div class="rm">
+          <div class="rm-when">2027 年 6 月下旬<em>分岔點</em></div>
+          <div class="rm-body">
+            <h4>確定走方案 A 還是方案 B</h4>
+            <p>中籤 → 方案 A，把席位號碼、進場口、進場時間告訴司機。
+            沒中 → 方案 B，選定兩到三個穴場地點，請司機評估當天交通管制下哪個進得去。
+            <strong>兩種情況行程都照跑，只是傍晚的落點不同。</strong></p>
+          </div>
+        </div>
+
+        <div class="rm">
+          <div class="rm-when">2027 年 7 月<em>收尾</em></div>
+          <div class="rm-body">
+            <h4>跟司機對一次當天流程</h4>
+            <p>出發時間、休息站、午餐地點、下車點、<strong>散場後的上車地點與等待時間</strong>（這點最重要，
+            人多訊號差，要先約好一個絕對找得到的地標）。同時確認 Airbnb 入住方式與行李寄放。
+            野餐墊、折疊椅、行動電源、防蚊液這時候備齊。</p>
+          </div>
+        </div>
+
+        <div class="rm">
+          <div class="rm-when">2027 年 8 月 1 日<em>出發</em></div>
+          <div class="rm-body">
+            <h4>成團出發</h4>
+            <p>不管有沒有票都會看到花火。差別只在距離。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="car">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">包車</p>
+      <h2>六個人分攤，包車比新幹線還便宜</h2>
+      <p>這是你們談到的報價：Alphard 七人座（扣掉司機正好六個乘客位）、上野來回長岡花火會場、點對點接送、含超時費、現金付款、不需訂金。</p>
+    </div>
+
+    <figure class="figure" data-slot="ngk-car"><span class="figbadge">示意圖 · 待換實拍</span><svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="包車前往長岡"><rect width="400" height="220" fill="var(--surface-2)"/>
+<g opacity=".14" fill="var(--ink)">
+<path d="M0 92l40-26 34 18 40-30 44 26 38-20 46 30 40-22 42 24 36-14v42H0z"/></g>
+<path d="M0 134h400v86H0z" fill="var(--ink)" opacity=".08"/>
+<g stroke="var(--line)" stroke-width="2" opacity=".7" stroke-dasharray="16 14"><path d="M0 178h400"/></g>
+<g stroke="var(--line)" stroke-width="1.4" opacity=".4"><path d="M0 138h400M0 214h400"/></g>
+<g transform="translate(108 108)">
+<path d="M8 44V22q0-9 9-12l30-11q7-3 15-3h84q9 0 15 6l22 20q5 5 5 12v10z" fill="var(--sea)" opacity=".85"/>
+<path d="M26 20l24-9q5-2 10-2h26v18H24z" fill="var(--surface)" opacity=".7"/>
+<path d="M96 9h44q5 0 9 4l16 14h-69z" fill="var(--surface)" opacity=".55"/>
+<rect x="4" y="44" width="184" height="8" rx="3" fill="var(--ink)" opacity=".35"/>
+<circle cx="42" cy="54" r="12" fill="var(--ink)" opacity=".55"/><circle cx="42" cy="54" r="5" fill="var(--surface-2)"/>
+<circle cx="152" cy="54" r="12" fill="var(--ink)" opacity=".55"/><circle cx="152" cy="54" r="5" fill="var(--surface-2)"/>
+<rect x="182" y="26" width="8" height="6" rx="2" fill="var(--lantern)" opacity=".8"/></g>
+<text x="200" y="204" text-anchor="middle" font-size="9" font-family="var(--mono)" fill="var(--ink-3)" opacity=".75">上野 → 長岡　270km</text>
+</svg><figcaption class="figcap"><b>上野 ↔ 長岡</b>　單程約 270 公里，走首都高接關越道。六人分攤 ¥15,000／人。<em>去程 4h05m–4h45m</em></figcaption></figure>
+    <div class="versus" style="margin-bottom:1.5rem">
+      <div class="vs win">
+        <span class="lbl">包車 Alphard</span>
+        <div class="big">¥15,000</div>
+        <p class="sub">¥90,000 ÷ 6 人。點對點、行李隨車、散場直接上車、能開到穴場高台、車上能睡。</p>
+      </div>
+      <div class="vs">
+        <span class="lbl">上越新幹線 來回</span>
+        <div class="big">¥18,220</div>
+        <p class="sub">東京↔長岡單程約 ¥9,110、1 小時 40 分。還要加上長岡站到會場來回的接駁或步行。</p>
+      </div>
+      <div class="vs">
+        <span class="lbl">六人合計價差</span>
+        <div class="big">¥19,320</div>
+        <p class="sub">包車便宜約兩萬日圓，而且省下的麻煩遠比省下的錢值錢。</p>
+      </div>
+    </div>
+
+    <div style="display:grid;gap:.85rem">
+      <div class="note night">
+        <span class="k">散場才是真正的關卡</span>
+        <div>花火 21:10 結束後，<strong>會場走到長岡站要 40–50 分鐘</strong>（去程只要 30 分，回程因為人潮變慢），
+        車站會實施入場管制，大手通會封街做方面別的排隊誘導。
+        往東京的臨時新幹線大約 <strong>21:21、21:35、21:50、22:16、22:29</strong> 幾班，
+        <strong>曾發生 124 人搭不上車、在收容設施過夜的新聞</strong>。
+        有司機在約定地點等，這一段完全不用經歷——這才是包車真正的價值。</div>
+      </div>
+      <div class="note warn">
+        <span class="k">回程會塞，要有心理準備</span>
+        <div>花火結束後關越道方向會嚴重回堵。<strong>21:30 上車、凌晨 01:00–02:00 回到上野</strong>是合理預期（最壞 03:00），
+        不要排隔天早上的任何行程。這也是為什麼 Day 3 的上午整個空著。
+        車上準備好毯子、頸枕、水——六個人輪流睡。</div>
+      </div>
+      <div class="note">
+        <span class="k">跟司機要確認的六件事</span>
+        <div>① 公司名稱與車行登記　② 保險範圍（乘客傷害險）　③ 六人份行李與野餐用品放得下嗎
+        　④ 能不能開到穴場高台（方案 B）　⑤ 散場後的上車地點與最長等待時間
+        　⑥ 若遇大雨順延到隔天（8/3），費用與可行性如何處理</div>
+      </div>
+      <div class="note warn" id="drive">
+        <span class="k">花火會不會延期</span>
+        <div>長岡花火<strong>小雨照常施放</strong>，只有暴風雨等極端天候才會中止。
+        但仍要先跟司機講好：萬一 8/2 中止、順延到 8/3，包車能不能改期、要不要加錢。
+        這一題現在問比當天問好。</div>
+      </div>
+    </div>
+
+    <div class="sec-head" style="margin-top:2.5rem;margin-bottom:1.15rem">
+      <p class="eyebrow">車程試算</p>
+      <h2 style="font-size:1.35rem">上野 ↔ 長岡，來回大約多久</h2>
+      <p>單程約 <strong>270 公里</strong>，走首都高接關越道。去程好算，回程的變數全在散場那一小時。以下是粗估，實際會有誤差。</p>
+    </div>
+
+    <div class="bigrow" style="margin-bottom:1.5rem">
+      <div><dt>單程距離</dt><dd>270<small>km</small></dd></div>
+      <div><dt>去程</dt><dd>4.0<small>–4.5 小時</small></dd></div>
+      <div><dt>回程（會場）</dt><dd>4.3<small>–6.0 小時</small></dd></div>
+      <div><dt>回程（穴場）</dt><dd>3.5<small>–4.5 小時</small></dd></div>
+      <div><dt>當天總時長</dt><dd>19<small>–21 小時</small></dd></div>
+    </div>
+
+    <div class="scroller" style="margin-bottom:1.15rem">
+      <table>
+        <thead><tr><th>去程　8/2（一）上午</th><th>距離</th><th>預估</th><th>說明</th></tr></thead>
+        <tbody>
+          <tr><td>上野 → 練馬 IC</td><td class="num">約 15 km</td><td class="num">30–40 分</td><td>平日上午市區道路，非通勤尖峰方向</td></tr>
+          <tr><td>練馬 IC → 長岡 IC（關越道）</td><td class="num">約 250 km</td><td class="num">2h40m–3h00m</td><td>高速順暢，中途過關越隧道</td></tr>
+          <tr><td>休息站 2 次</td><td class="num">—</td><td class="num">40 分</td><td>上里 SA、越後川口 SA 各約 20 分</td></tr>
+          <tr><td>長岡 IC → 市區</td><td class="num">約 5 km</td><td class="num">15–25 分</td><td>花火日下午市區開始有管制</td></tr>
+          <tr style="background:var(--sea-soft)"><td><strong>合計</strong></td><td class="num"><strong>約 270 km</strong></td><td class="num"><strong>4h05m–4h45m</strong></td><td><strong>08:00 出發 → 12:05–12:45 抵達</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="scroller" style="margin-bottom:1.15rem">
+      <table>
+        <thead><tr><th>回程　8/2（一）深夜</th><th>方案 A．會場內</th><th>方案 B．高台穴場</th><th>說明</th></tr></thead>
+        <tbody>
+          <tr><td>花火結束 → 走回車上</td><td class="num">20–40 分</td><td class="num">5–10 分</td><td>會場要逆著人潮走出河川敷；穴場就在車旁</td></tr>
+          <tr style="background:var(--peak-soft)"><td><strong>市區 → 長岡 IC</strong></td><td class="num"><strong>30–90 分</strong></td><td class="num"><strong>15–40 分</strong></td><td><strong>最大變數。</strong>散場車潮全擠向交流道；穴場多在外圍，離 IC 近</td></tr>
+          <tr><td>長岡 IC → 練馬 IC</td><td class="num">2h40m–3h00m</td><td class="num">2h40m–3h00m</td><td>深夜高速順暢</td></tr>
+          <tr><td>休息站 1 次</td><td class="num">20 分</td><td class="num">20 分</td><td>司機需要休息，這段別省</td></tr>
+          <tr><td>練馬 IC → 上野</td><td class="num">25–35 分</td><td class="num">25–35 分</td><td>深夜市區順暢</td></tr>
+          <tr style="background:var(--sea-soft)"><td><strong>合計</strong></td><td class="num"><strong>4h15m–6h05m</strong></td><td class="num"><strong>3h45m–4h45m</strong></td><td>以 21:10 花火結束起算</td></tr>
+          <tr style="background:var(--lantern-soft)"><td><strong>抵達上野</strong></td><td class="num"><strong>01:25–03:15</strong></td><td class="num"><strong>00:55–01:55</strong></td><td>穴場平均早約一小時</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="display:grid;gap:.85rem">
+      <div class="note warn">
+        <span class="k">關於「半夜十二點前後」</span>
+        <div>業者講的那個時間<strong>是完全順利、沒遇上大塞車的最好情況</strong>——要達成大概需要
+        提早離場、走穴場路線、關越道全程順暢三個條件同時成立。
+        <strong>務實一點抓 01:00–02:00 到上野</strong>，最壞 03:00。
+        重點不是幾點到，而是<strong>隔天上午千萬不要排行程</strong>——這也是 Day 3 整個上午留白的原因。</div>
+      </div>
+      <div class="note">
+        <span class="k">方案 B 的隱藏優勢</span>
+        <div>穴場高台多在長岡外圍、離交流道近，<strong>不必跟散場人車一起擠進市區</strong>。
+        回程平均比會場方案早<strong>約一小時</strong>到家。也就是說：抽不到票不只是省下票錢，
+        還省下一小時的塞車——如果你們比較在意隔天的體力，方案 B 其實不算是「退而求其次」。</div>
+      </div>
+      <div class="note night">
+        <span class="k">想提早三十分鐘的話</span>
+        <div>在 <strong>フェニックス 放完後就先走</strong>（通常排在後半段，不是最後一個節目），
+        可以避開最大那波人潮。代價是少看結尾。六個人可以先講好要不要這樣做——
+        <strong>但如果只看一次，我建議整場看完</strong>，一小時的塞車換一個完整的結尾是划算的。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="stay">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">住宿</p>
+      <h2>三對情侶，三種住法</h2>
+      <p>
+        因為包車是<strong>上野來回</strong>，住宿綁在上野／日暮里／淺草這個範圍。
+        六個人分三對，有三種住法：<strong>三戶各自獨立</strong>（隱私最好）、
+        <strong>一戶三臥室</strong>（最省、有共用客廳）、<strong>飯店三間</strong>（最好訂、可隨時取消）。
+        Airbnb 優先，下面每個都附帶好參數的搜尋連結。
+      </p>
+    </div>
+
+    <div class="note" style="margin-bottom:1.5rem">
+      <span class="k">好消息</span>
+      <div>長岡的飯店在花火期間是<strong>抽選制</strong>，平常 ¥10,000 的商旅會漲到 <strong>¥66,000 一晚</strong>。
+      而<strong>東京完全不受花火影響</strong>，照平常價格訂。這是包車方案最大的隱藏價值——
+      你們把最難搞的那一項整個繞開了。</div>
+    </div>
+
+    <h3 style="font-size:1.15rem;margin-bottom:.85rem">住法 1．Airbnb 三戶各自獨立（最推薦）</h3>
+    <p style="font-size:.875rem;color:var(--ink-2);margin-bottom:1rem;max-width:var(--measure)">
+      三對各訂一戶，衛浴、廚房、客廳全部獨立，誰幾點睡幾點起都不干擾。
+      關鍵是<strong>訂在同一棟或走路三分鐘內</strong>，這樣包車接送、集合出門才不會亂。
+    </p>
+    <div class="seats" style="margin-bottom:1.15rem">
+      <div class="seat pickd">
+        <span class="venue">上野・鶯谷・日暮里</span>
+        <h4>1BR × 3 戶．離上車點最近</h4>
+        <div class="price">¥10,000–16,000<small style="font-size:.7rem;color:var(--ink-3)">／戶／晚</small></div>
+        <div class="per">三戶 3 晚 ÷ 6 人 = ¥15,000–24,000／人</div>
+        <p>走得到上野站，包車接送最順，阿美橫丁採買在旁邊。這一區民泊公寓多，同棟多戶的機會最高。</p>
+        <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.5rem">
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=上野駅" target="_blank" rel="noopener">上野站</a>
+          <a class="mapl" href="https://www.airbnb.com.tw/s/%E4%B8%8A%E9%87%8E--%E5%8F%B0%E6%9D%B1%E5%8C%BA--%E6%9D%B1%E4%BA%AC%E9%83%BD/homes?adults=2&amp;min_bedrooms=1&amp;room_types%5B%5D=Entire%20home%2Fapt" target="_blank" rel="noopener">Airbnb 搜尋</a>
+        </div>
+      </div>
+      <div class="seat pickd">
+        <span class="venue">淺草・藏前</span>
+        <h4>1BR × 3 戶．氣氛最好</h4>
+        <div class="price">¥11,000–18,000<small style="font-size:.7rem;color:var(--ink-3)">／戶／晚</small></div>
+        <div class="per">三戶 3 晚 ÷ 6 人 = ¥16,500–27,000／人</div>
+        <p>老街區的民泊公寓。到上野搭銀座線兩站，包車也能直接開到門口。</p>
+        <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.5rem">
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=浅草駅" target="_blank" rel="noopener">淺草站</a>
+          <a class="mapl" href="https://www.airbnb.com.tw/s/%E6%B5%85%E8%8D%89--%E5%8F%B0%E6%9D%B1%E5%8C%BA--%E6%9D%B1%E4%BA%AC%E9%83%BD/homes?adults=2&amp;min_bedrooms=1&amp;room_types%5B%5D=Entire%20home%2Fapt" target="_blank" rel="noopener">Airbnb 搜尋</a>
+        </div>
+      </div>
+      <div class="seat">
+        <span class="venue">錦糸町・押上</span>
+        <h4>1BR × 3 戶．最省</h4>
+        <div class="price">¥8,000–13,000<small style="font-size:.7rem;color:var(--ink-3)">／戶／晚</small></div>
+        <div class="per">三戶 3 晚 ÷ 6 人 = ¥12,000–19,500／人</div>
+        <p>晴空塔一帶，同坪數便宜一到兩成。缺點是離上野遠，包車要多開 15 分鐘。</p>
+        <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.5rem">
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=錦糸町駅" target="_blank" rel="noopener">錦糸町站</a>
+          <a class="mapl" href="https://www.airbnb.com.tw/s/%E9%8C%A6%E7%B3%B8%E7%94%BA--%E5%A2%A8%E7%94%B0%E5%8C%BA--%E6%9D%B1%E4%BA%AC%E9%83%BD/homes?adults=2&amp;min_bedrooms=1&amp;room_types%5B%5D=Entire%20home%2Fapt" target="_blank" rel="noopener">Airbnb 搜尋</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="note" style="margin-bottom:2rem">
+      <span class="k">怎麼找到同一棟的三戶</span>
+      <div>這是實務上最有效的一招：先搜到一間喜歡的民泊，<strong>點進去按房東的頭像，看他名下的其他房源</strong>——
+      日本的民泊業者常常在同一棟公寓經營好幾間，房型幾乎一樣，可以一次訂三間。
+      房源標題出現「<strong>Room A／Room B／201號室</strong>」這種編號的，通常就是同棟多間。
+      訂之前直接私訊房東：「<strong>我們三對六人，想訂同一棟的三間，可以嗎？</strong>」
+      多數房東很樂意，有時還會給折扣。</div>
+    </div>
+
+    <h3 style="font-size:1.15rem;margin-bottom:.85rem">住法 2．Airbnb 一戶三臥室（最省，但共用客廳）</h3>
+    <p style="font-size:.875rem;color:var(--ink-2);margin-bottom:1rem;max-width:var(--measure)">
+      三對各睡一間房，客廳、廚房、洗衣機共用。<strong>比訂三戶便宜約兩成</strong>，
+      而且花火前一晚可以一起整理裝備、隔天一起吃早午餐。缺點是衛浴通常只有一到兩套。
+    </p>
+    <div class="seats" style="margin-bottom:1.15rem">
+      <div class="seat pickd">
+        <span class="venue">上野・鶯谷・日暮里</span>
+        <h4>3BR 整戶</h4>
+        <div class="price">¥28,000–36,000<small style="font-size:.7rem;color:var(--ink-3)">／晚</small></div>
+        <div class="per">÷ 6 人 × 3 晚 = ¥14,000–18,000／人</div>
+        <p>包車接送最順。訂之前務必確認<strong>三間都是獨立臥室</strong>，不是把客廳沙發床算進去。</p>
+        <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.5rem">
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=上野駅" target="_blank" rel="noopener">上野站</a>
+          <a class="mapl" href="https://www.airbnb.com.tw/s/%E4%B8%8A%E9%87%8E--%E5%8F%B0%E6%9D%B1%E5%8C%BA--%E6%9D%B1%E4%BA%AC%E9%83%BD/homes?adults=6&amp;min_bedrooms=3&amp;room_types%5B%5D=Entire%20home%2Fapt" target="_blank" rel="noopener">Airbnb 搜尋</a>
+        </div>
+      </div>
+      <div class="seat">
+        <span class="venue">淺草・藏前</span>
+        <h4>3BR 整棟町家</h4>
+        <div class="price">¥32,000–42,000<small style="font-size:.7rem;color:var(--ink-3)">／晚</small></div>
+        <div class="per">÷ 6 人 × 3 晚 = ¥16,000–21,000／人</div>
+        <p>老街區的一戶建，常有整棟出租，有時是兩層樓、衛浴兩套。</p>
+        <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.5rem">
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=浅草駅" target="_blank" rel="noopener">淺草站</a>
+          <a class="mapl" href="https://www.airbnb.com.tw/s/%E6%B5%85%E8%8D%89--%E5%8F%B0%E6%9D%B1%E5%8C%BA--%E6%9D%B1%E4%BA%AC%E9%83%BD/homes?adults=6&amp;min_bedrooms=3&amp;room_types%5B%5D=Entire%20home%2Fapt" target="_blank" rel="noopener">Airbnb 搜尋</a>
+        </div>
+      </div>
+      <div class="seat">
+        <span class="venue">篩選設定</span>
+        <h4>連結已帶好參數</h4>
+        <div class="price" style="font-size:1rem;line-height:1.5">6 人．3 臥室<br>整套房源</div>
+        <div class="per">再自己加三個條件</div>
+        <p><strong>「超讚房東」、評價 4.8 以上、可免費取消</strong>。
+        日期先填 2026 年的區間看行情，等 2027/8 開放再改。</p>
+      </div>
+    </div>
+
+    <div class="note warn" style="margin-bottom:2rem">
+      <span class="k">住法 1、2 都要問房東的四件事</span>
+      <div>
+      ① <strong>深夜進出</strong>——花火那晚會在凌晨一兩點回來，先問清楚有沒有門禁或噪音規定。<strong>這點最容易出事。</strong><br>
+      ② <strong>有沒有電梯</strong>——日本老公寓很多沒有，行李扛四樓會要命。<br>
+      ③ <strong>三戶（或三間）是不是真的都確認好了</strong>——分開訂要一筆一筆確認，別漏。<br>
+      ④ <strong>住宅宿泊事業登錄編號</strong>——合法民泊一定會揭示，沒有的別訂。
+      </div>
+    </div>
+
+    <h3 style="font-size:1.15rem;margin-bottom:.85rem">住法 3．飯店三間雙人房（Airbnb 訂不到時）</h3>
+    <p style="font-size:.875rem;color:var(--ink-2);margin-bottom:1rem;max-width:var(--measure)">
+      好處是每間有獨立衛浴、有大浴場、附免費早餐、隨時可訂可退，缺點是沒有共用客廳，六個人要在大廳集合。
+      以下都是上野一帶走得到的連鎖飯店；<strong>最後兩家 MIMARU 是公寓式飯店，全室附廚房</strong>，
+      介於 Airbnb 與商旅之間。
+    </p>
+    <div class="scroller">
+      <table>
+        <thead><tr><th>飯店</th><th>位置</th><th>雙人房（2 名／晚）</th><th>三間 × 3 晚</th><th>特色</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>アパホテル〈上野駅前〉</strong><br><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=アパホテル上野駅前" target="_blank" rel="noopener">地圖</a></td>
+            <td>銀座線・日比谷線上野站 3 番出口<strong>徒步 1 分</strong><br>JR 上野站広小路口徒步 3 分</td>
+            <td class="num">¥14,000–24,000</td>
+            <td class="num">¥126,000–216,000<br><small style="color:var(--ink-3)">÷6 ≈ ¥21,000–36,000／人</small></td>
+            <td>デラックスツイン、<strong>最上階大浴場</strong>。離車站最近</td>
+          </tr>
+          <tr>
+            <td><strong>スーパーホテル JR上野入谷口</strong><br><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=スーパーホテルJR上野入谷口" target="_blank" rel="noopener">地圖</a></td>
+            <td>JR 上野站入谷口徒步 5 分</td>
+            <td class="num">¥12,000–20,000</td>
+            <td class="num">¥108,000–180,000<br><small style="color:var(--ink-3)">÷6 ≈ ¥18,000–30,000／人</small></td>
+            <td><strong>免費早餐 buffet ＋ 大浴場</strong>。CP 值高</td>
+          </tr>
+          <tr>
+            <td><strong>東横INN 上野田原町駅</strong><br><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=東横イン上野田原町駅" target="_blank" rel="noopener">地圖</a></td>
+            <td>銀座線田原町站 2 番出口徒步 3 分<br>淺草站、藏前站各約 5 分</td>
+            <td class="num">¥13,650–27,300</td>
+            <td class="num">¥122,850–245,700<br><small style="color:var(--ink-3)">÷6 ≈ ¥20,475–40,950／人</small></td>
+            <td>138 間房、免費早餐、投幣洗衣<br>check-in 15:00／out 10:00</td>
+          </tr>
+          <tr>
+            <td><strong>スーパーホテル 秋葉原・末広町</strong><br><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=スーパーホテル秋葉原末広町" target="_blank" rel="noopener">地圖</a></td>
+            <td>銀座線末広町站徒步 2 分<br>JR 御徒町站南口徒步 5 分</td>
+            <td class="num">¥11,000–19,000</td>
+            <td class="num">¥99,000–171,000<br><small style="color:var(--cheap)">÷6 ≈ ¥16,500–28,500／人．最省</small></td>
+            <td>大浴場＋免費早餐。走得到阿美橫丁</td>
+          </tr>
+          <tr style="background:var(--lantern-soft)">
+            <td><strong>MIMARU 東京 上野EAST</strong><br><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=MIMARU東京上野EAST" target="_blank" rel="noopener">地圖</a></td>
+            <td>上野站<strong>徒步 3 分</strong>．56 間房</td>
+            <td class="num">¥25,000–40,000</td>
+            <td class="num"><small style="color:var(--ink-3)">房型大，較適合訂 1–2 間</small></td>
+            <td><strong>公寓式飯店．全室附廚房、微波爐、雙門冰箱、獨立衛浴</strong>。一間最多住 8 人</td>
+          </tr>
+          <tr style="background:var(--lantern-soft)">
+            <td><strong>MIMARU 東京 上野NORTH</strong><br><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=MIMARU東京上野NORTH" target="_blank" rel="noopener">地圖</a></td>
+            <td>上野站<strong>徒步 4 分</strong>．2018 開業</td>
+            <td class="num">¥25,000–38,000</td>
+            <td class="num"><small style="color:var(--ink-3)">一間最多 6 人</small></td>
+            <td>同上，全室廚房。<strong>六人訂一大間反而划算</strong>，但就不是分開睡了</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note warn" style="margin-top:1.15rem">
+      <span class="k">房價說明</span>
+      <div>以上為<strong>常態行情區間，不是 2027 年 8 月的實際報價</strong>。
+      飯店通常只開放未來 3–12 個月的訂房，<strong>2027/8 現在還訂不到</strong>。
+      上野站周邊雙人房兩人素泊最低約 ¥6,000 起（等於每人 ¥3,000），旺季與週末會往上跑。
+      實際訂房時請直接到各飯店官網或訂房平台查當日房價——通常官網訂比平台便宜，也好取消。</div>
+    </div>
+  </div>
+</section>
+
+<section id="air">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">機票</p>
+      <h2>2027 年 8 月的票還沒開賣</h2>
+      <p>
+        航空公司通常在起飛前約 330 天開放訂位，<strong>2027/8/1 往回推大約落在 2026 年 9 月初</strong>——
+        現在查不到價格是正常的，不是你搜錯。下面用<strong>今年（2026）八月同期的實查價</strong>當參考，
+        等明年九月開賣後再對照修正。
+      </p>
+    </div>
+
+    <div class="bigrow" style="margin-bottom:1.5rem">
+      <div><dt>航線</dt><dd>TPE<small> → </small>TYO</dd></div>
+      <div><dt>飛行時間</dt><dd>3<small>h</small>20<small>m</small></dd></div>
+      <div><dt>2026/8 實查最低</dt><dd>NT$7,372</dd></div>
+      <div><dt>本頁估值</dt><dd>NT$13,000</dd></div>
+      <div><dt>開賣時點</dt><dd>2026<small>/9 初</small></dd></div>
+    </div>
+
+    <div class="scroller" style="margin-bottom:1.15rem">
+      <table>
+        <thead><tr><th>類型</th><th>航空公司</th><th>八月來回含稅（估）</th><th>說明</th></tr></thead>
+        <tbody>
+          <tr style="background:var(--cheap-soft)">
+            <td><strong>廉航</strong></td>
+            <td>台灣虎航、樂桃、酷航、捷星日本</td>
+            <td class="num"><strong>NT$8,000–14,000</strong></td>
+            <td>這條線最便宜的四家。<strong>2026/8/25 虎航實查最低 NT$7,372</strong>。行李、選位另計</td>
+          </tr>
+          <tr>
+            <td>傳統航空</td>
+            <td>長榮、中華、星宇、日航、全日空</td>
+            <td class="num">NT$14,000–22,000</td>
+            <td>含 23kg 託運與餐食。六人同行行李多的話，價差可能沒想像中大</td>
+          </tr>
+          <tr>
+            <td>機場</td>
+            <td>成田 NRT ／ 羽田 HND</td>
+            <td class="num">—</td>
+            <td>羽田進市區快（到上野約 45 分、¥600），成田便宜但要 60 分、¥1,290</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="display:grid;gap:.85rem">
+      <div class="note warn">
+        <span class="k">八月是最貴的月份</span>
+        <div>七、八月暑假旺季，票價比平均<strong>高約 13%</strong>。
+        八月一號又卡在月初，需求更集中。建議<strong>至少提前 7 週訂</strong>，
+        但以你們的情況——<strong>2026 年 9 月一開賣就設價格追蹤，看到合理價就下手</strong>，
+        六個人的機位要一次湊齊，晚了容易只剩貴的艙等。</div>
+      </div>
+      <div class="note">
+        <span class="k">六人訂票的訣竅</span>
+        <div>訂票系統會把六個座位放在<strong>同一個艙等</strong>報價，若該艙等只剩三個位子，
+        系統會直接跳到更貴的艙等報全部六人。<strong>可以拆成 3+3 兩筆訂單分開查</strong>，
+        有時候便宜不少。同班機不同訂單一樣坐得在一起，報到時說一聲即可。</div>
+      </div>
+      <div class="note warn">
+        <span class="k">價格備註</span>
+        <div>本頁所有機票金額<strong>皆為 2026 年 8 月同期實查價推估，非 2027 年報價</strong>。
+        2027/8 航班開賣後請以航空公司官網與比價網站的當日價格為準，屆時再回來修正這一頁的數字。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="plan">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">每日行程</p>
+      <h2>逐時安排</h2>
+      <p>住東京市區，來回、吃飯、採買都在同一個生活圈。花火那天單獨拉出來排。每個地點附 Google 地圖連結。</p>
+    </div>
+
+    <div class="daytabs" role="tablist" aria-label="行程日期">
+      <button class="daytab" role="tab" id="tab-d1" aria-controls="d1" aria-selected="true"><b>Day 1 · 8/1 日</b>抵達．上野</button>
+      <button class="daytab" role="tab" id="tab-d2" aria-controls="d2" aria-selected="false"><b>Day 2 · 8/2 一</b>長岡花火</button>
+      <button class="daytab" role="tab" id="tab-d3" aria-controls="d3" aria-selected="false"><b>Day 3 · 8/3 二</b>拍照．夜景</button>
+      <button class="daytab" role="tab" id="tab-d4" aria-controls="d4" aria-selected="false"><b>Day 4 · 8/4 三</b>最後半天</button>
+    </div>
+
+    <div class="tabpanel" id="d1" role="tabpanel" aria-labelledby="tab-d1">
+      <div class="dayhead"><h3>Day 1｜抵達．上野</h3><span class="tag sea">主場：阿美橫丁</span>
+        <p>今天唯一的任務是把明天的東西備齊。不要排太滿，明天要從早上八點撐到半夜。</p></div>
+      <div class="tl">
+        <div class="ev" data-k="move"><div class="ev-time">上午</div><div class="ev-body">
+          <div class="ev-title"><h4>抵達成田或羽田</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=成田国際空港第2ターミナル" target="_blank" rel="noopener">成田</a>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=羽田空港第3ターミナル" target="_blank" rel="noopener">羽田</a></div>
+          <p>盡量選上午抵達的班機。六人同行入境與行李會慢一點，抓寬鬆一些。</p>
+        </div></div>
+
+        <div class="ev" data-k="move"><div class="ev-time">＋70 分</div><div class="ev-body">
+          <div class="ev-title"><h4>成田 → 上野</h4><span class="tag">京成本線</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=京成上野駅" target="_blank" rel="noopener">地圖</a></div>
+          <p><strong>Access 特急 ¥1,290</strong>（約 60 分，最划算）；趕時間可搭 <strong>Skyliner ¥2,580</strong>（41 分，全指定席）。
+          羽田出發的話走京急線到品川轉山手線，約 45 分、¥600。</p>
+          <div class="ev-cost"><span>Access 特急 <b>¥1,290</b>／人</span><span>Skyliner <b>¥2,580</b>／人</span></div>
+        </div></div>
+
+        <div class="ev" data-k="rest"><div class="ev-time">14:00</div><div class="ev-body">
+          <div class="ev-title"><h4>入住．六人整戶</h4></div>
+          <p>三對各進各的房間或各自的房源，行李歸位，確認洗衣機與廚房。跟房東再確認一次<strong>明天深夜（約半夜十二點到一點）返回</strong>不會有問題。</p>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">15:30</div><div class="ev-body">
+          <div class="ev-title"><h4>阿美橫丁．採買明天的糧食</h4><span class="tag lan">今日主場</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=アメヤ横丁" target="_blank" rel="noopener">地圖</a></div>
+          <p>上野站到御徒町站之間的老市場，四百多家店。明天在長岡買東西人會很多，
+          <strong>能在這裡先買的就先買</strong>：零食、乾糧、寶特瓶飲料。生鮮與冰塊明天到長岡再買。</p>
+          <div class="ev-cost"><span>採買 <b>¥1,500–2,500</b>／人</span></div>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">17:00</div><div class="ev-body">
+          <div class="ev-title"><h4>百元商店補齊花火用品</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=ダイソー上野" target="_blank" rel="noopener">地圖</a></div>
+          <p>野餐墊（レジャーシート）、可折疊坐墊、扇子、防蚊噴霧、雨衣、垃圾袋。
+          <strong>全部百元店就有</strong>，六人份加起來不到 ¥3,000。花火會場禁止大型帳篷與過高的椅子。</p>
+          <div class="ev-cost"><span>六人份 <b>約 ¥3,000</b></span></div>
+        </div></div>
+
+        <div class="ev" data-k="night"><div class="ev-time">18:30</div><div class="ev-body">
+          <div class="ev-title"><h4>上野晚餐．居酒屋或燒肉</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=上野居酒屋" target="_blank" rel="noopener">地圖</a></div>
+          <p>六人建議先訂位。阿美橫丁高架下與上野站周邊選擇多。今晚<strong>早點回去睡</strong>，明天七點就要起床。</p>
+          <div class="ev-cost"><span><b>¥2,500–3,500</b>／人</span></div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="tabpanel" id="d2" role="tabpanel" aria-labelledby="tab-d2" hidden>
+      <div class="dayhead"><h3>Day 2｜長岡花火</h3><span class="tag lan">主場：信濃川河川敷</span>
+        <p>早上出發、下午抵達、吃飯佔位、天黑放花火、深夜回東京。一整天就這一件事。</p></div>
+      <div class="tl">
+        <div class="ev" data-k="rest"><div class="ev-time">07:00</div><div class="ev-body">
+          <div class="ev-title"><h4>起床．住處吃早餐</h4></div>
+          <p>昨天買的麵包咖啡解決。<strong>出門前確認</strong>：票（或穴場地點）、野餐墊、行動電源、
+          防蚊液、雨衣、換洗衣物、現金。</p>
+        </div></div>
+
+        <div class="ev" data-k="move"><div class="ev-time">08:00</div><div class="ev-body">
+          <div class="ev-title"><h4>上野出發．包車</h4><span class="tag sea">Alphard 7 人座</span></div>
+          <p>司機到住處或上野指定點接。<strong>上車先睡</strong>——今晚會很長。走首都高接關越道往新潟方向。</p>
+        </div></div>
+
+        <div class="ev" data-k="move"><div class="ev-time">10:00</div><div class="ev-body">
+          <div class="ev-title"><h4>関越道．上里 SA 休息</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=上里サービスエリア" target="_blank" rel="noopener">地圖</a></div>
+          <p>上廁所、買飲料。之後過關越隧道進新潟縣，出隧道那一段風景很好。</p>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">12:30</div><div class="ev-body">
+          <div class="ev-title"><h4>抵達長岡</h4><span class="tag">約 4.5 小時車程</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=長岡駅" target="_blank" rel="noopener">地圖</a></div>
+          <p>比預定時間早到是好事。<strong>花火當天下午市區就開始管制</strong>，越晚進來越麻煩。</p>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">13:00</div><div class="ev-body">
+          <div class="ev-title"><h4>午餐：青島食堂 宮内駅前店</h4><span class="tag lan">長岡名物</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=青島食堂宮内駅前店" target="_blank" rel="noopener">地圖</a></div>
+          <p>新潟県長岡市宮内 3-5-3．11:00–19:00．第三個週三公休。
+          <strong>長岡生薑醬油拉麵的元祖</strong>，開了六十年。招牌「青島ラーメン」¥900——
+          醬油湯底加大量生薑，夏天喝反而開胃。</p>
+          <div class="ev-cost"><span>青島ラーメン <b>¥900</b></span></div>
+          <p style="margin-top:.3rem"><strong>花火當天一定排隊</strong>。備案：
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=ラーメンみずさわ長岡" target="_blank" rel="noopener">みずさわ</a>（城岡 1-4-6）、
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=ラーメンたいち長岡" target="_blank" rel="noopener">ラーメン たいち</a>（堺東町 50），
+          都是在地人認可的生薑醬油系。真的來不及就直接去超市買便當。</p>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">14:30</div><div class="ev-body">
+          <div class="ev-title"><h4>超市採買晚餐與冰塊</h4><span class="tag sea">關鍵補給</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=イオン長岡店" target="_blank" rel="noopener">イオン長岡</a></div>
+          <p>會場的攤販貴又要排隊。<strong>在這裡把晚餐買齊</strong>：便當、飯糰、炸物、水果、
+          大量的水與運動飲料、<strong>冰塊</strong>（八月的新潟很熱）、濕紙巾、垃圾袋。
+          六人份大約 ¥1,500／人。買完放車上，司機會幫忙顧。</p>
+          <div class="ev-cost"><span>晚餐與飲料 <b>¥1,500</b>／人</span><span>冰塊、保冷袋 <b>¥1,000</b>／團</span></div>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">15:30</div><div class="ev-body">
+          <div class="ev-title"><h4>移動到觀賞點．開始佔位</h4><span class="tag lan">分岔點</span></div>
+          <p><strong>方案 A（有票）</strong>：請司機開到最靠近你們進場口的下車點，依票面指示進場。
+          有料観覧席通常下午就開放入場，早點進去比較從容。</p>
+          <p><strong>方案 B（無票）</strong>：直接開上高台穴場。<strong>好位置下午就有人了</strong>，
+          三點半到算安全。鋪好野餐墊、撐傘遮陽、輪流去廁所。</p>
+          <div class="ev-cost"><span><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=国営越後丘陵公園" target="_blank" rel="noopener">越後丘陵公園</a></span><span><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=長岡ニュータウン中央公園" target="_blank" rel="noopener">長岡ニュータウン</a></span><span><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=長岡インパルス" target="_blank" rel="noopener">長岡インパルス</a></span></div>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">16:30</div><div class="ev-body">
+          <div class="ev-title"><h4>位子顧好，開始吃晚餐</h4></div>
+          <p>天還亮，慢慢吃。輪流去上廁所——<strong>天黑後廁所會大排長龍</strong>。
+          防蚊液這時候噴。手機開省電模式，行動電源接上。</p>
+        </div></div>
+
+        <div class="ev" data-k="night"><div class="ev-time">19:20</div><div class="ev-body">
+          <div class="ev-title"><h4>花火開始</h4><span class="tag lan">110 分鐘</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=長岡まつり大花火大会会場" target="_blank" rel="noopener">會場</a></div>
+          <p>19:20 施放到 21:10，約兩萬發。三個一定要看的節目：</p>
+          <div class="ev-cost"><span><b>正三尺玉</b>　直徑 90cm、重約 300kg，升空約 600 公尺、開花直徑約 650 公尺。日本少數還在放的規格。</span></div>
+          <div class="ev-cost"><span><b>復興祈願花火フェニックス</b>　紀念 2004 年中越地震復興，橫向展開<strong>約兩公里寬</strong>，配樂是平原綾香的〈Jupiter〉。這是長岡花火的靈魂。</span></div>
+          <div class="ev-cost"><span><b>天地人花火・ナイアガラ</b>　長生橋上的瀑布狀煙火，沿著橋整條垂落。</span></div>
+        </div></div>
+
+        <div class="ev" data-k="night"><div class="ev-time">21:10</div><div class="ev-body">
+          <div class="ev-title"><h4>結束．不要急著動</h4></div>
+          <p>坐著等十到二十分鐘，讓第一波人潮先走。<strong>這時候急沒有用，只會卡在原地。</strong>
+          收東西、垃圾自己帶走。</p>
+        </div></div>
+
+        <div class="ev" data-k="move"><div class="ev-time">21:30</div><div class="ev-body">
+          <div class="ev-title"><h4>回到約定地點上車</h4><span class="tag">最容易出錯的一步</span></div>
+          <p><strong>上車點要在出發前就講好，而且要是絕對找得到的地標</strong>——人多的時候手機訊號會塞，
+          找不到彼此很常見。六個人先約好「走散就在 X 集合」。</p>
+        </div></div>
+
+        <div class="ev" data-k="move"><div class="ev-time">22:00</div><div class="ev-body">
+          <div class="ev-title"><h4>上高速．回東京</h4></div>
+          <p>散場後關越道方向會回堵一段。上車就睡，司機會處理。</p>
+        </div></div>
+
+        <div class="ev" data-k="rest"><div class="ev-time">01:00<br>–02:00</div><div class="ev-body">
+          <div class="ev-title"><h4>抵達上野</h4><span class="tag sea">預估</span>
+          <a class="mapl" href="#drive">車程試算</a></div>
+          <p>方案 A（會場內）約 <strong>01:25–03:15</strong>；方案 B（高台穴場）約 <strong>00:55–01:55</strong>，
+          平均早一小時。業者說的「半夜十二點前後」是全程無大塞的最好情況，
+          <strong>務實抓一點到兩點</strong>。所以明天上午完全空著，睡到自然醒。</p>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="tabpanel" id="d3" role="tabpanel" aria-labelledby="tab-d3" hidden>
+      <div class="dayhead"><h3>Day 3｜東京．拍照與夜景</h3><span class="tag lan">三選一</span>
+        <p>上午睡飽，下午出門。三條路線都排到晚上、都有一個「值得拍」的高潮。當天看體力跟天氣再決定走哪條。</p></div>
+
+      <div class="optnote"><b>自由決定</b><span>以下都不是非去不可。三對六個人，早上起來看誰想走哪條，投票就好——路線 A 最省力、B 最好拍、C 最好玩。</span></div>
+
+      <div class="routeswap" role="group" aria-label="Day 3 路線">
+        <button type="button" data-route="r3a" aria-pressed="true"><b>路線 A．推薦</b>下町散步 → 晴空塔夜景</button>
+        <button type="button" data-route="r3b" aria-pressed="false"><b>路線 B．最網美</b>表參道 → 澀谷天空</button>
+        <button type="button" data-route="r3c" aria-pressed="false"><b>路線 C．最好玩</b>teamLab → 台場夜景</button>
+      </div>
+
+      <div data-routepanel="r3a">
+        <div class="tl">
+          <div class="ev" data-k="rest"><div class="ev-time">－11:30</div><div class="ev-body">
+            <div class="ev-title"><h4>睡到自然醒</h4><span class="tag">刻意留白</span></div>
+            <p>昨天從早上八點到凌晨兩點，這個上午不排任何事。有廚房的話煮個東西當早午餐。</p>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">13:00</div><div class="ev-body">
+            <div class="ev-title"><h4>谷中銀座商店街．夕焼けだんだん</h4><span class="tag free">免費</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=谷中銀座商店街" target="_blank" rel="noopener">商店街</a>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=夕焼けだんだん" target="_blank" rel="noopener">階梯</a></div>
+            <p>東京少數躲過戰火與泡沫改建的老街。<strong>「夕焼けだんだん」那道階梯是招牌構圖</strong>——
+            站在階梯頂往下拍，整條商店街收進畫面裡，六個人排一排也拍得下。
+            從日暮里站走 5 分鐘。兩側都是小吃：可樂餅、燒鳥、豆菓子、貓咪造型的燒菓子。</p>
+            <div class="ev-cost"><span>邊走邊吃 <b>¥500–1,200</b>／人</span></div>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">14:30</div><div class="ev-body">
+            <div class="ev-title"><h4>根津神社．千本鳥居</h4><span class="tag free">免費</span><span class="tag lan">拍照點</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=根津神社" target="_blank" rel="noopener">地圖</a></div>
+            <p>從谷中走過去約 15 分。<strong>境內有一整排朱紅色的乙女稲荷鳥居隧道</strong>，
+            氣氛跟京都伏見稻荷很像，但人少非常多——這是東京拍鳥居最不用排隊的地方。
+            穿過鳥居的逆光照最好看。本殿是江戶時代留下來的，已列重要文化財。</p>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">16:00</div><div class="ev-body">
+            <div class="ev-title"><h4>淺草寺．仲見世通</h4><span class="tag free">免費</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=浅草寺" target="_blank" rel="noopener">淺草寺</a>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=仲見世通り" target="_blank" rel="noopener">仲見世</a></div>
+            <p>從根津搭千代田線轉銀座線，約 20 分。雷門大燈籠前是東京最經典的合照點。
+            仲見世通兩側的人形燒、雷おこし、抹茶霜淇淋，一路吃到本堂。
+            <strong>想穿和服拍照的話，淺草有很多和服租借店</strong>（約 ¥3,000–5,000／人，含穿衣與髮型）。</p>
+            <div class="ev-cost"><span>小吃 <b>¥800–1,500</b>／人</span><span>和服租借（選配）<b>¥3,000–5,000</b></span></div>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">17:30</div><div class="ev-body">
+            <div class="ev-title"><h4>隅田公園．走向晴空塔</h4><span class="tag free">免費</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=隅田公園" target="_blank" rel="noopener">地圖</a></div>
+            <p>從淺草沿隅田川往晴空塔走，過吾妻橋約 20 分鐘。<strong>橋上可以同時拍到晴空塔與朝日啤酒大樓</strong>，
+            傍晚的光線最漂亮。走不動的話搭一站電車就到。</p>
+          </div></div>
+
+          <div class="ev" data-k="night"><div class="ev-time">18:30</div><div class="ev-body">
+            <div class="ev-title"><h4>東京晴空塔．天望デッキ</h4><span class="tag lan">今日高潮</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=東京スカイツリー" target="_blank" rel="noopener">地圖</a></div>
+            <p>350 公尺的天望デッキ。<strong>八月初日落大約 18:40</strong>——這個時間上去，
+            剛好從夕陽看到整片夜景亮起來，是一趟票看兩種景色。天氣好的話看得到富士山剪影。
+            想再上去的話，450 公尺的「天望回廊」要另外加購。</p>
+            <figure class="figure" data-slot="ngk-skytree"><span class="figbadge">示意圖 · 待換實拍</span><svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="東京晴空塔夜景"><rect width="400" height="220" fill="var(--surface-2)"/>
+<rect width="400" height="220" fill="var(--ink)" opacity=".1"/>
+<g opacity=".16" fill="var(--ink)">
+<rect x="10" y="150" width="30" height="70"/><rect x="46" y="166" width="24" height="54"/>
+<rect x="76" y="142" width="34" height="78"/><rect x="286" y="158" width="28" height="62"/>
+<rect x="320" y="140" width="32" height="80"/><rect x="358" y="164" width="30" height="56"/></g>
+<g fill="var(--sea)" opacity=".75">
+<path d="M196 26h8l10 120h-28z"/><path d="M186 146h28l8 74h-44z"/></g>
+<g fill="var(--sea)" opacity=".35"><ellipse cx="200" cy="96" rx="22" ry="7"/><ellipse cx="200" cy="66" rx="16" ry="5"/></g>
+<rect x="198" y="12" width="4" height="16" fill="var(--sea)" opacity=".8"/>
+<g fill="var(--lantern)" opacity=".7"><circle cx="200" cy="96" r="3"/><circle cx="200" cy="66" r="2.5"/></g>
+<g stroke="var(--sea)" stroke-width=".8" opacity=".3" fill="none">
+<path d="M186 120h28M188 100h24M190 80h20"/></g>
+<path d="M0 200h400v20H0z" fill="var(--sea)" opacity=".12"/>
+<g fill="var(--lantern)" opacity=".2"><ellipse cx="200" cy="210" rx="7" ry="10"/></g>
+</svg><figcaption class="figcap"><b>東京晴空塔 天望デッキ</b>　350 公尺高，八月初日落約 18:40，一趟票看夕陽轉夜景。<em>Day 3 路線 A · 18:30</em></figcaption></figure>
+            <div class="ev-cost"><span>天望デッキ <b>¥1,800–3,600</b>／人</span></div>
+            <p style="margin-top:.3rem"><strong>2026 年 4 月起改成浮動票價</strong>，每天價格不同，
+            而且<strong>當天在 4 樓窗口買每張要多收 ¥500 發券手續費</strong>——
+            六個人就是 ¥3,000，一定要事先上官網買日時指定券。</p>
+          </div></div>
+
+          <div class="ev" data-k="night"><div class="ev-time">20:00</div><div class="ev-body">
+            <div class="ev-title"><h4>東京晴空街道 晚餐</h4>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=東京ソラマチ" target="_blank" rel="noopener">地圖</a></div>
+            <p>塔下的商場，30、31 樓有一整層景觀餐廳，六人可訂位。想省錢的話 B1 美食街與超市也很好用。</p>
+            <div class="ev-cost"><span>景觀餐廳 <b>¥3,500–6,000</b></span><span>美食街 <b>¥1,200–2,000</b></span></div>
+          </div></div>
+
+          <div class="ev" data-k="night"><div class="ev-time">21:30</div><div class="ev-body">
+            <div class="ev-title"><h4>回上野．不忍池的蓮花</h4><span class="tag free">免費</span><span class="tag lan">八月限定</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=不忍池" target="_blank" rel="noopener">地圖</a></div>
+            <p>就在住處旁邊。<strong>七月中到八月中整片池子開滿蓮花</strong>，剛好是你們來的時候。
+            花在清晨開得最好，但夜裡打燈的池畔散步也很舒服，當作一天的收尾。</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div data-routepanel="r3b" hidden>
+        <div class="tl">
+          <div class="ev" data-k="rest"><div class="ev-time">－12:00</div><div class="ev-body">
+            <div class="ev-title"><h4>睡到自然醒</h4></div>
+            <p>這條路線跑得比較遠，出門前吃飽。</p>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">13:30</div><div class="ev-body">
+            <div class="ev-title"><h4>明治神宮</h4><span class="tag free">免費</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=明治神宮" target="_blank" rel="noopener">地圖</a></div>
+            <p>上野搭山手線到原宿約 30 分。市中心裡的一整片森林，參道兩旁高木成蔭，
+            夏天走進去體感低好幾度。<strong>大鳥居是拍照重點</strong>，境內的清正井也是知名景點。</p>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">15:00</div><div class="ev-body">
+            <div class="ev-title"><h4>表參道 → 原宿竹下通</h4>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=表参道" target="_blank" rel="noopener">表參道</a>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=竹下通り" target="_blank" rel="noopener">竹下通</a></div>
+            <p>表參道的櫸木大道兩側是建築名家的旗艦店，本身就很好拍；
+            竹下通則是完全相反的擁擠與繽紛，可麗餅、彩虹棉花糖都在這裡。兩條一起走剛好對比。</p>
+            <div class="ev-cost"><span>可麗餅 <b>¥600–900</b></span><span>咖啡 <b>¥600–800</b></span></div>
+          </div></div>
+
+          <div class="ev" data-k="night"><div class="ev-time">17:30</div><div class="ev-body">
+            <div class="ev-title"><h4>SHIBUYA SKY．澀谷天空</h4><span class="tag lan">今日高潮</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=渋谷スクランブルスクエア" target="_blank" rel="noopener">地圖</a></div>
+            <p>澀谷 Scramble Square 頂樓，<strong>地上 229 公尺的「屋外」展望空間</strong>——
+            沒有玻璃隔著，360 度看整個東京，天氣好時看得到晴空塔與富士山。
+            分成室內的 SKY GALLERY 與屋外的 SKY STAGE，下雨也有得看。
+            <strong>選日落前後的時段最值得</strong>，八月初日落約 18:40。</p>
+            <div class="ev-cost"><span>網路購票 <b>¥2,200</b>／人</span><span>現場窗口 <b>¥2,500</b>／人</span></div>
+            <p style="margin-top:.3rem"><strong>是日時指定券，一定要先在官網買</strong>，
+            日落時段最熱門常常完售。六個人記得買同一時段。</p>
+          </div></div>
+
+          <div class="ev" data-k="night"><div class="ev-time">19:15</div><div class="ev-body">
+            <div class="ev-title"><h4>澀谷十字路口．忠犬八公</h4><span class="tag free">免費</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=渋谷スクランブル交差点" target="_blank" rel="noopener">地圖</a></div>
+            <p>全世界最有名的路口。想拍空景的話，站在 <strong>MAGNET by SHIBUYA109 頂樓</strong>
+            或站前天橋往下拍最清楚。八公像永遠在排隊，但還是要拍一張。</p>
+          </div></div>
+
+          <div class="ev" data-k="night"><div class="ev-time">20:00</div><div class="ev-body">
+            <div class="ev-title"><h4>澀谷晚餐</h4>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=渋谷横丁" target="_blank" rel="noopener">澀谷橫丁</a></div>
+            <p>MIYASHITA PARK 一樓的「澀谷橫丁」把日本各地的鄉土料理排成一條街，
+            氣氛熱鬧、適合六個人。或走去道玄坂找燒肉、居酒屋。</p>
+            <div class="ev-cost"><span><b>¥3,000–4,500</b>／人</span></div>
+          </div></div>
+        </div>
+      </div>
+
+      <div data-routepanel="r3c" hidden>
+        <div class="tl">
+          <div class="ev" data-k="rest"><div class="ev-time">－11:30</div><div class="ev-body">
+            <div class="ev-title"><h4>睡到自然醒</h4></div>
+            <p>teamLab 是預約制，出發前先確認時段。</p>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">13:00</div><div class="ev-body">
+            <div class="ev-title"><h4>teamLab Planets TOKYO．豐洲</h4><span class="tag lan">拍照聖地</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=teamLab Planets TOKYO 豊洲" target="_blank" rel="noopener">地圖</a></div>
+            <p>上野搭車約 40 分。<strong>要脫鞋、會涉水走進作品裡</strong>的沉浸式數位藝術館，
+            鏡面地板加上無限延伸的光影，是東京最好拍的室內景點之一——<strong>情侶照怎麼拍都好看</strong>。
+            會弄濕膝蓋以下，<strong>女生建議穿短褲或方便捲起的褲子</strong>（現場有提供短褲租借）。</p>
+            <div class="ev-cost"><span>成人票 <b>約 ¥3,800</b>／人（以官網為準）</span></div>
+            <p style="margin-top:.3rem"><strong>完全預約制、日時指定</strong>，要先上官網買票。六人買同一時段。</p>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">15:30</div><div class="ev-body">
+            <div class="ev-title"><h4>台場海濱公園</h4><span class="tag free">免費</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=お台場海浜公園" target="_blank" rel="noopener">地圖</a></div>
+            <p>從豐洲搭百合海鷗號過去。人工沙灘、海風、可以坐下來發呆的階梯。
+            <strong>自由女神像複製品</strong>就在旁邊，背後正好是彩虹大橋——這是台場的招牌合照構圖。</p>
+          </div></div>
+
+          <div class="ev" data-k="night"><div class="ev-time">18:30</div><div class="ev-body">
+            <div class="ev-title"><h4>彩虹大橋．日落轉夜景</h4><span class="tag free">免費</span><span class="tag lan">今日高潮</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=レインボーブリッジ" target="_blank" rel="noopener">地圖</a></div>
+            <p>八月初日落約 18:40。<strong>從台場這一側看，夕陽會落在東京鐵塔與大橋之間</strong>，
+            天色轉藍的那二十分鐘（攝影師說的 blue hour）是全東京最好拍的時刻之一。
+            橋上有免費的人行步道，走一段更有感覺。</p>
+          </div></div>
+
+          <div class="ev" data-k="night"><div class="ev-time">20:00</div><div class="ev-body">
+            <div class="ev-title"><h4>台場晚餐．或回上野</h4>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=アクアシティお台場" target="_blank" rel="noopener">AQUA CiTY</a></div>
+            <p>AQUA CiTY 的海景餐廳可以邊吃邊看彩虹大橋。想省錢就回上野吃，車程約 40 分。</p>
+            <div class="ev-cost"><span>海景餐廳 <b>¥3,000–5,000</b></span></div>
+          </div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabpanel" id="d4" role="tabpanel" aria-labelledby="tab-d4" hidden>
+      <div class="dayhead"><h3>Day 4｜最後半天</h3><span class="tag lan">兩選一</span>
+        <p>下午兩點要出發去機場，實際能玩的是 <strong>09:00–13:30 大約四個半小時</strong>。兩條路線都算好了時間。</p></div>
+
+      <div class="optnote"><b>注意</b><span>2027/8/4 是<strong>週三</strong>——築地場外市場週三是自由營業日，<strong>只有大約一半的店會開</strong>。想吃海鮮早餐的話要有心理準備，或直接走路線 B。</span></div>
+
+      <div class="routeswap" role="group" aria-label="Day 4 路線">
+        <button type="button" data-route="r4a" aria-pressed="true"><b>路線 A．吃吃喝喝</b>築地 → 銀座 → 東京車站</button>
+        <button type="button" data-route="r4b" aria-pressed="false"><b>路線 B．最省力</b>上野公園 → 阿美橫丁</button>
+      </div>
+
+      <div data-routepanel="r4a">
+        <div class="tl">
+          <div class="ev" data-k="move"><div class="ev-time">08:30</div><div class="ev-body">
+            <div class="ev-title"><h4>退房．行李寄放</h4></div>
+            <p>Airbnb 多半可寄放到下午，訂房時先問。三戶分開住的話各自處理，或統一寄上野站的大型置物櫃。</p>
+            <div class="ev-cost"><span>大型置物櫃 <b>¥700</b>／個</span></div>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">09:30</div><div class="ev-body">
+            <div class="ev-title"><h4>築地場外市場．海鮮早餐</h4><span class="tag sea">吃吃喝喝</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=築地場外市場" target="_blank" rel="noopener">地圖</a></div>
+            <p>上野搭日比谷線到築地約 25 分。市場 5:00 開到 15:00，<strong>觀光最舒服的時段就是 9:00–13:00</strong>——
+            批發的尖峰過了、店家也都開了。玉子燒、海膽、和牛串、生蠔、鮪魚丼，一攤一攤買著吃。</p>
+            <div class="ev-cost"><span><b>訣竅：一開始就用「分著吃」的量買</b>，最後再上海鮮丼，不然很快就飽了</span></div>
+            <div class="ev-cost"><span>食べ歩き <b>¥1,500–2,500</b>／人</span><span>海鮮丼 <b>¥2,000–3,500</b></span></div>
+            <p style="margin-top:.3rem"><strong>週三只有一半店家營業</strong>，開的通常是名氣大的那幾家，
+            所以反而人更集中。想穩一點就改走路線 B。</p>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">11:15</div><div class="ev-body">
+            <div class="ev-title"><h4>濱離宮恩賜庭園</h4>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=浜離宮恩賜庭園" target="_blank" rel="noopener">地圖</a></div>
+            <p>從築地走過去 15 分。江戶時代的將軍庭園，<strong>池畔的茶屋前方就是汐留的玻璃帷幕大樓</strong>——
+            傳統與現代同框，是東京很獨特的一個構圖。中島の御茶屋可以坐下來喝抹茶配和菓子。</p>
+            <div class="ev-cost"><span>入園 <b>¥300</b>／人</span><span>抹茶＋和菓子 <b>¥850</b></span></div>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">12:15</div><div class="ev-body">
+            <div class="ev-title"><h4>銀座．最後採買</h4>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=銀座四丁目交差点" target="_blank" rel="noopener">銀座四丁目</a>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=GINZA SIX" target="_blank" rel="noopener">GINZA SIX</a></div>
+            <p>從濱離宮走 15 分。和光的鐘樓、GINZA SIX 的中庭裝置都很好拍。
+            百貨 B1 的伴手禮最齊，<strong>免稅同店滿 ¥5,000，六個人可以合併結帳衝門檻</strong>。</p>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">13:00</div><div class="ev-body">
+            <div class="ev-title"><h4>東京車站丸之內站體</h4><span class="tag free">免費</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=東京駅丸の内駅舎" target="_blank" rel="noopener">地圖</a></div>
+            <p>銀座走過去 10 分。<strong>1914 年的紅磚站體</strong>，戰後復原成三層樓的原貌。
+            站前廣場、或 KITTE 六樓的免費展望露臺往下拍，都是很漂亮的收尾照。</p>
+          </div></div>
+
+          <div class="ev" data-k="move"><div class="ev-time">13:40</div><div class="ev-body">
+            <div class="ev-title"><h4>回上野取行李 → 前往機場</h4></div>
+            <p>東京站到上野只要 6 分鐘。<strong>成田抓起飛前 3 小時出發、羽田 2.5 小時</strong>（六人報到與退稅要時間）。</p>
+            <div class="ev-cost"><span>Access 特急 <b>¥1,290</b>／人</span></div>
+          </div></div>
+        </div>
+      </div>
+
+      <div data-routepanel="r4b" hidden>
+        <div class="tl">
+          <div class="ev" data-k="rest"><div class="ev-time">09:00</div><div class="ev-body">
+            <div class="ev-title"><h4>睡飽一點．慢慢退房</h4></div>
+            <p>這條路線全部在住處走路範圍內，不用趕車，可以睡到八點多再起來。</p>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">09:30</div><div class="ev-body">
+            <div class="ev-title"><h4>不忍池．清晨的蓮花</h4><span class="tag free">免費</span><span class="tag lan">八月限定</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=不忍池" target="_blank" rel="noopener">地圖</a></div>
+            <p><strong>蓮花在清晨開得最好，中午前就會慢慢闔起來</strong>——所以這條路線把它排在早上。
+            整片池子開滿粉白色的花，人站在木棧道上拍，背後是一整面荷葉，是很少見的畫面。
+            七月中到八月中限定，剛好卡在你們來的時候。</p>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">10:30</div><div class="ev-body">
+            <div class="ev-title"><h4>上野恩賜公園．舊岩崎邸庭園</h4>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=上野恩賜公園" target="_blank" rel="noopener">上野公園</a>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=旧岩崎邸庭園" target="_blank" rel="noopener">舊岩崎邸</a></div>
+            <p>公園裡的<strong>清水觀音堂「月之松」</strong>——把松枝彎成一個圓圈，
+            從圓圈中間框出不忍池的弁天堂，是浮世繪畫過的構圖，現在還原地保留著，非常好拍。<br>
+            走 10 分鐘到舊岩崎邸庭園：三菱財閥的洋館，英國建築師設計，<strong>木造迴廊與彩繪玻璃</strong>保存完整。</p>
+            <div class="ev-cost"><span>舊岩崎邸 <b>¥400</b>／人</span><span>上野公園 <b>免費</b></span></div>
+          </div></div>
+
+          <div class="ev" data-k="play"><div class="ev-time">12:00</div><div class="ev-body">
+            <div class="ev-title"><h4>阿美橫丁．午餐與最後採買</h4><span class="tag sea">吃吃喝喝</span>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=アメヤ横丁" target="_blank" rel="noopener">地圖</a>
+            <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=二木の菓子アメ横" target="_blank" rel="noopener">二木の菓子</a></div>
+            <p>高架下的海鮮丼、串燒、中華料理，六個人隨便找一家坐下來吃。
+            <strong>二木の菓子</strong>（1947 年創業）零食最便宜、種類最多，伴手禮一次買齊。
+            藥妝去 <a href="https://www.google.com/maps/search/?api=1&amp;query=マツモトキヨシ上野" target="_blank" rel="noopener">松本清</a> 或
+            <a href="https://www.google.com/maps/search/?api=1&amp;query=ドンキホーテ上野" target="_blank" rel="noopener">唐吉訶德</a> 比價。</p>
+            <div class="ev-cost"><span>午餐 <b>¥1,200–2,000</b>／人</span></div>
+          </div></div>
+
+          <div class="ev" data-k="move"><div class="ev-time">13:30</div><div class="ev-body">
+            <div class="ev-title"><h4>取行李 → 前往機場</h4></div>
+            <p>全程都在上野站附近，最後一段完全不用趕。<strong>成田抓起飛前 3 小時、羽田 2.5 小時。</strong></p>
+            <div class="ev-cost"><span>Access 特急 <b>¥1,290</b>／人</span></div>
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="eat">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">必吃</p>
+      <h2>長岡的名物，東京的補給</h2>
+      <p>花火那天在長岡只有中午一餐能好好吃，其他時間都在佔位子。所以那一餐要吃對——長岡有自己的拉麵流派。</p>
+    </div>
+
+    <div class="filters" role="group" aria-label="美食篩選">
+      <button class="chip" data-filter="all" aria-pressed="true">全部</button>
+      <button class="chip" data-filter="nagaoka" aria-pressed="false">長岡．新潟</button>
+      <button class="chip" data-filter="tokyo" aria-pressed="false">東京</button>
+      <button class="chip" data-filter="hanabi" aria-pressed="false">花火當天</button>
+      <button class="chip" data-filter="gift" aria-pressed="false">伴手禮</button>
+    </div>
+
+    <div class="eats" id="eatGrid">
+      <article class="card eat" data-tags="nagaoka hanabi">
+        <h4>青島ラーメン</h4><span class="jp">青島食堂 宮内駅前店・長岡市宮内 3-5-3</span>
+        <p><strong>長岡生薑醬油拉麵的元祖</strong>，開了六十年。醬油湯底加大量生薑，夏天喝反而開胃。
+        11:00–19:00，第三個週三公休。花火當天必定排隊。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=青島食堂宮内駅前店" target="_blank" rel="noopener">地圖</a><span class="tag lan">長岡名物</span><span class="yen">¥900</span></div>
+      </article>
+      <article class="card eat" data-tags="nagaoka hanabi">
+        <h4>みずさわ</h4><span class="jp">長岡市城岡 1-4-6</span>
+        <p>在地人認可的長岡生薑醬油系人氣店。青島食堂排太長時的第一備案。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=ラーメンみずさわ長岡" target="_blank" rel="noopener">地圖</a><span class="tag lan">備案</span><span class="yen">¥800–1,000</span></div>
+      </article>
+      <article class="card eat" data-tags="nagaoka hanabi">
+        <h4>ラーメン たいち</h4><span class="jp">長岡市堺東町 50</span>
+        <p>同樣是在地評價高的生薑醬油系。位置與青島食堂不同方向，可依當天車行路線選。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=ラーメンたいち長岡" target="_blank" rel="noopener">地圖</a><span class="tag lan">備案</span><span class="yen">¥800–1,000</span></div>
+      </article>
+      <article class="card eat" data-tags="nagaoka">
+        <h4>へぎそば</h4><span class="jp">新潟中越地方的名物蕎麥麵</span>
+        <p>用<strong>布海苔</strong>（一種海藻）當黏著劑打的蕎麥麵，口感特別滑韌，一口一口捲成小團擺在木盒（へぎ）上。
+        長岡市區有數家，車程許可的話值得專程吃一次。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=へぎそば長岡" target="_blank" rel="noopener">地圖</a><span class="tag lan">長岡名物</span><span class="yen">¥1,200–1,800</span></div>
+      </article>
+      <article class="card eat" data-tags="nagaoka gift">
+        <h4>栃尾の油揚げ</h4><span class="jp">長岡市栃尾地區的巨大油豆腐</span>
+        <p>厚度是一般油豆腐的三倍，長約 20 公分。烤過淋上薑末醬油，外酥內軟。
+        長岡的超市與道の駅都買得到，當天在超市採買時可以順手拿。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=栃尾の油揚げ長岡" target="_blank" rel="noopener">地圖</a><span class="tag lan">長岡名物</span><span class="yen">¥200–400</span></div>
+      </article>
+      <article class="card eat" data-tags="nagaoka gift">
+        <h4>笹団子</h4><span class="jp">新潟名物和菓子</span>
+        <p>艾草麻糬包紅豆餡，用竹葉裹起來蒸。新潟最經典的伴手禮，超市與土產店都有。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=笹団子新潟" target="_blank" rel="noopener">地圖</a><span class="tag">伴手禮</span><span class="yen">¥150–250／個</span></div>
+      </article>
+      <article class="card eat" data-tags="hanabi">
+        <h4>超市便當與飯糰</h4><span class="jp">イオン長岡 等賣場</span>
+        <p><strong>花火當天最重要的一餐其實是這個。</strong>會場攤販貴又排隊，
+        下午先在超市把六人份的便當、炸物、飲料、冰塊買齊，帶上高台或進場慢慢吃。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=イオン長岡店" target="_blank" rel="noopener">地圖</a><span class="tag sea">關鍵</span><span class="yen">¥1,500／人</span></div>
+      </article>
+      <article class="card eat" data-tags="tokyo gift">
+        <h4>二木の菓子</h4><span class="jp">阿美橫丁・1947 年創業的零食批發</span>
+        <p>阿美橫丁的老字號零食店，價格比一般超市便宜，種類極多。伴手禮一次買齊的好地方。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=二木の菓子アメ横" target="_blank" rel="noopener">地圖</a><span class="tag">伴手禮</span><span class="yen">便宜</span></div>
+      </article>
+      <article class="card eat" data-tags="tokyo">
+        <h4>阿美橫丁 高架下</h4><span class="jp">上野–御徒町 之間</span>
+        <p>JR 高架橋下一整排熱炒、居酒屋、海鮮攤，價格便宜、氣氛熱鬧，是六個人吃飯最順的地方。建議先訂位。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=アメヤ横丁" target="_blank" rel="noopener">地圖</a><span class="tag sea">六人適合</span><span class="yen">¥3,000–4,000</span></div>
+      </article>
+      <article class="card eat" data-tags="tokyo">
+        <h4>谷中銀座商店街</h4><span class="jp">谷根千・老街小吃</span>
+        <p>可樂餅、燒鳥、煎餅、豆菓子，一攤一攤買著吃。適合 Day 3 下午散步時邊走邊分。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=谷中銀座商店街" target="_blank" rel="noopener">地圖</a><span class="tag free">邊走邊吃</span><span class="yen">¥500–1,200</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="money">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">費用</p>
+      <h2>六個人，四天三夜，逐項算給你看</h2>
+      <p>以 2027/8/1–8/4、住東京上野 Airbnb 三戶獨立（三對情侶各一戶）、包車去長岡、抽中 A 会場マス席為基準。日圓以 ¥100 ≈ NT$21 換算。</p>
+    </div>
+
+    <div class="scroller" style="margin-bottom:1.5rem">
+      <table>
+        <thead><tr><th>項目</th><th>明細</th><th>日圓（每人）</th><th>台幣（每人）</th></tr></thead>
+        <tbody>
+          <tr><td><strong>機票</strong></td><td>台北 ↔ 東京 來回含稅．廉航八月旺季估值<br><small style="color:var(--ink-3)">以 2026/8 同期實查價推估，2027 年票約 2026/9 開賣</small></td><td class="num">—</td><td class="num">13,000</td></tr>
+          <tr><td><strong>包車</strong></td><td>Alphard 上野↔長岡 來回 ¥90,000 ÷ 6 人</td><td class="num">15,000</td><td class="num">3,150</td></tr>
+          <tr style="background:var(--lantern-soft)"><td><strong>花火票</strong></td><td>A 会場マス席 ¥32,000 ÷ 6 人<br><small style="color:var(--ink-3)">抽不到就是 ¥0，改上高台穴場</small></td><td class="num">5,333</td><td class="num">1,120</td></tr>
+          <tr><td><strong>住宿</strong></td><td>Airbnb 三戶獨立 ¥13,000／戶 × 3 戶 × 3 晚 ÷ 6 人<br><small style="color:var(--ink-3)">三對情侶各一戶，衛浴廚房全獨立。改住法 2（一戶三臥室）每人約省 NT$700</small></td><td class="num">19,500</td><td class="num">4,095</td></tr>
+          <tr><td><strong>機場往返</strong></td><td>京成 Access 特急 ¥1,290 × 2 趟</td><td class="num">2,580</td><td class="num">542</td></tr>
+          <tr><td><strong>東京市內交通</strong></td><td>四天地鐵、JR 零星車資</td><td class="num">2,000</td><td class="num">420</td></tr>
+          <tr><td>餐食 Day 1</td><td>阿美橫丁採買 ¥2,000＋百元店用品 ¥500＋晚餐 ¥3,000</td><td class="num">5,500</td><td class="num">1,155</td></tr>
+          <tr><td>餐食 Day 2</td><td>早餐 ¥300＋青島拉麵 ¥900＋超市晚餐飲料 ¥1,500＋冰塊分攤 ¥170</td><td class="num">2,870</td><td class="num">603</td></tr>
+          <tr><td>餐食 Day 3</td><td>早午餐 ¥800＋谷中小吃 ¥1,000＋慶功晚餐 ¥3,500</td><td class="num">5,300</td><td class="num">1,113</td></tr>
+          <tr><td>餐食 Day 4</td><td>早餐 ¥400＋午餐 ¥1,500</td><td class="num">1,900</td><td class="num">399</td></tr>
+          <tr><td><strong>雜支</strong></td><td>置物櫃、賽錢、小額門票</td><td class="num">2,000</td><td class="num">420</td></tr>
+          <tr><td><strong>eSIM</strong></td><td>四天上網</td><td class="num">—</td><td class="num">300</td></tr>
+          <tr><td><strong>台灣端交通</strong></td><td>住家 ↔ 桃園機場 來回</td><td class="num">—</td><td class="num">180</td></tr>
+          <tr style="background:var(--sea-soft)"><td colspan="3"><strong>每人合計</strong>（方案 A．有票，不含購物）</td><td class="num"><strong>NT$ 26,497</strong></td></tr>
+          <tr style="background:var(--cheap-soft)"><td colspan="3"><strong>每人合計</strong>（方案 B．高台穴場，省下票錢）</td><td class="num"><strong>NT$ 25,377</strong></td></tr>
+          <tr style="background:var(--sea-soft)"><td colspan="3"><strong>六人團總計</strong>（方案 A）</td><td class="num"><strong>NT$ 158,982</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="calc">
+      <div class="controls">
+        <div class="ctl">
+          <label for="airR">機票 來回含稅／人 <b id="airV">NT$13,000</b></label>
+          <input type="range" id="airR" min="7000" max="24000" step="500" value="13000">
+        </div>
+        <div class="ctl">
+          <label for="stay">住宿 每戶每晚（三戶獨立） <b id="stayV">¥13,000</b></label>
+          <input type="range" id="stay" min="7000" max="24000" step="500" value="13000">
+        </div>
+        <div class="ctl">
+          <label for="rate">匯率 ¥100 = <b id="rateV">NT$21.0</b></label>
+          <input type="range" id="rate" min="19" max="24" step="0.1" value="21">
+        </div>
+        <div class="ctl">
+          <label>花火席次</label>
+          <div class="seg" id="seat">
+            <button type="button" data-v="5333" aria-pressed="true">A マス席 ¥32,000</button>
+            <button type="button" data-v="5000" aria-pressed="false">B マス席 ¥30,000</button>
+            <button type="button" data-v="2000" aria-pressed="false">北エリア ¥2,000</button>
+            <button type="button" data-v="0" aria-pressed="false">穴場免費</button>
+          </div>
+        </div>
+        <div class="ctl">
+          <label>吃飯的鬆緊度（四天合計／人）</label>
+          <div class="seg" id="food">
+            <button type="button" data-v="15570" aria-pressed="true">照本頁 ¥15,570</button>
+            <button type="button" data-v="20000" aria-pressed="false">寬鬆 ¥20,000</button>
+            <button type="button" data-v="26000" aria-pressed="false">放開吃 ¥26,000</button>
+          </div>
+        </div>
+        <div class="ctl">
+          <label>包車總價（六人分攤）</label>
+          <div class="seg" id="car">
+            <button type="button" data-v="90000" aria-pressed="true">¥90,000 報價</button>
+            <button type="button" data-v="110000" aria-pressed="false">漲到 ¥110,000</button>
+            <button type="button" data-v="0" aria-pressed="false">改搭新幹線</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card bill">
+        <div class="line"><span>機票</span><span id="bAir"></span></div>
+        <div class="line"><span>包車／新幹線</span><span id="bCar"></span></div>
+        <div class="line"><span>花火票</span><span id="bSeat"></span></div>
+        <div class="line"><span>住宿 3 戶 × 3 晚</span><span id="bStay"></span></div>
+        <div class="line"><span>東京交通</span><span id="bTrans"></span></div>
+        <div class="line"><span>吃 4 天</span><span id="bFood"></span></div>
+        <div class="line"><span>雜支、eSIM、台灣端</span><span id="bMisc"></span></div>
+        <div class="total"><span>每人合計</span><b id="bTotal"></b></div>
+        <div class="per" id="bTeam"></div>
+        <p style="font-size:.75rem;color:var(--ink-3);margin-top:.9rem;line-height:1.6">
+          不含購物與伴手禮。機票以 <strong>2026 年 8 月同期實查價</strong>推估（虎航實查最低 NT$7,372）。
+          <strong>2027/8 的票約 2026 年 9 月初才開賣</strong>，屆時請回來修正。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="booking">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">線上預訂</p>
+      <h2>能先訂好的就先訂</h2>
+      <p>這趟有幾項<strong>非先訂不可</strong>——晴空塔與 SHIBUYA SKY 都是日時指定券，現場買不但貴還可能完售。</p>
+    </div>
+    <div class="scroller">
+      <table>
+        <thead><tr><th>項目</th><th>為什麼先訂</th><th>參考價</th><th>平台</th></tr></thead>
+        <tbody>
+          <tr style="background:var(--peak-soft)"><td><strong>東京晴空塔 天望デッキ</strong></td>
+            <td><strong>現場窗口每張加收 ¥500 發券費</strong>，六人就是 ¥3,000。2026/4 起浮動票價</td>
+            <td class="num">¥1,800–3,600</td>
+            <td><a href="https://www.klook.com/zh-TW/search/?query=東京晴空塔" target="_blank" rel="noopener">Klook</a>　<a href="https://www.kkday.com/zh-tw/product/productlist?keyword=晴空塔" target="_blank" rel="noopener">KKday</a></td></tr>
+          <tr style="background:var(--peak-soft)"><td><strong>SHIBUYA SKY</strong></td>
+            <td><strong>日時指定券，日落時段常完售</strong>。線上 ¥2,200、現場 ¥2,500</td>
+            <td class="num">¥2,200</td>
+            <td><a href="https://www.klook.com/zh-TW/search/?query=SHIBUYA SKY" target="_blank" rel="noopener">Klook</a>　<a href="https://www.kkday.com/zh-tw/product/productlist?keyword=SHIBUYA SKY" target="_blank" rel="noopener">KKday</a></td></tr>
+          <tr style="background:var(--peak-soft)"><td><strong>teamLab Planets 豐洲</strong></td>
+            <td>完全預約制，六人要買同一時段</td><td class="num">約 ¥3,800</td>
+            <td><a href="https://www.klook.com/zh-TW/search/?query=teamLab" target="_blank" rel="noopener">Klook</a>　<a href="https://www.kkday.com/zh-tw/product/productlist?keyword=teamLab" target="_blank" rel="noopener">KKday</a></td></tr>
+          <tr><td><strong>日本 eSIM / 網卡</strong></td><td>六人建議各自有網路，散場時要聯絡</td><td class="num">NT$200–400</td>
+            <td><a href="https://www.klook.com/zh-TW/search/?query=日本eSIM" target="_blank" rel="noopener">Klook</a>　<a href="https://www.kkday.com/zh-tw/product/productlist?keyword=日本eSIM" target="_blank" rel="noopener">KKday</a></td></tr>
+          <tr><td><strong>成田／羽田機場接送</strong></td><td>六人加行李，包車比擠電車省事</td><td class="num">NT$2,500–4,000／車</td>
+            <td><a href="https://www.klook.com/zh-TW/search/?query=東京機場接送" target="_blank" rel="noopener">Klook</a></td></tr>
+          <tr><td><strong>長岡花火觀覽席套裝</strong></td><td>官方抽選落空時的替代管道，但多半綁住宿與交通</td><td class="num">依方案</td>
+            <td><a href="https://www.klook.com/zh-TW/search/?query=長岡花火" target="_blank" rel="noopener">Klook</a>　<a href="https://www.kkday.com/zh-tw/product/productlist?keyword=長岡花火" target="_blank" rel="noopener">KKday</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note warn" style="margin-top:1.15rem">
+      <span class="k">花火票別在平台亂買</span>
+      <div>長岡花火的正規管道是<strong>官方抽選</strong>（5 月下旬一次抽選、6 月中旬二次抽選）。
+      平台上的「觀覽席套裝」通常綁住宿與交通，<strong>跟你們的包車方案直接衝突</strong>，而且總價高很多。
+      先走官方抽選，兩次都落空再考慮平台，或直接走高台穴場方案——反正一定會出發。</div>
+    </div>
+  </div>
+</section>
+
+<section id="pack">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">出發前</p>
+      <h2>打包清單</h2>
+      <p>八月的新潟白天可到 32°C 以上、傍晚河邊會轉涼。花火那天要在戶外待五、六個小時，這張清單有一半是為那一天準備的。勾選會自動記住。</p>
+    </div>
+    <div class="card pad">
+      <div class="checks" id="packlist">
+        <div class="checkgroup"><h4>花火當天（最重要）</h4><ul>
+          <li><label><input type="checkbox"><span>花火票（記名式，帶證件核對）或穴場地點截圖</span></label></li>
+          <li><label><input type="checkbox"><span>野餐墊 レジャーシート</span></label></li>
+          <li><label><input type="checkbox"><span>折疊坐墊（會場禁止過高的椅子）</span></label></li>
+          <li><label><input type="checkbox"><span>行動電源（每人一顆，會拍很多影片）</span></label></li>
+          <li><label><input type="checkbox"><span>防蚊噴霧、涼感濕紙巾</span></label></li>
+          <li><label><input type="checkbox"><span>輕便雨衣（小雨照放，不能撐傘擋到後面）</span></label></li>
+          <li><label><input type="checkbox"><span>垃圾袋（垃圾一定要自己帶走）</span></label></li>
+          <li><label><input type="checkbox"><span>手電筒或頭燈（散場走夜路）</span></label></li>
+          <li><label><input type="checkbox"><span>扇子、手持電風扇、鹽糖</span></label></li>
+        </ul></div>
+        <div class="checkgroup"><h4>證件與錢</h4><ul>
+          <li><label><input type="checkbox"><span>護照（效期 6 個月以上）</span></label></li>
+          <li><label><input type="checkbox"><span>電子機票、住宿訂單（存離線）</span></label></li>
+          <li><label><input type="checkbox"><span>Visit Japan Web 入境與海關 QR</span></label></li>
+          <li><label><input type="checkbox"><span>日圓現金（包車當天付現，先分好）</span></label></li>
+          <li><label><input type="checkbox"><span>包車業者的 LINE 對話截圖與聯絡方式</span></label></li>
+        </ul></div>
+        <div class="checkgroup"><h4>車上（來回九小時）</h4><ul>
+          <li><label><input type="checkbox"><span>頸枕、眼罩</span></label></li>
+          <li><label><input type="checkbox"><span>薄外套或毯子（車內冷氣強）</span></label></li>
+          <li><label><input type="checkbox"><span>暈車藥</span></label></li>
+          <li><label><input type="checkbox"><span>耳機、離線下載的影片或音樂</span></label></li>
+          <li><label><input type="checkbox"><span>零食、口香糖</span></label></li>
+        </ul></div>
+        <div class="checkgroup"><h4>其他</h4><ul>
+          <li><label><input type="checkbox"><span>好走的鞋（散場要走不少路）</span></label></li>
+          <li><label><input type="checkbox"><span>防曬乳、帽子</span></label></li>
+          <li><label><input type="checkbox"><span>常備藥、腸胃藥</span></label></li>
+          <li><label><input type="checkbox"><span>eSIM 或分享器（六人建議各自有網路）</span></label></li>
+          <li><label><input type="checkbox"><span>環保購物袋、夾鏈袋</span></label></li>
+          <li><label><input type="checkbox"><span>六人共用的走散集合點（先講好）</span></label></li>
+        </ul></div>
+      </div>
+      <button class="resetbtn" id="resetPack" type="button" style="margin-top:1.15rem">清除所有勾選</button>
+    </div>
+
+    <div class="sec-head" style="margin-top:2.5rem;margin-bottom:1.15rem">
+      <p class="eyebrow">現場用得到</p>
+      <h2 style="font-size:1.25rem;font-family:var(--body);font-weight:500">日文小抄</h2>
+    </div>
+    <div class="phrases">
+      <div class="ph"><div class="zh">請問這裡可以看花火嗎</div><div class="jp">ここで花火は見えますか？</div><div class="rm">koko de hanabi wa miemasu ka</div></div>
+      <div class="ph"><div class="zh">這裡可以坐嗎</div><div class="jp">ここに座ってもいいですか？</div><div class="rm">koko ni suwatte mo ii desu ka</div></div>
+      <div class="ph"><div class="zh">廁所在哪裡</div><div class="jp">トイレはどこですか？</div><div class="rm">toire wa doko desu ka</div></div>
+      <div class="ph"><div class="zh">我們有六個人</div><div class="jp">六人です</div><div class="rm">rokunin desu</div></div>
+      <div class="ph"><div class="zh">請問可以停車嗎</div><div class="jp">ここに駐車できますか？</div><div class="rm">koko ni chuusha dekimasu ka</div></div>
+      <div class="ph"><div class="zh">請給我這個</div><div class="jp">これください</div><div class="rm">kore kudasai</div></div>
+      <div class="ph"><div class="zh">多少錢？</div><div class="jp">おいくらですか？</div><div class="rm">o-ikura desu ka</div></div>
+      <div class="ph"><div class="zh">可以免稅嗎</div><div class="jp">免税できますか？</div><div class="rm">menzei dekimasu ka</div></div>
+      <div class="ph"><div class="zh">冰塊在哪裡賣</div><div class="jp">氷はどこで売っていますか？</div><div class="rm">koori wa doko de utte imasu ka</div></div>
+      <div class="ph"><div class="zh">謝謝，麻煩您了</div><div class="jp">よろしくお願いします</div><div class="rm">yoroshiku onegai shimasu</div></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="cols">
+      <div>
+        <h4>行程設定</h4>
+        <p>六人同行．2027/8/1–8/4 四天三夜．住東京上野 Airbnb（三對情侶分三戶或三間房）．花火日 8/2（一）．
+        包車 Alphard 上野來回長岡（¥90,000，含超時費，現金付款，不需訂金）．
+        抽到票走方案 A、抽不到走方案 B，<strong>無論如何都會出發</strong>。</p>
+      </div>
+      <div>
+        <h4>價格說明</h4>
+        <p>金額為估算，用來抓預算而非報價。日圓以 ¥100 ≈ NT$21 換算。
+        花火席次以 2026 年一般販售價格推估，2027 年官方公告後可能調整。
+        機票為 2026 年 8 月同期實查價之推估值，<strong>非 2027 年報價</strong>；2027/8 的票約 2026 年 9 月初才開賣。</p>
+      </div>
+      <div>
+        <h4>出發前務必確認</h4>
+        <p>2027 年售票時程與海外居住者申請方式（長岡花火官網）、包車業者的公司登記與保險、
+        Airbnb 深夜進出規定、三戶是否同棟或鄰近、當天交通管制圖與穴場可及性、天候與是否順延至 8/3。</p>
+      </div>
+    </div>
+    <p class="disclaim">
+      本頁為個人旅遊規劃，非商業旅行社行程，不涉及代訂與收費。
+      席次價格、抽選日程引用自 2026 年公開資訊，僅供推估 2027 年之用，實際以主辦單位公告為準。
+      穴場皆非官方觀覽席，主辦單位不保證視野，現場請依警方與工作人員指示。
+      地圖連結導向 Google 地圖搜尋結果，實際位置與營業時間請以現場或官方公告為準。資料整理於 2026 年 8 月。
+    </p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var root = document.documentElement, saved = null;
+  try { saved = localStorage.getItem("ngk-theme"); } catch(e){}
+  if (saved) root.setAttribute("data-theme", saved);
+  document.getElementById("theme").addEventListener("click", function(){
+    var cur = root.getAttribute("data-theme");
+    var isDark = cur ? cur === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+    var next = isDark ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem("ngk-theme", next); } catch(e){}
+  });
+
+  var tabs = Array.prototype.slice.call(document.querySelectorAll(".daytab"));
+  tabs.forEach(function(tab){
+    tab.addEventListener("click", function(){
+      tabs.forEach(function(t){
+        var on = t === tab;
+        t.setAttribute("aria-selected", on ? "true" : "false");
+        document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
+      });
+    });
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll(".routeswap"), function(box){
+    var btns = Array.prototype.slice.call(box.querySelectorAll("button"));
+    var panels = Array.prototype.slice.call(box.parentElement.querySelectorAll("[data-routepanel]"));
+    btns.forEach(function(b){
+      b.addEventListener("click", function(){
+        btns.forEach(function(x){ x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+        var target = b.getAttribute("data-route");
+        panels.forEach(function(pn){ pn.hidden = pn.getAttribute("data-routepanel") !== target; });
+      });
+    });
+  });
+
+  var chips = Array.prototype.slice.call(document.querySelectorAll(".chip"));
+  var eats  = Array.prototype.slice.call(document.querySelectorAll("#eatGrid .eat[data-tags]"));
+  chips.forEach(function(chip){
+    chip.addEventListener("click", function(){
+      var f = chip.getAttribute("data-filter");
+      chips.forEach(function(c){ c.setAttribute("aria-pressed", c === chip ? "true" : "false"); });
+      eats.forEach(function(card){
+        var tags = card.getAttribute("data-tags") || "";
+        card.hidden = !(f === "all" || tags.split(" ").indexOf(f) !== -1);
+      });
+    });
+  });
+
+  var state = { air:13000, stay:13000, rate:21, seat:5333, food:15570, car:90000 };
+  var nt = function(n){ return "NT$" + Math.round(n).toLocaleString("en-US"); };
+
+  function segInit(id, key){
+    var box = document.getElementById(id);
+    Array.prototype.forEach.call(box.querySelectorAll("button"), function(b){
+      b.addEventListener("click", function(){
+        Array.prototype.forEach.call(box.querySelectorAll("button"), function(x){
+          x.setAttribute("aria-pressed", x === b ? "true" : "false");
+        });
+        state[key] = parseFloat(b.getAttribute("data-v"));
+        render();
+      });
+    });
+  }
+  segInit("seat","seat"); segInit("food","food"); segInit("car","car");
+  [["airR","air"],["stay","stay"],["rate","rate"]].forEach(function(pair){
+    var el = document.getElementById(pair[0]);
+    el.addEventListener("input", function(){ state[pair[1]] = parseFloat(el.value); render(); });
+  });
+
+  function render(){
+    var r = state.rate / 100;
+    var air   = state.air;
+    var car   = state.car ? (state.car / 6) * r : 18220 * r;
+    var seat  = state.seat * r;
+    var stay  = (state.stay * 3 * 3 / 6) * r;
+    var trans = (2580 + 2000) * r;
+    var food  = state.food * r;
+    var misc  = 2000 * r + 300 + 180;
+    var total = air + car + seat + stay + trans + food + misc;
+
+    document.getElementById("airV").textContent  = nt(state.air);
+    document.getElementById("stayV").textContent = "¥" + state.stay.toLocaleString("en-US");
+    document.getElementById("rateV").textContent = "NT$" + state.rate.toFixed(1);
+    document.getElementById("bAir").textContent   = nt(air);
+    document.getElementById("bCar").textContent   = nt(car) + (state.car ? "" : "（新幹線）");
+    document.getElementById("bSeat").textContent  = seat ? nt(seat) : "免費（穴場）";
+    document.getElementById("bStay").textContent  = nt(stay);
+    document.getElementById("bTrans").textContent = nt(trans);
+    document.getElementById("bFood").textContent  = nt(food);
+    document.getElementById("bMisc").textContent  = nt(misc);
+    document.getElementById("bTotal").textContent = nt(total);
+    document.getElementById("bTeam").textContent  = "六人團合計 " + nt(total * 6);
+    document.getElementById("heroPer").textContent = Math.round(total).toLocaleString("en-US");
+  }
+  render();
+
+  var boxes = Array.prototype.slice.call(document.querySelectorAll("#packlist input"));
+  var KEY = "ngk-pack", stored = [];
+  try { stored = JSON.parse(localStorage.getItem(KEY) || "[]"); } catch(e){}
+  boxes.forEach(function(b,i){
+    b.checked = !!stored[i];
+    b.addEventListener("change", function(){
+      try { localStorage.setItem(KEY, JSON.stringify(boxes.map(function(x){ return x.checked; }))); } catch(e){}
+    });
+  });
+  document.getElementById("resetPack").addEventListener("click", function(){
+    boxes.forEach(function(b){ b.checked = false; });
+    try { localStorage.removeItem(KEY); } catch(e){}
+  });
+
+  var cv = document.getElementById("tide"), ctx = cv.getContext("2d");
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var t = 0, raf, bursts = [];
+  function size(){
+    var d = window.devicePixelRatio || 1;
+    cv.width = cv.offsetWidth * d; cv.height = cv.offsetHeight * d;
+    ctx.setTransform(d,0,0,d,0,0);
+  }
+  function seedBursts(){
+    bursts = [];
+    var w = cv.offsetWidth, h = cv.offsetHeight;
+    for (var i = 0; i < 5; i++){
+      bursts.push({
+        x: w * (0.12 + i * 0.19),
+        y: h * (0.24 + ((i * 7) % 5) * 0.09),
+        r: 26 + (i % 3) * 16,
+        n: 22 + (i % 4) * 6,
+        ph: i * 1.27
+      });
+    }
+  }
+  function draw(){
+    var w = cv.offsetWidth, h = cv.offsetHeight;
+    ctx.clearRect(0,0,w,h);
+    var sea = getComputedStyle(root).getPropertyValue("--sea").trim();
+    var fire = getComputedStyle(root).getPropertyValue("--lantern").trim();
+    for (var b = 0; b < bursts.length; b++){
+      var o = bursts[b];
+      var cyc = (t * 0.24 + o.ph) % 4;
+      if (cyc > 2.1) continue;
+      var grow = Math.min(1, cyc / 0.7);
+      var fade = cyc < 0.7 ? 1 : Math.max(0, 1 - (cyc - 0.7) / 1.4);
+      ctx.strokeStyle = (b % 2) ? fire : sea;
+      ctx.lineWidth = 1;
+      for (var k = 0; k < o.n; k++){
+        var a = (k / o.n) * Math.PI * 2;
+        var rr = o.r * grow;
+        ctx.globalAlpha = 0.5 * fade;
+        ctx.beginPath();
+        ctx.moveTo(o.x + Math.cos(a) * rr * 0.35, o.y + Math.sin(a) * rr * 0.35 + cyc * 5);
+        ctx.lineTo(o.x + Math.cos(a) * rr, o.y + Math.sin(a) * rr + cyc * 9);
+        ctx.stroke();
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+  function loop(){ t += 0.016; draw(); raf = requestAnimationFrame(loop); }
+  function boot(){ size(); seedBursts(); draw(); if (!reduce){ cancelAnimationFrame(raf); loop(); } }
+  window.addEventListener("resize", boot);
+  boot();
+})();
+</script>
