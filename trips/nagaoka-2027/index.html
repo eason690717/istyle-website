@@ -530,3 +530,1208 @@ footer a{ font-size:.8125rem; }
 .vs .big{ font-family:var(--mono); font-size:1.5rem; font-weight:500; margin:.3rem 0 .15rem; font-variant-numeric:tabular-nums; }
 .vs .sub{ font-size:.8125rem; color:var(--ink-2); }
 </style>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a href="#top" class="brand">長岡<span>花火</span>遠征</a>
+    <nav class="navlinks">
+      <a href="#overview">總覽</a>
+      <a href="#ticket">搶票與備案</a>
+      <a href="#timeline">倒數時程</a>
+      <a href="#car">包車</a>
+      <a href="#stay">住宿</a>
+      <a href="#plan">每日行程</a>
+      <a href="#hanabi">花火作戰</a>
+      <a href="#eat">必吃</a>
+      <a href="#money">費用</a>
+      <a href="#pack">出發前</a>
+    </nav>
+    <button class="themebtn" id="theme" type="button" aria-label="切換深淺色">◐</button>
+  </div>
+</header>
+
+<main id="top">
+
+<div class="hero">
+  <canvas id="tide" aria-hidden="true"></canvas>
+  <div class="wrap hero-inner">
+    <p class="eyebrow">長岡花火 · 六人 · 四天三夜 · 2027/8/1 – 8/4</p>
+    <h1>正三尺玉升空六百公尺，<br>然後<em>鳳凰橫過兩公里</em>。</h1>
+    <p class="hero-sub">
+      日本三大花火之一，一晚兩萬發、兩天百萬人。六個人剛好坐滿一台 Alphard，
+      也剛好是一席「マス席」的單位。<strong>抽到票就進會場，抽不到就上高台</strong>——
+      有包車，兩種都成立，而且散場時不用跟人擠車站。
+    </p>
+    <dl class="hero-meta">
+      <div><dt>花火日</dt><dd>8/2<small> 一</small></dd></div>
+      <div><dt>人數</dt><dd>6<small>人</small></dd></div>
+      <div><dt>天數</dt><dd>4<small>天</small>3<small>夜</small></dd></div>
+      <div><dt>每人總計</dt><dd>NT$<span id="heroPer">28,520</span></dd></div>
+      <div><dt>包車分攤</dt><dd>¥15,000<small>／人</small></dd></div>
+    </dl>
+  </div>
+</div>
+
+<section id="overview">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">行程總覽</p>
+      <h2>一天給花火，一天給補眠</h2>
+      <p>花火那天會從早上八點耗到隔天凌晨三點——這是無法壓縮的。所以隔天整個上午排空，不安排任何要早起的事。</p>
+    </div>
+
+    <div class="overview">
+      <div class="ovday">
+        <span class="d">Day 1 · 8/1 日</span>
+        <h4>抵達．上野</h4>
+        <span class="hl">主場：阿美橫丁</span>
+        <ul>
+          <li>早班機抵成田／羽田</li>
+          <li>京成 Access 特急進上野</li>
+          <li>六人整戶 Airbnb 入住</li>
+          <li>阿美橫丁採買隔天的糧食與飲料</li>
+        </ul>
+        <span class="cost">當日約 ¥6,000／人</span>
+      </div>
+      <div class="ovday" style="background:var(--lantern-soft)">
+        <span class="d">Day 2 · 8/2 一</span>
+        <h4>長岡花火</h4>
+        <span class="hl">主場：信濃川河川敷</span>
+        <ul>
+          <li>08:00 上野出發，包車直達</li>
+          <li>午餐 青島食堂．生薑醬油拉麵</li>
+          <li>19:20–21:10 正三尺玉、鳳凰</li>
+          <li>深夜回東京，約 01:00–02:00 到</li>
+        </ul>
+        <span class="cost">當日約 ¥22,000／人</span>
+      </div>
+      <div class="ovday">
+        <span class="d">Day 3 · 8/3 二</span>
+        <h4>補眠．東京慢行</h4>
+        <span class="hl">主場：睡到自然醒</span>
+        <ul>
+          <li>中午前不排任何行程</li>
+          <li>下午淺草或谷根千散步</li>
+          <li>不忍池的蓮花（清晨或傍晚）</li>
+          <li>晚上居酒屋慶功</li>
+        </ul>
+        <span class="cost">當日約 ¥7,000／人</span>
+      </div>
+      <div class="ovday">
+        <span class="d">Day 4 · 8/4 三</span>
+        <h4>採買．回家</h4>
+        <span class="hl">主場：上野 → 機場</span>
+        <ul>
+          <li>阿美橫丁、藥妝最後採買</li>
+          <li>行李寄放後輕裝逛街</li>
+          <li>下午或傍晚班機</li>
+          <li>當晚回到台灣</li>
+        </ul>
+        <span class="cost">當日約 ¥5,000／人</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="ticket">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">搶票與備案</p>
+      <h2>抽到票是加分，抽不到照樣看得到</h2>
+      <p>
+        河川敷的<strong>有料観覧席區域全部要票</strong>，沒票不能進，也不賣現場票。
+        但長岡花火的正三尺玉升空約 600 公尺、開花直徑約 650 公尺，
+        <strong>周邊高台與河岸看得很清楚</strong>——差別只在距離、角度，還有那份「地面震動」的臨場感。
+      </p>
+    </div>
+
+    <div class="versus" style="margin-bottom:1.75rem">
+      <div class="vs win">
+        <span class="lbl">方案 A．抽到票</span>
+        <div class="big">¥5,333<small style="font-size:.7rem;color:var(--ink-3)">／人</small></div>
+        <p class="sub">A 会場マス席 ¥32,000 ÷ 6。正對鳳凰、聽得到炸裂聲、感覺得到地面震動。
+        代價是散場時要從河川敷走出來。</p>
+      </div>
+      <div class="vs">
+        <span class="lbl">方案 B．高台穴場</span>
+        <div class="big">¥0</div>
+        <p class="sub">免費。視野遠但完整，看得到整條鳳凰橫過天空。
+        有包車直接開上去，散場時直接上車走人，反而比會場快。</p>
+      </div>
+      <div class="vs">
+        <span class="lbl">兩者差距</span>
+        <div class="big">距離</div>
+        <p class="sub">節目一模一樣，正三尺玉與鳳凰兩邊都看得到。
+        會場內多的是震撼度與煙火在頭頂展開的壓迫感。</p>
+      </div>
+    </div>
+
+    <h3 style="font-size:1.15rem;margin-bottom:.85rem">席種與價格（以 2026 年一般販售為準，2027 應相近）</h3>
+    <div class="seats" style="margin-bottom:1.15rem">
+      <div class="seat pickd">
+        <span class="venue">A 会場・右岸（長岡站側）</span>
+        <h4>マス席（6 人）</h4>
+        <div class="price">¥32,000</div>
+        <div class="per">÷ 6 人 = ¥5,333／人</div>
+        <p><strong>六人團的首選。</strong>正好一整席不用拆、不用跟陌生人湊，中籤後六個人坐在一起。
+        位置正對鳳凰施放方向。</p>
+      </div>
+      <div class="seat pickd">
+        <span class="venue">B 会場・左岸（長岡 IC 側）</span>
+        <h4>マス席／堤防上マス席（6 人）</h4>
+        <div class="price">¥30,000</div>
+        <div class="per">÷ 6 人 = ¥5,000／人</div>
+        <p>比 A 会場便宜、也是六人一席。以「大迫力」著稱，離施放點更近。
+        <strong>兩個会場都投，中籤機率加倍。</strong></p>
+      </div>
+      <div class="seat">
+        <span class="venue">A／B 会場</span>
+        <h4>イス席・ベンチ席（1 人）</h4>
+        <div class="price">¥5,000</div>
+        <div class="per">× 6 人 = ¥30,000</div>
+        <p>單人席。六人要抽到連號不容易，可能被拆開。マス席沒中時的第二順位。</p>
+      </div>
+      <div class="seat">
+        <span class="venue">A 会場</span>
+        <h4>フェニックスエリア席／三尺玉シート指定席</h4>
+        <div class="price">¥4,000</div>
+        <div class="per">× 6 人 = ¥24,000</div>
+        <p>單人自由席性質，價格較低。名稱直接告訴你面對哪個節目。</p>
+      </div>
+      <div class="seat">
+        <span class="venue">B 会場</span>
+        <h4>北エリア席・てくてくエリア席</h4>
+        <div class="price">¥2,000</div>
+        <div class="per">× 6 人 = ¥12,000</div>
+        <p><strong>最便宜的入場方式。</strong>位置較邊緣，但仍在會場內。預算優先或想至少進場的話投這個。</p>
+      </div>
+      <div class="seat">
+        <span class="venue">A／B 会場</span>
+        <h4>テーブル席（1 人）</h4>
+        <div class="price">¥10,000</div>
+        <div class="per">× 6 人 = ¥60,000</div>
+        <p>有桌子、最舒服，價格也最高。六人合計六萬日圓，CP 值不高，略過。</p>
+      </div>
+    </div>
+
+    <div style="display:grid;gap:.85rem;margin-bottom:2rem">
+      <div class="note warn">
+        <span class="k">海外居住者要注意</span>
+        <div>2026 年起票券為<strong>記名式</strong>（防高價轉賣），官方的轉售服務<strong>僅限日本國內居住者</strong>使用。
+        台灣人能否直接在楽天チケット／Ticket Pass 完成一般抽選申請，官方沒有明確說明，
+        <strong>建議 2027 年 4 月開賣資訊公告後直接寫信問主辦單位</strong>。
+        確定可行的替代管道是<strong>旅行社的觀覽席套裝行程</strong>（例如 Club Tourism 的長岡花火團，
+        不需填日本地址）——但那通常綁住宿與交通，跟你們的包車方案衝突，只適合單買席次的方案。</div>
+      </div>
+      <div class="note">
+        <span class="k">六人的投注策略</span>
+        <div>マス席是 <strong>6 人一席</strong>，你們的人數正好是一個完整單位——這是很大的優勢：
+        不用拆團、不用跟陌生人共席、也不必抽連號。<strong>A 会場與 B 会場的マス席同時投</strong>，
+        再加投一組 B 会場北エリア席（¥2,000）當保底。全沒中就走方案 B，反正一定會出發。</div>
+      </div>
+    </div>
+
+    <h3 style="font-size:1.15rem;margin-bottom:.85rem">方案 B：免費視野點（會場外）</h3>
+    <div class="eats">
+      <article class="card eat">
+        <h4>国営越後丘陵公園 周邊市道</h4><span class="jp">長岡市西部・高台</span>
+        <p>公園周邊的市道沿線是知名的免費觀賞帶，位置高、視野開闊，看得到整條鳳凰橫過。有停車空間，包車可直接開上去。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=国営越後丘陵公園" target="_blank" rel="noopener">地圖</a><span class="tag free">免費</span><span class="yen">首選</span></div>
+      </article>
+      <article class="card eat">
+        <h4>長岡ニュータウン 中央公園</h4><span class="jp">長岡市新産・廣場與周邊高台</span>
+        <p>廣場腹地大、人相對少，是當地人推薦的穴場。周邊高台視野更好。適合鋪野餐墊坐下來慢慢看。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=長岡ニュータウン中央公園" target="_blank" rel="noopener">地圖</a><span class="tag free">免費</span><span class="yen">腹地大</span></div>
+      </article>
+      <article class="card eat">
+        <h4>長岡新都市運動公園（長岡インパルス）</h4><span class="jp">長岡市新産</span>
+        <p>運動公園一帶，停車與腹地都足夠，是穴場清單上的常客。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=長岡インパルス" target="_blank" rel="noopener">地圖</a><span class="tag free">免費</span><span class="yen">好停車</span></div>
+      </article>
+      <article class="card eat">
+        <h4>青葉台南公園 周邊</h4><span class="jp">長岡市青葉台・住宅區高台</span>
+        <p>住宅區裡的高台公園，當地人的觀賞點。安靜，但要留意不要影響住戶與停車規定。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=青葉台南公園長岡" target="_blank" rel="noopener">地圖</a><span class="tag free">免費</span><span class="yen">安靜</span></div>
+      </article>
+      <article class="card eat">
+        <h4>長岡赤十字病院 前一帶</h4><span class="jp">長岡市千秋・靠近會場</span>
+        <p>往年有料観覧席與緊急直升機坪之間的部分空地，會被當成免費觀賞範圍。<strong>離會場最近的免費點</strong>，
+        但每年開放範圍不同，要現場看指示。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=長岡赤十字病院" target="_blank" rel="noopener">地圖</a><span class="tag free">免費</span><span class="yen">距離最近</span></div>
+      </article>
+      <article class="card eat">
+        <h4>信濃川兩岸高台</h4><span class="jp">右岸＝長岡站側／左岸＝長岡 IC 側</span>
+        <p>兩側高台都有視野點。左岸離高速公路交流道近，包車進出最順，散場時能最快上高速。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=長生橋長岡" target="_blank" rel="noopener">地圖</a><span class="tag free">免費</span><span class="yen">機動性高</span></div>
+      </article>
+    </div>
+
+    <div class="note warn" style="margin-top:1.15rem">
+      <span class="k">穴場的免責</span>
+      <div>以上都<strong>不是官方觀覽席</strong>，主辦單位不保證視野，也可能因當年交通管制而無法進入或停車。
+      現場請依警方與工作人員指示，不要停在私人土地、農路或消防通道。
+      <strong>請司機當天先確認交通管制圖</strong>，並準備第二、第三順位地點。</div>
+    </div>
+  </div>
+</section>
+
+<section id="timeline">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">倒數時程</p>
+      <h2>什麼時候該做什麼</h2>
+      <p>
+        這趟的難度不在錢，在<strong>時間點</strong>。機票、包車、花火票、住宿四件事的開賣時間全部不一樣，
+        而且都有「錯過就沒了」的性質。照這張表走就不會漏。
+      </p>
+    </div>
+
+    <div class="card pad">
+      <div class="roadmap">
+        <div class="rm now">
+          <div class="rm-when">2026 年 8–9 月<em>現在</em></div>
+          <div class="rm-body">
+            <h4>把包車對話截圖存檔．確認業者資訊</h4>
+            <p>業者說「LINE 官方帳號的聊天記錄只能保存半年」——<strong>現在就把整段對話截圖存下來</strong>，
+            特別是「¥90,000、上野來回、點對點、超時費包含在內、不用訂金」這幾句。
+            同時跟他要<strong>公司名稱、車行登記編號、保險範圍、司機聯絡方式</strong>。
+            不收訂金對你們有利，但也代表沒有書面憑證，一年後真出狀況會很難處理。
+            順便確認六人份行李（花火用的野餐墊、折疊椅）放不放得下。</p>
+          </div>
+        </div>
+
+        <div class="rm">
+          <div class="rm-when">2026 年 9 月上旬<em>機票開賣</em></div>
+          <div class="rm-body">
+            <h4>2027/8 的機票開始陸續開放</h4>
+            <p>航空公司通常在起飛前約 330 天開賣，2027/8/1 往回推大約落在 <strong>2026 年 9 月初</strong>。
+            現在查不到價格是正常的。開賣後先設 Google Flights 價格追蹤，六個人一起搜（同艙等票量要夠）。
+            八月初是暑假旺季，不會便宜，但早訂通常比晚訂好。</p>
+          </div>
+        </div>
+
+        <div class="rm">
+          <div class="rm-when">2026 年 10–12 月<em>卡住房</em></div>
+          <div class="rm-body">
+            <h4>訂上野的六人整戶 Airbnb</h4>
+            <p>先訂<strong>可免費取消</strong>的房源卡位，之後再慢慢換更好的。
+            東京在花火期間不會漲價（漲的是長岡），所以壓力比住長岡小非常多——
+            這正是包車方案最大的隱藏價值。</p>
+          </div>
+        </div>
+
+        <div class="rm crit">
+          <div class="rm-when">2027 年 1–2 月<em>最後期限</em></div>
+          <div class="rm-body">
+            <h4>正式向包車業者下訂</h4>
+            <p>他說「提前半年就好」，而 LINE 記錄只留半年——<strong>2 月是不能再拖的界線</strong>，
+            再晚原始對話就消失了。這時要把日期（8/2）、出發時間、上車地點、回程等待地點、
+            六人姓名全部確認一次，並請他<strong>用文字重述一次報價與包含項目</strong>當作新的憑證。</p>
+          </div>
+        </div>
+
+        <div class="rm">
+          <div class="rm-when">2027 年 3–4 月<em>票務情報</em></div>
+          <div class="rm-body">
+            <h4>盯官網公告，並寫信問海外購票方式</h4>
+            <p>長岡花火財團官網（nagaokamatsuri.com）會公告當年售票時程。
+            2026 年是 4 月 10 日先開長岡市民先行販售，一般販售的辦法會同時公布。
+            <strong>這時就寫信問主辦單位：海外居住者要怎麼申請一般抽選、記名式票券的姓名怎麼填、
+            付款方式接不接受海外信用卡。</strong>問清楚才知道要不要走旅行社管道。</p>
+          </div>
+        </div>
+
+        <div class="rm crit">
+          <div class="rm-when">2027 年 5 月下旬<em>一次抽選</em></div>
+          <div class="rm-body">
+            <h4>一般販售 第一次抽選</h4>
+            <p>2026 年的時間是 <strong>5/25 中午 12:00 起 – 6/8 17:00 止</strong>，2027 應該相近。
+            這是抽選不是先搶先贏，<strong>期間內任何時候申請中籤率都一樣</strong>，不必熬夜。
+            照前面的策略投：A 会場マス席 ＋ B 会場マス席 ＋ B 会場北エリア席保底。</p>
+          </div>
+        </div>
+
+        <div class="rm">
+          <div class="rm-when">2027 年 6 月中旬<em>二次抽選</em></div>
+          <div class="rm-body">
+            <h4>第二次抽選（一次沒中的補救）</h4>
+            <p>2026 年是 <strong>6/18 – 6/22</strong>。一次抽選落空的席次會再放出來，
+            剩餘席種通常比較邊緣，但仍然進得了會場。這是最後一次官方管道。</p>
+          </div>
+        </div>
+
+        <div class="rm">
+          <div class="rm-when">2027 年 6 月下旬<em>分岔點</em></div>
+          <div class="rm-body">
+            <h4>確定走方案 A 還是方案 B</h4>
+            <p>中籤 → 方案 A，把席位號碼、進場口、進場時間告訴司機。
+            沒中 → 方案 B，選定兩到三個穴場地點，請司機評估當天交通管制下哪個進得去。
+            <strong>兩種情況行程都照跑，只是傍晚的落點不同。</strong></p>
+          </div>
+        </div>
+
+        <div class="rm">
+          <div class="rm-when">2027 年 7 月<em>收尾</em></div>
+          <div class="rm-body">
+            <h4>跟司機對一次當天流程</h4>
+            <p>出發時間、休息站、午餐地點、下車點、<strong>散場後的上車地點與等待時間</strong>（這點最重要，
+            人多訊號差，要先約好一個絕對找得到的地標）。同時確認 Airbnb 入住方式與行李寄放。
+            野餐墊、折疊椅、行動電源、防蚊液這時候備齊。</p>
+          </div>
+        </div>
+
+        <div class="rm">
+          <div class="rm-when">2027 年 8 月 1 日<em>出發</em></div>
+          <div class="rm-body">
+            <h4>成團出發</h4>
+            <p>不管有沒有票都會看到花火。差別只在距離。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="car">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">包車</p>
+      <h2>六個人分攤，包車比新幹線還便宜</h2>
+      <p>這是你們談到的報價：Alphard 七人座（扣掉司機正好六個乘客位）、上野來回長岡花火會場、點對點接送、含超時費、現金付款、不需訂金。</p>
+    </div>
+
+    <div class="versus" style="margin-bottom:1.5rem">
+      <div class="vs win">
+        <span class="lbl">包車 Alphard</span>
+        <div class="big">¥15,000</div>
+        <p class="sub">¥90,000 ÷ 6 人。點對點、行李隨車、散場直接上車、能開到穴場高台、車上能睡。</p>
+      </div>
+      <div class="vs">
+        <span class="lbl">上越新幹線 來回</span>
+        <div class="big">¥18,220</div>
+        <p class="sub">東京↔長岡單程約 ¥9,110、1 小時 40 分。還要加上長岡站到會場來回的接駁或步行。</p>
+      </div>
+      <div class="vs">
+        <span class="lbl">六人合計價差</span>
+        <div class="big">¥19,320</div>
+        <p class="sub">包車便宜約兩萬日圓，而且省下的麻煩遠比省下的錢值錢。</p>
+      </div>
+    </div>
+
+    <div style="display:grid;gap:.85rem">
+      <div class="note night">
+        <span class="k">散場才是真正的關卡</span>
+        <div>花火 21:10 結束後，<strong>會場走到長岡站要 40–50 分鐘</strong>（去程只要 30 分，回程因為人潮變慢），
+        車站會實施入場管制，大手通會封街做方面別的排隊誘導。
+        往東京的臨時新幹線大約 <strong>21:21、21:35、21:50、22:16、22:29</strong> 幾班，
+        <strong>曾發生 124 人搭不上車、在收容設施過夜的新聞</strong>。
+        有司機在約定地點等，這一段完全不用經歷——這才是包車真正的價值。</div>
+      </div>
+      <div class="note warn">
+        <span class="k">回程會塞，要有心理準備</span>
+        <div>花火結束後關越道方向會嚴重回堵。<strong>21:30 上車、凌晨 01:00–02:00 回到上野</strong>是合理預期（最壞 03:00），
+        不要排隔天早上的任何行程。這也是為什麼 Day 3 的上午整個空著。
+        車上準備好毯子、頸枕、水——六個人輪流睡。</div>
+      </div>
+      <div class="note">
+        <span class="k">跟司機要確認的六件事</span>
+        <div>① 公司名稱與車行登記　② 保險範圍（乘客傷害險）　③ 六人份行李與野餐用品放得下嗎
+        　④ 能不能開到穴場高台（方案 B）　⑤ 散場後的上車地點與最長等待時間
+        　⑥ 若遇大雨順延到隔天（8/3），費用與可行性如何處理</div>
+      </div>
+      <div class="note warn" id="drive">
+        <span class="k">花火會不會延期</span>
+        <div>長岡花火<strong>小雨照常施放</strong>，只有暴風雨等極端天候才會中止。
+        但仍要先跟司機講好：萬一 8/2 中止、順延到 8/3，包車能不能改期、要不要加錢。
+        這一題現在問比當天問好。</div>
+      </div>
+    </div>
+
+    <div class="sec-head" style="margin-top:2.5rem;margin-bottom:1.15rem">
+      <p class="eyebrow">車程試算</p>
+      <h2 style="font-size:1.35rem">上野 ↔ 長岡，來回大約多久</h2>
+      <p>單程約 <strong>270 公里</strong>，走首都高接關越道。去程好算，回程的變數全在散場那一小時。以下是粗估，實際會有誤差。</p>
+    </div>
+
+    <div class="bigrow" style="margin-bottom:1.5rem">
+      <div><dt>單程距離</dt><dd>270<small>km</small></dd></div>
+      <div><dt>去程</dt><dd>4.0<small>–4.5 小時</small></dd></div>
+      <div><dt>回程（會場）</dt><dd>4.3<small>–6.0 小時</small></dd></div>
+      <div><dt>回程（穴場）</dt><dd>3.5<small>–4.5 小時</small></dd></div>
+      <div><dt>當天總時長</dt><dd>19<small>–21 小時</small></dd></div>
+    </div>
+
+    <div class="scroller" style="margin-bottom:1.15rem">
+      <table>
+        <thead><tr><th>去程　8/2（一）上午</th><th>距離</th><th>預估</th><th>說明</th></tr></thead>
+        <tbody>
+          <tr><td>上野 → 練馬 IC</td><td class="num">約 15 km</td><td class="num">30–40 分</td><td>平日上午市區道路，非通勤尖峰方向</td></tr>
+          <tr><td>練馬 IC → 長岡 IC（關越道）</td><td class="num">約 250 km</td><td class="num">2h40m–3h00m</td><td>高速順暢，中途過關越隧道</td></tr>
+          <tr><td>休息站 2 次</td><td class="num">—</td><td class="num">40 分</td><td>上里 SA、越後川口 SA 各約 20 分</td></tr>
+          <tr><td>長岡 IC → 市區</td><td class="num">約 5 km</td><td class="num">15–25 分</td><td>花火日下午市區開始有管制</td></tr>
+          <tr style="background:var(--sea-soft)"><td><strong>合計</strong></td><td class="num"><strong>約 270 km</strong></td><td class="num"><strong>4h05m–4h45m</strong></td><td><strong>08:00 出發 → 12:05–12:45 抵達</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="scroller" style="margin-bottom:1.15rem">
+      <table>
+        <thead><tr><th>回程　8/2（一）深夜</th><th>方案 A．會場內</th><th>方案 B．高台穴場</th><th>說明</th></tr></thead>
+        <tbody>
+          <tr><td>花火結束 → 走回車上</td><td class="num">20–40 分</td><td class="num">5–10 分</td><td>會場要逆著人潮走出河川敷；穴場就在車旁</td></tr>
+          <tr style="background:var(--peak-soft)"><td><strong>市區 → 長岡 IC</strong></td><td class="num"><strong>30–90 分</strong></td><td class="num"><strong>15–40 分</strong></td><td><strong>最大變數。</strong>散場車潮全擠向交流道；穴場多在外圍，離 IC 近</td></tr>
+          <tr><td>長岡 IC → 練馬 IC</td><td class="num">2h40m–3h00m</td><td class="num">2h40m–3h00m</td><td>深夜高速順暢</td></tr>
+          <tr><td>休息站 1 次</td><td class="num">20 分</td><td class="num">20 分</td><td>司機需要休息，這段別省</td></tr>
+          <tr><td>練馬 IC → 上野</td><td class="num">25–35 分</td><td class="num">25–35 分</td><td>深夜市區順暢</td></tr>
+          <tr style="background:var(--sea-soft)"><td><strong>合計</strong></td><td class="num"><strong>4h15m–6h05m</strong></td><td class="num"><strong>3h45m–4h45m</strong></td><td>以 21:10 花火結束起算</td></tr>
+          <tr style="background:var(--lantern-soft)"><td><strong>抵達上野</strong></td><td class="num"><strong>01:25–03:15</strong></td><td class="num"><strong>00:55–01:55</strong></td><td>穴場平均早約一小時</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="display:grid;gap:.85rem">
+      <div class="note warn">
+        <span class="k">關於「半夜十二點前後」</span>
+        <div>業者講的那個時間<strong>是完全順利、沒遇上大塞車的最好情況</strong>——要達成大概需要
+        提早離場、走穴場路線、關越道全程順暢三個條件同時成立。
+        <strong>務實一點抓 01:00–02:00 到上野</strong>，最壞 03:00。
+        重點不是幾點到，而是<strong>隔天上午千萬不要排行程</strong>——這也是 Day 3 整個上午留白的原因。</div>
+      </div>
+      <div class="note">
+        <span class="k">方案 B 的隱藏優勢</span>
+        <div>穴場高台多在長岡外圍、離交流道近，<strong>不必跟散場人車一起擠進市區</strong>。
+        回程平均比會場方案早<strong>約一小時</strong>到家。也就是說：抽不到票不只是省下票錢，
+        還省下一小時的塞車——如果你們比較在意隔天的體力，方案 B 其實不算是「退而求其次」。</div>
+      </div>
+      <div class="note night">
+        <span class="k">想提早三十分鐘的話</span>
+        <div>在 <strong>フェニックス 放完後就先走</strong>（通常排在後半段，不是最後一個節目），
+        可以避開最大那波人潮。代價是少看結尾。六個人可以先講好要不要這樣做——
+        <strong>但如果只看一次，我建議整場看完</strong>，一小時的塞車換一個完整的結尾是划算的。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="stay">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">住宿</p>
+      <h2>上野一帶，六人一整戶</h2>
+      <p>
+        因為包車是<strong>上野來回</strong>，住宿就綁在上野／日暮里／淺草這個範圍。
+        好消息是：長岡的飯店在花火期間是抽選制、平常 ¥10,000 的商旅會漲到 ¥66,000 一晚，
+        <strong>而東京完全不受影響</strong>。這是包車方案最大的隱藏價值。
+      </p>
+    </div>
+
+    <div class="scroller">
+      <table>
+        <thead><tr><th>選項</th><th>位置</th><th>每晚（六人）</th><th>三晚合計</th><th>每人</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Airbnb 整戶 3LDK</strong> <span class="pill sea">建議</span></td>
+            <td>上野・日暮里・鶯谷 <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=上野駅" target="_blank" rel="noopener">地圖</a></td>
+            <td class="num">¥24,000–30,000</td><td class="num">¥72,000–90,000</td>
+            <td class="num">¥12,000–15,000<br><small style="color:var(--ink-3)">≈ NT$2,520–3,150</small></td>
+          </tr>
+          <tr>
+            <td><strong>Airbnb 整棟町家</strong></td>
+            <td>淺草・藏前 <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=浅草駅" target="_blank" rel="noopener">地圖</a></td>
+            <td class="num">¥28,000–38,000</td><td class="num">¥84,000–114,000</td>
+            <td class="num">¥14,000–19,000</td>
+          </tr>
+          <tr>
+            <td><strong>商旅 3 間雙人房</strong></td>
+            <td>上野站周邊</td>
+            <td class="num">¥30,000–42,000</td><td class="num">¥90,000–126,000</td>
+            <td class="num">¥15,000–21,000</td>
+          </tr>
+          <tr>
+            <td><strong>青年旅館包整間宿舍房</strong></td>
+            <td>淺草・日暮里</td>
+            <td class="num">¥18,000–24,000</td><td class="num">¥54,000–72,000</td>
+            <td class="num">¥9,000–12,000<br><small style="color:var(--cheap)">最省</small></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="display:grid;gap:.85rem;margin-top:1.15rem">
+      <div class="note">
+        <span class="k">六人房源的篩選條件</span>
+        <div>Airbnb 篩「<strong>房源類型：整套房源</strong>」＋「<strong>可住 6 人</strong>」，然後看三件事：
+        ① 評價 4.8 以上、評價數 50 則以上（新房源風險高）
+        ② <strong>有沒有電梯</strong>——六個人的行李扛四樓會要命
+        ③ 走到上野站 10 分鐘內，包車才好接送。
+        另外確認民泊的<strong>住宅宿泊事業登錄編號</strong>，以及深夜進出（凌晨三點回來）會不會違反房東規定——
+        <strong>這點一定要事先問，你們花火當晚必定深夜返回。</strong></div>
+      </div>
+      <div class="note warn">
+        <span class="k">先訂可免費取消的</span>
+        <div>2026 年底就先卡一間可免費取消的房源，之後看到更好的再換。
+        六人整戶的好房源不多，晚訂容易只剩貴的或位置差的。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="plan">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">每日行程</p>
+      <h2>逐時安排</h2>
+      <p>住東京市區，來回、吃飯、採買都在同一個生活圈。花火那天單獨拉出來排。每個地點附 Google 地圖連結。</p>
+    </div>
+
+    <div class="daytabs" role="tablist" aria-label="行程日期">
+      <button class="daytab" role="tab" id="tab-d1" aria-controls="d1" aria-selected="true"><b>Day 1 · 8/1 日</b>抵達．上野</button>
+      <button class="daytab" role="tab" id="tab-d2" aria-controls="d2" aria-selected="false"><b>Day 2 · 8/2 一</b>長岡花火</button>
+      <button class="daytab" role="tab" id="tab-d3" aria-controls="d3" aria-selected="false"><b>Day 3 · 8/3 二</b>補眠．東京慢行</button>
+      <button class="daytab" role="tab" id="tab-d4" aria-controls="d4" aria-selected="false"><b>Day 4 · 8/4 三</b>採買．回家</button>
+    </div>
+
+    <div class="tabpanel" id="d1" role="tabpanel" aria-labelledby="tab-d1">
+      <div class="dayhead"><h3>Day 1｜抵達．上野</h3><span class="tag sea">主場：阿美橫丁</span>
+        <p>今天唯一的任務是把明天的東西備齊。不要排太滿，明天要從早上八點撐到半夜。</p></div>
+      <div class="tl">
+        <div class="ev" data-k="move"><div class="ev-time">上午</div><div class="ev-body">
+          <div class="ev-title"><h4>抵達成田或羽田</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=成田国際空港第2ターミナル" target="_blank" rel="noopener">成田</a>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=羽田空港第3ターミナル" target="_blank" rel="noopener">羽田</a></div>
+          <p>盡量選上午抵達的班機。六人同行入境與行李會慢一點，抓寬鬆一些。</p>
+        </div></div>
+
+        <div class="ev" data-k="move"><div class="ev-time">＋70 分</div><div class="ev-body">
+          <div class="ev-title"><h4>成田 → 上野</h4><span class="tag">京成本線</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=京成上野駅" target="_blank" rel="noopener">地圖</a></div>
+          <p><strong>Access 特急 ¥1,290</strong>（約 60 分，最划算）；趕時間可搭 <strong>Skyliner ¥2,580</strong>（41 分，全指定席）。
+          羽田出發的話走京急線到品川轉山手線，約 45 分、¥600。</p>
+          <div class="ev-cost"><span>Access 特急 <b>¥1,290</b>／人</span><span>Skyliner <b>¥2,580</b>／人</span></div>
+        </div></div>
+
+        <div class="ev" data-k="rest"><div class="ev-time">14:00</div><div class="ev-body">
+          <div class="ev-title"><h4>入住．六人整戶</h4></div>
+          <p>放行李、分房間、確認洗衣機與廚房。跟房東再確認一次<strong>明天深夜（約半夜十二點到一點）返回</strong>不會有問題。</p>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">15:30</div><div class="ev-body">
+          <div class="ev-title"><h4>阿美橫丁．採買明天的糧食</h4><span class="tag lan">今日主場</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=アメヤ横丁" target="_blank" rel="noopener">地圖</a></div>
+          <p>上野站到御徒町站之間的老市場，四百多家店。明天在長岡買東西人會很多，
+          <strong>能在這裡先買的就先買</strong>：零食、乾糧、寶特瓶飲料。生鮮與冰塊明天到長岡再買。</p>
+          <div class="ev-cost"><span>採買 <b>¥1,500–2,500</b>／人</span></div>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">17:00</div><div class="ev-body">
+          <div class="ev-title"><h4>百元商店補齊花火用品</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=ダイソー上野" target="_blank" rel="noopener">地圖</a></div>
+          <p>野餐墊（レジャーシート）、可折疊坐墊、扇子、防蚊噴霧、雨衣、垃圾袋。
+          <strong>全部百元店就有</strong>，六人份加起來不到 ¥3,000。花火會場禁止大型帳篷與過高的椅子。</p>
+          <div class="ev-cost"><span>六人份 <b>約 ¥3,000</b></span></div>
+        </div></div>
+
+        <div class="ev" data-k="night"><div class="ev-time">18:30</div><div class="ev-body">
+          <div class="ev-title"><h4>上野晚餐．居酒屋或燒肉</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=上野居酒屋" target="_blank" rel="noopener">地圖</a></div>
+          <p>六人建議先訂位。阿美橫丁高架下與上野站周邊選擇多。今晚<strong>早點回去睡</strong>，明天七點就要起床。</p>
+          <div class="ev-cost"><span><b>¥2,500–3,500</b>／人</span></div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="tabpanel" id="d2" role="tabpanel" aria-labelledby="tab-d2" hidden>
+      <div class="dayhead"><h3>Day 2｜長岡花火</h3><span class="tag lan">主場：信濃川河川敷</span>
+        <p>早上出發、下午抵達、吃飯佔位、天黑放花火、深夜回東京。一整天就這一件事。</p></div>
+      <div class="tl">
+        <div class="ev" data-k="rest"><div class="ev-time">07:00</div><div class="ev-body">
+          <div class="ev-title"><h4>起床．住處吃早餐</h4></div>
+          <p>昨天買的麵包咖啡解決。<strong>出門前確認</strong>：票（或穴場地點）、野餐墊、行動電源、
+          防蚊液、雨衣、換洗衣物、現金。</p>
+        </div></div>
+
+        <div class="ev" data-k="move"><div class="ev-time">08:00</div><div class="ev-body">
+          <div class="ev-title"><h4>上野出發．包車</h4><span class="tag sea">Alphard 7 人座</span></div>
+          <p>司機到住處或上野指定點接。<strong>上車先睡</strong>——今晚會很長。走首都高接關越道往新潟方向。</p>
+        </div></div>
+
+        <div class="ev" data-k="move"><div class="ev-time">10:00</div><div class="ev-body">
+          <div class="ev-title"><h4>関越道．上里 SA 休息</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=上里サービスエリア" target="_blank" rel="noopener">地圖</a></div>
+          <p>上廁所、買飲料。之後過關越隧道進新潟縣，出隧道那一段風景很好。</p>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">12:30</div><div class="ev-body">
+          <div class="ev-title"><h4>抵達長岡</h4><span class="tag">約 4.5 小時車程</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=長岡駅" target="_blank" rel="noopener">地圖</a></div>
+          <p>比預定時間早到是好事。<strong>花火當天下午市區就開始管制</strong>，越晚進來越麻煩。</p>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">13:00</div><div class="ev-body">
+          <div class="ev-title"><h4>午餐：青島食堂 宮内駅前店</h4><span class="tag lan">長岡名物</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=青島食堂宮内駅前店" target="_blank" rel="noopener">地圖</a></div>
+          <p>新潟県長岡市宮内 3-5-3．11:00–19:00．第三個週三公休。
+          <strong>長岡生薑醬油拉麵的元祖</strong>，開了六十年。招牌「青島ラーメン」¥900——
+          醬油湯底加大量生薑，夏天喝反而開胃。</p>
+          <div class="ev-cost"><span>青島ラーメン <b>¥900</b></span></div>
+          <p style="margin-top:.3rem"><strong>花火當天一定排隊</strong>。備案：
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=ラーメンみずさわ長岡" target="_blank" rel="noopener">みずさわ</a>（城岡 1-4-6）、
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=ラーメンたいち長岡" target="_blank" rel="noopener">ラーメン たいち</a>（堺東町 50），
+          都是在地人認可的生薑醬油系。真的來不及就直接去超市買便當。</p>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">14:30</div><div class="ev-body">
+          <div class="ev-title"><h4>超市採買晚餐與冰塊</h4><span class="tag sea">關鍵補給</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=イオン長岡店" target="_blank" rel="noopener">イオン長岡</a></div>
+          <p>會場的攤販貴又要排隊。<strong>在這裡把晚餐買齊</strong>：便當、飯糰、炸物、水果、
+          大量的水與運動飲料、<strong>冰塊</strong>（八月的新潟很熱）、濕紙巾、垃圾袋。
+          六人份大約 ¥1,500／人。買完放車上，司機會幫忙顧。</p>
+          <div class="ev-cost"><span>晚餐與飲料 <b>¥1,500</b>／人</span><span>冰塊、保冷袋 <b>¥1,000</b>／團</span></div>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">15:30</div><div class="ev-body">
+          <div class="ev-title"><h4>移動到觀賞點．開始佔位</h4><span class="tag lan">分岔點</span></div>
+          <p><strong>方案 A（有票）</strong>：請司機開到最靠近你們進場口的下車點，依票面指示進場。
+          有料観覧席通常下午就開放入場，早點進去比較從容。</p>
+          <p><strong>方案 B（無票）</strong>：直接開上高台穴場。<strong>好位置下午就有人了</strong>，
+          三點半到算安全。鋪好野餐墊、撐傘遮陽、輪流去廁所。</p>
+          <div class="ev-cost"><span><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=国営越後丘陵公園" target="_blank" rel="noopener">越後丘陵公園</a></span><span><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=長岡ニュータウン中央公園" target="_blank" rel="noopener">長岡ニュータウン</a></span><span><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=長岡インパルス" target="_blank" rel="noopener">長岡インパルス</a></span></div>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">16:30</div><div class="ev-body">
+          <div class="ev-title"><h4>位子顧好，開始吃晚餐</h4></div>
+          <p>天還亮，慢慢吃。輪流去上廁所——<strong>天黑後廁所會大排長龍</strong>。
+          防蚊液這時候噴。手機開省電模式，行動電源接上。</p>
+        </div></div>
+
+        <div class="ev" data-k="night"><div class="ev-time">19:20</div><div class="ev-body">
+          <div class="ev-title"><h4>花火開始</h4><span class="tag lan">110 分鐘</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=長岡まつり大花火大会会場" target="_blank" rel="noopener">會場</a></div>
+          <p>19:20 施放到 21:10，約兩萬發。三個一定要看的節目：</p>
+          <div class="ev-cost"><span><b>正三尺玉</b>　直徑 90cm、重約 300kg，升空約 600 公尺、開花直徑約 650 公尺。日本少數還在放的規格。</span></div>
+          <div class="ev-cost"><span><b>復興祈願花火フェニックス</b>　紀念 2004 年中越地震復興，橫向展開<strong>約兩公里寬</strong>，配樂是平原綾香的〈Jupiter〉。這是長岡花火的靈魂。</span></div>
+          <div class="ev-cost"><span><b>天地人花火・ナイアガラ</b>　長生橋上的瀑布狀煙火，沿著橋整條垂落。</span></div>
+        </div></div>
+
+        <div class="ev" data-k="night"><div class="ev-time">21:10</div><div class="ev-body">
+          <div class="ev-title"><h4>結束．不要急著動</h4></div>
+          <p>坐著等十到二十分鐘，讓第一波人潮先走。<strong>這時候急沒有用，只會卡在原地。</strong>
+          收東西、垃圾自己帶走。</p>
+        </div></div>
+
+        <div class="ev" data-k="move"><div class="ev-time">21:30</div><div class="ev-body">
+          <div class="ev-title"><h4>回到約定地點上車</h4><span class="tag">最容易出錯的一步</span></div>
+          <p><strong>上車點要在出發前就講好，而且要是絕對找得到的地標</strong>——人多的時候手機訊號會塞，
+          找不到彼此很常見。六個人先約好「走散就在 X 集合」。</p>
+        </div></div>
+
+        <div class="ev" data-k="move"><div class="ev-time">22:00</div><div class="ev-body">
+          <div class="ev-title"><h4>上高速．回東京</h4></div>
+          <p>散場後關越道方向會回堵一段。上車就睡，司機會處理。</p>
+        </div></div>
+
+        <div class="ev" data-k="rest"><div class="ev-time">01:00<br>–02:00</div><div class="ev-body">
+          <div class="ev-title"><h4>抵達上野</h4><span class="tag sea">預估</span>
+          <a class="mapl" href="#drive">車程試算</a></div>
+          <p>方案 A（會場內）約 <strong>01:25–03:15</strong>；方案 B（高台穴場）約 <strong>00:55–01:55</strong>，
+          平均早一小時。業者說的「半夜十二點前後」是全程無大塞的最好情況，
+          <strong>務實抓一點到兩點</strong>。所以明天上午完全空著，睡到自然醒。</p>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="tabpanel" id="d3" role="tabpanel" aria-labelledby="tab-d3" hidden>
+      <div class="dayhead"><h3>Day 3｜補眠．東京慢行</h3><span class="tag sea">主場：睡到自然醒</span>
+        <p>這天的行程刻意留白。想睡到幾點就睡到幾點，下午再出門。</p></div>
+      <div class="tl">
+        <div class="ev" data-k="rest"><div class="ev-time">－</div><div class="ev-body">
+          <div class="ev-title"><h4>上午：不排任何行程</h4><span class="tag">刻意留白</span></div>
+          <p>昨天從早上八點到半夜，六個人都需要這個上午。有廚房的話煮個東西當早午餐。</p>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">14:00</div><div class="ev-body">
+          <div class="ev-title"><h4>谷根千散步</h4><span class="tag free">免費</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=谷中銀座商店街" target="_blank" rel="noopener">谷中銀座</a></div>
+          <p>谷中、根津、千駄木一帶，東京少數躲過戰火與泡沫改建的老街區。
+          從上野走過去或搭一站。<strong>谷中銀座商店街</strong>的「夕焼けだんだん」階梯是招牌畫面，
+          兩側都是小吃與雜貨，適合六個人邊走邊分著吃。</p>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">16:00</div><div class="ev-body">
+          <div class="ev-title"><h4>替代選項：淺草</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=浅草寺" target="_blank" rel="noopener">淺草寺</a>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=仲見世通り" target="_blank" rel="noopener">仲見世通</a></div>
+          <p>從上野搭銀座線兩站。淺草寺、仲見世通、隅田川岸。想買伴手禮的話這裡比阿美橫丁好逛。</p>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">17:30</div><div class="ev-body">
+          <div class="ev-title"><h4>不忍池的蓮花</h4><span class="tag free">免費</span><span class="tag lan">八月限定</span>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=不忍池" target="_blank" rel="noopener">地圖</a></div>
+          <p>上野公園裡的池子，<strong>七月中到八月中整片開滿蓮花</strong>，剛好是你們來的時候。
+          花在清晨開得最好、下午會闔起來，但傍晚的光線拍起來很漂亮。就在住處旁邊，隨時可以去。</p>
+        </div></div>
+
+        <div class="ev" data-k="night"><div class="ev-time">19:00</div><div class="ev-body">
+          <div class="ev-title"><h4>慶功晚餐</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=上野アメ横高架下居酒屋" target="_blank" rel="noopener">地圖</a></div>
+          <p>阿美橫丁高架下有一整排熱炒與居酒屋，價格便宜、氣氛熱鬧，適合六個人。六人記得先訂位。</p>
+          <div class="ev-cost"><span><b>¥3,000–4,000</b>／人</span></div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="tabpanel" id="d4" role="tabpanel" aria-labelledby="tab-d4" hidden>
+      <div class="dayhead"><h3>Day 4｜採買．回家</h3><span class="tag sea">主場：上野 → 機場</span></div>
+      <div class="tl">
+        <div class="ev" data-k="move"><div class="ev-time">09:00</div><div class="ev-body">
+          <div class="ev-title"><h4>退房．寄放行李</h4></div>
+          <p>Airbnb 多半可寄放到下午，訂房時先問。不行的話上野站有大型投幣式置物櫃。</p>
+          <div class="ev-cost"><span>大型置物櫃 <b>¥700</b>／個</span></div>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">10:00</div><div class="ev-body">
+          <div class="ev-title"><h4>阿美橫丁．最後採買</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=アメヤ横丁" target="_blank" rel="noopener">地圖</a></div>
+          <p>零食、藥妝、乾貨。<strong>免稅要同一家店累計滿 ¥5,000，記得帶護照</strong>。
+          六個人可以合併在同一家結帳衝免稅門檻。藥妝比價可去
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=マツモトキヨシ上野" target="_blank" rel="noopener">松本清</a> 或
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=ドンキホーテ上野" target="_blank" rel="noopener">唐吉訶德</a>。</p>
+        </div></div>
+
+        <div class="ev" data-k="play"><div class="ev-time">12:00</div><div class="ev-body">
+          <div class="ev-title"><h4>午餐：上野最後一餐</h4>
+          <a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=上野駅周辺ランチ" target="_blank" rel="noopener">地圖</a></div>
+          <p>上野站內的 ecute、atré 都有餐廳，帶著行李也方便。</p>
+          <div class="ev-cost"><span><b>¥1,200–2,000</b>／人</span></div>
+        </div></div>
+
+        <div class="ev" data-k="move"><div class="ev-time">14:00</div><div class="ev-body">
+          <div class="ev-title"><h4>取行李 → 前往機場</h4></div>
+          <p>成田請抓 <strong>起飛前 3 小時</strong>出發（車程 60 分＋六人報到）。羽田抓 2.5 小時。</p>
+          <div class="ev-cost"><span>Access 特急 <b>¥1,290</b>／人</span></div>
+        </div></div>
+
+        <div class="ev" data-k="move"><div class="ev-time">傍晚</div><div class="ev-body">
+          <div class="ev-title"><h4>起飛．當晚回到台灣</h4><span class="tag">回家</span></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="eat">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">必吃</p>
+      <h2>長岡的名物，東京的補給</h2>
+      <p>花火那天在長岡只有中午一餐能好好吃，其他時間都在佔位子。所以那一餐要吃對——長岡有自己的拉麵流派。</p>
+    </div>
+
+    <div class="filters" role="group" aria-label="美食篩選">
+      <button class="chip" data-filter="all" aria-pressed="true">全部</button>
+      <button class="chip" data-filter="nagaoka" aria-pressed="false">長岡．新潟</button>
+      <button class="chip" data-filter="tokyo" aria-pressed="false">東京</button>
+      <button class="chip" data-filter="hanabi" aria-pressed="false">花火當天</button>
+      <button class="chip" data-filter="gift" aria-pressed="false">伴手禮</button>
+    </div>
+
+    <div class="eats" id="eatGrid">
+      <article class="card eat" data-tags="nagaoka hanabi">
+        <h4>青島ラーメン</h4><span class="jp">青島食堂 宮内駅前店・長岡市宮内 3-5-3</span>
+        <p><strong>長岡生薑醬油拉麵的元祖</strong>，開了六十年。醬油湯底加大量生薑，夏天喝反而開胃。
+        11:00–19:00，第三個週三公休。花火當天必定排隊。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=青島食堂宮内駅前店" target="_blank" rel="noopener">地圖</a><span class="tag lan">長岡名物</span><span class="yen">¥900</span></div>
+      </article>
+      <article class="card eat" data-tags="nagaoka hanabi">
+        <h4>みずさわ</h4><span class="jp">長岡市城岡 1-4-6</span>
+        <p>在地人認可的長岡生薑醬油系人氣店。青島食堂排太長時的第一備案。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=ラーメンみずさわ長岡" target="_blank" rel="noopener">地圖</a><span class="tag lan">備案</span><span class="yen">¥800–1,000</span></div>
+      </article>
+      <article class="card eat" data-tags="nagaoka hanabi">
+        <h4>ラーメン たいち</h4><span class="jp">長岡市堺東町 50</span>
+        <p>同樣是在地評價高的生薑醬油系。位置與青島食堂不同方向，可依當天車行路線選。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=ラーメンたいち長岡" target="_blank" rel="noopener">地圖</a><span class="tag lan">備案</span><span class="yen">¥800–1,000</span></div>
+      </article>
+      <article class="card eat" data-tags="nagaoka">
+        <h4>へぎそば</h4><span class="jp">新潟中越地方的名物蕎麥麵</span>
+        <p>用<strong>布海苔</strong>（一種海藻）當黏著劑打的蕎麥麵，口感特別滑韌，一口一口捲成小團擺在木盒（へぎ）上。
+        長岡市區有數家，車程許可的話值得專程吃一次。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=へぎそば長岡" target="_blank" rel="noopener">地圖</a><span class="tag lan">長岡名物</span><span class="yen">¥1,200–1,800</span></div>
+      </article>
+      <article class="card eat" data-tags="nagaoka gift">
+        <h4>栃尾の油揚げ</h4><span class="jp">長岡市栃尾地區的巨大油豆腐</span>
+        <p>厚度是一般油豆腐的三倍，長約 20 公分。烤過淋上薑末醬油，外酥內軟。
+        長岡的超市與道の駅都買得到，當天在超市採買時可以順手拿。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=栃尾の油揚げ長岡" target="_blank" rel="noopener">地圖</a><span class="tag lan">長岡名物</span><span class="yen">¥200–400</span></div>
+      </article>
+      <article class="card eat" data-tags="nagaoka gift">
+        <h4>笹団子</h4><span class="jp">新潟名物和菓子</span>
+        <p>艾草麻糬包紅豆餡，用竹葉裹起來蒸。新潟最經典的伴手禮，超市與土產店都有。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=笹団子新潟" target="_blank" rel="noopener">地圖</a><span class="tag">伴手禮</span><span class="yen">¥150–250／個</span></div>
+      </article>
+      <article class="card eat" data-tags="hanabi">
+        <h4>超市便當與飯糰</h4><span class="jp">イオン長岡 等賣場</span>
+        <p><strong>花火當天最重要的一餐其實是這個。</strong>會場攤販貴又排隊，
+        下午先在超市把六人份的便當、炸物、飲料、冰塊買齊，帶上高台或進場慢慢吃。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=イオン長岡店" target="_blank" rel="noopener">地圖</a><span class="tag sea">關鍵</span><span class="yen">¥1,500／人</span></div>
+      </article>
+      <article class="card eat" data-tags="tokyo gift">
+        <h4>二木の菓子</h4><span class="jp">阿美橫丁・1947 年創業的零食批發</span>
+        <p>阿美橫丁的老字號零食店，價格比一般超市便宜，種類極多。伴手禮一次買齊的好地方。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=二木の菓子アメ横" target="_blank" rel="noopener">地圖</a><span class="tag">伴手禮</span><span class="yen">便宜</span></div>
+      </article>
+      <article class="card eat" data-tags="tokyo">
+        <h4>阿美橫丁 高架下</h4><span class="jp">上野–御徒町 之間</span>
+        <p>JR 高架橋下一整排熱炒、居酒屋、海鮮攤，價格便宜、氣氛熱鬧，是六個人吃飯最順的地方。建議先訂位。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=アメヤ横丁" target="_blank" rel="noopener">地圖</a><span class="tag sea">六人適合</span><span class="yen">¥3,000–4,000</span></div>
+      </article>
+      <article class="card eat" data-tags="tokyo">
+        <h4>谷中銀座商店街</h4><span class="jp">谷根千・老街小吃</span>
+        <p>可樂餅、燒鳥、煎餅、豆菓子，一攤一攤買著吃。適合 Day 3 下午散步時邊走邊分。</p>
+        <div class="row"><a class="mapl" href="https://www.google.com/maps/search/?api=1&amp;query=谷中銀座商店街" target="_blank" rel="noopener">地圖</a><span class="tag free">邊走邊吃</span><span class="yen">¥500–1,200</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="money">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">費用</p>
+      <h2>六個人，四天三夜，逐項算給你看</h2>
+      <p>以 2027/8/1–8/4、住東京上野六人整戶、包車去長岡、抽中 A 会場マス席為基準。日圓以 ¥100 ≈ NT$21 換算。</p>
+    </div>
+
+    <div class="scroller" style="margin-bottom:1.5rem">
+      <table>
+        <thead><tr><th>項目</th><th>明細</th><th>日圓（每人）</th><th>台幣（每人）</th></tr></thead>
+        <tbody>
+          <tr><td><strong>機票</strong></td><td>台北 ↔ 東京 來回含稅．八月暑假旺季估值</td><td class="num">—</td><td class="num">16,000</td></tr>
+          <tr><td><strong>包車</strong></td><td>Alphard 上野↔長岡 來回 ¥90,000 ÷ 6 人</td><td class="num">15,000</td><td class="num">3,150</td></tr>
+          <tr style="background:var(--lantern-soft)"><td><strong>花火票</strong></td><td>A 会場マス席 ¥32,000 ÷ 6 人<br><small style="color:var(--ink-3)">抽不到就是 ¥0，改上高台穴場</small></td><td class="num">5,333</td><td class="num">1,120</td></tr>
+          <tr><td><strong>住宿</strong></td><td>上野六人整戶 ¥27,000／晚 × 3 晚 ÷ 6 人</td><td class="num">13,500</td><td class="num">2,835</td></tr>
+          <tr><td><strong>機場往返</strong></td><td>京成 Access 特急 ¥1,290 × 2 趟</td><td class="num">2,580</td><td class="num">542</td></tr>
+          <tr><td><strong>東京市內交通</strong></td><td>四天地鐵、JR 零星車資</td><td class="num">2,000</td><td class="num">420</td></tr>
+          <tr><td>餐食 Day 1</td><td>阿美橫丁採買 ¥2,000＋百元店用品 ¥500＋晚餐 ¥3,000</td><td class="num">5,500</td><td class="num">1,155</td></tr>
+          <tr><td>餐食 Day 2</td><td>早餐 ¥300＋青島拉麵 ¥900＋超市晚餐飲料 ¥1,500＋冰塊分攤 ¥170</td><td class="num">2,870</td><td class="num">603</td></tr>
+          <tr><td>餐食 Day 3</td><td>早午餐 ¥800＋谷中小吃 ¥1,000＋慶功晚餐 ¥3,500</td><td class="num">5,300</td><td class="num">1,113</td></tr>
+          <tr><td>餐食 Day 4</td><td>早餐 ¥400＋午餐 ¥1,500</td><td class="num">1,900</td><td class="num">399</td></tr>
+          <tr><td><strong>雜支</strong></td><td>置物櫃、賽錢、小額門票</td><td class="num">2,000</td><td class="num">420</td></tr>
+          <tr><td><strong>eSIM</strong></td><td>四天上網</td><td class="num">—</td><td class="num">300</td></tr>
+          <tr><td><strong>台灣端交通</strong></td><td>住家 ↔ 桃園機場 來回</td><td class="num">—</td><td class="num">180</td></tr>
+          <tr style="background:var(--sea-soft)"><td colspan="3"><strong>每人合計</strong>（方案 A．有票，不含購物）</td><td class="num"><strong>NT$ 28,237</strong></td></tr>
+          <tr style="background:var(--cheap-soft)"><td colspan="3"><strong>每人合計</strong>（方案 B．高台穴場，省下票錢）</td><td class="num"><strong>NT$ 27,117</strong></td></tr>
+          <tr style="background:var(--sea-soft)"><td colspan="3"><strong>六人團總計</strong>（方案 A）</td><td class="num"><strong>NT$ 169,422</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="calc">
+      <div class="controls">
+        <div class="ctl">
+          <label for="air">機票 來回含稅／人 <b id="airV">NT$16,000</b></label>
+          <input type="range" id="air" min="9000" max="26000" step="500" value="16000">
+        </div>
+        <div class="ctl">
+          <label for="stay">住宿 每晚（六人整戶） <b id="stayV">¥27,000</b></label>
+          <input type="range" id="stay" min="16000" max="45000" step="1000" value="27000">
+        </div>
+        <div class="ctl">
+          <label for="rate">匯率 ¥100 = <b id="rateV">NT$21.0</b></label>
+          <input type="range" id="rate" min="19" max="24" step="0.1" value="21">
+        </div>
+        <div class="ctl">
+          <label>花火席次</label>
+          <div class="seg" id="seat">
+            <button type="button" data-v="5333" aria-pressed="true">A マス席 ¥32,000</button>
+            <button type="button" data-v="5000" aria-pressed="false">B マス席 ¥30,000</button>
+            <button type="button" data-v="2000" aria-pressed="false">北エリア ¥2,000</button>
+            <button type="button" data-v="0" aria-pressed="false">穴場免費</button>
+          </div>
+        </div>
+        <div class="ctl">
+          <label>吃飯的鬆緊度（四天合計／人）</label>
+          <div class="seg" id="food">
+            <button type="button" data-v="15570" aria-pressed="true">照本頁 ¥15,570</button>
+            <button type="button" data-v="20000" aria-pressed="false">寬鬆 ¥20,000</button>
+            <button type="button" data-v="26000" aria-pressed="false">放開吃 ¥26,000</button>
+          </div>
+        </div>
+        <div class="ctl">
+          <label>包車總價（六人分攤）</label>
+          <div class="seg" id="car">
+            <button type="button" data-v="90000" aria-pressed="true">¥90,000 報價</button>
+            <button type="button" data-v="110000" aria-pressed="false">漲到 ¥110,000</button>
+            <button type="button" data-v="0" aria-pressed="false">改搭新幹線</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card bill">
+        <div class="line"><span>機票</span><span id="bAir"></span></div>
+        <div class="line"><span>包車／新幹線</span><span id="bCar"></span></div>
+        <div class="line"><span>花火票</span><span id="bSeat"></span></div>
+        <div class="line"><span>住宿 3 晚</span><span id="bStay"></span></div>
+        <div class="line"><span>東京交通</span><span id="bTrans"></span></div>
+        <div class="line"><span>吃 4 天</span><span id="bFood"></span></div>
+        <div class="line"><span>雜支、eSIM、台灣端</span><span id="bMisc"></span></div>
+        <div class="total"><span>每人合計</span><b id="bTotal"></b></div>
+        <div class="per" id="bTeam"></div>
+        <p style="font-size:.75rem;color:var(--ink-3);margin-top:.9rem;line-height:1.6">
+          不含購物與伴手禮。機票為八月旺季估值——<strong>2027/8 的票約 2026 年 9 月初才開賣</strong>，
+          現在查不到價格是正常的。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pack">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">出發前</p>
+      <h2>打包清單</h2>
+      <p>八月的新潟白天可到 32°C 以上、傍晚河邊會轉涼。花火那天要在戶外待五、六個小時，這張清單有一半是為那一天準備的。勾選會自動記住。</p>
+    </div>
+    <div class="card pad">
+      <div class="checks" id="packlist">
+        <div class="checkgroup"><h4>花火當天（最重要）</h4><ul>
+          <li><label><input type="checkbox"><span>花火票（記名式，帶證件核對）或穴場地點截圖</span></label></li>
+          <li><label><input type="checkbox"><span>野餐墊 レジャーシート</span></label></li>
+          <li><label><input type="checkbox"><span>折疊坐墊（會場禁止過高的椅子）</span></label></li>
+          <li><label><input type="checkbox"><span>行動電源（每人一顆，會拍很多影片）</span></label></li>
+          <li><label><input type="checkbox"><span>防蚊噴霧、涼感濕紙巾</span></label></li>
+          <li><label><input type="checkbox"><span>輕便雨衣（小雨照放，不能撐傘擋到後面）</span></label></li>
+          <li><label><input type="checkbox"><span>垃圾袋（垃圾一定要自己帶走）</span></label></li>
+          <li><label><input type="checkbox"><span>手電筒或頭燈（散場走夜路）</span></label></li>
+          <li><label><input type="checkbox"><span>扇子、手持電風扇、鹽糖</span></label></li>
+        </ul></div>
+        <div class="checkgroup"><h4>證件與錢</h4><ul>
+          <li><label><input type="checkbox"><span>護照（效期 6 個月以上）</span></label></li>
+          <li><label><input type="checkbox"><span>電子機票、住宿訂單（存離線）</span></label></li>
+          <li><label><input type="checkbox"><span>Visit Japan Web 入境與海關 QR</span></label></li>
+          <li><label><input type="checkbox"><span>日圓現金（包車當天付現，先分好）</span></label></li>
+          <li><label><input type="checkbox"><span>包車業者的 LINE 對話截圖與聯絡方式</span></label></li>
+        </ul></div>
+        <div class="checkgroup"><h4>車上（來回九小時）</h4><ul>
+          <li><label><input type="checkbox"><span>頸枕、眼罩</span></label></li>
+          <li><label><input type="checkbox"><span>薄外套或毯子（車內冷氣強）</span></label></li>
+          <li><label><input type="checkbox"><span>暈車藥</span></label></li>
+          <li><label><input type="checkbox"><span>耳機、離線下載的影片或音樂</span></label></li>
+          <li><label><input type="checkbox"><span>零食、口香糖</span></label></li>
+        </ul></div>
+        <div class="checkgroup"><h4>其他</h4><ul>
+          <li><label><input type="checkbox"><span>好走的鞋（散場要走不少路）</span></label></li>
+          <li><label><input type="checkbox"><span>防曬乳、帽子</span></label></li>
+          <li><label><input type="checkbox"><span>常備藥、腸胃藥</span></label></li>
+          <li><label><input type="checkbox"><span>eSIM 或分享器（六人建議各自有網路）</span></label></li>
+          <li><label><input type="checkbox"><span>環保購物袋、夾鏈袋</span></label></li>
+          <li><label><input type="checkbox"><span>六人共用的走散集合點（先講好）</span></label></li>
+        </ul></div>
+      </div>
+      <button class="resetbtn" id="resetPack" type="button" style="margin-top:1.15rem">清除所有勾選</button>
+    </div>
+
+    <div class="sec-head" style="margin-top:2.5rem;margin-bottom:1.15rem">
+      <p class="eyebrow">現場用得到</p>
+      <h2 style="font-size:1.25rem;font-family:var(--body);font-weight:500">日文小抄</h2>
+    </div>
+    <div class="phrases">
+      <div class="ph"><div class="zh">請問這裡可以看花火嗎</div><div class="jp">ここで花火は見えますか？</div><div class="rm">koko de hanabi wa miemasu ka</div></div>
+      <div class="ph"><div class="zh">這裡可以坐嗎</div><div class="jp">ここに座ってもいいですか？</div><div class="rm">koko ni suwatte mo ii desu ka</div></div>
+      <div class="ph"><div class="zh">廁所在哪裡</div><div class="jp">トイレはどこですか？</div><div class="rm">toire wa doko desu ka</div></div>
+      <div class="ph"><div class="zh">我們有六個人</div><div class="jp">六人です</div><div class="rm">rokunin desu</div></div>
+      <div class="ph"><div class="zh">請問可以停車嗎</div><div class="jp">ここに駐車できますか？</div><div class="rm">koko ni chuusha dekimasu ka</div></div>
+      <div class="ph"><div class="zh">請給我這個</div><div class="jp">これください</div><div class="rm">kore kudasai</div></div>
+      <div class="ph"><div class="zh">多少錢？</div><div class="jp">おいくらですか？</div><div class="rm">o-ikura desu ka</div></div>
+      <div class="ph"><div class="zh">可以免稅嗎</div><div class="jp">免税できますか？</div><div class="rm">menzei dekimasu ka</div></div>
+      <div class="ph"><div class="zh">冰塊在哪裡賣</div><div class="jp">氷はどこで売っていますか？</div><div class="rm">koori wa doko de utte imasu ka</div></div>
+      <div class="ph"><div class="zh">謝謝，麻煩您了</div><div class="jp">よろしくお願いします</div><div class="rm">yoroshiku onegai shimasu</div></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="cols">
+      <div>
+        <h4>行程設定</h4>
+        <p>六人同行．2027/8/1–8/4 四天三夜．住東京上野一帶六人整戶．花火日 8/2（一）．
+        包車 Alphard 上野來回長岡（¥90,000，含超時費，現金付款，不需訂金）．
+        抽到票走方案 A、抽不到走方案 B，<strong>無論如何都會出發</strong>。</p>
+      </div>
+      <div>
+        <h4>價格說明</h4>
+        <p>金額為估算，用來抓預算而非報價。日圓以 ¥100 ≈ NT$21 換算。
+        花火席次以 2026 年一般販售價格推估，2027 年官方公告後可能調整。
+        機票為八月旺季估值，2027/8 的票約 2026 年 9 月初才開賣。</p>
+      </div>
+      <div>
+        <h4>出發前務必確認</h4>
+        <p>2027 年售票時程與海外居住者申請方式（長岡花火官網）、包車業者的公司登記與保險、
+        Airbnb 深夜進出規定、當天交通管制圖與穴場可及性、天候與是否順延至 8/3。</p>
+      </div>
+    </div>
+    <p class="disclaim">
+      本頁為個人旅遊規劃，非商業旅行社行程，不涉及代訂與收費。
+      席次價格、抽選日程引用自 2026 年公開資訊，僅供推估 2027 年之用，實際以主辦單位公告為準。
+      穴場皆非官方觀覽席，主辦單位不保證視野，現場請依警方與工作人員指示。
+      地圖連結導向 Google 地圖搜尋結果，實際位置與營業時間請以現場或官方公告為準。資料整理於 2026 年 8 月。
+    </p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var root = document.documentElement, saved = null;
+  try { saved = localStorage.getItem("ngk-theme"); } catch(e){}
+  if (saved) root.setAttribute("data-theme", saved);
+  document.getElementById("theme").addEventListener("click", function(){
+    var cur = root.getAttribute("data-theme");
+    var isDark = cur ? cur === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+    var next = isDark ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem("ngk-theme", next); } catch(e){}
+  });
+
+  var tabs = Array.prototype.slice.call(document.querySelectorAll(".daytab"));
+  tabs.forEach(function(tab){
+    tab.addEventListener("click", function(){
+      tabs.forEach(function(t){
+        var on = t === tab;
+        t.setAttribute("aria-selected", on ? "true" : "false");
+        document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
+      });
+    });
+  });
+
+  var chips = Array.prototype.slice.call(document.querySelectorAll(".chip"));
+  var eats  = Array.prototype.slice.call(document.querySelectorAll("#eatGrid .eat[data-tags]"));
+  chips.forEach(function(chip){
+    chip.addEventListener("click", function(){
+      var f = chip.getAttribute("data-filter");
+      chips.forEach(function(c){ c.setAttribute("aria-pressed", c === chip ? "true" : "false"); });
+      eats.forEach(function(card){
+        var tags = card.getAttribute("data-tags") || "";
+        card.hidden = !(f === "all" || tags.split(" ").indexOf(f) !== -1);
+      });
+    });
+  });
+
+  var state = { air:16000, stay:27000, rate:21, seat:5333, food:15570, car:90000 };
+  var nt = function(n){ return "NT$" + Math.round(n).toLocaleString("en-US"); };
+
+  function segInit(id, key){
+    var box = document.getElementById(id);
+    Array.prototype.forEach.call(box.querySelectorAll("button"), function(b){
+      b.addEventListener("click", function(){
+        Array.prototype.forEach.call(box.querySelectorAll("button"), function(x){
+          x.setAttribute("aria-pressed", x === b ? "true" : "false");
+        });
+        state[key] = parseFloat(b.getAttribute("data-v"));
+        render();
+      });
+    });
+  }
+  segInit("seat","seat"); segInit("food","food"); segInit("car","car");
+  [["air","air"],["stay","stay"],["rate","rate"]].forEach(function(pair){
+    var el = document.getElementById(pair[0]);
+    el.addEventListener("input", function(){ state[pair[1]] = parseFloat(el.value); render(); });
+  });
+
+  function render(){
+    var r = state.rate / 100;
+    var air   = state.air;
+    var car   = state.car ? (state.car / 6) * r : 18220 * r;
+    var seat  = state.seat * r;
+    var stay  = (state.stay * 3 / 6) * r;
+    var trans = (2580 + 2000) * r;
+    var food  = state.food * r;
+    var misc  = 2000 * r + 300 + 180;
+    var total = air + car + seat + stay + trans + food + misc;
+
+    document.getElementById("airV").textContent  = nt(state.air);
+    document.getElementById("stayV").textContent = "¥" + state.stay.toLocaleString("en-US");
+    document.getElementById("rateV").textContent = "NT$" + state.rate.toFixed(1);
+    document.getElementById("bAir").textContent   = nt(air);
+    document.getElementById("bCar").textContent   = nt(car) + (state.car ? "" : "（新幹線）");
+    document.getElementById("bSeat").textContent  = seat ? nt(seat) : "免費（穴場）";
+    document.getElementById("bStay").textContent  = nt(stay);
+    document.getElementById("bTrans").textContent = nt(trans);
+    document.getElementById("bFood").textContent  = nt(food);
+    document.getElementById("bMisc").textContent  = nt(misc);
+    document.getElementById("bTotal").textContent = nt(total);
+    document.getElementById("bTeam").textContent  = "六人團合計 " + nt(total * 6);
+    document.getElementById("heroPer").textContent = Math.round(total).toLocaleString("en-US");
+  }
+  render();
+
+  var boxes = Array.prototype.slice.call(document.querySelectorAll("#packlist input"));
+  var KEY = "ngk-pack", stored = [];
+  try { stored = JSON.parse(localStorage.getItem(KEY) || "[]"); } catch(e){}
+  boxes.forEach(function(b,i){
+    b.checked = !!stored[i];
+    b.addEventListener("change", function(){
+      try { localStorage.setItem(KEY, JSON.stringify(boxes.map(function(x){ return x.checked; }))); } catch(e){}
+    });
+  });
+  document.getElementById("resetPack").addEventListener("click", function(){
+    boxes.forEach(function(b){ b.checked = false; });
+    try { localStorage.removeItem(KEY); } catch(e){}
+  });
+
+  var cv = document.getElementById("tide"), ctx = cv.getContext("2d");
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var t = 0, raf, bursts = [];
+  function size(){
+    var d = window.devicePixelRatio || 1;
+    cv.width = cv.offsetWidth * d; cv.height = cv.offsetHeight * d;
+    ctx.setTransform(d,0,0,d,0,0);
+  }
+  function seedBursts(){
+    bursts = [];
+    var w = cv.offsetWidth, h = cv.offsetHeight;
+    for (var i = 0; i < 5; i++){
+      bursts.push({
+        x: w * (0.12 + i * 0.19),
+        y: h * (0.24 + ((i * 7) % 5) * 0.09),
+        r: 26 + (i % 3) * 16,
+        n: 22 + (i % 4) * 6,
+        ph: i * 1.27
+      });
+    }
+  }
+  function draw(){
+    var w = cv.offsetWidth, h = cv.offsetHeight;
+    ctx.clearRect(0,0,w,h);
+    var sea = getComputedStyle(root).getPropertyValue("--sea").trim();
+    var fire = getComputedStyle(root).getPropertyValue("--lantern").trim();
+    for (var b = 0; b < bursts.length; b++){
+      var o = bursts[b];
+      var cyc = (t * 0.24 + o.ph) % 4;
+      if (cyc > 2.1) continue;
+      var grow = Math.min(1, cyc / 0.7);
+      var fade = cyc < 0.7 ? 1 : Math.max(0, 1 - (cyc - 0.7) / 1.4);
+      ctx.strokeStyle = (b % 2) ? fire : sea;
+      ctx.lineWidth = 1;
+      for (var k = 0; k < o.n; k++){
+        var a = (k / o.n) * Math.PI * 2;
+        var rr = o.r * grow;
+        ctx.globalAlpha = 0.5 * fade;
+        ctx.beginPath();
+        ctx.moveTo(o.x + Math.cos(a) * rr * 0.35, o.y + Math.sin(a) * rr * 0.35 + cyc * 5);
+        ctx.lineTo(o.x + Math.cos(a) * rr, o.y + Math.sin(a) * rr + cyc * 9);
+        ctx.stroke();
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+  function loop(){ t += 0.016; draw(); raf = requestAnimationFrame(loop); }
+  function boot(){ size(); seedBursts(); draw(); if (!reduce){ cancelAnimationFrame(raf); loop(); } }
+  window.addEventListener("resize", boot);
+  boot();
+})();
+</script>
