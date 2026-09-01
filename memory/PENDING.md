@@ -15,7 +15,8 @@
   `dasin-nursing`、`nursing-clock`、`xiaqun`。
   路徑：專案 → Settings → Danger Zone → Delete Project。
   已提醒兩點：(a) 護理專案在 D:\GA\CLAUDE.md 路由表仍標「活躍」且本機有交接文件，
-  (b) 別跟另一帳號的 `dasin-care` 搞混（2 天前才更新，不在刪除清單）。
+  (b) ⛔ **`dasin-care` 不要動** — 老闆 2026-09-01 明確指示。它在另一帳號 easons-projects-cac5ebe9
+      底下（2 天前才更新），名字與 dasin-nursing 相近，任何批次操作都要排除它。
 
 - **通知管道未設定**：爬蟲失敗告警走 notifyOwner()，但 LINE/Telegram env 都沒填 → 目前告警只進 console。
   需老闆提供 Telegram Bot Token（LINE Notify 已停服）。
