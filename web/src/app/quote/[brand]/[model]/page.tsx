@@ -36,7 +36,7 @@ export default async function ModelPage({ params }: { params: Promise<Params> })
     },
   }).catch(() => null);
 
-  if (!model || model.brand.slug !== brandSlug) notFound();
+  if (!model || !model.isActive || model.brand.slug !== brandSlug) notFound();
 
   // 同時找該機型的二手回收價（fuzzy match）
   const recyclePrices = await findRecyclePricesForModel(model.name);

@@ -22,8 +22,8 @@ const SYMPTOMS: Symptom[] = [
     label: "螢幕破裂 / 玻璃裂",
     category: "螢幕",
     causes: [
-      { name: "外玻璃破裂", description: "顯示與觸控正常，僅外層玻璃碎", estimatedCost: "$1,800–6,000", urgency: "medium", relatedSlug: "iphone-screen-repair-cost-2026" },
-      { name: "整片螢幕破裂", description: "顯示異常或觸控失靈", estimatedCost: "$3,200–14,200", urgency: "high", relatedSlug: "iphone-screen-repair-cost-2026" },
+      { name: "外玻璃破裂", description: "顯示與觸控正常，僅外層玻璃碎", estimatedCost: "$1,800–6,000", urgency: "medium" },
+      { name: "整片螢幕破裂", description: "顯示異常或觸控失靈", estimatedCost: "$3,200–14,200", urgency: "high" },
     ],
   },
   {

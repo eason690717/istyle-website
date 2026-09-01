@@ -28,88 +28,6 @@ export interface BlogPost {
 
 export const BLOG_POSTS: BlogPost[] = [
   {
-    slug: "iphone-screen-repair-cost-2026",
-    title: "2026 iPhone 螢幕破裂維修費用完整指南｜副廠 vs 原廠怎麼選",
-    excerpt: "iPhone 螢幕破裂維修費用從 $1,800 到 $14,000 不等，差在哪裡？本文完整解析副廠 OLED、原廠拆機、全新原廠三種選擇，讓您花對錢。",
-    metaDescription: "2026 最新 iPhone 螢幕維修費用表，副廠 OLED 從 $1,800 起，原廠拆機從 $4,500 起。板橋 i時代 14 年技術經驗，30 分鐘完工。",
-    keywords: ["iPhone 螢幕維修費用", "iPhone 螢幕破裂 多少錢", "iPhone 螢幕副廠 原廠 差異", "iPhone 換螢幕 2026", "板橋 iPhone 螢幕維修"],
-    coverImage: "/cases/iphone-broken-screen.jpg",
-    category: "pricing",
-    author: "i時代團隊",
-    publishedAt: "2026-04-20",
-    readingMinutes: 6,
-    body: `## iPhone 螢幕維修費用為什麼差這麼多？
-
-很多客戶第一次送修時會疑惑：為什麼同樣是 iPhone 15 Pro Max 的螢幕，有人報價 $5,200，有人報價 $14,200？差在哪？
-
-答案在「**螢幕來源等級**」。iPhone 螢幕從便宜到貴大致分三種：
-
-### 1. 副廠 OLED 螢幕（$1,800 起）
-
-由第三方廠商生產的 OLED 面板，**色彩、亮度、觸控反應與原廠接近**，差異主要在：
-- 無法顯示「原廠螢幕」驗證
-- 極限亮度略低（一般使用無感）
-- 價格僅原廠 1/3
-
-**適合客群**：機型 3 年以上、預算緊、實用為主。
-
-### 2. APPLE 原廠拆機螢幕（$4,500 起）
-
-從原廠完整機拆下來的螢幕，**True Tone、Face ID 校準全保留**，所有功能與新機一樣。
-- 需關閉「尋找 iPhone」功能才能進行
-- 價格約為全新原廠的 6 成
-
-**適合客群**：機型 2 年內、追求接近原廠體驗。
-
-### 3. 全新原廠螢幕（$12,000 起）
-
-透過 Apple 原廠供應鏈取得的全新螢幕，**等同新機出廠規格**。
-- 含新的保護貼、觸控層
-- 最貴但最完整
-
-**適合客群**：iPhone 16 / 17 Pro 等高階新機、對品質零妥協。
-
-## 2026 各機型螢幕維修價格一覽
-
-| 機型 | 副廠 OLED | 原廠拆機 | 全新原廠 |
-|---|---:|---:|---:|
-| iPhone 17 Pro Max | $6,000 | $13,300 | $14,200 |
-| iPhone 17 Pro | $6,000 | $12,000 | $12,500 |
-| iPhone 16 Pro Max | $5,800 | $10,500 | $14,200 |
-| iPhone 15 Pro Max | $5,200 | $9,600 | $14,200 |
-| iPhone 14 Pro | $3,000 | $5,500 | $10,800 |
-| iPhone 13 | $4,100 | — | $9,000 |
-
-## 我該選哪一種？
-
-**用「**2 年法則**」判斷**：
-- 買了不到 2 年 → 選原廠拆機
-- 2 年以上 → 選副廠 OLED
-- 當作工作備用機 → 副廠 OLED 就夠
-
-## 修螢幕後我的資料會不見嗎？
-
-**不會**。螢幕維修不動儲存晶片與主機板，資料完全保留。但仍建議事先備份。
-
-## 維修需要多久？
-
-**副廠 OLED** 平均 30 分鐘。**原廠拆機** 約 1 小時（需重新校準）。現場等候即可取件。
-
-## i時代為什麼推薦我們？
-
-- **14 年技術經驗**：累積維修超過 10,000 台 iPhone
-- **透明價目**：線上即可查詢，無隱藏費用
-- **保固 3 個月**：同部位故障免費再修
-- **板橋現場維修**：江子翠商圈，近捷運
-`,
-    faqs: [
-      { q: "iPhone 螢幕維修保固多久？", a: "i時代維修保固 3 個月，期間非人為損壞同部位故障可免費再修。" },
-      { q: "副廠 OLED 會顯示「無法驗證」嗎？", a: "iOS 15.2 之後第三方螢幕會顯示「無法驗證此 iPhone 螢幕」訊息，但不影響使用。若極度在意可選原廠拆機。" },
-      { q: "維修後 Face ID 還能用嗎？", a: "原廠拆機螢幕保留 Face ID 校準；副廠 OLED 通常也保留，但少數機型需重新設定。" },
-    ],
-    relatedSlugs: ["iphone-battery-should-replace", "sell-old-iphone-tips"],
-  },
-  {
     slug: "iphone-battery-should-replace",
     title: "iPhone 電池健康度低於 80% 該換嗎？省錢換電池完整攻略",
     excerpt: "iPhone 電池健康度降到 80% 以下突然關機？本文告訴您什麼時候該換電池、認證電池 vs 原廠電池差在哪、怎麼省最多錢。",
@@ -186,7 +104,7 @@ $1,500 換新電池 + 保固 vs 自行冒險，算算就知道值不值得。
       { q: "換電池後需要重新設定嗎？", a: "不需要。電池更換不影響 iOS 設定、App 資料、照片等。開機即可繼續使用。" },
       { q: "認證電池會爆炸嗎？", a: "認證電池通過 KC / CE / BSMI 安全認證，與原廠採用相同等級的保護晶片，在正常使用下不會爆炸。" },
     ],
-    relatedSlugs: ["iphone-screen-repair-cost-2026", "macbook-battery-bulge"],
+    relatedSlugs: ["macbook-battery-bulge"],
   },
   {
     slug: "sell-old-iphone-tips",
@@ -272,7 +190,7 @@ iPhone 的二手價格遵循「**折舊曲線**」：
       { q: "螢幕破掉還有回收價嗎？", a: "有。以 iPhone 14 Pro 為例，螢幕破裂但能開機約可回收 $4,000-6,000（無損機為 $13,000）。" },
       { q: "幾天內可以現金拿到錢？", a: "i時代現場驗機、現金當場給付。或指定匯款即日到帳。" },
     ],
-    relatedSlugs: ["iphone-screen-repair-cost-2026", "macbook-battery-bulge"],
+    relatedSlugs: ["macbook-battery-bulge"],
   },
   {
     slug: "macbook-battery-bulge",
@@ -445,7 +363,7 @@ MacBook 鋰電池老化後會逐漸產生氣體，頂壓上方的鍵盤與觸控
       { q: "假日也有營業嗎？", a: "有，週六日照常 11:00-21:00 營業。建議先 LINE 預約避免久等。" },
       { q: "可以現場等候嗎？", a: "可以。常見維修（螢幕、電池）30-60 分鐘完成，店面有座位區。" },
     ],
-    relatedSlugs: ["iphone-screen-repair-cost-2026", "iphone-battery-should-replace"],
+    relatedSlugs: ["iphone-battery-should-replace"],
   },
 ];
 
@@ -524,7 +442,7 @@ iPhone 13 Pro 採用 **LTPO OLED 面板**（首次導入 ProMotion 120Hz），�
       { q: "綠屏不修會變嚴重嗎？", a: "OLED 色衰是不可逆的，會逐漸擴大。建議盡早處理避免影響日常使用。" },
       { q: "副廠螢幕也會綠屏嗎？", a: "副廠 OLED 採用同等級面板，理論上不會有相同 bug，但壽命略短於原廠。" },
     ],
-    relatedSlugs: ["iphone-screen-repair-cost-2026", "iphone-12-touch-screen-issue"],
+    relatedSlugs: ["iphone-12-touch-screen-issue"],
   },
   {
     slug: "iphone-12-touch-screen-issue",
@@ -592,7 +510,7 @@ iPhone 12 / 12 Pro / 12 mini / 12 Pro Max 推出至今，i時代維修統計最�
       { q: "iPhone 12 觸控失靈是不是螢幕壞掉？", a: "多數情況是觸控 IC 或螢幕本體故障，需更換完整螢幕總成。少數是排線鬆脫，僅需重接。" },
       { q: "iPhone 12 綠色波紋會自己好嗎？", a: "不會。OLED panel 損壞是不可逆的，建議盡早更換避免擴大。" },
     ],
-    relatedSlugs: ["iphone-13-pro-green-screen", "iphone-screen-repair-cost-2026"],
+    relatedSlugs: ["iphone-13-pro-green-screen"],
   },
   {
     slug: "iphone-14-pro-overheating",
@@ -656,7 +574,7 @@ Apple 在 iOS 16.5 → 17.x → 18.x 連續優化散熱演算法，**輕度使�
       { q: "iPhone 過熱會不會爆炸？", a: "不會直接爆炸。iPhone 有溫度保護，超過 50°C 就會強制降頻或關機。但長期過熱會加速電池老化。" },
       { q: "充電發燙正常嗎？", a: "輕微溫熱（35-40°C）正常，但燙到無法觸碰就需要送修檢查。" },
     ],
-    relatedSlugs: ["iphone-battery-should-replace", "iphone-screen-repair-cost-2026"],
+    relatedSlugs: ["iphone-battery-should-replace"],
   },
   {
     slug: "iphone-x-face-id-failure",
@@ -709,7 +627,7 @@ i時代螢幕維修**保證保留 Face ID 功能**，這是基本要求。
       { q: "Face ID 修了會跟新的一樣靈敏嗎？", a: "i時代用同等級零件，重新校準後與原廠靈敏度幾乎相同。" },
       { q: "Apple 修 Face ID 多少錢？", a: "Apple 通常直接換整機，費用 $15,000+。i時代僅維修故障部位 $3,500 起。" },
     ],
-    relatedSlugs: ["iphone-screen-repair-cost-2026"],
+    relatedSlugs: ["iphone-12-touch-screen-issue"],
   },
   {
     slug: "switch-joycon-drift",

@@ -44,6 +44,11 @@ function mapLegacyCollection(rawSlug: string): string {
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
+  // === 0. 已下架文章 → 301 導回報價頁（Google 已索引，避免 404）===
+  if (pathname === "/blog/iphone-screen-repair-cost-2026") {
+    return doRedirect(req, "/quote/apple");
+  }
+
   // === 1. EasyStore /pages/* ===
   if (pathname.startsWith("/pages/")) {
     const dest = mapLegacyPage(pathname.slice("/pages/".length));
