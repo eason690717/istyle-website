@@ -11,7 +11,12 @@
   本機 CLI 登入的是 admin-63910056 碰不到 → 老闆 `vercel login` 換帳號後 `cd web && vercel --prod`。
   注意：DB 改動（爬蟲資料、文章內容、封面）**已即時生效**，只有程式碼部分待部署。
 
-- **待老闆自行刪除 3 個 Vercel 專案**（2026-09-01 交辦，刪除不可逆故不代為執行）：
+- 🔑 **需要 Personal Access Token 才能繼續**（2026-09-01）：老闆給的 `vcp_` 是 project-scoped token，
+  只能讀 istyle、CLI 完全用不了（whoami/deploy 皆 404）。需到 Account Settings → Tokens
+  建立 PAT（scope: easonhsieh0717s-projects），`vercel login --token <PAT>` 後即可一次完成部署＋刪除。
+  ⚠️ 舊的 vcp_ token 已外洩在對話紀錄，請老闆撤銷。CLI 目前為登出狀態。
+
+- **待刪除 3 個 Vercel 專案**（2026-09-01 交辦，token 權限不足暫未執行）：
   `dasin-nursing`、`nursing-clock`、`xiaqun`。
   路徑：專案 → Settings → Danger Zone → Delete Project。
   已提醒兩點：(a) 護理專案在 D:\GA\CLAUDE.md 路由表仍標「活躍」且本機有交接文件，
