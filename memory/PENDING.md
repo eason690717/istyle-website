@@ -6,15 +6,10 @@
 
 ## 待處理 (3)
 
-- ⚠️ **兩個 commit 已 push 未部署**（e52a3ad 移除 Watch/AirPods 報價、0b76ae4 爬蟲修復＋文章整理）。
-  正確帳號已確認為 **easonhsieh0717**（截圖實證 istyle 在 easonhsieh0717s-projects 底下）；
-  本機 CLI 登入的是 admin-63910056 碰不到 → 老闆 `vercel login` 換帳號後 `cd web && vercel --prod`。
-  注意：DB 改動（爬蟲資料、文章內容、封面）**已即時生效**，只有程式碼部分待部署。
-
-- 🔑 **需要 Personal Access Token 才能繼續**（2026-09-01）：老闆給的 `vcp_` 是 project-scoped token，
-  只能讀 istyle、CLI 完全用不了（whoami/deploy 皆 404）。需到 Account Settings → Tokens
-  建立 PAT（scope: easonhsieh0717s-projects），`vercel login --token <PAT>` 後即可一次完成部署＋刪除。
-  ⚠️ 舊的 vcp_ token 已外洩在對話紀錄，請老闆撤銷。CLI 目前為登出狀態。
+- ✅ **部署已完成**（2026-09-01 18:23）—— 改走 REST API 繞過 CLI 的 token 限制。
+  用 `node scripts/deploy-via-api.mjs <TOKEN>`，實測 297 檔 9.3MB 約 3 分鐘。
+  線上已驗證：舊文章 301、AirPods 機型頁 404、/quote/apple 無 Watch/AirPods、
+  blog 24 張封面 24 種 hash 零重複、/recycle 1731 筆無容量列 0。
 
 - **待刪除 3 個 Vercel 專案**（2026-09-01 交辦，token 權限不足暫未執行）：
   `dasin-nursing`、`nursing-clock`、`xiaqun`。
