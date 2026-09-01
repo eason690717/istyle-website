@@ -70,14 +70,25 @@ export function normalizeModelName(raw: string | null | undefined, _brandHint?: 
   return n;
 }
 
-// 容量正規化：256G/256g/256GB → "256GB"，1T/1TB → "1TB"
+// 真實存在的儲存容量。用白名單擋掉把「機型代號」或「行動網路世代」誤判成容量的情況：
+//   「小米 15T」→ 15T 是機型不是容量（曾造成 modelName 被吃成「小米」、storage="15TB"）
+//   「Redmi Pad 2 4G」→ 4G 是行動網路
+//   「realme GT Neo 3T」→ 3T 是機型
+const VALID_GB = new Set([8, 16, 32, 64, 128, 256, 512]);
+const VALID_TB = new Set([1, 2, 4, 8]);
+
+// 容量正規化：256G/256g/256GB → "256GB"，1T/1TB → "1TB"，1024GB → "1TB"
+// 非白名單值一律回 null（寧可沒有容量，也不要錯的容量）
 export function normalizeStorage(raw: string | null | undefined): string | null {
   if (!raw) return null;
   const m = raw.toString().match(/(\d+(?:\.\d+)?)\s*(TB|T|GB|G)\b/i);
   if (!m) return null;
-  const num = m[1];
-  const unit = /T/i.test(m[2]) ? "TB" : "GB";
-  return `${num}${unit}`;
+  const num = parseFloat(m[1]);
+  if (!Number.isFinite(num)) return null;
+  const isTB = /^T/i.test(m[2]);
+  if (!isTB && num === 1024) return "1TB";   // 1024GB 統一寫成 1TB
+  if (isTB) return VALID_TB.has(num) ? `${num}TB` : null;
+  return VALID_GB.has(num) ? `${num}GB` : null;
 }
 
 // 規格正規化：WiFi+5G / WiFi + 5G / Wi-Fi+LTE → "WiFi+5G" 或 "WiFi"

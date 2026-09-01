@@ -17,7 +17,12 @@ export async function GET(req: NextRequest) {
 
   try {
     const result = await refreshRecyclePrices();
-    return NextResponse.json({ ok: true, ...result });
+    // 來源失效時回 207：有跑完但結果不完整，別讓失敗被記成成功
+    if (!result.ok) {
+      console.error("[cron/refresh-recycle] 來源異常:", JSON.stringify(result.sources));
+      return NextResponse.json(result, { status: 207 });
+    }
+    return NextResponse.json(result);
   } catch (e) {
     console.error("[cron] refresh-recycle failed:", e);
     return NextResponse.json({ ok: false, error: String(e) }, { status: 500 });

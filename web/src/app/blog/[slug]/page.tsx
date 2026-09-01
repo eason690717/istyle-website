@@ -101,10 +101,12 @@ function renderBody(md: string) {
   return out;
 }
 
+// 連結必須在粗體之前處理：粗體會插入含 `text-[var(--gold)]` 的 class，
+// 那對方括號會被連結的 `\[..\]\(..\)` 規則吃掉，把整段吐成 `var(--gold)]">…`。
 function formatInline(text: string): string {
   return text
-    .replace(/\*\*(.+?)\*\*/g, '<strong class="text-[var(--gold)]">$1</strong>')
     .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" class="text-[var(--gold)] underline hover:text-[var(--gold-bright)]">$1</a>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong class="text-[var(--gold)]">$1</strong>')
     .replace(/`(.+?)`/g, '<code class="rounded bg-[var(--bg-soft)] px-1 py-0.5 font-mono text-xs">$1</code>')
     .replace(/❌/g, '<span style="color:#f87171">❌</span>')
     .replace(/★/g, '<span style="color:var(--gold)">★</span>');

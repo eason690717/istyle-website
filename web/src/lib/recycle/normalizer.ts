@@ -10,17 +10,19 @@ export interface ParsedModel {
   variant?: string;
 }
 
-const STORAGE_NORM: Record<string, string> = {
-  T: "TB", t: "TB", TB: "TB", tb: "TB",
-  GB: "GB", G: "GB", g: "GB", gb: "GB",
-};
+// 容量解析統一走 normalize-model（全站唯一來源），本檔不再自己實作一套。
+// 該版本含白名單，會擋掉「小米 15T」這類把機型代號誤判成容量的情況。
+import { normalizeStorage as normalizeStorageCanonical } from "@/lib/normalize-model";
 
 function normalizeStorage(raw: string): string | undefined {
-  const m = raw.match(/(\d+(?:\.\d+)?)\s*(TB|T|GB|G)\b/i);
-  if (!m) return undefined;
-  const num = m[1];
-  const unit = STORAGE_NORM[m[2]] || "GB";
-  return `${num}${unit}`;
+  return normalizeStorageCanonical(raw) ?? undefined;
+}
+
+// 只有在真的解析出容量時，才把「數字+容量單位」後綴從機型名稱切掉。
+// 否則「小米 15T Pro」會被切成「小米」，機型名稱整個消失。
+function stripStorageSuffix(cleaned: string, storage: string | undefined): string {
+  if (!storage) return cleaned;
+  return cleaned.replace(/\s*\d+\s*(?:TB|T|GB|G)\b.*$/i, "").trim() || cleaned;
 }
 
 function slugify(s: string): string {
@@ -38,7 +40,7 @@ export function parseIphone(raw: string): ParsedModel | null {
   const cleaned = raw.replace(/\s+/g, " ").trim();
   if (!/iphone/i.test(cleaned)) return null;
   const storage = normalizeStorage(cleaned);
-  const baseName = cleaned.replace(/\s*\d+\s*(?:TB|T|GB|G)\b.*$/i, "").trim();
+  const baseName = stripStorageSuffix(cleaned, storage);
   const modelKey = slugify(`${baseName}${storage ? "-" + storage : ""}`);
   return { modelKey, category: "phone", brand: "Apple", modelName: baseName, storage };
 }
@@ -62,16 +64,30 @@ export function parseIpad(raw: string): ParsedModel | null {
   return { modelKey, category: "tablet", brand: "Apple", modelName: baseName, storage, variant };
 }
 
+// us3c 格式："Macbook Pro 16吋 M4 Max / 16C40G / 64G / 1TB SSD｜2024年"
+//   16C40G = 16 核 CPU / 40 核 GPU、64G = 記憶體、1TB SSD = 儲存
+// 舊版把所有「數字+G」都當容量剝掉，導致 CPU/GPU/RAM 規格全部消失，
+// 不同記憶體配置（64G vs 48G，差價 $2,700）會塌縮成同一筆互相覆蓋。
+// 現在只取 SSD 容量當 storage，其餘規格保留在名稱中以維持可讀與可區分。
 export function parseMacBook(raw: string, kind: "pro" | "air"): ParsedModel | null {
   const cleaned = raw.replace(/\s+/g, " ").trim();
   if (!/macbook/i.test(cleaned)) return null;
-  const storageMatches = cleaned.match(/(\d+(?:\.\d+)?)\s*(?:TB|T|GB|G)\b/gi);
-  const storage = storageMatches ? normalizeStorage(storageMatches[storageMatches.length - 1]) : undefined;
+
+  let storage: string | undefined;
+  const ssdMatch = cleaned.match(/(\d+(?:\.\d+)?)\s*(?:TB|T|GB|G)\s*SSD/i);
+  if (ssdMatch) storage = normalizeStorage(ssdMatch[0]);
+  if (!storage) {
+    // 沒標 SSD 時退而取最後一個合法容量（RAM 通常寫在前面）
+    const all = cleaned.match(/(\d+(?:\.\d+)?)\s*(?:TB|T|GB|G)\b/gi) || [];
+    for (let i = all.length - 1; i >= 0 && !storage; i--) storage = normalizeStorage(all[i]);
+  }
+
   const baseName = cleaned
-    .replace(/\d+\s*(?:TB|T|GB|G)\b/gi, "")
-    .replace(/[／\/]+/g, " ")
+    .replace(/(\d+(?:\.\d+)?)\s*(?:TB|T|GB|G)\s*SSD/gi, "")   // 只拿掉 SSD 容量段
+    .replace(/[／/｜|]+/g, " ")
     .replace(/\s+/g, " ")
     .trim();
+
   const modelKey = slugify(`macbook-${kind}-${baseName.replace(/macbook|pro|air/gi, "").trim()}${storage ? "-" + storage : ""}`);
   return {
     modelKey,
@@ -95,7 +111,7 @@ export function parseGenericModel(raw: string, brand: string, category: Category
     .trim();
   if (!cleaned) return null;
   const storage = normalizeStorage(cleaned);
-  const baseName = cleaned.replace(/\s*\d+\s*(?:TB|T|GB|G)\b.*$/i, "").trim() || cleaned;
+  const baseName = stripStorageSuffix(cleaned, storage);
   const modelKey = slugify(`${brand}-${baseName}${storage ? "-" + storage : ""}`);
   return { modelKey, category, brand, modelName: baseName, storage };
 }

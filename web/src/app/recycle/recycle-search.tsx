@@ -12,11 +12,31 @@ interface PriceItem {
   storage: string;
   variant: string;
   minPrice: number;
+  isStale: boolean;       // 超過 STALE_DAYS 沒對到市場行情 → 不顯示死價格，改導 LINE
+  updatedLabel: string;   // 例：「9/1」
 }
 
-type SortKey = "price_desc" | "price_asc" | "name_asc";
+type SortKey = "grouped" | "price_desc" | "price_asc" | "name_asc";
 
-const STORAGE_BUCKETS = ["32GB", "64GB", "128GB", "256GB", "512GB", "1TB", "2TB"];
+// 依實際容量大小排序（字串排序會讓 1TB 排在 256GB 前面）
+const STORAGE_BUCKETS = ["16GB", "32GB", "64GB", "128GB", "256GB", "512GB", "1TB", "2TB", "4TB", "8TB"];
+
+function storageRank(s: string): number {
+  const i = STORAGE_BUCKETS.indexOf(s);
+  return i === -1 ? 999 : i;   // 無容量排最後
+}
+
+// 數字感知比較：讓「iPhone 9」排在「iPhone 11」之前（純字串比較會相反）
+function naturalCompare(a: string, b: string): number {
+  return a.localeCompare(b, "zh-TW", { numeric: true, sensitivity: "base" });
+}
+
+// 客人查得最多的品牌排前面；純字母序會讓「黑鯊」這類冷門品牌佔住第一畫面
+const BRAND_PRIORITY = ["Apple", "Samsung", "Google", "Sony", "ASUS", "OPPO", "Xiaomi", "vivo"];
+function brandRank(b: string): number {
+  const i = BRAND_PRIORITY.indexOf(b);
+  return i === -1 ? BRAND_PRIORITY.length : i;
+}
 
 export function RecycleSearch({
   prices,
@@ -32,12 +52,25 @@ export function RecycleSearch({
   const [activeStorages, setActiveStorages] = useState<Set<string>>(new Set());
   const [activeVariant, setActiveVariant] = useState<string>("all");
   const [query, setQuery] = useState("");
-  const [sortKey, setSortKey] = useState<SortKey>("price_desc");
+  const [sortKey, setSortKey] = useState<SortKey>("grouped");
   const [view, setView] = useState<"card" | "table">("table");
 
   // 計數（依「搜尋結果」動態縮減 — 搜 Air 4 時，類別 chip 只顯示有 Air 4 的類別）
   // 注意：這些 useMemo 會在下面 searchOnly 定義後使用
 
+
+  // 每個機型的最高價 —— grouped 排序用它代表機型新舊。
+  // 直接比機型名稱會讓「iPhone XS」排在「iPhone 17」前面（locale 中字母在數字之後），
+  // 把最新最熱門的機型埋到列表深處。
+  const modelTopPrice = useMemo(() => {
+    const m = new Map<string, number>();
+    for (const p of prices) {
+      const k = `${p.brand}|${p.modelName}`;
+      const cur = m.get(k);
+      if (cur === undefined || p.minPrice > cur) m.set(k, p.minPrice);
+    }
+    return m;
+  }, [prices]);
 
   // 共用排序：搜尋字存在時 → 相關度優先；否則使用者指定排序
   function sortList<T extends PriceItem>(list: T[]): T[] {
@@ -50,7 +83,26 @@ export function RecycleSearch({
       }
       if (sortKey === "price_desc") return b.minPrice - a.minPrice;
       if (sortKey === "price_asc") return a.minPrice - b.minPrice;
-      return a.modelName.localeCompare(b.modelName, "zh-TW");
+      if (sortKey === "name_asc") return naturalCompare(a.modelName, b.modelName);
+      // grouped（預設）：同品牌、同類別、同機型的容量排在一起，
+      // 才不會出現 iPhone 17 512GB 跟 MacBook 夾雜在一起的情況
+      if (a.brand !== b.brand) {
+        const br = brandRank(a.brand) - brandRank(b.brand);
+        if (br !== 0) return br;
+        return naturalCompare(a.brand, b.brand);
+      }
+      if (a.category !== b.category) return naturalCompare(a.categoryLabel, b.categoryLabel);
+      // 同類別內：機型依「該機型最高價」由高到低，新旗艦自然排在前面
+      if (a.modelName !== b.modelName) {
+        const ta = modelTopPrice.get(`${a.brand}|${a.modelName}`) ?? a.minPrice;
+        const tb = modelTopPrice.get(`${b.brand}|${b.modelName}`) ?? b.minPrice;
+        if (ta !== tb) return tb - ta;
+        return naturalCompare(a.modelName, b.modelName);
+      }
+      // 同機型：容量小 → 大
+      const sr = storageRank(a.storage) - storageRank(b.storage);
+      if (sr !== 0) return sr;
+      return naturalCompare(a.variant, b.variant);
     });
   }
 
@@ -125,13 +177,13 @@ export function RecycleSearch({
       list = list.filter(p => p.variant === activeVariant);
     }
     return sortList(list);
-  }, [searchOnly, activeCategory, activeBrand, activeStorages, activeVariant, sortKey]);
+  }, [searchOnly, activeCategory, activeBrand, activeStorages, activeVariant, sortKey, modelTopPrice]);
 
   // 「擴展到全部類別」的搜尋備援：當有搜尋字但本類別 0 結果，提供跨類別結果
   const crossCategoryResults = useMemo(() => {
     if (!query.trim() || filtered.length > 0 || activeCategory === "all") return [];
     return sortList(prices.filter(matchQuery));
-  }, [query, filtered.length, activeCategory, prices, sortKey]);
+  }, [query, filtered.length, activeCategory, prices, sortKey, modelTopPrice]);
 
   function toggleStorage(s: string) {
     const next = new Set(activeStorages);
@@ -168,6 +220,7 @@ export function RecycleSearch({
     return counts;
   }, [searchOnly, activeCategory]);
 
+  // 只列出白名單內的容量，且依實際大小排序（避免 1TB 排在 256GB 前面）
   const availableStorages = useMemo(() => {
     const base = searchOnly.filter(p =>
       (activeCategory === "all" || p.category === activeCategory) &&
@@ -318,9 +371,10 @@ export function RecycleSearch({
             onChange={(e) => setSortKey(e.target.value as SortKey)}
             className="rounded border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-1.5 text-xs text-[var(--fg)] focus:border-[var(--gold)] focus:outline-none"
           >
+            <option value="grouped">品牌 / 機型分組</option>
             <option value="price_desc">價格高到低</option>
             <option value="price_asc">價格低到高</option>
-            <option value="name_asc">機型名稱</option>
+            <option value="name_asc">機型名稱 A→Z</option>
           </select>
           <div className="hidden gap-1 rounded border border-[var(--border)] bg-[var(--bg-elevated)] p-0.5 sm:flex">
             <button
@@ -416,12 +470,25 @@ function PriceCard({ item }: { item: PriceItem }) {
         </div>
       )}
       <hr className="divider-gold my-4" />
-      <div className="text-[10px] uppercase tracking-widest text-[var(--gold-soft)]">回收價（起）</div>
-      <div className="text-gold-gradient font-serif text-3xl font-semibold leading-tight">
-        {formatTwd(item.minPrice)}
-      </div>
+      {item.isStale ? (
+        <>
+          <div className="text-[10px] uppercase tracking-widest text-[var(--fg-muted)]">近期無市場行情</div>
+          <div className="font-serif text-xl font-semibold leading-tight text-[var(--fg-muted)]">
+            LINE 專人估價
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="text-[10px] uppercase tracking-widest text-[var(--gold-soft)]">
+            回收價（起）<span className="ml-1 normal-case tracking-normal text-[var(--fg-muted)]">{item.updatedLabel} 更新</span>
+          </div>
+          <div className="text-gold-gradient font-serif text-3xl font-semibold leading-tight">
+            {formatTwd(item.minPrice)}
+          </div>
+        </>
+      )}
       <a href={SITE.lineAddUrl} className="btn-gold-outline mt-4 block rounded-full py-2 text-center text-xs">
-        LINE 預約回收 →
+        {item.isStale ? "LINE 詢問此機型 →" : "LINE 預約回收 →"}
       </a>
     </div>
   );
@@ -458,14 +525,18 @@ function ResultTable({ items }: { items: PriceItem[] }) {
 
             {/* 右：價格 + 預約鈕 */}
             <div className="flex flex-shrink-0 flex-col items-end gap-1">
-              <div className="font-mono text-base font-semibold text-[var(--gold)] leading-none">
-                {p.minPrice.toLocaleString()}
-              </div>
+              {p.isStale ? (
+                <div className="text-[11px] font-medium leading-none text-[var(--fg-muted)]">詢價</div>
+              ) : (
+                <div className="font-mono text-base font-semibold text-[var(--gold)] leading-none">
+                  {p.minPrice.toLocaleString()}
+                </div>
+              )}
               <a
                 href={SITE.lineAddUrl}
                 className="rounded-full bg-[var(--gold)]/15 px-2.5 py-0.5 text-[10px] text-[var(--gold)] hover:bg-[var(--gold)] hover:text-black transition"
               >
-                預約 →
+                {p.isStale ? "LINE →" : "預約 →"}
               </a>
             </div>
           </li>
@@ -476,11 +547,13 @@ function ResultTable({ items }: { items: PriceItem[] }) {
       <table className="hidden min-w-full text-sm md:table">
         <thead>
           <tr className="bg-[#1f1810] text-[var(--gold)]">
+            <th className="px-3 py-2.5 text-left font-medium">品牌</th>
             <th className="px-3 py-2.5 text-left font-medium">機型</th>
             <th className="px-3 py-2.5 text-left font-medium">類別</th>
-            <th className="px-3 py-2.5 text-left font-medium">容量</th>
+            <th className="px-3 py-2.5 text-right font-medium">容量</th>
             <th className="px-3 py-2.5 text-left font-medium">規格</th>
             <th className="px-3 py-2.5 text-right font-medium">回收價</th>
+            <th className="px-3 py-2.5 text-right font-medium">更新</th>
             <th className="px-3 py-2.5 text-right font-medium w-16"></th>
           </tr>
         </thead>
@@ -492,17 +565,24 @@ function ResultTable({ items }: { items: PriceItem[] }) {
                 idx % 2 === 0 ? "bg-[#141414]" : "bg-[#181818]"
               } hover:bg-[#241c12]`}
             >
+              <td className="px-3 py-2.5 text-xs text-[var(--fg-muted)]">{p.brand}</td>
               <td className="px-3 py-2.5 font-medium text-[var(--fg)]">{p.modelName}</td>
               <td className="px-3 py-2.5 text-xs text-[var(--fg-muted)]">{p.categoryLabel}</td>
-              <td className="px-3 py-2.5 text-xs">{p.storage || "—"}</td>
+              {/* 容量右對齊：數字靠右比較好掃視 */}
+              <td className="px-3 py-2.5 text-right font-mono text-xs">{p.storage || "—"}</td>
               <td className="px-3 py-2.5 text-xs">{p.variant || "—"}</td>
-              <td className="px-3 py-2.5 text-right font-mono font-medium text-[var(--gold)]">{p.minPrice.toLocaleString()}</td>
+              <td className="px-3 py-2.5 text-right font-mono font-medium">
+                {p.isStale
+                  ? <span className="text-xs font-sans text-[var(--fg-muted)]">LINE 詢價</span>
+                  : <span className="text-[var(--gold)]">{p.minPrice.toLocaleString()}</span>}
+              </td>
+              <td className="px-3 py-2.5 text-right text-[10px] text-[var(--fg-muted)]">{p.updatedLabel}</td>
               <td className="px-3 py-2.5 text-right">
                 <a
                   href={SITE.lineAddUrl}
                   className="rounded border border-[var(--gold-soft)] px-2 py-1 text-[10px] text-[var(--gold-soft)] hover:bg-[var(--gold)] hover:text-black"
                 >
-                  預約
+                  {p.isStale ? "詢價" : "預約"}
                 </a>
               </td>
             </tr>

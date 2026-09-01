@@ -59,6 +59,23 @@ export default async function RecyclePage() {
     ? prices.reduce((max, p) => p.lastUpdatedAt > max ? p.lastUpdatedAt : max, prices[0].lastUpdatedAt)
     : null;
 
+  // 超過這個天數沒對到市場行情，就不再把舊價當現價顯示，改導 LINE 專人估價。
+  // 掛掉的爬蟲曾讓 4 月的價格在站上顯示了 4 個月，這道防線要獨立於爬蟲是否健康。
+  const STALE_DAYS = 14;
+  const staleBefore = Date.now() - STALE_DAYS * 86400_000;
+
+  // 有些來源只提供「基礎機型」報價（無容量），與另一來源的分容量報價並存時，
+  // 同一機型會出現兩列、且無容量那列的價格通常低於所有容量版本，看起來像矛盾。
+  // 同機型已有分容量報價時，就把無容量那列藏起來。
+  const modelsWithStorage = new Set(
+    prices.filter(p => p.storage).map(p => `${p.brand}|${p.modelName}`),
+  );
+  const visible = prices.filter(
+    p => p.storage || !modelsWithStorage.has(`${p.brand}|${p.modelName}`),
+  );
+
+  const freshCount = visible.filter(p => p.lastUpdatedAt.getTime() >= staleBefore).length;
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-12">
       <div className="text-center">
@@ -69,18 +86,18 @@ export default async function RecyclePage() {
           每日自動比對市場行情．保證高於市場
         </p>
         <p className="mt-2 text-xs text-[var(--fg-muted)]">
-          目前收錄 {prices.length} 個機型．
+          收錄 {visible.length} 個機型，其中 {freshCount} 個為 {STALE_DAYS} 天內行情．
           {lastUpdated && (
-            <>更新於 {new Date(lastUpdated).toLocaleString("zh-TW", { timeZone: "Asia/Taipei" })}</>
+            <>最後更新 {new Date(lastUpdated).toLocaleString("zh-TW", { timeZone: "Asia/Taipei" })}</>
           )}
         </p>
       </div>
 
-      {prices.length === 0 ? (
+      {visible.length === 0 ? (
         <NoData />
       ) : (
         <RecycleSearch
-          prices={prices.map(p => ({
+          prices={visible.map(p => ({
             id: p.id,
             category: p.category,
             categoryLabel: CATEGORY_LABELS[p.category] || p.category,
@@ -89,9 +106,13 @@ export default async function RecyclePage() {
             storage: p.storage || "",
             variant: p.variant || "",
             minPrice: p.minPrice!,
+            isStale: p.lastUpdatedAt.getTime() < staleBefore,
+            updatedLabel: p.lastUpdatedAt.toLocaleDateString("zh-TW", {
+              timeZone: "Asia/Taipei", month: "numeric", day: "numeric",
+            }),
           }))}
           categories={CATEGORY_LABELS}
-          brands={Array.from(new Set(prices.map(p => p.brand))).sort()}
+          brands={Array.from(new Set(visible.map(p => p.brand))).sort()}
         />
       )}
 

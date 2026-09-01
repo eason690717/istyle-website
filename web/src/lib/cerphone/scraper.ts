@@ -173,66 +173,129 @@ export async function scrapeCerphoneAll() {
     brandIdMap.set(b.slug, dbBrand.id);
   }
 
-  // Cache model + item ids
-  const modelKeyToId = new Map<string, number>();
-  const itemNameToId = new Map<string, number>();
-  let modelOrder = 0, itemOrder = 0;
+  // === 效能：預載對照表，避免每筆資料各打一次 DB ===
+  // 舊版對 4,000 筆資料逐筆 await upsert，每筆都是一趟 Turso HTTP round-trip（~70ms），
+  // 累積 280 秒 → 300 秒 timeout 砍在迴圈中途，導致固定只更新到前 ~1,200 筆，
+  // 後面 2,600 筆自開站起從未被更新過。改為預載 + 差異寫入 + 並行批次。
+  const [existingModels, existingItems] = await Promise.all([
+    prisma.deviceModel.findMany({ select: { id: true, slug: true, section: true } }),
+    prisma.repairItem.findMany({ select: { id: true, slug: true } }),
+  ]);
+  const modelSlugToId = new Map(existingModels.map(m => [m.slug, m.id]));
+  const modelSlugToSection = new Map(existingModels.map(m => [m.slug, m.section]));
+  const itemSlugToId = new Map(existingItems.map(i => [i.slug, i.id]));
+  const sectionUpdates: Array<{ slug: string; section: string }> = [];
 
+  // 先補齊缺少的 DeviceModel / RepairItem（數量少，循序即可）
+  let modelOrder = existingModels.length, itemOrder = existingItems.length;
+  const seenModelSlugs = new Set<string>();
+  const seenItemSlugs = new Set<string>();
   for (const r of all) {
     const brandId = brandIdMap.get(r.brandSlug);
     if (!brandId) continue;
-
-    const modelKey = `${r.brandSlug}|${r.modelName}`;
-    let modelId = modelKeyToId.get(modelKey);
-    if (!modelId) {
-      const baseSlug = slugify(`${r.brandSlug}-${r.modelName}`);
-      const m = await prisma.deviceModel.upsert({
-        where: { slug: baseSlug },
-        create: { brandId, slug: baseSlug, name: r.modelName, section: r.section, sortOrder: modelOrder++ },
-        update: { section: r.section },
-      });
-      modelId = m.id;
-      modelKeyToId.set(modelKey, modelId);
-      modelUpserts++;
+    const mSlug = slugify(`${r.brandSlug}-${r.modelName}`);
+    if (!seenModelSlugs.has(mSlug)) {
+      seenModelSlugs.add(mSlug);
+      if (!modelSlugToId.has(mSlug)) {
+        const m = await prisma.deviceModel.create({
+          data: { brandId, slug: mSlug, name: r.modelName, section: r.section, sortOrder: modelOrder++ },
+        }).catch(() => null);
+        if (m) { modelSlugToId.set(mSlug, m.id); modelUpserts++; }
+      } else if (modelSlugToSection.get(mSlug) !== r.section) {
+        // 來源重新分區時同步（不碰 isActive，人工隱藏的機型要保持隱藏）
+        sectionUpdates.push({ slug: mSlug, section: r.section });
+      }
     }
-
-    let itemId = itemNameToId.get(r.itemName);
-    if (!itemId) {
-      const baseSlug = slugify(r.itemName);
-      const it = await prisma.repairItem.upsert({
-        where: { slug: baseSlug },
-        create: {
-          slug: baseSlug, name: r.itemName,
-          category: itemCategory(r.itemName),
-          sortOrder: itemOrder++,
-          warrantyMonths: /認證/.test(r.itemName) ? 6 : 3,
-        },
-        update: {},
-      });
-      itemId = it.id;
-      itemNameToId.set(r.itemName, itemId);
-      itemUpserts++;
+    const iSlug = slugify(r.itemName);
+    if (!seenItemSlugs.has(iSlug)) {
+      seenItemSlugs.add(iSlug);
+      if (!itemSlugToId.has(iSlug)) {
+        const it = await prisma.repairItem.create({
+          data: {
+            slug: iSlug, name: r.itemName,
+            category: itemCategory(r.itemName),
+            sortOrder: itemOrder++,
+            warrantyMonths: /認證/.test(r.itemName) ? 6 : 3,
+          },
+        }).catch(() => null);
+        if (it) { itemSlugToId.set(iSlug, it.id); itemUpserts++; }
+      }
     }
-
-    const tier = /原廠|APPLE\s*原|OEM/i.test(r.itemName) ? "OEM" : "STANDARD";
-
-    await prisma.repairPrice.upsert({
-      where: { modelId_itemId_tier: { modelId, itemId, tier } },
-      create: {
-        modelId, itemId, tier,
-        cerphonePriceRaw: r.cerphonePriceRaw,
-        cerphonePrice: r.cerphonePrice,
-        calculatedPrice: r.istylePrice,
-        isAvailable: true,
-      },
-      update: {
-        cerphonePriceRaw: r.cerphonePriceRaw,
-        cerphonePrice: r.cerphonePrice,
-        calculatedPrice: r.istylePrice,
-      },
-    });
-    priceUpserts++;
   }
+
+  // 套用 section 變更（通常 0 筆，來源改版時才有）
+  for (let i = 0; i < sectionUpdates.length; i += 25) {
+    await Promise.allSettled(sectionUpdates.slice(i, i + 25).map(u =>
+      prisma.deviceModel.update({ where: { slug: u.slug }, data: { section: u.section } }),
+    ));
+  }
+  if (sectionUpdates.length) console.log(`[cerphone] 更新 section ${sectionUpdates.length} 筆`);
+
+  // 預載既有報價，只寫「真的變動」的列（多數日子價格不變 → 寫入量大幅下降）
+  const existingPrices = await prisma.repairPrice.findMany({
+    select: { modelId: true, itemId: true, tier: true, cerphonePrice: true, calculatedPrice: true },
+  });
+  const priceKey = (modelId: number, itemId: number, tier: string) => `${modelId}|${itemId}|${tier}`;
+  const existingPriceMap = new Map(
+    existingPrices.map(p => [priceKey(p.modelId, p.itemId, p.tier), p]),
+  );
+
+  type PendingWrite = {
+    modelId: number; itemId: number; tier: string;
+    raw: string; cerphonePrice: number; istylePrice: number; isNew: boolean;
+  };
+  const pending: PendingWrite[] = [];
+  const queuedKeys = new Set<string>();
+
+  for (const r of all) {
+    const modelId = modelSlugToId.get(slugify(`${r.brandSlug}-${r.modelName}`));
+    const itemId = itemSlugToId.get(slugify(r.itemName));
+    if (!modelId || !itemId) continue;
+    const tier = /原廠|APPLE\s*原|OEM/i.test(r.itemName) ? "OEM" : "STANDARD";
+    const k = priceKey(modelId, itemId, tier);
+    if (queuedKeys.has(k)) continue;   // 同一輪重複列，取第一筆
+    const prev = existingPriceMap.get(k);
+    // 價格沒變就跳過，省下一次 round-trip
+    if (prev && prev.cerphonePrice === r.cerphonePrice && prev.calculatedPrice === r.istylePrice) continue;
+    queuedKeys.add(k);
+    pending.push({
+      modelId, itemId, tier,
+      raw: r.cerphonePriceRaw, cerphonePrice: r.cerphonePrice, istylePrice: r.istylePrice,
+      isNew: !prev,
+    });
+  }
+
+  // 並行批次寫入（Turso 是 HTTP，平行化才有意義；批次大小取保守值避免打爆連線）
+  const BATCH = 25;
+  for (let i = 0; i < pending.length; i += BATCH) {
+    const slice = pending.slice(i, i + BATCH);
+    const done = await Promise.allSettled(slice.map(w =>
+      prisma.repairPrice.upsert({
+        where: { modelId_itemId_tier: { modelId: w.modelId, itemId: w.itemId, tier: w.tier } },
+        create: {
+          modelId: w.modelId, itemId: w.itemId, tier: w.tier,
+          cerphonePriceRaw: w.raw,
+          cerphonePrice: w.cerphonePrice,
+          calculatedPrice: w.istylePrice,
+          isAvailable: true,
+        },
+        // 注意：不動 manualOverride / isAvailable，人工覆寫與隱藏欄位要保留
+        update: {
+          cerphonePriceRaw: w.raw,
+          cerphonePrice: w.cerphonePrice,
+          calculatedPrice: w.istylePrice,
+        },
+      }),
+    ));
+    priceUpserts += done.filter(d => d.status === "fulfilled").length;
+    const failures = done.filter(d => d.status === "rejected");
+    if (failures.length) {
+      console.error(`[cerphone] batch ${i / BATCH} 有 ${failures.length} 筆寫入失敗`,
+        String((failures[0] as PromiseRejectedResult).reason).slice(0, 200));
+    }
+  }
+  const unchangedCount = all.length - pending.length;
+  console.log(`[cerphone] 待寫 ${pending.length} 筆（未變動 ${unchangedCount} 筆跳過），實寫 ${priceUpserts} 筆`);
 
   const finishedAt = new Date();
   // summary：失敗品牌 > 0 = partial；全失敗 = error
