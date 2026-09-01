@@ -7,6 +7,7 @@
 // 存遠端 URL 不下載檔案（images.pexels.com 已在 next.config remotePatterns 與 CSP 白名單），
 // 這樣圖源等同無限，也不會把 repo 撐大。
 // Pexels 無法使用時退回本地圖池，並仍盡量避開已用過的。
+import { createHash } from "node:crypto";
 import { prisma } from "@/lib/prisma";
 
 // 主題 → Pexels 英文搜尋詞（圖文一致，避免 iPhone 文章配吸塵器圖）
@@ -107,6 +108,32 @@ async function searchPexels(query: string, page: number): Promise<string[]> {
   }
 }
 
+// 以「圖片內容」判斷是否重複 —— 只比網址會漏掉「同一張照片存成不同檔名／不同 ID」的情況。
+// 實測本機 31 個圖檔只有 24 種內容，其中一張被 5 個檔名共用，列表頁看起來就是同一張。
+const contentHashCache = new Map<string, string>();
+
+export async function hashCoverContent(cover: string): Promise<string | null> {
+  const cached = contentHashCache.get(cover);
+  if (cached) return cached;
+  try {
+    let buf: Buffer;
+    if (cover.startsWith("http")) {
+      const res = await fetch(cover);
+      if (!res.ok) return null;
+      buf = Buffer.from(await res.arrayBuffer());
+    } else {
+      const { readFileSync } = await import("node:fs");
+      const { resolve } = await import("node:path");
+      buf = readFileSync(resolve(process.cwd(), "public", cover.replace(/^\//, "")));
+    }
+    const h = createHash("sha256").update(buf).digest("hex").slice(0, 16);
+    contentHashCache.set(cover, h);
+    return h;
+  } catch {
+    return null;
+  }
+}
+
 // Pexels 搜尋結果中相鄰的照片常來自同一組拍攝（連號 ID），
 // 依序取會拿到「URL 不同但看起來一樣」的圖。改用大跨距掃描把選取打散。
 function spreadPick(candidates: string[], seed: number, used: Set<string>): string | null {
@@ -124,12 +151,16 @@ function spreadPick(candidates: string[], seed: number, used: Set<string>): stri
 }
 
 /**
- * 取一張「全站沒用過、且不與既有圖來自同一組連號拍攝」的封面圖。
- * @param usedCovers 已用過的圖（呼叫端可傳入以在同一批生成中共用並累加，避免同批撞圖）
+ * 取一張「全站沒用過」的封面圖。
+ * 網址不重複只是第一道；還會下載內容算 SHA-256 比對，
+ * 擋掉「同一張照片以不同網址／檔名出現」的情況（這正是先前列表頁看起來全是同一張的原因）。
+ * @param usedCovers  已用過的圖（呼叫端可傳入以在同一批生成中共用並累加，避免同批撞圖）
+ * @param usedHashes  已用過的內容 hash；不傳則只做網址層級的去重
  */
 export async function pickUniqueCover(
   contextStrings: string[],
   usedCovers?: Set<string>,
+  usedHashes?: Set<string>,
 ): Promise<string> {
   const used = usedCovers ?? (await loadUsedCovers());
   const queries = pickQueries(contextStrings);
@@ -139,8 +170,16 @@ export async function pickUniqueCover(
     for (let page = 1; page <= 3; page++) {
       const candidates = await searchPexels(query, page);
       if (candidates.length === 0) break;   // 沒 API key 或查無結果，換下一組查詢
-      const fresh = spreadPick(candidates, seed + page, used);
-      if (fresh) { used.add(fresh); return fresh; }
+      // 同一頁可能要試幾張才找到內容也沒撞的
+      for (let tries = 0; tries < 5; tries++) {
+        const fresh = spreadPick(candidates, seed + page + tries * 13, used);
+        if (!fresh) break;
+        used.add(fresh);                    // 先佔位，避免同批其他文章重試到同一張
+        if (!usedHashes) return fresh;      // 呼叫端不要求內容去重
+        const h = await hashCoverContent(fresh);
+        if (!h) return fresh;               // 抓不到內容就不擋，至少網址是新的
+        if (!usedHashes.has(h)) { usedHashes.add(h); return fresh; }
+      }
     }
   }
 
@@ -149,6 +188,17 @@ export async function pickUniqueCover(
   const chosen = localFresh ?? LOCAL_COVERS[used.size % LOCAL_COVERS.length];
   used.add(chosen);
   return chosen;
+}
+
+/** 載入全站已用封面的內容 hash（供生成時做內容層級去重） */
+export async function loadUsedCoverHashes(): Promise<Set<string>> {
+  const covers = await loadUsedCovers();
+  const hashes = new Set<string>();
+  for (const c of covers) {
+    const h = await hashCoverContent(c);
+    if (h) hashes.add(h);
+  }
+  return hashes;
 }
 
 export { loadUsedCovers, LOCAL_COVERS };

@@ -64,14 +64,13 @@ export default async function RecyclePage() {
   const STALE_DAYS = 14;
   const staleBefore = Date.now() - STALE_DAYS * 86400_000;
 
-  // 有些來源只提供「基礎機型」報價（無容量），與另一來源的分容量報價並存時，
-  // 同一機型會出現兩列、且無容量那列的價格通常低於所有容量版本，看起來像矛盾。
-  // 同機型已有分容量報價時，就把無容量那列藏起來。
-  const modelsWithStorage = new Set(
-    prices.filter(p => p.storage).map(p => `${p.brand}|${p.modelName}`),
-  );
+  // 手機／平板／筆電的回收價一定要綁容量才有意義 —— 同一支 iPhone 128GB 與 1TB 差好幾千，
+  // 只寫機型不寫容量的報價不但無法參考，還會出現「無容量列的價格高於所有容量版本」這種矛盾。
+  // （有些來源只提供不分容量的基礎機型報價，就是這些列的來源。）
+  // AirPods / Dyson / 遊戲主機本來就沒有容量規格，不套這個規則。
+  const STORAGE_REQUIRED = new Set(["phone", "tablet", "laptop_pro", "laptop_air", "desktop"]);
   const visible = prices.filter(
-    p => p.storage || !modelsWithStorage.has(`${p.brand}|${p.modelName}`),
+    p => !STORAGE_REQUIRED.has(p.category) || !!p.storage,
   );
 
   const freshCount = visible.filter(p => p.lastUpdatedAt.getTime() >= staleBefore).length;

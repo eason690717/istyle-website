@@ -13,7 +13,7 @@ function fmtTwd(n: number): string {
 }
 
 // 每週二手回收行情總覽
-export async function generateWeeklyRecycleDigest(usedCovers?: Set<string>) {
+export async function generateWeeklyRecycleDigest(usedCovers?: Set<string>, usedHashes?: Set<string>) {
   const today = fmtDate();
   const slug = `weekly-recycle-${today}`;
 
@@ -91,7 +91,7 @@ ${laptops.map(p => `| ${p.modelName} | ${p.storage || "—"} | ${fmtTwd(p.minPri
       title: `${today} 二手 3C 回收行情總覽 — Top 機型一覽`,
       excerpt: `本週 i時代收錄 ${totalRecords} 個機型回收價。完整 Top 10 手機 / 平板 / 筆電行情。`,
       body,
-      coverImage: await pickUniqueCover([slug, "二手回收"], usedCovers),
+      coverImage: await pickUniqueCover([slug, "二手回收"], usedCovers, usedHashes),
       metaDescription: `${today} 二手 iPhone / iPad / MacBook 回收行情：Top 10 高價機型一覽，i時代板橋江子翠每日更新行情。`,
       keywords: "二手回收價,iPhone 回收價格,iPad 回收,MacBook 回收,2026 回收行情,板橋二手機回收",
     },
@@ -101,7 +101,7 @@ ${laptops.map(p => `| ${p.modelName} | ${p.storage || "—"} | ${fmtTwd(p.minPri
 
 // 每週自動產生「品牌維修指南」文章（基於 DB 真實資料）
 // 每週輪流選一個品牌，避免重複
-export async function generateBrandGuide(usedCovers?: Set<string>) {
+export async function generateBrandGuide(usedCovers?: Set<string>, usedHashes?: Set<string>) {
   const today = fmtDate();
   const allBrands = await prisma.brand.findMany({
     where: { isActive: true },
@@ -190,7 +190,7 @@ ${topModels.slice(0, 8).map(m => {
       title: `${brand.name} ${brand.nameZh} 全機型維修指南｜${brand._count.models} 個機型透明報價`,
       excerpt: `i時代收錄 ${brand.name} ${brand._count.models} 個機型，本文整理熱門送修機型、保固政策與選擇建議，報價可線上即時查詢。`,
       body,
-      coverImage: await pickUniqueCover([slug, brand.name, brand.nameZh], usedCovers),
+      coverImage: await pickUniqueCover([slug, brand.name, brand.nameZh], usedCovers, usedHashes),
       metaDescription: `${brand.name} ${brand.nameZh} 維修報價：i時代收錄 ${brand._count.models} 個機型，板橋江子翠 14 年技術經驗，透明價目，當日完工。`,
       keywords: `${brand.name} 維修,${brand.nameZh} 維修,${brand.name} 換螢幕,${brand.name} 換電池,板橋 ${brand.name} 維修`,
     },
@@ -210,7 +210,7 @@ const TROUBLE_TEMPLATES = [
 ];
 
 // offset：同一次執行要產多篇時往後挑不同機型，避免一次跑出重複主題
-export async function generateModelTroublePost(usedCovers?: Set<string>, offset = 0) {
+export async function generateModelTroublePost(usedCovers?: Set<string>, offset = 0, usedHashes?: Set<string>) {
   const today = fmtDate();
   // 抓回收價最高的前 30 個機型
   const topRecycle = await prisma.recyclePrice.findMany({
@@ -276,7 +276,7 @@ ${TROUBLE_TEMPLATES.map((t, i) => `### ${i + 1}. ${t.issue}
       title: `${target.modelName} 常見故障維修指南｜${target.brand} 5 大問題解析`,
       excerpt: `${target.modelName} 螢幕破裂、電池老化、Face ID 失效等 5 大常見故障的成因與判斷方式，維修報價可線上即時查詢。`,
       body,
-      coverImage: await pickUniqueCover([slug, target.modelName, target.brand, "螢幕電池"], usedCovers),
+      coverImage: await pickUniqueCover([slug, target.modelName, target.brand, "螢幕電池"], usedCovers, usedHashes),
       metaDescription: `${target.modelName} 維修費用、常見故障、回收價：i時代板橋江子翠 14 年技術經驗，透明報價，當日完工。`,
       keywords: `${target.modelName} 維修,${target.brand} 維修,${target.modelName} 螢幕,${target.modelName} 電池,${target.modelName} 回收,板橋手機維修`,
     },
@@ -287,7 +287,7 @@ ${TROUBLE_TEMPLATES.map((t, i) => `### ${i + 1}. ${t.issue}
 import { SITE } from "@/lib/site-config";
 
 // 每月維修報價變動報告（templated）
-export async function generateMonthlyRepairReport(usedCovers?: Set<string>) {
+export async function generateMonthlyRepairReport(usedCovers?: Set<string>, usedHashes?: Set<string>) {
   const today = fmtDate();
   const slug = `monthly-repair-${today.slice(0, 7)}`;
   const existing = await prisma.autoArticle.findUnique({ where: { slug } }).catch(() => null);
@@ -327,7 +327,7 @@ ${brandStats.map(b => `| ${b.name} ${b.nameZh} | ${b._count.models} | ${b.models
       title: `${today.slice(0, 7)} 維修報價收錄報告 — ${totalPrices.toLocaleString()} 筆透明價目`,
       excerpt: `i時代收錄 ${totalPrices.toLocaleString()} 筆維修報價、${brandStats.length} 大品牌全覆蓋。本月新增更新與行情解析。`,
       body,
-      coverImage: await pickUniqueCover([slug, "板橋維修推薦"], usedCovers),
+      coverImage: await pickUniqueCover([slug, "板橋維修推薦"], usedCovers, usedHashes),
       metaDescription: `i時代 ${today.slice(0, 7)} 維修報價收錄 ${totalPrices.toLocaleString()} 筆，${brandStats.length} 品牌全覆蓋，板橋江子翠透明價目。`,
       keywords: "維修報價,iPhone 維修,Android 維修,MacBook 維修,板橋手機維修,2026 維修價目",
     },
@@ -402,7 +402,7 @@ const CARE_TOPICS: Array<{
   },
 ];
 
-export async function generateCareTipsPost(usedCovers?: Set<string>, offset = 0) {
+export async function generateCareTipsPost(usedCovers?: Set<string>, offset = 0, usedHashes?: Set<string>) {
   const today = fmtDate();
   const weekIndex = Math.floor(Date.now() / (7 * 24 * 3600 * 1000));
   const topic = CARE_TOPICS[(weekIndex + offset) % CARE_TOPICS.length];
@@ -431,7 +431,7 @@ ${topic.sections.map(s => `### ${s.h}\n\n${s.body}\n`).join("\n")}
       title: topic.title,
       excerpt: topic.intro,
       body,
-      coverImage: await pickUniqueCover([slug, topic.title], usedCovers),
+      coverImage: await pickUniqueCover([slug, topic.title], usedCovers, usedHashes),
       metaDescription: `${topic.intro} i時代板橋江子翠 14 年維修經驗整理。`,
       keywords: `${topic.title},手機保養,手機維修知識,板橋手機維修`,
     },

@@ -28,17 +28,21 @@ export async function GET(req: NextRequest) {
     // 也因此各生成器必須循序執行 — 並行會讓兩篇同時挑到同一張。
     const usedCovers = await loadUsedCovers();
     const before = usedCovers.size;
+    // 內容 hash 只在「本批次內」比對：跨歷史去重靠網址唯一性就夠，
+    // 若要 hash 全站 285+ 張圖得下載每一張，會直接吃光 cron 的執行時間。
+    // 全站的內容層級稽核交給 scripts/audit-cover-duplicates.ts 定期跑。
+    const batchHashes = new Set<string>();
 
     const created: Array<{ kind: string; slug: string }> = [];
     const skipped: string[] = [];
 
     // 依序嘗試各類型。已存在的（例如當月的月報）會回傳既有文章，不算新增。
     const tasks: Array<{ kind: string; run: () => Promise<{ slug: string } | null> }> = [
-      { kind: "weekly_recycle", run: () => generateWeeklyRecycleDigest(usedCovers) },
-      { kind: "trouble_article", run: () => generateModelTroublePost(usedCovers, 0) },
-      { kind: "care_tips", run: () => generateCareTipsPost(usedCovers, 0) },
-      { kind: "brand_guide", run: () => generateBrandGuide(usedCovers) },
-      { kind: "monthly_summary", run: () => generateMonthlyRepairReport(usedCovers) },
+      { kind: "weekly_recycle", run: () => generateWeeklyRecycleDigest(usedCovers, batchHashes) },
+      { kind: "trouble_article", run: () => generateModelTroublePost(usedCovers, 0, batchHashes) },
+      { kind: "care_tips", run: () => generateCareTipsPost(usedCovers, 0, batchHashes) },
+      { kind: "brand_guide", run: () => generateBrandGuide(usedCovers, batchHashes) },
+      { kind: "monthly_summary", run: () => generateMonthlyRepairReport(usedCovers, batchHashes) },
     ];
 
     const seenSlugs = new Set<string>();
@@ -62,8 +66,8 @@ export async function GET(req: NextRequest) {
     // 不足門檻時，補產不同機型的故障解析與不同主題的保養知識
     for (let offset = 1; newCount < MIN_NEW_ARTICLES && offset <= 12; offset++) {
       const filler = offset % 2 === 1
-        ? await generateModelTroublePost(usedCovers, offset).catch(() => null)
-        : await generateCareTipsPost(usedCovers, offset).catch(() => null);
+        ? await generateModelTroublePost(usedCovers, offset, batchHashes).catch(() => null)
+        : await generateCareTipsPost(usedCovers, offset, batchHashes).catch(() => null);
       if (filler && !seenSlugs.has(filler.slug)) {
         seenSlugs.add(filler.slug);
         created.push({ kind: "filler", slug: filler.slug });
