@@ -2,17 +2,41 @@
 
 > 最後更新: 2026-09-01
 
-## 進行中 (1)
+## 進行中 (0)
 
-- **官網優化計畫書待老闆確認** — `D:\GA\0424_iStyle\OPTIMIZATION_PLAN.md`，確認後交執行 AI。優先序：0) 部署卡住的 commit → 1) 回收爬蟲修復 → 2) LINE 全站導入
+## 待處理 (3)
 
-## 待處理 (2)
+- ⚠️ **兩個 commit 已 push 未部署**（e52a3ad 移除 Watch/AirPods 報價、0b76ae4 爬蟲修復＋文章整理）。
+  正確帳號已確認為 **easonhsieh0717**（截圖實證 istyle 在 easonhsieh0717s-projects 底下）；
+  本機 CLI 登入的是 admin-63910056 碰不到 → 老闆 `vercel login` 換帳號後 `cd web && vercel --prod`。
+  注意：DB 改動（爬蟲資料、文章內容、封面）**已即時生效**，只有程式碼部分待部署。
 
-- ⚠️ **commit e52a3ad 已 push 未部署**（移除 Watch/AirPods 報價 + 下架 screen-repair-cost 文章）。本機 Vercel CLI 帳號（admin-63910056）沒有 istyle 專案，需老闆用正確帳號 `vercel login` 後 `cd web && vercel --prod`
-- ⚠️ **回收爬蟲 3 來源死 2 個**：source2 自 7/21、source3 從未成功，都回報 success 0 筆；73% 回收價停在 4/25（詳見計畫書 Part B）
+- **待老闆自行刪除 3 個 Vercel 專案**（2026-09-01 交辦，刪除不可逆故不代為執行）：
+  `dasin-nursing`、`nursing-clock`、`xiaqun`。
+  路徑：專案 → Settings → Danger Zone → Delete Project。
+  已提醒兩點：(a) 護理專案在 D:\GA\CLAUDE.md 路由表仍標「活躍」且本機有交接文件，
+  (b) 別跟另一帳號的 `dasin-care` 搞混（2 天前才更新，不在刪除清單）。
 
-## 已完成 (最近 5 筆)
+- **通知管道未設定**：爬蟲失敗告警走 notifyOwner()，但 LINE/Telegram env 都沒填 → 目前告警只進 console。
+  需老闆提供 Telegram Bot Token（LINE Notify 已停服）。
 
-- 2026-09-01 隱藏 Apple Watch(18) + AirPods(4) 維修報價機型（DeviceModel.isActive=0，DB 即生效，爬蟲 upsert 不會復活）
-- 2026-09-01 下架 blog/iphone-screen-repair-cost-2026（含 7 處 relatedSlugs、診斷工具連結、pexels 封面清理、middleware 301 → /quote/apple）— 待部署
-- 2026-09-01 機型詳細頁加 isActive 檢查（inactive → 404）— 待部署
+## 計畫書剩餘項目（OPTIMIZATION_PLAN.md）
+
+已完成 Part B 全部（爬蟲修復＋告警＋陳舊價格），以及使用者臨時追加的 4 項需求。
+尚未執行：
+- A1 LINE 全站導入（報價詳細頁 LINE 按鈕帶預填訊息、sticky bar、analytics event）
+- A2 電話轉換強化（桌機 header 顯示號碼、營業時間內外不同 CTA）
+- A3 版面質感、A4 瀏覽率（/booking 表單 0 筆問題調查）
+
+## 已完成 (2026-09-01)
+
+- 三個爬蟲 cron 全部修復並實測：source1 317、source2 403（死 42 天）、source3 688（從未成功）
+- cerphone 維修報價 timeout 修復：原本固定只更新 30%，現 138s 跑完 3,977 筆
+- 容量解析白名單（「小米 15T」不再被吃成 storage=15TB）、MacBook 保留 RAM 規格
+- 下架 500 筆舊 key 重複列；14 天未更新改顯示「LINE 詢價」
+- 0 筆不再記 success → error/warning + notifyOwner + cron 回 207
+- 維修知識移除所有寫死報價（152 篇自動文章 + 9 個手寫表格 + 257 篇摘要）
+- 285 篇文章封面改 Pexels 不重複取圖（原本 11 張圖分 285 篇，單張用 74 次）
+- cron 每次至少產 3 篇 + 新增常青保養知識文章類型
+- 修 markdown 渲染 bug（粗體的 text-[var(--gold)] 方括號被連結規則吃掉）
+- /recycle 改「品牌/機型分組」排序、容量由小到大、加更新日欄位、去除同機型重複列
