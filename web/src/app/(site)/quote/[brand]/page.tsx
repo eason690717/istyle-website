@@ -5,7 +5,19 @@ import { SITE } from "@/lib/site-config";
 import { displayPrice, formatTwd } from "@/lib/pricing";
 import type { Metadata } from "next";
 
+// 品牌報價矩陣，資料每天 cron 更新，改用 ISR 讓 CDN 吃快取，避免每個請求都重新查資料庫渲染。
+export const revalidate = 3600;
+
 type Params = { brand: string };
+
+// 10 個品牌頁在 build 時就產生好（/quote/apple 單頁就有 858 PV／90 天）。
+// 未列出的品牌仍可運作 —— dynamicParams 預設為 true，會在首次請求時產生並快取。
+export async function generateStaticParams() {
+  const brands = await prisma.brand
+    .findMany({ where: { isActive: true }, select: { slug: true } })
+    .catch(() => []);
+  return brands.map(b => ({ brand: b.slug }));
+}
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { brand: brandSlug } = await params;

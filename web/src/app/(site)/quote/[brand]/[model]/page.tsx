@@ -7,6 +7,9 @@ import { findRecyclePricesForModel } from "@/lib/model-helpers";
 import { AddToCartButton } from "@/components/cart-button";
 import type { Metadata } from "next";
 
+// 機型報價明細，資料每天 cron 更新，改用 ISR 讓 CDN 吃快取，避免每個請求都重新查資料庫渲染。
+export const revalidate = 3600;
+
 type Params = { brand: string; model: string };
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {

@@ -1,10 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
-import { cookies } from "next/headers";
 import { SITE } from "@/lib/site-config";
 import { HeaderSearch } from "./header-search";
 import { CartButton } from "./cart-button";
-import { COOKIE_NAME, verifySession } from "@/lib/admin-auth";
 
 const NAV = [
   { href: "/shop", label: "商城" },
@@ -15,11 +13,11 @@ const NAV = [
   { href: "/booking", label: "線上預約" },
 ];
 
-export async function Header() {
-  // 檢查是否已登入後台 → 顯示「後台」快速連結
-  const cookieStore = await cookies();
-  const sessionToken = cookieStore.get(COOKIE_NAME)?.value;
-  const isAdmin = sessionToken ? await verifySession(sessionToken) : false;
+// 注意：這個元件刻意不讀 cookies()／headers()。
+// 前台 Header 出現在每一個公開頁，只要它讀了請求資訊，整站就無法靜態快取，
+// 每個爬蟲請求都會觸發完整 SSR。先前為了顯示「已登入後台」徽章而呼叫 cookies()，
+// 代價是一個月燒掉 6 小時 CPU（額度 4 小時）。老闆要進後台直接輸入 /admin 即可。
+export function Header() {
   return (
     <header className="sticky top-0 z-30 border-b border-[var(--border)] bg-[var(--bg)]/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
@@ -52,15 +50,6 @@ export async function Header() {
           ))}
           <HeaderSearch />
           <CartButton />
-          {isAdmin && (
-            <Link
-              href="/admin"
-              className="rounded-full border border-[var(--gold)]/40 px-3 py-1.5 text-xs text-[var(--gold)] transition hover:bg-[var(--gold)]/10"
-              title="後台管理"
-            >
-              🔒 後台
-            </Link>
-          )}
           <a
             href={`tel:${SITE.phoneRaw}`}
             className="btn-gold rounded-full px-4 py-2 text-sm"
@@ -73,11 +62,6 @@ export async function Header() {
         <div className="flex items-center gap-2 md:hidden">
           <HeaderSearch />
           <CartButton />
-          {isAdmin && (
-            <Link href="/admin" className="rounded-full border border-[var(--gold)]/40 px-2 py-1 text-[10px] text-[var(--gold)]">
-              🔒
-            </Link>
-          )}
           <a
             href={`tel:${SITE.phoneRaw}`}
             className="btn-gold rounded-full px-3 py-2 text-xs"

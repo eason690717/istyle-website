@@ -4,7 +4,9 @@ import { notFound } from "next/navigation";
 import { SITE } from "@/lib/site-config";
 import type { Metadata } from "next";
 
-export const dynamic = "force-dynamic";
+// 同上，不需要每個請求都重算。
+// 改用 ISR：CDN 直接回快取，只有每小時第一個請求會重新產生。
+export const revalidate = 3600;
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;

@@ -11,7 +11,9 @@ export const metadata: Metadata = {
   description: `${SITE.name}部落格：iPhone / iPad / MacBook / Android 維修知識、電池保養、2026 回收行情、板橋維修推薦。`,
 };
 
-export const dynamic = "force-dynamic";
+// 文章每天由 cron 產生，不需要每個請求都重算。
+// 改用 ISR：CDN 直接回快取，只有每小時第一個請求會重新產生。
+export const revalidate = 3600;
 
 export default async function BlogIndexPage() {
   // 自動產生的文章（最新優先）

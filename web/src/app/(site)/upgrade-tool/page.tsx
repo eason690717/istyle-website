@@ -4,7 +4,8 @@ import { SITE } from "@/lib/site-config";
 import { UpgradeForm } from "./upgrade-form";
 import type { Metadata } from "next";
 
-export const dynamic = "force-dynamic";
+// 換機決策器讀的報價每天 cron 更新一次。
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "換機決策器 — 修還是換？",
