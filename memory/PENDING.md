@@ -4,6 +4,13 @@
 
 ## 進行中 (0)
 
+## 已完成 — Vercel CPU 超額修復（2026-09-01）
+
+- 根因：root layout 的 headers() + Header 的 cookies() 讓全站無法快取
+- 改用 route group 拆 (site)/(internal) 兩個 root layout，公開頁改 ISR
+- 線上驗證 X-Vercel-Cache: HIT，公開頁全部 200、後台 307
+- 老闆同時升級 Pro（Hobby 禁止商業使用）
+
 ## 待處理 (3)
 
 - ✅ **部署已完成**（2026-09-01 18:23）—— 改走 REST API 繞過 CLI 的 token 限制。
