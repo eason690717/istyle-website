@@ -13,7 +13,8 @@
 
 - **待刪除 3 個 Vercel 專案**（2026-09-01 交辦，token 權限不足暫未執行）：
   `dasin-nursing`、`nursing-clock`、`xiaqun`。
-  路徑：專案 → Settings → Danger Zone → Delete Project。
+  路徑：`https://vercel.com/easonhsieh0717s-projects/<專案>/settings/general` → 按 End 捲到最底。
+  ⚠️ 新版 Vercel 已無「Danger Zone」，刪除在 General 最底部（Advanced 頁面沒有）。
   已提醒兩點：(a) 護理專案在 D:\GA\CLAUDE.md 路由表仍標「活躍」且本機有交接文件，
   (b) ⛔ **`dasin-care` 不要動** — 老闆 2026-09-01 明確指示。它在另一帳號 easons-projects-cac5ebe9
       底下（2 天前才更新），名字與 dasin-nursing 相近，任何批次操作都要排除它。
