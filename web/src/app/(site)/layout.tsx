@@ -1,7 +1,10 @@
+// 公開前台的 root layout。
+// 刻意不呼叫 headers()／cookies() —— 只要 root layout 讀了請求資訊，
+// 整個網站就無法被靜態快取，每個爬蟲請求都會觸發一次完整 SSR。
+// 後台 chrome 的隔離改用 route group：(site) 與 (internal) 各有自己的 root layout。
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 import { Noto_Sans_TC, Noto_Serif_TC } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { FloatingCta } from "@/components/floating-cta";
@@ -14,15 +17,6 @@ import { ToastContainer } from "@/components/toast";
 import { Suspense } from "react";
 import { CartProvider } from "@/lib/cart";
 import { SITE } from "@/lib/site-config";
-
-// 判斷現在是不是內部頁（admin/pos/m），用來隱藏前台 header/footer
-async function isInternalPage(): Promise<boolean> {
-  try {
-    const h = await headers();
-    const path = h.get("x-pathname") || "";
-    return path.startsWith("/admin") || path.startsWith("/pos") || path.startsWith("/m");
-  } catch { return false; }
-}
 
 const notoSans = Noto_Sans_TC({
   variable: "--font-noto-sans",
@@ -100,9 +94,7 @@ const jsonLd = {
   knowsAbout: ["手機維修", "iPhone維修", "iPad維修", "MacBook維修", "Switch維修", "Dyson維修", "二手機回收"],
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const internal = await isInternalPage();
-
+export default function SiteLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="zh-TW" className={`${notoSans.variable} ${notoSerif.variable} h-full`}>
       <head>
@@ -111,25 +103,19 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={`flex min-h-full flex-col bg-[var(--bg)] text-[var(--fg)] antialiased ${internal ? "" : "pb-14 md:pb-0"}`}>
-        {internal ? (
-          // 內部後台 / POS / 行動站：純淨布局，沒有前台 chrome
+      <body className="flex min-h-full flex-col bg-[var(--bg)] text-[var(--fg)] antialiased pb-14 md:pb-0">
+        <CartProvider>
+          <PromoBanner />
+          <Header />
           <main className="flex-1">{children}</main>
-        ) : (
-          // 公開前台：Header + Footer + Banner + Cart + Exit Intent
-          <CartProvider>
-            <PromoBanner />
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-            <FloatingCta />
-          </CartProvider>
-        )}
+          <Footer />
+          <FloatingCta />
+        </CartProvider>
         <Analytics />
         <SpeedInsights />
         <ToastContainer />
-        {!internal && <Suspense fallback={null}><Tracker /></Suspense>}
-        {!internal && <ExitIntent />}
+        <Suspense fallback={null}><Tracker /></Suspense>
+        <ExitIntent />
       </body>
     </html>
   );

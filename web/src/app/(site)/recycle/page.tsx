@@ -9,7 +9,9 @@ export const metadata: Metadata = {
   description: "i時代提供 iPhone、iPad、MacBook、Switch、Dyson 二手機高價回收，每日更新行情，現場現金交易，板橋江子翠。",
 };
 
-export const dynamic = "force-dynamic";
+// 回收價每天 02:00 cron 更新，不需要每個請求都重算。
+// 改用 ISR：CDN 直接回快取，只有每小時第一個請求會重新產生。
+export const revalidate = 3600;
 
 const CATEGORY_LABELS: Record<string, string> = {
   phone: "手機",

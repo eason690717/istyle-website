@@ -8,7 +8,9 @@ import type { Metadata } from "next";
 
 type Params = { slug: string };
 
-export const dynamic = "force-dynamic";
+// 文章產生後就不再變動，不需要每個請求都重算。
+// 改用 ISR：CDN 直接回快取，只有每小時第一個請求會重新產生。
+export const revalidate = 3600;
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { slug } = await params;

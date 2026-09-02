@@ -4,7 +4,9 @@ import { SITE } from "@/lib/site-config";
 import { RelatedReading, PRESET_LINKS } from "@/components/related-reading";
 import type { Metadata } from "next";
 
-export const dynamic = "force-dynamic";
+// 案例由後台手動新增，不需要每個請求都重算。
+// 改用 ISR：CDN 直接回快取，只有每小時第一個請求會重新產生。
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "真實維修案例",

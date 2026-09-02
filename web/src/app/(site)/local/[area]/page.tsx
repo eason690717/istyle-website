@@ -5,6 +5,9 @@ import { LOCAL_AREAS, getAreaBySlug } from "@/lib/local-areas";
 import { SITE } from "@/lib/site-config";
 import type { Metadata } from "next";
 
+// 地區頁內容固定，改用 ISR 讓 CDN 吃快取，避免每個請求都重新查資料庫渲染。
+export const revalidate = 3600;
+
 // 預先 SSG 所有地區頁
 export function generateStaticParams() {
   return LOCAL_AREAS.map(a => ({ area: a.slug }));

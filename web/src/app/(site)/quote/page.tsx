@@ -9,7 +9,9 @@ export const metadata: Metadata = {
   description: `${SITE.name}提供 iPhone、iPad、MacBook、Samsung、Switch、Dyson 等全品牌維修透明報價，板橋現場維修，當日完工。`,
 };
 
-export const dynamic = "force-dynamic";
+// 報價每天 04:00 cron 更新，不需要每個請求都重算。
+// 改用 ISR：CDN 直接回快取，只有每小時第一個請求會重新產生。
+export const revalidate = 3600;
 
 const FALLBACK_BRANDS = [
   { id: 1, slug: "apple", name: "Apple", nameZh: "蘋果", _count: { models: 80 } },

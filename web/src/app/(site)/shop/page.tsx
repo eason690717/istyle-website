@@ -9,7 +9,9 @@ export const metadata: Metadata = {
   description: `${SITE.name}．iPhone / Android / MacBook 配件、保護貼、充電線、行動電源．14 年技術選品．7-11 取貨`,
 };
 
-export const dynamic = "force-dynamic";
+// 商品與庫存可能隨時異動，用較短的 5 分鐘快取；
+// 即使如此，爬蟲流量也不再逐次觸發 SSR。
+export const revalidate = 300;
 
 const CATEGORY_LABELS: Record<string, string> = {
   case: "手機殼",
