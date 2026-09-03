@@ -69,7 +69,7 @@ export default async function QuoteIndex() {
         <div className="mx-auto mt-5 inline-flex flex-col items-center gap-1 rounded-2xl border border-[var(--gold)]/30 bg-[var(--gold)]/5 px-5 py-3 text-xs sm:flex-row sm:gap-4">
           <span className="flex items-center gap-1.5 text-[var(--gold-bright)]">
             <span className="h-2 w-2 animate-pulse rounded-full bg-[var(--gold)]" />
-            每週自動比對 cerphone 業界行情
+            每日自動比對業界行情
           </span>
           <span className="text-[var(--fg-muted)]">
             目前收錄 <strong className="text-[var(--gold)]">{refreshStats.modelCount.toLocaleString()}</strong> 個機型
