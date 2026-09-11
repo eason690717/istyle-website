@@ -4,14 +4,30 @@
 //   2. POST /v13/deployments 帶檔案清單建立 production 部署
 // 檔案清單用 `git ls-files` 取得，天然排除 node_modules / .next / .env
 //
-// 用法：node scripts/deploy-via-api.mjs <TOKEN>
+// 用法：node scripts/deploy-via-api.mjs            （token 讀自 web/.env.local 的 VERCEL_DEPLOY_TOKEN）
+//      node scripts/deploy-via-api.mjs <TOKEN>    （或直接帶參數）
 import { createHash } from "node:crypto";
 import { readFileSync, statSync } from "node:fs";
 import { execSync } from "node:child_process";
+import { existsSync, readFileSync as readEnvFile } from "node:fs";
 
-const TOKEN = process.argv[2];
+// Token 來源優先序：命令列參數 → web/.env.local 的 VERCEL_DEPLOY_TOKEN → 環境變數。
+// 放在 .env.local（被 .gitignore 的 .env* 擋住、也不在 git ls-files 內所以不會被上傳），
+// 就不必每次把 token 貼進對話或指令歷史。
+function loadDeployToken() {
+  if (process.argv[2] && !process.argv[2].startsWith("dpl_")) return process.argv[2];
+  if (existsSync(".env.local")) {
+    const line = readEnvFile(".env.local", "utf-8").split("\n")
+      .find(l => l.trim().startsWith("VERCEL_DEPLOY_TOKEN"));
+    // trim() 會一併去掉 Windows 換行的 \r；再剝掉可能的引號
+    if (line) return line.slice(line.indexOf("=") + 1).trim().replace(/^"|"$/g, "");
+  }
+  return process.env.VERCEL_DEPLOY_TOKEN?.trim();
+}
+
+const TOKEN = loadDeployToken();
 const PROJECT_ID = "prj_C8Kh4BSj09p2hRETfUOLMOMHJlvG";
-if (!TOKEN) { console.error("用法: node scripts/deploy-via-api.mjs <TOKEN>"); process.exit(1); }
+if (!TOKEN) { console.error("找不到 token：請在 web/.env.local 加一行 VERCEL_DEPLOY_TOKEN=xxx，或以參數傳入"); process.exit(1); }
 
 const H = { Authorization: `Bearer ${TOKEN}` };
 
@@ -70,4 +86,4 @@ console.log(`   id:  ${body.id}`);
 console.log(`   url: https://${body.url}`);
 console.log(`   狀態: ${body.readyState || body.status}`);
 console.log(`\n建置中，可用這個查進度：`);
-console.log(`   node scripts/deploy-status.mjs ${TOKEN} ${body.id}`);
+console.log(`   node scripts/deploy-status.mjs ${body.id}`);

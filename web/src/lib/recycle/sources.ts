@@ -1,7 +1,7 @@
 // 三個來源網站的爬蟲（不對外洩露來源資訊）
 import * as cheerio from "cheerio";
 import {
-  parseModelByCategory, parseGenericModel, parsePriceText, parseUs3cAndroid,
+  parseModelByCategory, parseGenericModel, parsePriceText, parseUs3cAndroid, parseUs3cConsole, parseUs3cDyson,
   type Category, type ParsedModel,
 } from "./normalizer";
 import { isReasonablePrice, strictParsePrice } from "./validation";
@@ -170,6 +170,40 @@ export async function scrapeUs3cAndroid(): Promise<ScrapedRow[]> {
       if (parsed) results.push({ ...parsed, price: row.us3cPrice });
     }
   } catch (e) { console.error("[source2 android]", e); }
+  return results;
+}
+
+// === Source 2 補：us3c 遊戲主機（PS5/PS4、Switch、Xbox） ===========================
+export async function scrapeUs3cConsoles(): Promise<ScrapedRow[]> {
+  const results: ScrapedRow[] = [];
+  try {
+    const html = await fetchHtml("https://www.us3c.com.tw/promotion-recycle-ps-switch");
+    for (const row of extractUs3cRows(html)) {
+      if (!isReasonablePrice(row.us3cPrice, "console")) {
+        console.warn(`[source2 console] 異常價 ${row.model} = ${row.us3cPrice}`);
+        continue;
+      }
+      const parsed = parseUs3cConsole(row.model);
+      if (parsed) results.push({ ...parsed, price: row.us3cPrice });
+    }
+  } catch (e) { console.error("[source2 console]", e); }
+  return results;
+}
+
+// === Source 2 補：us3c Dyson（吹風機／造型器） ======================================
+export async function scrapeUs3cDyson(): Promise<ScrapedRow[]> {
+  const results: ScrapedRow[] = [];
+  try {
+    const html = await fetchHtml("https://www.us3c.com.tw/promotion-recycle-dyson");
+    for (const row of extractUs3cRows(html)) {
+      if (!isReasonablePrice(row.us3cPrice, "dyson")) {
+        console.warn(`[source2 dyson] 異常價 ${row.model} = ${row.us3cPrice}`);
+        continue;
+      }
+      const parsed = parseUs3cDyson(row.model, row.capacity);
+      if (parsed) results.push({ ...parsed, price: row.us3cPrice });
+    }
+  } catch (e) { console.error("[source2 dyson]", e); }
   return results;
 }
 

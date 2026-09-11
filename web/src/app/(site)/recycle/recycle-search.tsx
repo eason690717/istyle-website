@@ -500,7 +500,8 @@ function PriceCard({ item }: { item: PriceItem }) {
 // 舊版 8 欄擠在一起、價格用 14px 等寬字、次要資訊只有 10-12px，深色底上顯得又細又小。
 // 品牌與類別併入機型欄上方的小字，省下兩欄給價格呼吸；預設排序時加「品牌·類別」分區標題方便掃讀。
 function groupLabel(p: PriceItem) {
-  return `${p.brand} · ${p.categoryLabel}`;
+  // 品牌與類別同名時（Dyson）只顯示一次，避免「Dyson · Dyson」
+  return p.brand === p.categoryLabel ? p.brand : `${p.brand} · ${p.categoryLabel}`;
 }
 
 function ResultTable({ items, grouped }: { items: PriceItem[]; grouped: boolean }) {
@@ -583,8 +584,10 @@ function ResultTable({ items, grouped }: { items: PriceItem[]; grouped: boolean 
                   <div className="text-[15px] font-semibold text-[var(--fg-strong)]">{p.modelName}</div>
                 </td>
                 <td className="px-4 py-3.5 text-sm">
-                  <span className="font-semibold text-[var(--fg)]">{p.storage || "—"}</span>
-                  {p.variant && <span className="ml-2 text-[var(--fg-muted)]">{p.variant}</span>}
+                  {/* 遊戲機、Dyson 多半沒有容量只有型號／年份，此時不要先印一個「—」 */}
+                  {p.storage && <span className="font-semibold text-[var(--fg)]">{p.storage}</span>}
+                  {p.variant && <span className={`${p.storage ? "ml-2 " : ""}text-[var(--fg-muted)]`}>{p.variant}</span>}
+                  {!p.storage && !p.variant && <span className="text-[var(--fg-muted)]">—</span>}
                 </td>
                 <td className="px-4 py-3.5 text-right">
                   {p.isStale

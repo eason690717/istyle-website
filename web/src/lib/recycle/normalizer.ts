@@ -149,6 +149,47 @@ export function parseUs3cAndroid(raw: string): ParsedModel | null {
   return { modelKey, category: "phone", brand, modelName, storage };
 }
 
+// 移除字串中「合法容量」的 token（不論位置），其餘數字（型號、代數）保留
+function removeStorageTokens(s: string): string {
+  return s.replace(/\s*(\d+(?:\.\d+)?\s*(?:TB|T|GB|G))\b/gi, (m, tok) => (normalizeStorage(tok) ? "" : m))
+    .replace(/\s+/g, " ").trim();
+}
+
+// us3c 遊戲主機："Sony PS5 光碟版 CFI-1218A"、"Nintendo Switch 2 BEE-001 紅藍 + 瑪利歐賽車世界 同捆組"、
+//              "Microsoft Xbox Series X 1T 光碟版"
+// 同名不同版本價差大（PS5 光碟版 CFI-1018A $5,900 / CFI-1218A $7,200），
+// 型號代碼若剝掉會塌成同一筆互相覆蓋 → 代碼與後面的版本說明一律放進 variant。
+export function parseUs3cConsole(raw: string): ParsedModel | null {
+  const cleaned = raw.replace(/\s+/g, " ").trim();
+  const brand = cleaned.split(" ")[0];
+  let rest = cleaned.slice(brand.length).trim();
+  const storage = normalizeStorage(rest);
+  let variant: string | undefined;
+  const codeAt = rest.search(/\b[A-Z]{3}-[A-Z0-9]+/);
+  if (codeAt > 0) {
+    variant = rest.slice(codeAt).trim();
+    rest = rest.slice(0, codeAt).trim();
+  }
+  if (storage) rest = removeStorageTokens(rest);
+  if (!rest) return null;
+  const modelKey = slugify(`${brand}-${rest}${storage ? "-" + storage : ""}${variant ? "-" + variant : ""}`);
+  return { modelKey, category: "console", brand, modelName: rest, storage, variant };
+}
+
+// us3c Dyson："Dyson Supersonic HD01"，capacity 欄位其實是出廠年份（2016）
+// 產品線（Supersonic / Airwrap…）當機型、型號＋年份當規格 → 同產品線各代排在一起，客人也比較認得年份
+export function parseUs3cDyson(raw: string, year?: string): ParsedModel | null {
+  const cleaned = raw.replace(/\s+/g, " ").trim().replace(/^Dyson\s+/i, "");
+  const m = cleaned.match(/^(.*?)\s+([A-Z]{2}\d{2})\b(.*)$/);
+  const modelName = (m ? m[1] : cleaned).trim();
+  if (!modelName) return null;
+  const code = m ? (m[2] + m[3]).trim() : "";
+  const y = year && /^\d{4}$/.test(year.trim()) ? `${year.trim()}年` : "";
+  const variant = [code, y].filter(Boolean).join(" · ") || undefined;
+  const modelKey = slugify(`dyson-${modelName}${variant ? "-" + variant : ""}`);
+  return { modelKey, category: "dyson", brand: "Dyson", modelName, variant };
+}
+
 // AirPods：us3c 格式 "Apple AirPods Pro 2 MagSafe Lightning A2931 A2699 A2698"
 // 1) 去掉 Apple 前綴
 // 2) 去掉行末 "AXXXX" 型號代碼（多個 model number 用空白分隔）

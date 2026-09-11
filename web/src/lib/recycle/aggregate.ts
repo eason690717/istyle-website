@@ -2,7 +2,7 @@
 // 公式：往 Apple 官方價靠攏，避免被同業哄抬而虧本收
 // 寫入前統一透過 normalize-model 正規化（資料源頭統一）
 import { prisma } from "@/lib/prisma";
-import { scrapeSource1, scrapeSource2, scrapeSource3, scrapeUs3cAirPods, scrapeUs3cAndroid, type ScrapedRow } from "./sources";
+import { scrapeSource1, scrapeSource2, scrapeSource3, scrapeUs3cAirPods, scrapeUs3cAndroid, scrapeUs3cConsoles, scrapeUs3cDyson, type ScrapedRow } from "./sources";
 import { normalizeRecycleRow } from "@/lib/normalize-model";
 import { notifyOwner } from "@/lib/notify";
 
@@ -67,19 +67,23 @@ export async function refreshRecyclePrices() {
   const officialMargin = setting?.recycleOfficialMargin ?? 0.4;
   const competitorDiscount = setting?.recycleCompetitorDiscount ?? 0.85;
 
-  const [r1, r2, r3, rA, rD] = await Promise.allSettled([
+  const [r1, r2, r3, rA, rD, rC, rY] = await Promise.allSettled([
     scrapeSource1(),
     scrapeSource2(),
     scrapeSource3(),
     scrapeUs3cAirPods(),
     scrapeUs3cAndroid(),
+    scrapeUs3cConsoles(),
+    scrapeUs3cDyson(),
   ]);
   const s1 = r1.status === "fulfilled" ? r1.value : [];
-  // AirPods 與 Android 來源同 us3c，併入 s2 一起參與 source2Price 計算
+  // AirPods / Android / 遊戲主機 / Dyson 來源同 us3c，併入 s2 一起參與 source2Price 計算
   const s2 = [
     ...(r2.status === "fulfilled" ? r2.value : []),
     ...(rA.status === "fulfilled" ? rA.value : []),
     ...(rD.status === "fulfilled" ? rD.value : []),
+    ...(rC.status === "fulfilled" ? rC.value : []),
+    ...(rY.status === "fulfilled" ? rY.value : []),
   ];
   const s3 = r3.status === "fulfilled" ? r3.value : [];
 
@@ -88,7 +92,7 @@ export async function refreshRecyclePrices() {
   const health = await Promise.all([
     judgeSource("source1", s1.length, r1.status === "rejected" ? String(r1.reason) : undefined),
     judgeSource("source2", s2.length,
-      [r2, rA, rD].filter(r => r.status === "rejected").map(r => String((r as PromiseRejectedResult).reason)).join(" | ") || undefined),
+      [r2, rA, rD, rC, rY].filter(r => r.status === "rejected").map(r => String((r as PromiseRejectedResult).reason)).join(" | ") || undefined),
     judgeSource("source3", s3.length, r3.status === "rejected" ? String(r3.reason) : undefined),
   ]);
   for (const h of health) await logScrape(h.source, h.status, h.count, startedAt, h.errorMsg);
