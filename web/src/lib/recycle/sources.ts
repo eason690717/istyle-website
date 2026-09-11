@@ -1,7 +1,7 @@
 // 三個來源網站的爬蟲（不對外洩露來源資訊）
 import * as cheerio from "cheerio";
 import {
-  parseModelByCategory, parseGenericModel, parsePriceText,
+  parseModelByCategory, parseGenericModel, parsePriceText, parseUs3cAndroid,
   type Category, type ParsedModel,
 } from "./normalizer";
 import { isReasonablePrice, strictParsePrice } from "./validation";
@@ -155,6 +155,24 @@ export async function scrapeUs3cAirPods(): Promise<ScrapedRow[]> {
   return results;
 }
 
+// === Source 2 補：us3c Android（Samsung / Google / Xiaomi 分容量收購價） ===========
+// 非 Apple 品牌原本只有 jyes 一個來源；多一個來源才能交叉比價
+export async function scrapeUs3cAndroid(): Promise<ScrapedRow[]> {
+  const results: ScrapedRow[] = [];
+  try {
+    const html = await fetchHtml("https://www.us3c.com.tw/promotion-recycle-android");
+    for (const row of extractUs3cRows(html)) {
+      if (!isReasonablePrice(row.us3cPrice, "phone")) {
+        console.warn(`[source2 android] 異常價 ${row.model} = ${row.us3cPrice}`);
+        continue;
+      }
+      const parsed = parseUs3cAndroid(row.model);
+      if (parsed) results.push({ ...parsed, price: row.us3cPrice });
+    }
+  } catch (e) { console.error("[source2 android]", e); }
+  return results;
+}
+
 // === Source 3：jyes（全品牌主頁，含 Samsung、OPPO、vivo、Sony…） =================
 const SOURCE3_PAGES: Array<{ cid: number; brand: string; category: Category }> = [
   { cid: 1,  brand: "Apple",    category: "phone" },
@@ -179,43 +197,103 @@ const SOURCE3_PAGES: Array<{ cid: number; brand: string; category: Category }> =
   { cid: 86, brand: "HONOR",    category: "phone" },
 ];
 
+// 並行上限：688 個詳細頁若循序抓約 5 分鐘（撞 cron timeout），全並行又太粗暴。
+// 8 條並行實測約 40 秒，且對來源網站負擔合理。
+const SOURCE3_DETAIL_CONCURRENCY = 8;
+
+async function mapWithConcurrency<T, R>(items: T[], limit: number, fn: (item: T) => Promise<R>): Promise<R[]> {
+  const out: R[] = new Array(items.length);
+  let next = 0;
+  async function worker() {
+    while (next < items.length) {
+      const i = next++;
+      out[i] = await fn(items[i]);
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
+  return out;
+}
+
+async function fetchHtmlWithTimeout(url: string, ms = 15000): Promise<string> {
+  const res = await fetch(url, {
+    headers: {
+      "User-Agent": UA,
+      "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.8",
+    },
+    cache: "no-store",
+    signal: AbortSignal.timeout(ms),
+  });
+  if (!res.ok) throw new Error(`Fetch ${url} → ${res.status}`);
+  return await res.text();
+}
+
+interface Source3Listing { name: string; detailUrl: string; brand: string; category: Category }
+
+// 2026-09 改版：列表頁只給「該機型最高回收價」，沒有容量 —— 對手機／平板來說資訊不足
+// （同一支 iPhone 128GB 與 1TB 差好幾千），前台因此把這些列全部濾掉，
+// 導致 Samsung、OPPO、Google、Sony 等非 Apple 品牌幾乎沒有自助查價。
+// 每一列都有「詳細價格」連結，詳細頁有 [容量, 回收價] 表格，改從詳細頁逐容量抓取。
+// 附帶好處：jyes 的 iPhone 資料有了容量後，能與另外兩個來源用同一個 modelKey 合併，
+// 才算真正的三來源比價（先前三方交集為 0）。
 export async function scrapeSource3(): Promise<ScrapedRow[]> {
-  const results: ScrapedRow[] = [];
+  // 1. 從各品牌列表頁收集機型與詳細頁網址
+  const listings: Source3Listing[] = [];
   for (const page of SOURCE3_PAGES) {
     try {
-      const url = `https://www.jyes.com.tw/recycle.php?act=list&cid=${page.cid}`;
-      const html = await fetchHtml(url);
+      const html = await fetchHtmlWithTimeout(`https://www.jyes.com.tw/recycle.php?act=list&cid=${page.cid}`);
       const $ = cheerio.load(html);
-      // jyes 表格固定 4 欄：[名稱, 名稱(重複), $價格, 詳細價格]
-      // 嚴格只取「以 $ 開頭」的 cell 當價格，避免被名稱裡的數字誤判
+      $("table tr").each((_, tr) => {
+        const name = $(tr).find("td").first().text().trim();
+        // 只跳過真正的表頭列（jyes 每列都以「舊機高額回收價」結尾，不能用 /回收價$/ 寬鬆比對）
+        if (!name || /^(商品名稱|商品|名稱|最高回收價|回收價)$/.test(name)) return;
+        const link = $(tr).find("a").filter((_, a) => /詳細/.test($(a).text())).first().attr("href");
+        if (!link) return;
+        listings.push({
+          name: name.replace(/舊機高額回收價/g, "").trim(),
+          detailUrl: new URL(link, "https://www.jyes.com.tw/").href,
+          brand: page.brand,
+          category: page.category,
+        });
+      });
+    } catch (e) { console.error(`[source3 list cid=${page.cid}]`, e); }
+  }
+
+  // 2. 並行抓詳細頁，每個容量各產生一筆
+  let detailOk = 0, detailFail = 0, detailEmpty = 0;
+  const perModel = await mapWithConcurrency(listings, SOURCE3_DETAIL_CONCURRENCY, async (l) => {
+    const rows: ScrapedRow[] = [];
+    try {
+      const html = await fetchHtmlWithTimeout(l.detailUrl);
+      const $ = cheerio.load(html);
       $("table tr").each((_, tr) => {
         const cells = $(tr).find("td").map((_, td) => $(td).text().trim()).get();
-        if (cells.length < 3) return;
-        const modelText = cells[0];
-        // 只跳過真正的表頭列。注意不能用 /回收價$/ 之類的寬鬆比對：
-        // jyes 每一列商品名稱都以「舊機高額回收價」結尾，會把整張表全部誤判成表頭。
-        if (/^(商品名稱|商品|名稱|最高回收價|回收價)$/.test(modelText)) return;
-        // strict：price cell 必須以 $ 起頭
-        const priceCell = cells.find(c => /^\$/.test(c.trim()));
-        if (!priceCell) return;
+        if (cells.length < 2) return;
+        const [capCell, priceCell] = cells;
+        if (!/^\$/.test(priceCell.trim())) return;          // 表頭列「容量 | 回收價」不會以 $ 開頭
         const price = strictParsePrice(priceCell);
         if (!price) return;
-        // 合理性檢查
-        if (!isReasonablePrice(price, page.category)) {
-          console.warn(`[source3] 異常價 cid=${page.cid} ${modelText} = ${price}`);
+        if (!isReasonablePrice(price, l.category)) {
+          console.warn(`[source3] 異常價 ${l.name} ${capCell} = ${price}`);
           return;
         }
-        const looksApple = /iphone|ipad/i.test(modelText);
-        let parsed: ParsedModel | null = null;
-        const cleanedName = modelText.replace(/舊機高額回收價/g, "").trim();
-        if (looksApple) {
-          parsed = parseModelByCategory(cleanedName, page.category);
-        } else {
-          parsed = parseGenericModel(cleanedName, page.brand, page.category);
-        }
-        if (parsed) results.push({ ...parsed, price });
+        // 把容量接在名稱後面交給既有 parser，容量白名單與名稱清理邏輯就能共用
+        const withCap = `${l.name} ${capCell}`;
+        const parsed = /iphone|ipad/i.test(l.name)
+          ? parseModelByCategory(withCap, l.category)
+          : parseGenericModel(withCap, l.brand, l.category);
+        // 詳細頁一定有容量；解析不出容量代表格式異常，寧可丟掉也不要產生無容量列
+        if (parsed?.storage) rows.push({ ...parsed, price });
       });
-    } catch (e) { console.error(`[source3 cid=${page.cid}]`, e); }
-  }
+      if (rows.length) detailOk++; else detailEmpty++;
+    } catch (e) {
+      detailFail++;
+      console.warn(`[source3 detail] ${l.detailUrl}`, String(e).slice(0, 120));
+    }
+    return rows;
+  });
+
+  const results = perModel.flat();
+  console.log(`[source3] 機型 ${listings.length}，詳細頁成功 ${detailOk}／空白 ${detailEmpty}／失敗 ${detailFail}，產出 ${results.length} 筆（含容量）`);
   return results;
 }

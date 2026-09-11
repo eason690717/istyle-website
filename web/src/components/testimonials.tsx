@@ -27,7 +27,7 @@ export function TestimonialsGrid({ limit = 6 }: { limit?: number }) {
           </div>
           <p className="mt-3 text-sm leading-relaxed text-[var(--fg)]">"{t.comment}"</p>
           {t.source && (
-            <div className="mt-3 text-[10px] uppercase tracking-wider text-[var(--gold-soft)]">
+            <div className="mt-3 text-[11px] uppercase tracking-wider text-[var(--gold-soft)]">
               {SOURCE_LABEL[t.source]}．{t.date}
             </div>
           )}

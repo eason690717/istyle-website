@@ -11,7 +11,7 @@ export function CaseCard({ c, compact = false }: { c: CaseStudy; compact?: boole
             {src && (
               <Image src={src} alt={idx === 0 ? "維修前" : "維修後"} fill className="object-cover" sizes="200px" />
             )}
-            <span className="absolute left-2 top-2 rounded bg-black/70 px-2 py-0.5 text-[10px] text-[var(--gold)]">
+            <span className="absolute left-2 top-2 rounded bg-black/70 px-2 py-0.5 text-[11px] text-[var(--gold)]">
               {idx === 0 ? "維修前" : "維修後"}
             </span>
           </div>
@@ -31,7 +31,7 @@ export function CaseCard({ c, compact = false }: { c: CaseStudy; compact?: boole
             </p>
           </>
         )}
-        <div className="mt-3 flex items-center justify-between text-[10px] text-[var(--fg-muted)]">
+        <div className="mt-3 flex items-center justify-between text-[11px] text-[var(--fg-muted)]">
           <span>⏱ {c.duration}</span>
           <span>{"★".repeat(c.rating)}</span>
         </div>

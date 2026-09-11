@@ -20,7 +20,7 @@ export default function CheckoutPage() {
       <div className="mt-8">
         <CheckoutForm />
       </div>
-      <p className="mt-6 text-center text-[10px] text-[var(--fg-muted)]">
+      <p className="mt-6 text-center text-[11px] text-[var(--fg-muted)]">
         🔒 採用 SSL 加密與綠界 ECPay 安全金流．資料僅用於本次訂單
       </p>
     </div>

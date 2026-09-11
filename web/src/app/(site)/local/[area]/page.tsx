@@ -217,7 +217,7 @@ function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="text-center">
       <div className="font-serif text-2xl text-[var(--gold)] md:text-3xl">{value}</div>
-      <div className="mt-1 text-[10px] text-[var(--fg-muted)]">{label}</div>
+      <div className="mt-1 text-[11px] text-[var(--fg-muted)]">{label}</div>
     </div>
   );
 }

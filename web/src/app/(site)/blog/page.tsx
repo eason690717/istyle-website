@@ -65,7 +65,7 @@ export default async function BlogIndexPage() {
           >
             <div className="relative aspect-[16/9] bg-[var(--bg-soft)]">
               <Image src={c.cover} alt={c.title} fill className="object-cover" sizes="400px" />
-              <span className="absolute left-3 top-3 rounded bg-black/70 px-2 py-0.5 text-[10px] text-[var(--gold)]">
+              <span className="absolute left-3 top-3 rounded bg-black/70 px-2 py-0.5 text-[11px] text-[var(--gold)]">
                 {c.badge}
               </span>
             </div>
@@ -76,7 +76,7 @@ export default async function BlogIndexPage() {
               <p className="mt-2 text-xs text-[var(--fg-muted)] line-clamp-3 leading-relaxed">
                 {c.excerpt}
               </p>
-              <div className="mt-3 text-[10px] text-[var(--fg-muted)]">
+              <div className="mt-3 text-[11px] text-[var(--fg-muted)]">
                 {c.date}
               </div>
             </div>

@@ -70,7 +70,7 @@ export default function BookingPage() {
         >
           ☎ 直接撥打 {SITE.phone}
         </a>
-        <p className="mt-1 text-[10px] text-[var(--fg-muted)]">營業時間 11:00 – 21:00</p>
+        <p className="mt-1 text-[11px] text-[var(--fg-muted)]">營業時間 11:00 – 21:00</p>
       </div>
 
       {/* 4 種服務範圍提示 */}

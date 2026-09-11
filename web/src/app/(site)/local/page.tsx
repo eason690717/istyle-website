@@ -35,7 +35,7 @@ export default function LocalIndexPage() {
             <p className="mt-1 text-xs text-[var(--fg-muted)]">{a.fullName}</p>
             <div className="mt-3 flex flex-wrap gap-1">
               {a.popularServices.slice(0, 3).map(s => (
-                <span key={s} className="rounded bg-[var(--gold)]/10 px-2 py-0.5 text-[10px] text-[var(--gold-bright)]">
+                <span key={s} className="rounded bg-[var(--gold)]/10 px-2 py-0.5 text-[11px] text-[var(--gold-bright)]">
                   {s}
                 </span>
               ))}

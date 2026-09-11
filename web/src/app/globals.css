@@ -50,6 +50,9 @@
   --color-fg: var(--fg);
   --color-fg-muted: var(--fg-muted);
   --color-fg-strong: var(--fg-strong);
+  /* 12px 在深色底上太細小（淺字深底本來就會顯得更細），全站 162 處 text-xs 一次提到 13px */
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.25rem;
   --font-sans: var(--font-noto-sans), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-noto-serif), ui-serif, Georgia, serif;
 }

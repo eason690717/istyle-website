@@ -80,7 +80,7 @@ export default function CoursesPage() {
           <p className="mt-2 text-sm text-[var(--fg-muted)]">
             分 iPhone 班 / Android 班 / 全系列班<br />
             主力 1-2 級實作（換螢幕 / 電池 / 充電孔 / 周邊模組）<br />
-            <span className="text-[10px]">⚠️ 不教主機板 BGA — 短期班學不會，我們不騙你</span>
+            <span className="text-[11px]">⚠️ 不教主機板 BGA — 短期班學不會，我們不騙你</span>
           </p>
         </header>
 
@@ -159,7 +159,7 @@ function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)] p-4 text-center">
       <div className="font-serif text-2xl text-[var(--gold)] md:text-3xl">{value}</div>
-      <div className="mt-1 text-[10px] text-[var(--fg-muted)]">{label}</div>
+      <div className="mt-1 text-[11px] text-[var(--fg-muted)]">{label}</div>
     </div>
   );
 }
@@ -178,12 +178,12 @@ function CourseCard({ c }: { c: typeof COURSES[number] }) {
   return (
     <div className={`relative flex flex-col overflow-hidden rounded-2xl border-2 ${isPopular ? "border-[var(--gold)] shadow-lg shadow-[var(--gold)]/20" : "border-[var(--border)]"} bg-[var(--bg-elevated)] p-5`}>
       {isPopular && (
-        <div className="absolute -right-8 top-3 rotate-45 bg-[var(--gold)] px-10 py-1 text-[10px] font-bold text-black">
+        <div className="absolute -right-8 top-3 rotate-45 bg-[var(--gold)] px-10 py-1 text-[11px] font-bold text-black">
           熱門
         </div>
       )}
       <div className="mb-3">
-        <div className={`mb-2 inline-flex items-center gap-1 rounded-full bg-gradient-to-r ${badge.color} px-2.5 py-0.5 text-[10px] font-medium text-white`}>
+        <div className={`mb-2 inline-flex items-center gap-1 rounded-full bg-gradient-to-r ${badge.color} px-2.5 py-0.5 text-[11px] font-medium text-white`}>
           <span>{badge.icon}</span>
           <span>{badge.label}</span>
         </div>
@@ -198,7 +198,7 @@ function CourseCard({ c }: { c: typeof COURSES[number] }) {
           <>
             <span className="font-serif text-3xl font-bold text-[var(--gold-bright)]">${c.earlyBirdPrice.toLocaleString()}</span>
             <span className="text-xs text-[var(--fg-muted)] line-through">${c.price.toLocaleString()}</span>
-            <span className="rounded bg-red-500/20 px-1.5 py-0.5 text-[10px] text-red-400">早鳥</span>
+            <span className="rounded bg-red-500/20 px-1.5 py-0.5 text-[11px] text-red-400">早鳥</span>
           </>
         ) : (
           <span className="font-serif text-3xl font-bold text-[var(--gold-bright)]">${c.price.toLocaleString()}</span>

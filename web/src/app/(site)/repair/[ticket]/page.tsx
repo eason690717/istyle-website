@@ -102,7 +102,7 @@ export default async function RepairTicketPage({
           return (
             <div key={s} className="text-center">
               <div className={`mx-auto mb-1 h-2 rounded-full ${reached ? "bg-[var(--gold)]" : "bg-[var(--border)]"}`} />
-              <div className={`text-[10px] ${reached ? "text-[var(--fg)]" : "text-[var(--fg-muted)]"}`}>{info.label}</div>
+              <div className={`text-[11px] ${reached ? "text-[var(--fg)]" : "text-[var(--fg-muted)]"}`}>{info.label}</div>
             </div>
           );
         })}

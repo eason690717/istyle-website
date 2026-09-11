@@ -23,7 +23,7 @@ export function CountdownClient({ targetIso }: { targetIso: string }) {
   if (!remain) return null;
   const pad = (n: number) => n.toString().padStart(2, "0");
   return (
-    <span className="rounded-full border border-[var(--gold)]/30 bg-black/40 px-2 py-0.5 font-mono text-[10px] text-[var(--gold-bright)]">
+    <span className="rounded-full border border-[var(--gold)]/30 bg-black/40 px-2 py-0.5 font-mono text-[11px] text-[var(--gold-bright)]">
       限時 {remain.d > 0 ? `${remain.d} 天 ` : ""}{pad(remain.h)}:{pad(remain.m)}:{pad(remain.s)}
     </span>
   );

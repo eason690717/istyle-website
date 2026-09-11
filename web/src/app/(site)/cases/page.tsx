@@ -56,13 +56,13 @@ export default async function CasesPage() {
                   </div>
                 )}
                 <div className="p-4">
-                  <div className="flex flex-wrap gap-1 text-[10px]">
+                  <div className="flex flex-wrap gap-1 text-[11px]">
                     <span className="rounded bg-[var(--gold)]/10 px-2 py-0.5 text-[var(--gold-bright)]">{c.brand}</span>
                     <span className="rounded bg-[var(--border)] px-2 py-0.5 text-[var(--fg-muted)]">{c.issueType}</span>
                   </div>
                   <h3 className="mt-2 font-serif text-base text-[var(--fg)] group-hover:text-[var(--gold)]">{c.title}</h3>
                   <p className="mt-1 text-xs text-[var(--fg-muted)]">{c.deviceModel}</p>
-                  <div className="mt-3 flex justify-between text-[10px] text-[var(--fg-muted)]">
+                  <div className="mt-3 flex justify-between text-[11px] text-[var(--fg-muted)]">
                     {c.repairMinutes && <span>⏱ {c.repairMinutes} 分鐘</span>}
                     {c.cost != null && <span>💰 NT$ {c.cost.toLocaleString()}</span>}
                   </div>

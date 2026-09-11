@@ -214,7 +214,7 @@ function PriceMatrix({
                       rec ? "bg-[var(--gold)] text-black" : ""
                     }`}
                   >
-                    {rec && <span className="mr-1 text-[10px]">★ 推薦</span>}
+                    {rec && <span className="mr-1 text-[11px]">★ 推薦</span>}
                     {it.name}
                   </th>
                 );

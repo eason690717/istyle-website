@@ -100,7 +100,7 @@ export function CheckoutForm() {
                 <div className="truncate text-[var(--fg)]">
                   {it.kind === "product" ? it.title : [it.modelName, it.itemName].filter(Boolean).join(" · ")}
                 </div>
-                <div className="text-[10px] text-[var(--fg-muted)]">
+                <div className="text-[11px] text-[var(--fg-muted)]">
                   {[it.tierLabel || it.subtitle, `× ${it.qty}`].filter(Boolean).join(" ")}
                 </div>
               </div>
@@ -157,7 +157,7 @@ export function CheckoutForm() {
                       <span className="rounded bg-[var(--gold-soft)]/20 px-1.5 py-0.5 text-[9px] text-[var(--gold-soft)]">✋ 手動</span>
                     )}
                   </div>
-                  <div className="text-[10px] text-[var(--fg-muted)]">{opt.hint}</div>
+                  <div className="text-[11px] text-[var(--fg-muted)]">{opt.hint}</div>
                 </div>
               </div>
               <div className="font-mono text-sm text-[var(--gold)]">
@@ -198,7 +198,7 @@ export function CheckoutForm() {
         {pending ? "建立付款中..." : `前往綠界付款 ${formatTwd(total)} →`}
       </button>
 
-      <p className="text-center text-[10px] text-[var(--fg-muted)]">
+      <p className="text-center text-[11px] text-[var(--fg-muted)]">
         點擊後將跳轉到綠界 ECPay 安全付款頁面．支援信用卡 / ATM / 7-11 代碼
       </p>
     </form>

@@ -54,7 +54,7 @@ export function CartView() {
                   <span className="text-sm font-medium text-[var(--fg-strong)]">{it.title}</span>
                 )}
                 <div className="mt-1 flex flex-wrap items-center gap-2 text-xs">
-                  <span className={`rounded px-2 py-0.5 text-[10px] ${
+                  <span className={`rounded px-2 py-0.5 text-[11px] ${
                     it.kind === "product"
                       ? "bg-[var(--accent-cool)]/20 text-[var(--accent-cool)]"
                       : "bg-[var(--gold)]/15 text-[var(--gold)]"
@@ -87,7 +87,7 @@ export function CartView() {
                 </div>
                 <button
                   onClick={() => remove(it.key)}
-                  className="text-[10px] text-[var(--fg-muted)] underline hover:text-red-400"
+                  className="text-[11px] text-[var(--fg-muted)] underline hover:text-red-400"
                 >
                   移除
                 </button>
@@ -104,7 +104,7 @@ export function CartView() {
               {formatTwd(subtotal)}
             </span>
           </div>
-          <p className="mt-1 text-[10px] text-[var(--fg-muted)]">
+          <p className="mt-1 text-[11px] text-[var(--fg-muted)]">
             ＊ 配送費 / 急件費等下一步計算
           </p>
         </div>

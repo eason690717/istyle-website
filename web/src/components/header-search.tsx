@@ -100,11 +100,11 @@ export function HeaderSearch() {
                   className="block p-3 transition hover:bg-[var(--bg-soft)]"
                 >
                   <div className="flex items-center gap-2">
-                    <span className="rounded bg-[var(--gold)]/15 px-2 py-0.5 text-[10px] text-[var(--gold)]">{r.brandName}</span>
+                    <span className="rounded bg-[var(--gold)]/15 px-2 py-0.5 text-[11px] text-[var(--gold)]">{r.brandName}</span>
                     <span className="text-sm font-medium text-[var(--fg)]">{r.modelName}</span>
                   </div>
                   {r.topItems.length > 0 && (
-                    <div className="mt-1 text-[10px] text-[var(--fg-muted)]">
+                    <div className="mt-1 text-[11px] text-[var(--fg-muted)]">
                       {r.topItems.slice(0, 2).map(it => `${it.name} $${it.price.toLocaleString()}`).join("．")}
                     </div>
                   )}

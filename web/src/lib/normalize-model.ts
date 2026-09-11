@@ -79,16 +79,25 @@ const VALID_TB = new Set([1, 2, 4, 8]);
 
 // 容量正規化：256G/256g/256GB → "256GB"，1T/1TB → "1TB"，1024GB → "1TB"
 // 非白名單值一律回 null（寧可沒有容量，也不要錯的容量）
+// 掃描字串中「所有」容量候選，回傳白名單內最大的一個。
+// 只看第一個會出錯：「iPad Air 11 M3 Wi-Fi+5G 256G」第一個命中是 5G（行動網路）→ 被白名單擋掉 → 整筆遺失；
+// 「Galaxy Z Fold7 5G 16G 1TB」第一個合法值是 16G（記憶體）。儲存容量一定大於記憶體，取最大值最穩。
 export function normalizeStorage(raw: string | null | undefined): string | null {
   if (!raw) return null;
-  const m = raw.toString().match(/(\d+(?:\.\d+)?)\s*(TB|T|GB|G)\b/i);
-  if (!m) return null;
-  const num = parseFloat(m[1]);
-  if (!Number.isFinite(num)) return null;
-  const isTB = /^T/i.test(m[2]);
-  if (!isTB && num === 1024) return "1TB";   // 1024GB 統一寫成 1TB
-  if (isTB) return VALID_TB.has(num) ? `${num}TB` : null;
-  return VALID_GB.has(num) ? `${num}GB` : null;
+  let bestGb = -1;
+  let best: string | null = null;
+  for (const m of raw.toString().matchAll(/(\d+(?:\.\d+)?)\s*(TB|T|GB|G)\b/gi)) {
+    const num = parseFloat(m[1]);
+    if (!Number.isFinite(num)) continue;
+    const isTB = /^T/i.test(m[2]);
+    let label: string | null = null;
+    let gb = 0;
+    if (!isTB && num === 1024) { label = "1TB"; gb = 1024; }   // 1024GB 統一寫成 1TB
+    else if (isTB && VALID_TB.has(num)) { label = `${num}TB`; gb = num * 1024; }
+    else if (!isTB && VALID_GB.has(num)) { label = `${num}GB`; gb = num; }
+    if (label && gb > bestGb) { bestGb = gb; best = label; }
+  }
+  return best;
 }
 
 // 規格正規化：WiFi+5G / WiFi + 5G / Wi-Fi+LTE → "WiFi+5G" 或 "WiFi"

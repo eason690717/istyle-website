@@ -94,10 +94,10 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
                   <div className="flex h-full w-full items-center justify-center text-4xl text-[var(--fg-muted)]">📦</div>
                 )}
                 {p.isFeatured && (
-                  <span className="absolute left-2 top-2 rounded bg-[var(--gold)] px-2 py-0.5 text-[10px] font-bold text-black">★ 精選</span>
+                  <span className="absolute left-2 top-2 rounded bg-[var(--gold)] px-2 py-0.5 text-[11px] font-bold text-black">★ 精選</span>
                 )}
                 {p.comparePrice && p.comparePrice > p.price && (
-                  <span className="absolute right-2 top-2 rounded bg-red-500 px-2 py-0.5 text-[10px] font-bold text-white">
+                  <span className="absolute right-2 top-2 rounded bg-red-500 px-2 py-0.5 text-[11px] font-bold text-white">
                     -{Math.round((1 - p.price / p.comparePrice) * 100)}%
                   </span>
                 )}
@@ -108,7 +108,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
                 )}
               </div>
               <div className="p-4">
-                <div className="text-[10px] text-[var(--gold-soft)]">{CATEGORY_LABELS[p.category] || p.category}</div>
+                <div className="text-[11px] text-[var(--gold-soft)]">{CATEGORY_LABELS[p.category] || p.category}</div>
                 <h2 className="mt-1 line-clamp-2 text-sm font-medium leading-snug text-[var(--fg)] group-hover:text-[var(--gold)]">
                   {p.name}
                 </h2>

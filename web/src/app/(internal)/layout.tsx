@@ -12,7 +12,9 @@ import { ToastContainer } from "@/components/toast";
 const notoSans = Noto_Sans_TC({
   variable: "--font-noto-sans",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "700"],
+  // 300 全站沒用到（拿掉省下載量）；補上 600／800 —— 先前沒載入，
+  // font-semibold 只能被瀏覽器替換成 700 或假粗體，字看起來發虛
+  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
 });
 

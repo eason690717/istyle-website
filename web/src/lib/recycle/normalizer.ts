@@ -18,11 +18,21 @@ function normalizeStorage(raw: string): string | undefined {
   return normalizeStorageCanonical(raw) ?? undefined;
 }
 
-// 只有在真的解析出容量時，才把「數字+容量單位」後綴從機型名稱切掉。
-// 否則「小米 15T Pro」會被切成「小米」，機型名稱整個消失。
+// 只有在真的解析出容量時，才把容量從機型名稱剝掉，而且是「從字尾逐個 token 剝、只剝合法容量」。
+//   ✗ 從第一個「數字+G」切到底：「小米 15T Pro 256G」會被切成「小米」
+//   ✗ 字尾整串一起剝：「realme GT Neo 3T 256G」會連 3T 一起剝成「realme GT Neo」
+//   ✓ 逐個剝：256G 合法 → 剝；3T 不在白名單 → 屬於機型名稱，停
+// 另外順手剝掉「12G/512G」裡的記憶體前綴「12G/」。
 function stripStorageSuffix(cleaned: string, storage: string | undefined): string {
   if (!storage) return cleaned;
-  return cleaned.replace(/\s*\d+\s*(?:TB|T|GB|G)\b.*$/i, "").trim() || cleaned;
+  let s = cleaned;
+  for (;;) {
+    const m = s.match(/\s*(\d+(?:\.\d+)?\s*(?:TB|T|GB|G))\s*$/i);
+    if (!m || m.index === undefined) break;
+    if (!normalizeStorage(m[1])) break;
+    s = s.slice(0, m.index).replace(/\s*\d+(?:\.\d+)?\s*G\s*\/\s*$/i, "").trim();
+  }
+  return s || cleaned;
 }
 
 function slugify(s: string): string {
@@ -52,11 +62,11 @@ export function parseIpad(raw: string): ParsedModel | null {
   const storage = normalizeStorage(cleaned);
   let variant: string | undefined;
   if (/5G|LTE|cellular|蜂窩|行動網路/i.test(cleaned)) variant = "WiFi+5G";
-  else if (/wifi/i.test(cleaned)) variant = "WiFi";
+  else if (/wi-?fi/i.test(cleaned)) variant = "WiFi";   // jyes 寫 Wi-Fi，us3c 寫 WiFi
   let baseName = cleaned
     .replace(/\s*\d+\s*(?:TB|T|GB|G)\b/gi, "")
-    .replace(/wifi\s*\+?\s*(?:5G|LTE|cellular|蜂窩|行動網路)/gi, "")
-    .replace(/\b(?:wifi|5G|LTE|cellular|蜂窩|行動網路)\b/gi, "")
+    .replace(/wi-?fi\s*\+?\s*(?:5G|LTE|cellular|蜂窩|行動網路)/gi, "")
+    .replace(/\b(?:wi-?fi|5G|LTE|cellular|蜂窩|行動網路)\b/gi, "")
     .replace(/[+,]/g, "")
     .replace(/\s+/g, " ")
     .trim();
@@ -114,6 +124,29 @@ export function parseGenericModel(raw: string, brand: string, category: Category
   const baseName = stripStorageSuffix(cleaned, storage);
   const modelKey = slugify(`${brand}-${baseName}${storage ? "-" + storage : ""}`);
   return { modelKey, category, brand, modelName: baseName, storage };
+}
+
+// us3c Android 格式："Samsung Galaxy S26 Ultra 5G 12G/512G SM-S9480"
+//                    "Google Pixel 10 Pro Fold 5G 16G/1TB"、"Xiaomi 小米 15T Pro 12G/1T"
+// 規格一律寫成「記憶體 + 容量」（12G/512G、16G 1TB），在第一個這種組合前切開，
+// 其後的型號代碼（SM-S9480）也一併去掉。
+// 名稱要與 jyes 對齊才能合併比價：jyes 寫「SAMSUNG S26 Ultra」不寫 Galaxy，所以 Galaxy 要拿掉。
+export function parseUs3cAndroid(raw: string): ParsedModel | null {
+  const cleaned = raw.replace(/\s+/g, " ").trim();
+  const storage = normalizeStorage(cleaned);
+  if (!storage) return null;
+  const brand = cleaned.split(" ")[0];
+  const cut = cleaned.search(/\b\d+G(?:\/|\s+)\d+(?:\.\d+)?\s*(?:TB|T|GB|G)\b/i);
+  let modelName = (cut > 0 ? cleaned.slice(0, cut) : cleaned)
+    .replace(/\s+[45]G\s*$/i, "")                          // 行動網路世代不是機型的一部分
+    .trim();
+  // 用 startsWith 而非 new RegExp(`^${brand}\s+`)：樣板字串裡的 \s 會被當成未知跳脫而吞掉反斜線，
+  // 實際變成 /^Samsungs+/，永遠比對不到
+  if (modelName.toLowerCase().startsWith(brand.toLowerCase() + " ")) modelName = modelName.slice(brand.length + 1);
+  modelName = modelName.replace(/^Galaxy\s+/i, "").trim();
+  if (!modelName) return null;
+  const modelKey = slugify(`${brand}-${modelName}-${storage}`);
+  return { modelKey, category: "phone", brand, modelName, storage };
 }
 
 // AirPods：us3c 格式 "Apple AirPods Pro 2 MagSafe Lightning A2931 A2699 A2698"

@@ -86,7 +86,7 @@ export function ExitIntent() {
           <div className="relative">
             <div className="mx-auto mb-4 flex w-fit items-center gap-2 rounded-full border border-[var(--gold)]/40 bg-[var(--gold)]/10 px-4 py-1.5">
               <span className="h-2 w-2 animate-pulse rounded-full bg-[var(--gold)]" />
-              <span className="text-[10px] font-medium uppercase tracking-wider text-[var(--gold-bright)]">限時優惠</span>
+              <span className="text-[11px] font-medium uppercase tracking-wider text-[var(--gold-bright)]">限時優惠</span>
             </div>
 
             {/* 大數字 — 視覺主角 */}
@@ -114,7 +114,7 @@ export function ExitIntent() {
                 "不修不收費，透明報價",
               ].map((t) => (
                 <li key={t} className="flex items-center gap-2">
-                  <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[var(--gold)]/20 text-[10px] text-[var(--gold-bright)]">✓</span>
+                  <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[var(--gold)]/20 text-[11px] text-[var(--gold-bright)]">✓</span>
                   <span>{t}</span>
                 </li>
               ))}
@@ -142,7 +142,7 @@ export function ExitIntent() {
 
             <button
               onClick={close}
-              className="mt-3 block w-full text-center text-[10px] text-[var(--fg-muted)]/60 hover:text-[var(--fg-muted)]"
+              className="mt-3 block w-full text-center text-[11px] text-[var(--fg-muted)]/60 hover:text-[var(--fg-muted)]"
             >
               不用了，繼續逛
             </button>

@@ -127,7 +127,7 @@ export function BookingForm() {
       )}
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-[10px] text-[var(--fg-muted)]">
+        <p className="text-[11px] text-[var(--fg-muted)]">
           資料僅用於預約聯絡
         </p>
         <button

@@ -154,7 +154,7 @@ function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] p-3 text-center">
       <div className="font-serif text-lg text-[var(--gold)]">{value}</div>
-      <div className="mt-1 text-[10px] text-[var(--fg-muted)]">{label}</div>
+      <div className="mt-1 text-[11px] text-[var(--fg-muted)]">{label}</div>
     </div>
   );
 }

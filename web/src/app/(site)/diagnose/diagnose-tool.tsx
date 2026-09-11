@@ -149,7 +149,7 @@ export function DiagnoseTool() {
                 : "border-[var(--border)] bg-[var(--bg-elevated)] hover:border-[var(--gold-soft)]"
             }`}
           >
-            <div className="text-[10px] uppercase tracking-wider text-[var(--gold-soft)]">{s.category}</div>
+            <div className="text-[11px] uppercase tracking-wider text-[var(--gold-soft)]">{s.category}</div>
             <div className="mt-1 text-sm font-medium text-[var(--fg)]">{s.label}</div>
           </button>
         ))}
@@ -170,21 +170,21 @@ export function DiagnoseTool() {
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <h3 className="font-semibold text-[var(--gold)]">{cause.name}</h3>
-                      <span className={`rounded px-2 py-0.5 text-[10px] ${URGENCY_COLOR[cause.urgency]}`}>
+                      <span className={`rounded px-2 py-0.5 text-[11px] ${URGENCY_COLOR[cause.urgency]}`}>
                         {URGENCY_LABEL[cause.urgency]}
                       </span>
                     </div>
                     <p className="mt-1 text-xs text-[var(--fg)]">{cause.description}</p>
                   </div>
                   <div className="text-right">
-                    <div className="text-[10px] text-[var(--fg-muted)]">預估</div>
+                    <div className="text-[11px] text-[var(--fg-muted)]">預估</div>
                     <div className="font-mono text-sm text-[var(--gold)]">{cause.estimatedCost}</div>
                   </div>
                 </div>
                 {cause.relatedSlug && (
                   <Link
                     href={`/blog/${cause.relatedSlug}`}
-                    className="mt-2 inline-block text-[10px] text-[var(--gold-soft)] underline hover:text-[var(--gold)]"
+                    className="mt-2 inline-block text-[11px] text-[var(--gold-soft)] underline hover:text-[var(--gold)]"
                   >
                     深入了解 →
                   </Link>

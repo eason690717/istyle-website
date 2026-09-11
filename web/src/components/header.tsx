@@ -32,7 +32,7 @@ export function Header() {
           />
           <div className="flex flex-col leading-tight">
             <span className="font-serif text-lg text-[var(--gold)] sm:text-xl">{SITE.name}</span>
-            <span className="hidden text-[10px] tracking-widest text-[var(--fg-muted)] sm:block">
+            <span className="hidden text-[11px] tracking-widest text-[var(--fg-muted)] sm:block">
               {SITE.tagline}
             </span>
           </div>

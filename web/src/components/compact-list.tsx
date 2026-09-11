@@ -61,7 +61,7 @@ export function CompactList<T>({
                   {mobileTitle(item)}
                 </div>
                 {mobileSubLine && (
-                  <div className="mt-1 flex flex-wrap items-center gap-1 text-[10px]">
+                  <div className="mt-1 flex flex-wrap items-center gap-1 text-[11px]">
                     {mobileSubLine(item)}
                   </div>
                 )}
@@ -76,14 +76,14 @@ export function CompactList<T>({
                   cta.external ? (
                     <a
                       href={cta.href}
-                      className="rounded-full bg-[var(--gold)]/15 px-2.5 py-0.5 text-[10px] text-[var(--gold)] transition hover:bg-[var(--gold)] hover:text-black"
+                      className="rounded-full bg-[var(--gold)]/15 px-2.5 py-0.5 text-[11px] text-[var(--gold)] transition hover:bg-[var(--gold)] hover:text-black"
                     >
                       {cta.label}
                     </a>
                   ) : (
                     <Link
                       href={cta.href}
-                      className="rounded-full bg-[var(--gold)]/15 px-2.5 py-0.5 text-[10px] text-[var(--gold)] transition hover:bg-[var(--gold)] hover:text-black"
+                      className="rounded-full bg-[var(--gold)]/15 px-2.5 py-0.5 text-[11px] text-[var(--gold)] transition hover:bg-[var(--gold)] hover:text-black"
                     >
                       {cta.label}
                     </Link>

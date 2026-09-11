@@ -162,9 +162,9 @@ function ResultPanel({ result, issue, budget }: { result: DecisionResult; issue:
 function Card({ label, cost, sub, highlight }: { label: string; cost: number; sub: string; highlight?: boolean }) {
   return (
     <div className={`rounded-lg border p-3 text-center ${highlight ? "border-[var(--gold)] bg-[var(--gold)]/10" : "border-[var(--border)] bg-[var(--bg-elevated)]"}`}>
-      <div className="text-[10px] text-[var(--fg-muted)]">{label}</div>
+      <div className="text-[11px] text-[var(--fg-muted)]">{label}</div>
       <div className="mt-1 font-serif text-xl text-[var(--gold)]">NT$ {cost.toLocaleString()}</div>
-      <div className="mt-1 text-[10px] text-[var(--fg-muted)]">{sub}</div>
+      <div className="mt-1 text-[11px] text-[var(--fg-muted)]">{sub}</div>
     </div>
   );
 }

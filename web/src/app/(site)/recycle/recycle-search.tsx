@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import { SITE } from "@/lib/site-config";
 import { formatTwd } from "@/lib/pricing";
 
@@ -424,7 +424,7 @@ export function RecycleSearch({
           )}
         </div>
       ) : view === "table" ? (
-        <ResultTable items={filtered.slice(0, 200)} />
+        <ResultTable items={filtered.slice(0, 200)} grouped={sortKey === "grouped" && !query.trim()} />
       ) : (
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.slice(0, 60).map((p) => (
@@ -472,14 +472,14 @@ function PriceCard({ item }: { item: PriceItem }) {
       <hr className="divider-gold my-4" />
       {item.isStale ? (
         <>
-          <div className="text-[10px] uppercase tracking-widest text-[var(--fg-muted)]">近期無市場行情</div>
+          <div className="text-[11px] uppercase tracking-widest text-[var(--fg-muted)]">近期無市場行情</div>
           <div className="font-serif text-xl font-semibold leading-tight text-[var(--fg-muted)]">
             LINE 專人估價
           </div>
         </>
       ) : (
         <>
-          <div className="text-[10px] uppercase tracking-widest text-[var(--gold-soft)]">
+          <div className="text-[11px] uppercase tracking-widest text-[var(--gold-soft)]">
             回收價（起）<span className="ml-1 normal-case tracking-normal text-[var(--fg-muted)]">{item.updatedLabel} 更新</span>
           </div>
           <div className="text-gold-gradient font-serif text-3xl font-semibold leading-tight">
@@ -495,97 +495,113 @@ function PriceCard({ item }: { item: PriceItem }) {
 }
 
 // 緊湊列表：手機版單頁不滾動 + 桌面版完整表格
-function ResultTable({ items }: { items: PriceItem[] }) {
-  return (
-    <div className="mt-4 rounded-xl border border-[var(--border)] overflow-hidden">
-      {/* === 手機版（< md）：緊湊卡片列，不滾動 === */}
-      <ul className="md:hidden divide-y divide-[var(--border-soft)]">
-        {items.map((p, idx) => (
-          <li
-            key={p.id}
-            className={`flex items-center gap-3 px-3 py-3 transition ${
-              idx % 2 === 0 ? "bg-[#141414]" : "bg-[#181818]"
-            } hover:bg-[#241c12]`}
-          >
-            {/* 左：機型名稱（兩行） + 規格徽章 */}
-            <div className="min-w-0 flex-1">
-              <div className="truncate text-sm font-medium leading-tight text-[var(--fg-strong)]">
-                {p.modelName}
-              </div>
-              <div className="mt-1 flex flex-wrap items-center gap-1 text-[10px]">
-                <span className="rounded bg-[var(--gold)]/15 px-1.5 py-0.5 text-[var(--gold)]">{p.categoryLabel}</span>
-                {p.storage && (
-                  <span className="rounded bg-[var(--bg-soft)] px-1.5 py-0.5 text-[var(--fg-muted)]">{p.storage}</span>
-                )}
-                {p.variant && (
-                  <span className="rounded bg-[var(--bg-soft)] px-1.5 py-0.5 text-[var(--fg-muted)]">{p.variant}</span>
-                )}
-              </div>
-            </div>
+// 版面比例參考業界做法（2026-09 對照實測）：
+//   機型 15px/600、價格 18px/800、列高約 60px、儲存格留白 14×16px、4-5 欄
+// 舊版 8 欄擠在一起、價格用 14px 等寬字、次要資訊只有 10-12px，深色底上顯得又細又小。
+// 品牌與類別併入機型欄上方的小字，省下兩欄給價格呼吸；預設排序時加「品牌·類別」分區標題方便掃讀。
+function groupLabel(p: PriceItem) {
+  return `${p.brand} · ${p.categoryLabel}`;
+}
 
-            {/* 右：價格 + 預約鈕 */}
-            <div className="flex flex-shrink-0 flex-col items-end gap-1">
-              {p.isStale ? (
-                <div className="text-[11px] font-medium leading-none text-[var(--fg-muted)]">詢價</div>
-              ) : (
-                <div className="font-mono text-base font-semibold text-[var(--gold)] leading-none">
-                  {p.minPrice.toLocaleString()}
+function ResultTable({ items, grouped }: { items: PriceItem[]; grouped: boolean }) {
+  // 只有在「品牌/機型分組」排序下才插入分區標題；依價格排序時各品牌交錯，標題反而干擾
+  const sectionStart = (idx: number) =>
+    grouped && (idx === 0 || groupLabel(items[idx - 1]) !== groupLabel(items[idx]));
+
+  return (
+    <div className="mt-4 overflow-hidden rounded-xl border border-[var(--border)]">
+      {/* === 手機版（< md）=== */}
+      <ul className="md:hidden">
+        {items.map((p, idx) => (
+          <li key={p.id}>
+            {sectionStart(idx) && (
+              <div className="border-t border-[var(--border)] bg-[#1f1810] px-4 py-2.5 text-[15px] font-bold tracking-wide text-[var(--gold)] first:border-t-0">
+                {groupLabel(p)}
+              </div>
+            )}
+            <div className="flex items-center gap-3 border-t border-[var(--border-soft)] px-4 py-3.5 transition hover:bg-[#241c12]">
+              <div className="min-w-0 flex-1">
+                <div className="truncate text-[15px] font-semibold leading-snug text-[var(--fg-strong)]">
+                  {p.modelName}
                 </div>
-              )}
-              <a
-                href={SITE.lineAddUrl}
-                className="rounded-full bg-[var(--gold)]/15 px-2.5 py-0.5 text-[10px] text-[var(--gold)] hover:bg-[var(--gold)] hover:text-black transition"
-              >
-                {p.isStale ? "LINE →" : "預約 →"}
-              </a>
+                <div className="mt-1.5 flex flex-wrap items-center gap-1.5 text-xs">
+                  {p.storage && (
+                    <span className="rounded-md bg-[var(--bg-soft)] px-2 py-0.5 font-medium text-[var(--fg)]">{p.storage}</span>
+                  )}
+                  {p.variant && (
+                    <span className="rounded-md bg-[var(--bg-soft)] px-2 py-0.5 text-[var(--fg-muted)]">{p.variant}</span>
+                  )}
+                  {!grouped && <span className="text-[var(--fg-muted)]">{groupLabel(p)}</span>}
+                </div>
+              </div>
+              <div className="flex flex-shrink-0 flex-col items-end gap-1.5">
+                {p.isStale ? (
+                  <div className="text-sm font-semibold text-[var(--fg-muted)]">LINE 詢價</div>
+                ) : (
+                  <div className="text-lg font-extrabold leading-none tabular-nums text-[var(--gold)]">
+                    ${p.minPrice.toLocaleString()}
+                  </div>
+                )}
+                <a
+                  href={SITE.lineAddUrl}
+                  className="whitespace-nowrap rounded-full bg-[var(--gold)]/15 px-3 py-1 text-xs font-medium text-[var(--gold)] transition hover:bg-[var(--gold)] hover:text-black"
+                >
+                  {p.isStale ? "LINE 詢問 →" : "預約回收 →"}
+                </a>
+              </div>
             </div>
           </li>
         ))}
       </ul>
 
-      {/* === 桌面版（>= md）：完整表格 === */}
-      <table className="hidden min-w-full text-sm md:table">
+      {/* === 桌面版（>= md）=== */}
+      <table className="hidden w-full md:table">
         <thead>
-          <tr className="bg-[#1f1810] text-[var(--gold)]">
-            <th className="px-3 py-2.5 text-left font-medium">品牌</th>
-            <th className="px-3 py-2.5 text-left font-medium">機型</th>
-            <th className="px-3 py-2.5 text-left font-medium">類別</th>
-            <th className="px-3 py-2.5 text-right font-medium">容量</th>
-            <th className="px-3 py-2.5 text-left font-medium">規格</th>
-            <th className="px-3 py-2.5 text-right font-medium">回收價</th>
-            <th className="px-3 py-2.5 text-right font-medium">更新</th>
-            <th className="px-3 py-2.5 text-right font-medium w-16"></th>
+          <tr className="bg-[#1f1810]">
+            <th className="px-4 py-3.5 text-left text-[13px] font-bold tracking-wide text-[var(--gold-soft)]">機型</th>
+            <th className="px-4 py-3.5 text-left text-[13px] font-bold tracking-wide text-[var(--gold-soft)]">容量 / 規格</th>
+            <th className="px-4 py-3.5 text-right text-[13px] font-bold tracking-wide text-[var(--gold-soft)]">回收價</th>
+            <th className="px-4 py-3.5 text-right text-[13px] font-bold tracking-wide text-[var(--gold-soft)]">更新</th>
+            <th className="w-32 px-4 py-3.5"></th>
           </tr>
         </thead>
         <tbody>
           {items.map((p, idx) => (
-            <tr
-              key={p.id}
-              className={`group border-t border-[var(--border-soft)] transition ${
-                idx % 2 === 0 ? "bg-[#141414]" : "bg-[#181818]"
-              } hover:bg-[#241c12]`}
-            >
-              <td className="px-3 py-2.5 text-xs text-[var(--fg-muted)]">{p.brand}</td>
-              <td className="px-3 py-2.5 font-medium text-[var(--fg)]">{p.modelName}</td>
-              <td className="px-3 py-2.5 text-xs text-[var(--fg-muted)]">{p.categoryLabel}</td>
-              {/* 容量右對齊：數字靠右比較好掃視 */}
-              <td className="px-3 py-2.5 text-right font-mono text-xs">{p.storage || "—"}</td>
-              <td className="px-3 py-2.5 text-xs">{p.variant || "—"}</td>
-              <td className="px-3 py-2.5 text-right font-mono font-medium">
-                {p.isStale
-                  ? <span className="text-xs font-sans text-[var(--fg-muted)]">LINE 詢價</span>
-                  : <span className="text-[var(--gold)]">{p.minPrice.toLocaleString()}</span>}
-              </td>
-              <td className="px-3 py-2.5 text-right text-[10px] text-[var(--fg-muted)]">{p.updatedLabel}</td>
-              <td className="px-3 py-2.5 text-right">
-                <a
-                  href={SITE.lineAddUrl}
-                  className="rounded border border-[var(--gold-soft)] px-2 py-1 text-[10px] text-[var(--gold-soft)] hover:bg-[var(--gold)] hover:text-black"
-                >
-                  {p.isStale ? "詢價" : "預約"}
-                </a>
-              </td>
-            </tr>
+            <Fragment key={p.id}>
+              {sectionStart(idx) && (
+                <tr className="border-t border-[var(--border)] bg-[#1a1510]">
+                  <td colSpan={5} className="px-4 py-3 text-[15px] font-bold tracking-wide text-[var(--gold)]">
+                    {groupLabel(p)}
+                  </td>
+                </tr>
+              )}
+              <tr className="border-t border-[var(--border-soft)] transition hover:bg-[#241c12]">
+                <td className="px-4 py-3.5">
+                  {!grouped && (
+                    <div className="mb-0.5 text-xs text-[var(--fg-muted)]">{groupLabel(p)}</div>
+                  )}
+                  <div className="text-[15px] font-semibold text-[var(--fg-strong)]">{p.modelName}</div>
+                </td>
+                <td className="px-4 py-3.5 text-sm">
+                  <span className="font-semibold text-[var(--fg)]">{p.storage || "—"}</span>
+                  {p.variant && <span className="ml-2 text-[var(--fg-muted)]">{p.variant}</span>}
+                </td>
+                <td className="px-4 py-3.5 text-right">
+                  {p.isStale
+                    ? <span className="text-sm font-semibold text-[var(--fg-muted)]">LINE 詢價</span>
+                    : <span className="text-lg font-extrabold tabular-nums text-[var(--gold)]">${p.minPrice.toLocaleString()}</span>}
+                </td>
+                <td className="px-4 py-3.5 text-right text-sm tabular-nums text-[var(--fg-muted)]">{p.updatedLabel}</td>
+                <td className="px-4 py-3.5 text-right">
+                  <a
+                    href={SITE.lineAddUrl}
+                    className="inline-block whitespace-nowrap rounded-full border border-[var(--gold-soft)] px-3.5 py-1.5 text-sm font-medium text-[var(--gold)] transition hover:bg-[var(--gold)] hover:text-black"
+                  >
+                    {p.isStale ? "LINE 詢問" : "預約回收"}
+                  </a>
+                </td>
+              </tr>
+            </Fragment>
           ))}
         </tbody>
       </table>
