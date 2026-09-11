@@ -4,6 +4,12 @@
 
 ## 進行中 (0)
 
+## 已完成 — 遊戲主機／Dyson、Telegram 通知、token 本機化（2026-09-11）
+
+- 回收價新增遊戲主機 34 筆、Dyson 19 筆，線上驗證全部有價、零重複
+- notifyOwner 接上 Telegram + env trim + 無管道時大聲警告；`scripts/setup-telegram.mjs` 一鍵設定
+- 部署腳本改讀 `web/.env.local` 的 VERCEL_DEPLOY_TOKEN
+
 ## 已完成 — 非 Apple 分容量回收價 + 字體版面（2026-09-11）
 
 - 9/2–9/8 三個 cron 每天自動執行已驗證；維修報價 8 天寫入 0 筆經實抓比對確認為同行未調價
@@ -35,8 +41,14 @@
   (b) ⛔ **`dasin-care` 不要動** — 老闆 2026-09-01 明確指示。它在另一帳號 easons-projects-cac5ebe9
       底下（2 天前才更新），名字與 dasin-nursing 相近，任何批次操作都要排除它。
 
-- **通知管道未設定**（9/3 source3 曾失敗一次，被正確判定為 FAIL，但只進 console 沒通知到人）：爬蟲失敗告警走 notifyOwner()，但 LINE/Telegram env 都沒填 → 目前告警只進 console。
-  需老闆提供 Telegram Bot Token（LINE Notify 已停服）。
+- **待老闆：接通 Telegram 通知**（程式碼已上線）—— 目前預約／下單／**綠界付款成功**都不會通知任何人
+  1. Telegram 搜尋 @BotFather → /newbot → 取名 → 拿到 bot token
+  2. 對新 bot 傳一則 /start
+  3. `web/.env.local` 加 `TELEGRAM_BOT_TOKEN=...` → 告訴 Claude 跑 `node scripts/setup-telegram.mjs`
+
+- **待老闆：換 Vercel token** —— 對話中的 vcp_ token 已於 2026-09-11 最後一次使用
+  1. 撤銷舊 token　2. 建新 token（建議 Personal Access Token，可順便讓 Claude 刪那 3 個專案）
+  3. `web/.env.local` 加 `VERCEL_DEPLOY_TOKEN=...`（不要貼進對話）
 
 ## 計畫書剩餘項目（OPTIMIZATION_PLAN.md）
 
