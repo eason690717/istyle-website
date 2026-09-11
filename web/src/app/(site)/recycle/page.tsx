@@ -71,9 +71,21 @@ export default async function RecyclePage() {
   // （有些來源只提供不分容量的基礎機型報價，就是這些列的來源。）
   // AirPods / Dyson / 遊戲主機本來就沒有容量規格，不套這個規則。
   const STORAGE_REQUIRED = new Set(["phone", "tablet", "laptop_pro", "laptop_air", "desktop"]);
-  const visible = prices.filter(
+  const withStorage = prices.filter(
     p => !STORAGE_REQUIRED.has(p.category) || !!p.storage,
   );
+
+  // 同一機型＋容量＋規格只顯示一筆，取最近更新的那筆。
+  // 資料庫可能因 modelKey 格式歷次調整而殘留「顯示欄位相同、key 不同」的舊列，
+  // 過期的那筆會顯示「LINE 詢價」、新的那筆顯示價格，並排出現就是規格混亂。
+  // 在顯示層收斂，不依賴資料庫永遠乾淨（2026-09-11 曾一次冒出 592 組）。
+  const newest = new Map<string, (typeof withStorage)[number]>();
+  for (const p of withStorage) {
+    const k = `${p.brand}|${p.modelName}|${p.storage ?? ""}|${p.variant ?? ""}`;
+    const cur = newest.get(k);
+    if (!cur || p.lastUpdatedAt > cur.lastUpdatedAt) newest.set(k, p);
+  }
+  const visible = [...newest.values()];
 
   const freshCount = visible.filter(p => p.lastUpdatedAt.getTime() >= staleBefore).length;
 
