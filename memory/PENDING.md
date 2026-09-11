@@ -1,8 +1,17 @@
 # 待辦事項
 
-> 最後更新: 2026-09-01
+> 最後更新: 2026-09-11
 
 ## 進行中 (0)
+
+## 已完成 — 非 Apple 分容量回收價 + 字體版面（2026-09-11）
+
+- 9/2–9/8 三個 cron 每天自動執行已驗證；維修報價 8 天寫入 0 筆經實抓比對確認為同行未調價
+- Option C：jyes 改抓詳細頁逐容量 + 新增 us3c Android → 有真實價格 747 → 1,664
+  （Samsung 0→209、Google 0→57、Sony 0→27），三來源交集 0 → 143
+- 修 4 個解析陷阱，新增 `scripts/test-recycle-parsers.ts`（20 項）
+- 字體：補載 Noto Sans TC 600/800、text-xs 13px、10px→11px；/recycle 表格 8 欄→5 欄、價格 18px/800、列高 63px
+- ⚠️ 部署後線上發現 592 組同機型同容量重複（我的改動暴露的），已加顯示層去重 + 清 588 筆殘留，線上複驗零重複
 
 ## 已完成 — Vercel CPU 超額修復（2026-09-01）
 
@@ -26,7 +35,7 @@
   (b) ⛔ **`dasin-care` 不要動** — 老闆 2026-09-01 明確指示。它在另一帳號 easons-projects-cac5ebe9
       底下（2 天前才更新），名字與 dasin-nursing 相近，任何批次操作都要排除它。
 
-- **通知管道未設定**：爬蟲失敗告警走 notifyOwner()，但 LINE/Telegram env 都沒填 → 目前告警只進 console。
+- **通知管道未設定**（9/3 source3 曾失敗一次，被正確判定為 FAIL，但只進 console 沒通知到人）：爬蟲失敗告警走 notifyOwner()，但 LINE/Telegram env 都沒填 → 目前告警只進 console。
   需老闆提供 Telegram Bot Token（LINE Notify 已停服）。
 
 ## 計畫書剩餘項目（OPTIMIZATION_PLAN.md）
