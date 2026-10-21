@@ -1,3 +1,4 @@
+import { articleKindLabel } from "@/lib/article-kind";
 import Link from "next/link";
 import Image from "next/image";
 import { BLOG_POSTS, CATEGORY_LABEL, getCoverImage } from "@/lib/blog-posts";
@@ -29,7 +30,7 @@ export default async function BlogIndexPage() {
     title: a.title,
     excerpt: a.excerpt,
     cover: a.coverImage || "/cases/tech-shop.jpg",
-    badge: a.kind === "weekly_recycle" ? "週報" : a.kind === "monthly_summary" ? "月報" : "自動",
+    badge: articleKindLabel(a.kind),
     date: a.publishedAt.toISOString().slice(0, 10),
   }));
   const manualCards = BLOG_POSTS.map(p => ({

@@ -1,7 +1,13 @@
 // 自動產生的文章（每週/每月）
+import { articleKindLabel } from "@/lib/article-kind";
 import Link from "next/link";
 import Image from "next/image";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
+import LEGACY from "@/lib/legacy-article-redirects.json";
+
+// 2026-10-21 清掉 407 篇重複文章時，每個舊網址都對應到保留的那篇（或 /blog、/quote）。
+// 用 308 永久轉址，讓搜尋引擎把舊網址的權重轉給新網址，而不是看到一堆 404。
+const legacyRedirects = LEGACY as Record<string, string>;
 import { prisma } from "@/lib/prisma";
 import { SITE } from "@/lib/site-config";
 import type { Metadata } from "next";
@@ -96,7 +102,11 @@ function renderBody(md: string) {
 export default async function AutoArticlePage({ params }: { params: Promise<Params> }) {
   const { slug } = await params;
   const article = await prisma.autoArticle.findUnique({ where: { slug } }).catch(() => null);
-  if (!article) notFound();
+  if (!article) {
+    const to = legacyRedirects[slug] ?? legacyRedirects[decodeURIComponent(slug)];
+    if (to) permanentRedirect(to);
+    notFound();
+  }
 
   return (
     <>
@@ -126,7 +136,7 @@ export default async function AutoArticlePage({ params }: { params: Promise<Para
 
         <div className="mb-3 flex items-center gap-3 text-xs">
           <span className="rounded bg-[var(--gold)]/15 px-2 py-0.5 text-[var(--gold)]">
-            {article.kind === "weekly_recycle" ? "週報" : article.kind === "monthly_summary" ? "月報" : "自動"}
+            {articleKindLabel(article.kind)}
           </span>
           <span className="text-[var(--fg-muted)]">{article.publishedAt.toISOString().slice(0, 10)}</span>
           <span className="text-[var(--gold-soft)]">．系統自動產生</span>

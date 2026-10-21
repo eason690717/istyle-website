@@ -337,8 +337,11 @@ model ProductVariant {
 model AutoArticle {
   id              Int      @id @default(autoincrement())
   slug            String   @unique
-  kind            String   // "weekly_recycle" | "daily_repair" | "monthly_summary"
-  title           String
+  kind            String   // "weekly_recycle" | "trouble_article" | "care_tips" | "brand_guide"
+  // 標題與內文指紋都設唯一索引：自動文章「不可重複」由資料庫兜底（見 src/lib/article-uniqueness.ts）
+  title           String   @unique
+  subject         String?  // 文章主角（例如機型名）。算內文指紋前會先拿掉，讓「只換機型名的樣板」被判為重複
+  contentHash     String?  @unique
   excerpt         String
   body            String
   coverImage      String?
